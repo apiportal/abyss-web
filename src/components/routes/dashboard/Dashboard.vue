@@ -36,19 +36,20 @@
           </Widget>
         </div>
         <div class="col-12 col-md-4">
-          <Widget title="widget 4 - inform modal" :pseudo-slot="(props) => props.foo">
-            <template slot-scope="props">
+          <Widget title="widget 4 - inform modal">
+            <template slot-props="{ toggleInformModal }">
                 <b-button variant="primary" @click="toggleInformModal">
                   Show Inform Modal
                 </b-button>
                 <InformModal
                   v-if="isInformModalVisible"  
+                  :onClose="toggleInformModal"
                 >
                   <div>
                     This is an inform modal
                   </div>
-                  <div slot="footer">
-                    <b-button class="float-right" variant="primary" size="sm">
+                  <div slot="footer" slot-props="{ toggleInformModal }">
+                    <b-button class="float-right" variant="primary" size="sm" @click="toggleInformModal">
                       OK
                     </b-button>
                   </div>
@@ -92,7 +93,6 @@ export default {
   },
   methods: {
     toggleInformModal() {
-      console.log('modal triggered');
       this.isInformModalVisible = !this.isInformModalVisible;
     },
   },

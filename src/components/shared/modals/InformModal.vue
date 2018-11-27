@@ -58,7 +58,6 @@ export default {
     onClose: {
       type: Function,
       required: false,
-      default() { console.log('yo'); },
     },
   },
 };

@@ -7,9 +7,15 @@ import {
   faSpinner,
   faTachometerAlt,
   faSitemap,
-  faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+  faEllipsisH,
+  faEllipsisV,
+  faCube,
+  faCubes,
+  faCertificate,
+  faFilePowerpoint,
+  faGlobe,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import App from './App';
@@ -19,7 +25,14 @@ library.add(
   faTachometerAlt,
   faSpinner,
   faSitemap,
-  faEllipsisH);
+  faEllipsisH,
+  faEllipsisV,
+  faCube,
+  faCubes,
+  faCertificate,
+  faFilePowerpoint,
+  faGlobe,
+);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;

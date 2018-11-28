@@ -22,9 +22,29 @@ export default {
           to: '/app/dashboard',
         },
         {
-          icon: 'sitemap',
+          icon: 'cube',
           name: 'My APIs',
           to: '/app/my-apis',
+        },
+        {
+          icon: 'cubes',
+          name: 'My Apps',
+          to: '/app/my-apps',
+        },
+        {
+          icon: 'certificate',
+          name: 'My Licenses',
+          to: '/app/my-licenses',
+        },
+        {
+          icon: 'file-powerpoint',
+          name: 'My Policies',
+          to: '/app/my-policies',
+        },
+        {
+          icon: 'globe',
+          name: 'Explore',
+          to: '/app/explore',
         },
       ],
     };
@@ -42,11 +62,13 @@ ul.sidenav-links {
     a {
       display: block;
       position: relative;
-      padding-left: 30px;
+      padding-left: 2em;
+      padding-top: .5em;
+      padding-bottom: .5em;
 
       .route-icon {
         position: absolute;
-        top: 0;
+        top: .5em;
         left: 0;
       }
     }

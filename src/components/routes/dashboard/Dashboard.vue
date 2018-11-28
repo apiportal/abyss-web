@@ -68,6 +68,7 @@ import LineChart from '@/components/shared/charts/LineChart';
 import BarChart from '@/components/shared/charts/BarChart';
 import ColumnChart from '@/components/shared/charts/ColumnChart';
 import InformModal from '@/components/shared/modals/InformModal';
+import api from '@/api';
 
 export default {
   components: {
@@ -95,6 +96,12 @@ export default {
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;
     },
+    getDashboarData() {
+      return api.getDashboardData();
+    },
+  },
+  mounted() {
+    this.getDashboarData();
   },
 };
 </script>

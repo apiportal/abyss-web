@@ -2,12 +2,12 @@ import axios from 'axios';
 
 const verapi = axios.create(
   {
-    baseURL: '/',
+    baseURL: 'https://dev2.apiportal.com',
   },
 );
 
 export default {
-  getDashboardData() {
-    return verapi.get('/dashboard-data');
+  getApiData() {
+    return verapi.get('/data/pet3.json');
   },
 };

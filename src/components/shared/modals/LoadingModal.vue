@@ -1,13 +1,18 @@
 <template>
   <div class="loading-modal-backdrop">
     <div class="loading-modal">
-      <font-awesome-icon :icon="['fa', 'spinner']" spin /> 
+      <Icon icon="spinner" spin /> 
     </div>
   </div>
 </template>
 
 <script>
+import Icon from '@/components/shared/Icon';
+
 export default {
+  components: {
+    Icon,
+  },
   data() {
     return {
       isModalVisible: true,

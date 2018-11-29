@@ -1,5 +1,3 @@
 <template>
-  <div>
-    My APIs
-  </div>
+  <router-view></router-view>
 </template>

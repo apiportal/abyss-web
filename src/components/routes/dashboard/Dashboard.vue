@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import Widget from '@/components/shared/Widget';
+import Widget from '@/components/shared/widgets/Widget';
 import LineChart from '@/components/shared/charts/LineChart';
 import BarChart from '@/components/shared/charts/BarChart';
 import ColumnChart from '@/components/shared/charts/ColumnChart';

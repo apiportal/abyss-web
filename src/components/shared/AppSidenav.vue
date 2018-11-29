@@ -3,7 +3,7 @@
     <ul class="sidenav-links">
       <li v-for="(route, index) in routes" v-bind:key="index">
         <b-link :to="route.to">
-          <span class="route-icon"><font-awesome-icon :icon="route.icon" /></span>
+          <span class="route-icon"><Icon :icon="route.icon" /></span>
           {{ route.name }}
         </b-link>
       </li>
@@ -12,7 +12,12 @@
 </template>
 
 <script>
+import Icon from '@/components/shared/Icon';
+
 export default {
+  components: {
+    Icon,
+  },
   data() {
     return {
       routes: [

@@ -4,7 +4,7 @@
       <span style="float: right; margin-top: -4px;">
         <b-dropdown variant="link" size="sm" right no-caret>
           <template slot="button-content">
-            <font-awesome-icon icon="ellipsis-h" />
+            <Icon icon="ellipsis-h" />
           </template>
           <b-dropdown-item href="#">Action</b-dropdown-item>
           <b-dropdown-item href="#">Another action</b-dropdown-item>
@@ -22,7 +22,12 @@
 </template>
 
 <script>
+import Icon from '@/components/shared/Icon';
+
 export default {
+  components: {
+    Icon,
+  },
   props: {
     title: {
       type: String,

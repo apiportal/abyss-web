@@ -5,6 +5,9 @@
       v-bind:key="index"
       :path="pathKey"
       :methods="paths[pathKey]"
+      :onMethodChange="onMethodChange"
+      :onDescriptionChange="onDescriptionChange"
+      :onSummaryChange="onSummaryChange"
     />
   </div>
 </template>
@@ -22,11 +25,23 @@ export default {
       required: true,
       default() { return {}; },
     },
+    onMethodChange: {
+      type: Function,
+      required: true,
+    },
+    onDescriptionChange: {
+      type: Function,
+      required: true,
+    },
+    onSummaryChange: {
+      type: Function,
+      required: true,
+    },
   },
-  data() {
-    return {
-      pathKeys: Object.keys(this.paths),
-    };
+  computed: {
+    pathKeys() {
+      return Object.keys(this.paths);
+    },
   },
 };
 </script>

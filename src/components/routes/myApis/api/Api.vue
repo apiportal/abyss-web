@@ -50,7 +50,10 @@
     >
       <template>
         <Paths
-          :paths="petData.paths"
+          :paths="apiData.paths"
+          :onMethodChange="handleMethodChange"
+          :onDescriptionChange="handleDescriptionChange"
+          :onSummaryChange="handleSummaryChange"
         />
       </template>
     </RollableWidget>
@@ -85,7 +88,7 @@ export default {
   },
   data() {
     return {
-      petData: pet3,
+      apiData: pet3,
       widgets: [
         {
           isRolled: true,
@@ -117,10 +120,61 @@ export default {
   mounted() {
   },
   methods: {
+    updateObjectPropName(obj, oldVal, newVal) {
+      return Object.keys(obj).reduce((object, key) => {
+        if (key === newVal) {
+          return { ...object };
+        }
+        return {
+          ...object,
+          [key !== oldVal ? key : newVal]: obj[key],
+        };
+      }, {});
+    },
     toggleRollableWidget(index) {
       this.widgets[index].isRolled = !this.widgets[index].isRolled;
     },
-
+    handleMethodChange({ path, oldVal, newVal }) {
+      this.apiData = {
+        ...this.apiData,
+        paths: {
+          ...this.apiData.paths,
+          [path]: {
+            ...this.updateObjectPropName(this.apiData.paths[path], oldVal, newVal),
+          },
+        },
+      };
+    },
+    handleDescriptionChange({ path, method, newVal }) {
+      this.apiData = {
+        ...this.apiData,
+        paths: {
+          ...this.apiData.paths,
+          [path]: {
+            ...this.apiData.paths[path],
+            [method]: {
+              ...this.apiData.paths[path][method],
+              description: newVal,
+            },
+          },
+        },
+      };
+    },
+    handleSummaryChange({ path, method, newVal }) {
+      this.apiData = {
+        ...this.apiData,
+        paths: {
+          ...this.apiData.paths,
+          [path]: {
+            ...this.apiData.paths[path],
+            [method]: {
+              ...this.apiData.paths[path][method],
+              summary: newVal,
+            },
+          },
+        },
+      };
+    },
   },
 };
 </script>

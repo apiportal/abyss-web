@@ -1,14 +1,19 @@
 <template>
   <div class="path-container">
     <header>
-      {{ path }}
+      <strong>{{ path }}</strong>
     </header>
     <main>
+      <p>Operations:</p>
       <PathMethod
         v-for="(methodKey, index) in methodKeys"
         v-bind:key="index"
         :methodType="methodKey"
         :methodProps="methods[methodKey]"
+        :path="path"
+        :onMethodChange="onMethodChange"
+        :onDescriptionChange="onDescriptionChange"
+        :onSummaryChange="onSummaryChange"
       />
     </main>
   </div>
@@ -32,11 +37,23 @@ export default {
       required: true,
       default() { return {}; },
     },
+    onMethodChange: {
+      type: Function,
+      required: true,
+    },
+    onDescriptionChange: {
+      type: Function,
+      required: true,
+    },
+    onSummaryChange: {
+      type: Function,
+      required: true,
+    },
   },
-  data() {
-    return {
-      methodKeys: Object.keys(this.methods),
-    };
+  computed: {
+    methodKeys() {
+      return Object.keys(this.methods);
+    },
   },
 };
 </script>

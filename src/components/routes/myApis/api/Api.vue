@@ -1,6 +1,6 @@
 <template>
   <div class="api-container">
-    <RollableWidget
+    <!-- <RollableWidget
       :title="widgets[0].title"
       :isRolled="widgets[0].isRolled"
       :onToggle="() => toggleRollableWidget(0)"
@@ -9,7 +9,7 @@
         <InputWithIcon
           :append="{ icon: 'search' }"
         />
-        rollable widget 1 content
+        MY APIs content
       </template>
     </RollableWidget>
 
@@ -19,7 +19,7 @@
       :onToggle="() => toggleRollableWidget(1)"
     >
       <template>
-        rollable widget 2 content
+        My Proxies Content
       </template>
     </RollableWidget>
 
@@ -29,7 +29,7 @@
       :onToggle="() => toggleRollableWidget(2)"
     >
       <template>
-        rollable widget 3 content
+        Information Content
       </template>
     </RollableWidget>
 
@@ -39,7 +39,7 @@
       :onToggle="() => toggleRollableWidget(3)"
     >
       <template>
-        rollable widget 4 content
+        Components &amp; Limits Content
       </template>
     </RollableWidget>
 
@@ -65,116 +65,174 @@
       unrolledWidth="1"
     >
       <template>
-        rollable widget 6 content
+        Editor Content
       </template>
-    </RollableWidget>
-
+    </RollableWidget> -->
+    <FinderLayout
+      name="pet3"
+      :path="path"
+    >
+      <template>
+        <FinderColumn
+          v-for="(column, columnIndex) in columns"
+          v-bind:key="columnIndex"
+        >
+          <template>
+            <FinderColumnObject
+              v-if="column.type === 'object'"
+              :propNames="column.propNames"
+              :columnIndex="columnIndex"
+              :onPathChange="handlePathChange"
+              :selected="Boolean(path[columnIndex + 1]) ? path[columnIndex + 1] : ''"
+            />
+            <div
+              v-else
+            >
+              {{ column }}
+            </div>
+          </template>
+        </FinderColumn>
+      </template>
+    </FinderLayout>
 
   </div>
 </template>
 
 <script>
 // import api from '@/api';
-import RollableWidget from '@/components/shared/widgets/RollableWidget';
-import InputWithIcon from '@/components/shared/InputWithIcon';
-import Paths from '@/components/shared/Paths';
+import FinderLayout from '@/components/shared/finder/FinderLayout';
+import FinderColumn from '@/components/shared/finder/FinderColumn';
+import FinderColumnObject from '@/components/shared/finder/FinderColumnObject';
 import pet3 from '@/assets/pet3.json';
 
 export default {
   components: {
-    RollableWidget,
-    InputWithIcon,
-    Paths,
+    FinderLayout,
+    FinderColumn,
+    FinderColumnObject,
+  },
+  computed: {
+    columns() {
+      const getColumnData = (data) => {
+        const dataType = (typeof data);
+
+        if (dataType === 'object') {
+          return {
+            type: dataType,
+            propNames: Object.keys(data),
+          };
+        }
+        return {
+          type: dataType,
+          data,
+        };
+      };
+      const getPropData = (obj, keysArr) =>
+        keysArr.reduce((reducedObj, item) => reducedObj[item], obj);
+
+      return this.path.map((item, index) => {
+        const pathData = (
+          index === 0 ?
+          this.apiData :
+          getPropData(this.apiData, this.path.slice(1, (index + 1)))
+        );
+        return getColumnData(pathData);
+      });
+    },
   },
   data() {
     return {
       apiData: pet3,
-      widgets: [
-        {
-          isRolled: true,
-          title: 'My APIs',
-        },
-        {
-          isRolled: true,
-          title: 'My Proxies',
-        },
-        {
-          isRolled: true,
-          title: 'Information',
-        },
-        {
-          isRolled: true,
-          title: 'Components & Limits',
-        },
-        {
-          isRolled: false,
-          title: 'Paths',
-        },
-        {
-          isRolled: true,
-          title: 'Editor',
-        },
-      ],
+      path: [''],
+      // widgets: [
+      //   {
+      //     isRolled: true,
+      //     title: 'My APIs',
+      //   },
+      //   {
+      //     isRolled: true,
+      //     title: 'My Proxies',
+      //   },
+      //   {
+      //     isRolled: true,
+      //     title: 'Information',
+      //   },
+      //   {
+      //     isRolled: true,
+      //     title: 'Components & Limits',
+      //   },
+      //   {
+      //     isRolled: false,
+      //     title: 'Paths',
+      //   },
+      //   {
+      //     isRolled: true,
+      //     title: 'Editor',
+      //   },
+      // ],
     };
   },
   mounted() {
   },
   methods: {
-    updateObjectPropName(obj, oldVal, newVal) {
-      return Object.keys(obj).reduce((object, key) => {
-        if (key === newVal) {
-          return { ...object };
-        }
-        return {
-          ...object,
-          [key !== oldVal ? key : newVal]: obj[key],
-        };
-      }, {});
+    handlePathChange({ columnIndex, propName }) {
+      this.path = [...this.path.slice(0, (columnIndex + 1)), propName];
     },
-    toggleRollableWidget(index) {
-      this.widgets[index].isRolled = !this.widgets[index].isRolled;
-    },
-    handleMethodChange({ path, oldVal, newVal }) {
-      this.apiData = {
-        ...this.apiData,
-        paths: {
-          ...this.apiData.paths,
-          [path]: {
-            ...this.updateObjectPropName(this.apiData.paths[path], oldVal, newVal),
-          },
-        },
-      };
-    },
-    handleDescriptionChange({ path, method, newVal }) {
-      this.apiData = {
-        ...this.apiData,
-        paths: {
-          ...this.apiData.paths,
-          [path]: {
-            ...this.apiData.paths[path],
-            [method]: {
-              ...this.apiData.paths[path][method],
-              description: newVal,
-            },
-          },
-        },
-      };
-    },
-    handleSummaryChange({ path, method, newVal }) {
-      this.apiData = {
-        ...this.apiData,
-        paths: {
-          ...this.apiData.paths,
-          [path]: {
-            ...this.apiData.paths[path],
-            [method]: {
-              ...this.apiData.paths[path][method],
-              summary: newVal,
-            },
-          },
-        },
-      };
-    },
+    // updateObjectPropName(obj, oldVal, newVal) {
+    //   return Object.keys(obj).reduce((object, key) => {
+    //     if (key === newVal) {
+    //       return { ...object };
+    //     }
+    //     return {
+    //       ...object,
+    //       [key !== oldVal ? key : newVal]: obj[key],
+    //     };
+    //   }, {});
+    // },
+    // toggleRollableWidget(index) {
+    //   this.widgets[index].isRolled = !this.widgets[index].isRolled;
+    // },
+    // handleMethodChange({ path, oldVal, newVal }) {
+    //   this.apiData = {
+    //     ...this.apiData,
+    //     paths: {
+    //       ...this.apiData.paths,
+    //       [path]: {
+    //         ...this.updateObjectPropName(this.apiData.paths[path], oldVal, newVal),
+    //       },
+    //     },
+    //   };
+    // },
+    // handleDescriptionChange({ path, method, newVal }) {
+    //   this.apiData = {
+    //     ...this.apiData,
+    //     paths: {
+    //       ...this.apiData.paths,
+    //       [path]: {
+    //         ...this.apiData.paths[path],
+    //         [method]: {
+    //           ...this.apiData.paths[path][method],
+    //           description: newVal,
+    //         },
+    //       },
+    //     },
+    //   };
+    // },
+    // handleSummaryChange({ path, method, newVal }) {
+    //   this.apiData = {
+    //     ...this.apiData,
+    //     paths: {
+    //       ...this.apiData.paths,
+    //       [path]: {
+    //         ...this.apiData.paths[path],
+    //         [method]: {
+    //           ...this.apiData.paths[path][method],
+    //           summary: newVal,
+    //         },
+    //       },
+    //     },
+    //   };
+    // },
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="path-container">
     <header>
-      <strong>{{ path }}</strong>
+      <h4>{{ path }}</h4>
     </header>
     <main>
       <p>Operations:</p>

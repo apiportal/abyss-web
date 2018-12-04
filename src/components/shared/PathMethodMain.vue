@@ -15,11 +15,11 @@
         })"
       />
       <label for="">Decription:</label>
-      {{ description }}
+      <p>Desc. parent val: {{ description }}</p>
       <b-form-input 
         type="text" 
         v-model="descriptionEditable" 
-        @keyup.native="() => onDescriptionChange({
+        @blur.native="() => onDescriptionChange({
           path,
           method,
           newVal: descriptionEditable,
@@ -29,7 +29,7 @@
       <b-form-input 
         type="text" 
         v-model="summaryEditable"
-        @keyup.native="() => onSummaryChange({
+        @blur.native="() => onSummaryChange({
           path,
           method,
           newVal: summaryEditable,

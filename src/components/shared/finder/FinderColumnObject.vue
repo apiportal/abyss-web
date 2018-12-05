@@ -31,10 +31,19 @@ export default {
       type: Function,
       required: true,
     },
-    selected: {
-      type: String,
-      required: false,
-      default() { return ''; },
+    path: {
+      type: Array,
+      required: true,
+    },
+  },
+  computed: {
+    selected() {
+      const { path, columnIndex } = this;
+      return (
+        path.length >= (columnIndex + 1) ?
+        path[(columnIndex + 1)] :
+        null
+      );
     },
   },
 };

@@ -71,6 +71,7 @@
     <FinderLayout
       name="pet3"
       :path="path"
+      :onPathChange="handlePathChange"
     >
       <template>
         <FinderColumn
@@ -83,7 +84,7 @@
               :propNames="column.propNames"
               :columnIndex="columnIndex"
               :onPathChange="handlePathChange"
-              :selected="Boolean(path[columnIndex + 1]) ? path[columnIndex + 1] : ''"
+              :path="path"
             />
             <div
               v-else

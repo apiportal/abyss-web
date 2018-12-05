@@ -1,0 +1,249 @@
+{
+  "Schema Object":  {
+    
+  },
+  "Media Type Object": {
+    "schema": {
+      "type": "Schema Object"
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "example": {
+      "type": "Example Object"
+    },
+    "encoding": {
+      "type": "Encoding Object",
+      "Map": true
+    }
+  },
+  "Request Body Object": {
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Required": true,
+      "Map": true
+    },
+    "required": {
+      "type": "boolean"
+    }
+  },
+  "Parameter Object": {
+    "name": {
+      "type": "string",
+      "Required": true
+    },
+    "in": {
+      "type": "string",
+      "Required": true
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "deprecated": {
+      "type": "boolean"
+    }
+  },
+  "External Documentation Object": {
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "url": {
+      "type": "string",
+      "Required": true
+    }
+  },
+  "Operation Object": {
+    "tags": {
+      "type": "string",
+      "Array": true
+    },
+    "summary": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "externalDocs": {
+      "type": "External Documentation Object"
+    },
+    "operationId": {
+      "type": "string"
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Array": true
+    },
+    "requestBody": {
+      "type": "Request Body Object",
+      "Required": true
+    },
+    "responses": {
+      "type": "Responses Object",
+      "Required": true
+    },
+    "callbacks": {
+      "type": "Callback Object",
+      "Map": true
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
+    "security": {
+      "type": "Security Requirement Object"
+    },
+    "servers": {
+      "type": "Server Object"
+    }
+  },
+  "Paths Object": {
+    "summary": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "get": {
+      "type": "Operation Object"
+    },
+    "put": {
+      "type": "Operation Object"
+    },
+    "post": {
+      "type": "Operation Object"
+    },
+    "delete": {
+      "type": "Operation Object"
+    },
+    "options": {
+      "type": "Operation Object"
+    },
+    "head": {
+      "type": "Operation Object"
+    },
+    "patch": {
+      "type": "Operation Object"
+    },
+    "trace": {
+      "type": "Operation Object"
+    },
+    "servers": {
+      "type": "Server Object"
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Array": true
+    }
+  },
+  "Server Variable Object": {
+    "enum": {
+      "type": "primitive",
+      "Array": true
+    },
+    "default": {
+      "type": "primitive"
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    }
+  },
+  "Server Object": {
+    "url": {
+      "type": "string",
+      "Required": true
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "variables": {
+      "type": "Server Variable Object",
+      "map": true
+    }
+  },
+  "Licence Object": {
+    "name": {
+      "type": "string",
+      "Required": true
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "Contact Object": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    }
+  },
+  "Info Object": {
+    "title": {
+      "type": "string",
+      "Required": true
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "termsOfService": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "Contact Object"
+    },
+    "licence": {
+      "type": "Licence Object"
+    },
+    "version": {
+      "type": "String",
+      "Required": true
+    }
+  },
+  "OpenApi 3.0": {
+    "openapi": {
+      "type": "string",
+      "Required": true
+    },
+    "info": {
+      "type": "Info Object",
+      "Required": true
+    },
+    "servers": {
+      "type": "Server Object",
+      "Array": true
+    },
+    "paths": {
+      "type": "Paths Object",
+      "Required": true
+    },
+    "components": {
+      "type": "Components Object"
+    },
+    "security": {
+      "type": "Security Requirement Object"
+    },
+    "tags": {
+      "type": "Tag Object"
+    },
+    "externalDocs": {
+      "type": "External Documentation Object"
+    }
+  }
+}

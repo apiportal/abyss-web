@@ -251,7 +251,8 @@
   },
   "Paths Object": {
     "{path}": {
-      "type": "Path Item Object"
+      "type": "Path Item Object",
+      "regex": "{(.*?)}"
     }
   },
   "Path Item Object": {

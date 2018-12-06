@@ -12,7 +12,7 @@
         >
           <template>
             <FinderColumnObject
-              v-if="column.type === 'object'"
+              v-if="column.type === 'object' || column.interface"
               :objectProps="column.propNames"
               :objectInterface="column.interface"
               :columnIndex="columnIndex"
@@ -59,14 +59,29 @@ export default {
           // NOT A DEFINED INTERFACE
           if (!(currentInterface[currentKey] && currentInterface[currentKey].type)) {
             // TODO PATHS -> {PATH} regex
-            return {};
+            const currentInterfaceProps = Object.keys(currentInterface);
+            const matchedInterfaceProp = currentInterfaceProps.find((item) => {
+              if (currentInterface[item].regex) {
+                return Boolean(item.match(new RegExp(currentInterface[item].regex), 'g'));
+              }
+              return false;
+            });
+            if (matchedInterfaceProp) {
+              console.log(currentInterface[matchedInterfaceProp].type);
+              return getPropInterface({
+                interfaces,
+                keys,
+                currentInterfaceKey: currentInterface[matchedInterfaceProp].type,
+                currentKeyIndex: (currentKeyIndex + 1),
+              });
+            }
+            return false;
           }
-          const nextInterfaceKey = currentInterface[currentKey].type;
-          console.log(currentInterface[currentKey]);
+          // FOUND INTERFACE
           return getPropInterface({
             interfaces,
             keys,
-            currentInterfaceKey: nextInterfaceKey,
+            currentInterfaceKey: currentInterface[currentKey].type,
             currentKeyIndex: (currentKeyIndex + 1),
           });
         }
@@ -102,6 +117,7 @@ export default {
         );
         return {
           ...getColumnData({ propData, propInterface }),
+          interface: propInterface,
         };
       });
     },

@@ -2,14 +2,14 @@
   <div class="finder-column-object-container">
     <ul class="menu">
       <li
-        v-for="(propName, index) in objectProps"
+        v-for="(prop, index) in computedProps"
         v-bind:key="index"
       >
         <b-link
-          @click="() => onPathChange({ columnIndex, propName })"
-          :class="propName === selected ? 'selected': ''"
+          @click="() => onPathChange({ columnIndex, propName: prop.name })"
+          :class="`${prop.name === selected ? 'selected': ''} ${prop.exists ? 'exists': 'nonexists'}`"
         >
-          {{ propName }}
+          {{ prop.name }}
         </b-link>
       </li>
     </ul>
@@ -21,7 +21,13 @@ export default {
   props: {
     objectProps: {
       type: Array,
-      required: true,
+      required: false,
+      default() { return []; },
+    },
+    objectInterface: {
+      type: Object,
+      required: false,
+      default() { return {}; },
     },
     columnIndex: {
       type: Number,
@@ -45,6 +51,20 @@ export default {
         null
       );
     },
+    computedProps() {
+      const { objectProps, objectInterface } = this;
+      const computedObjectProps = objectProps.map(prop => ({
+        name: prop,
+        exists: true,
+      }));
+      const objectInterfaceProps = Object.keys(objectInterface)
+        .filter(prop => objectProps.indexOf(prop) === -1)
+        .map(prop => ({
+          name: prop,
+          exists: false,
+        }));
+      return [...computedObjectProps, ...objectInterfaceProps];
+    },
   },
 };
 </script>
@@ -66,6 +86,11 @@ export default {
 
         &.selected {
           background-color: rgb(216, 216, 216);
+        }
+
+        &.nonexists {
+          opacity: 0.5;
+          filter: alpha(opacity=50);
         }
       }
     }

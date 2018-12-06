@@ -1,6 +1,149 @@
 {
+  "Tag Object": {
+    "name": {
+      "type": "string",
+      "Required": true
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "externalDocs": {
+      "type": "External Documentation Object"
+    }
+  },
+  "Security Scheme Object": {
+    "notDefinedYet": true
+  },
+  "Components Object": {
+    "schemas": {
+      "type": "Schema Object",
+      "Map": true
+    },
+    "responses": {
+      "type": "Response Object",
+      "Map": true
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "requestBodies": {
+      "type": "Request Body Object",
+      "Map": true
+    },
+    "headers": {
+      "type": "Header Object",
+      "Map": true
+    },
+    "securitySchemes": {
+      "type": "Security Scheme Object",
+      "Map": true
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    },
+    "callbacks": {
+      "type": "Callback Object",
+      "Map": true
+    }
+  },
+  "Security Requirement Object": {
+    "{name}": {
+      "type": "string",
+      "Array": true
+    }
+  },
+  "Callback Object": {
+    "{expression}": {
+      "type": "Path Item Object"
+    }
+  },
+  "Link Parameters Object": {
+    "notDefinedYet": true
+  },
+  "Link Object": {
+    "href": {
+      "type": "string"
+    },
+    "operationId": {
+      "type": "string"
+    },
+    "parameters": {
+      "type": "Link Parameters Object"
+    },
+    "headers": {
+      "type": "Header Object"
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    }
+  },
+  "Response Object": {
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "headers": {
+      "type": "Header Object"
+    },
+    "content": {
+      "type": "Media Type Object"
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    }
+  },
+  "Responses Object": {
+    "default": {
+      "type": "Response Object"
+    },
+    "{HTTP status code}": {
+      "type": "Response Object"
+    }
+  },
+  "Header Object":  {
+    "notDefinedYet": true
+  },
+  "Encoding Object": {
+    "contentType": {
+      "type": "string"
+    },
+    "headers": {
+      "type": "Header Object"
+    },
+    "style": {
+      "type": "string"
+    },
+    "explode": {
+      "type": "boolean"
+    },
+    "allowReserved": {
+      "type": "boolean"
+    }
+  },
+  "Example Object": {
+    "summary": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "Value": {
+      "type": "Any",
+      "Markdown": true
+    }
+  },
   "Schema Object":  {
-    
+    "notDefinedYet": true
   },
   "Media Type Object": {
     "schema": {
@@ -107,6 +250,11 @@
     }
   },
   "Paths Object": {
+    "{path}": {
+      "type": "Path Item Object"
+    }
+  },
+  "Path Item Object": {
     "summary": {
       "type": "string"
     },
@@ -170,7 +318,7 @@
     },
     "variables": {
       "type": "Server Variable Object",
-      "map": true
+      "Map": true
     }
   },
   "Licence Object": {
@@ -216,7 +364,7 @@
       "Required": true
     }
   },
-  "OpenApi 3.0": {
+  "Root Object": {
     "openapi": {
       "type": "string",
       "Required": true

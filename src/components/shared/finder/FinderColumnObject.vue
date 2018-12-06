@@ -2,7 +2,7 @@
   <div class="finder-column-object-container">
     <ul class="menu">
       <li
-        v-for="(propName, index) in propNames"
+        v-for="(propName, index) in objectProps"
         v-bind:key="index"
       >
         <b-link
@@ -19,7 +19,7 @@
 <script>
 export default {
   props: {
-    propNames: {
+    objectProps: {
       type: Array,
       required: true,
     },

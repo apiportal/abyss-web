@@ -1,73 +1,5 @@
 <template>
   <div class="api-container">
-    <!-- <RollableWidget
-      :title="widgets[0].title"
-      :isRolled="widgets[0].isRolled"
-      :onToggle="() => toggleRollableWidget(0)"
-    >
-      <template>
-        <InputWithIcon
-          :append="{ icon: 'search' }"
-        />
-        MY APIs content
-      </template>
-    </RollableWidget>
-
-    <RollableWidget
-      :title="widgets[1].title"
-      :isRolled="widgets[1].isRolled"
-      :onToggle="() => toggleRollableWidget(1)"
-    >
-      <template>
-        My Proxies Content
-      </template>
-    </RollableWidget>
-
-    <RollableWidget
-      :title="widgets[2].title"
-      :isRolled="widgets[2].isRolled"
-      :onToggle="() => toggleRollableWidget(2)"
-    >
-      <template>
-        Information Content
-      </template>
-    </RollableWidget>
-
-    <RollableWidget
-      :title="widgets[3].title"
-      :isRolled="widgets[3].isRolled"
-      :onToggle="() => toggleRollableWidget(3)"
-    >
-      <template>
-        Components &amp; Limits Content
-      </template>
-    </RollableWidget>
-
-    <RollableWidget
-      :title="widgets[4].title"
-      :isRolled="widgets[4].isRolled"
-      :onToggle="() => toggleRollableWidget(4)"
-    >
-      <template>
-        <Paths
-          :paths="apiData.paths"
-          :onMethodChange="handleMethodChange"
-          :onDescriptionChange="handleDescriptionChange"
-          :onSummaryChange="handleSummaryChange"
-        />
-      </template>
-    </RollableWidget>
-
-    <RollableWidget
-      :title="widgets[5].title"
-      :isRolled="widgets[5].isRolled"
-      :onToggle="() => toggleRollableWidget(5)"
-      unrolledWidth="1"
-    >
-      <template>
-        Editor Content
-      </template>
-    </RollableWidget> -->
     <FinderLayout
       name="pet3"
       :path="path"
@@ -81,7 +13,8 @@
           <template>
             <FinderColumnObject
               v-if="column.type === 'object'"
-              :propNames="column.propNames"
+              :objectProps="column.propNames"
+              :objectInterface="column.interface"
               :columnIndex="columnIndex"
               :onPathChange="handlePathChange"
               :path="path"
@@ -104,7 +37,9 @@
 import FinderLayout from '@/components/shared/finder/FinderLayout';
 import FinderColumn from '@/components/shared/finder/FinderColumn';
 import FinderColumnObject from '@/components/shared/finder/FinderColumnObject';
-import pet3 from '@/assets/pet3.json';
+import Interfaces from '@/assets/openAPI3.0.json';
+import Pet3 from '@/assets/pet3.json';
+
 
 export default {
   components: {
@@ -114,63 +49,68 @@ export default {
   },
   computed: {
     columns() {
-      const getColumnData = (data) => {
-        const dataType = (typeof data);
+      const getPropData = ({ obj, keys }) =>
+        keys.reduce((reducedObj, key) => reducedObj[key], obj);
+      const getPropInterface = ({ interfaces, keys, currentInterfaceKey = 'Root Object', currentKeyIndex = 0 }) => {
+        const currentInterface = interfaces[currentInterfaceKey];
+        const currentKey = keys[currentKeyIndex];
+
+        if (currentKeyIndex < keys.length) {
+          // NOT A DEFINED INTERFACE
+          if (!(currentInterface[currentKey] && currentInterface[currentKey].type)) {
+            // TODO PATHS -> {PATH} regex
+            return {};
+          }
+          const nextInterfaceKey = currentInterface[currentKey].type;
+          console.log(currentInterface[currentKey]);
+          return getPropInterface({
+            interfaces,
+            keys,
+            currentInterfaceKey: nextInterfaceKey,
+            currentKeyIndex: (currentKeyIndex + 1),
+          });
+        }
+
+        return interfaces[currentInterfaceKey];
+      };
+      const getColumnData = ({ propData }) => {
+        const dataType = (typeof propData);
 
         if (dataType === 'object') {
           return {
             type: dataType,
-            propNames: Object.keys(data),
+            propNames: Object.keys(propData),
           };
         }
         return {
           type: dataType,
-          data,
+          data: propData,
         };
       };
-      const getPropData = (obj, keysArr) =>
-        keysArr.reduce((reducedObj, item) => reducedObj[item], obj);
 
       return this.path.map((item, index) => {
-        const pathData = (
+        const { apiData, interfaces, path } = this;
+        const propData = (
           index === 0 ?
           this.apiData :
-          getPropData(this.apiData, this.path.slice(1, (index + 1)))
+          getPropData({ obj: apiData, keys: path.slice(1, (index + 1)) })
         );
-        return getColumnData(pathData);
+        const propInterface = (
+          index === 0 ?
+          interfaces['Root Object'] :
+          getPropInterface({ interfaces, keys: path.slice(1, (index + 1)) })
+        );
+        return {
+          ...getColumnData({ propData, propInterface }),
+        };
       });
     },
   },
   data() {
     return {
-      apiData: pet3,
+      apiData: Pet3,
+      interfaces: Interfaces,
       path: [''],
-      // widgets: [
-      //   {
-      //     isRolled: true,
-      //     title: 'My APIs',
-      //   },
-      //   {
-      //     isRolled: true,
-      //     title: 'My Proxies',
-      //   },
-      //   {
-      //     isRolled: true,
-      //     title: 'Information',
-      //   },
-      //   {
-      //     isRolled: true,
-      //     title: 'Components & Limits',
-      //   },
-      //   {
-      //     isRolled: false,
-      //     title: 'Paths',
-      //   },
-      //   {
-      //     isRolled: true,
-      //     title: 'Editor',
-      //   },
-      // ],
     };
   },
   mounted() {

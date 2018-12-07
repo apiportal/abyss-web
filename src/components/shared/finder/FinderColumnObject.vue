@@ -41,6 +41,16 @@ export default {
       type: Array,
       required: true,
     },
+    isArray: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    isMap: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
   },
   computed: {
     selected() {

@@ -12,8 +12,70 @@
       "type": "External Documentation Object"
     }
   },
+  "OAuth Flow Object": {
+    "authorizationUrl": {
+      "type": "string",
+      "Required": true
+    },
+    "tokenUrl": {
+      "type": "string",
+      "Required": true
+    },
+    "refreshUrl": {
+      "type": "string"
+    },
+    "scopes": {
+      "type": "string",
+      "Required": true,
+      "Map": true
+    }
+  },
+  "OAuth Flows Object": {
+    "implicit": {
+      "type": "OAuth Flow Object"
+    },
+    "password": {
+      "type": "OAuth Flow Object"
+    },
+    "clientCredentials": {
+      "type": "OAuth Flow Object"
+    },
+    "authorizationCode": {
+      "type": "OAuth Flow Object"
+    }
+  },
   "Security Scheme Object": {
-    "notDefinedYet": true
+    "type": {
+      "type": "string",
+      "Required": true,
+      "ValidValues": ["apiKey", "http", "oauth2", "openIdConnect"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "Required": true
+    },
+    "in": {
+      "type": "string",
+      "Required": true,
+      "ValidValues": ["query", "header", "cookie"]
+    },
+    "scheme": {
+      "type": "string",
+      "Required": true
+    },
+    "bearerFormat": {
+      "type": "string"
+    },
+    "flows": {
+      "type": "OAuth Flows Object"
+    },
+    "openIdConnectUrl": {
+      "type": "string",
+      "Required": true
+    }
   },
   "Components Object": {
     "schemas": {
@@ -106,7 +168,8 @@
       "type": "Response Object"
     },
     "{HTTP status code}": {
-      "type": "Response Object"
+      "type": "Response Object",
+      "regex": "{(.*?)}"
     }
   },
   "Header Object":  {
@@ -243,10 +306,12 @@
       "type": "Boolean"
     },
     "security": {
-      "type": "Security Requirement Object"
+      "type": "Security Requirement Object",
+      "Array": true
     },
     "servers": {
-      "type": "Server Object"
+      "type": "Server Object",
+      "Array": true
     }
   },
   "Paths Object": {
@@ -386,10 +451,12 @@
       "type": "Components Object"
     },
     "security": {
-      "type": "Security Requirement Object"
+      "type": "Security Requirement Object",
+      "Array": true
     },
     "tags": {
-      "type": "Tag Object"
+      "type": "Tag Object",
+      "Array": true
     },
     "externalDocs": {
       "type": "External Documentation Object"

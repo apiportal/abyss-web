@@ -15,6 +15,8 @@
               v-if="column.type === 'object' || column.interface"
               :objectProps="column.propNames"
               :objectInterface="column.interface"
+              :isArray="column.isArray"
+              :isMap="column.isMap"
               :columnIndex="columnIndex"
               :onPathChange="handlePathChange"
               :path="path"
@@ -49,16 +51,34 @@ export default {
   },
   computed: {
     columns() {
-      const getPropData = ({ obj, keys }) =>
-        keys.reduce((reducedObj, key) => reducedObj[key], obj);
-      const getPropInterface = ({ interfaces, keys, currentInterfaceKey = 'Root Object', currentKeyIndex = 0 }) => {
+      const getPropData = ({ obj = {}, keys = [] }) =>
+        keys.reduce((reducedObj, key) => (reducedObj[key] ? reducedObj[key] : {}), obj);
+      const getPropInterface = ({
+        interfaces,
+        keys,
+        currentInterfaceKey = 'Root Object',
+        currentKeyIndex = 0,
+        isParentArray = false,
+        isParentMap = false,
+      }) => {
         const currentInterface = interfaces[currentInterfaceKey];
         const currentKey = keys[currentKeyIndex];
 
         if (currentKeyIndex < keys.length) {
+          if (isParentArray || isParentMap) {
+            // ARRAY || MAP -> PASS PROPS TO CHILD KEY
+            return getPropInterface({
+              interfaces,
+              keys,
+              currentInterfaceKey,
+              currentKeyIndex: (currentKeyIndex + 1),
+              isParentArray: false,
+              isParentMap: false,
+            });
+          }
           // NOT A DEFINED INTERFACE
           if (!(currentInterface[currentKey] && currentInterface[currentKey].type)) {
-            // TODO PATHS -> {PATH} regex
+            // CHECK REGEX MATCH
             const currentInterfaceProps = Object.keys(currentInterface);
             const matchedInterfaceProp = currentInterfaceProps.find((item) => {
               if (currentInterface[item].regex) {
@@ -67,12 +87,14 @@ export default {
               return false;
             });
             if (matchedInterfaceProp) {
-              console.log(currentInterface[matchedInterfaceProp].type);
+              // REGEX MATCHED
               return getPropInterface({
                 interfaces,
                 keys,
                 currentInterfaceKey: currentInterface[matchedInterfaceProp].type,
                 currentKeyIndex: (currentKeyIndex + 1),
+                isParentArray: currentInterface[matchedInterfaceProp].Array,
+                isParentMap: currentInterface[matchedInterfaceProp].Map,
               });
             }
             return false;
@@ -83,10 +105,16 @@ export default {
             keys,
             currentInterfaceKey: currentInterface[currentKey].type,
             currentKeyIndex: (currentKeyIndex + 1),
+            isParentArray: currentInterface[currentKey].Array,
+            isParentMap: currentInterface[currentKey].Map,
           });
         }
 
-        return interfaces[currentInterfaceKey];
+        return {
+          interface: ((isParentArray || isParentMap) ? {} : interfaces[currentInterfaceKey]),
+          isArray: isParentArray,
+          isMap: isParentMap,
+        };
       };
       const getColumnData = ({ propData }) => {
         const dataType = (typeof propData);
@@ -112,12 +140,12 @@ export default {
         );
         const propInterface = (
           index === 0 ?
-          interfaces['Root Object'] :
+          { interface: interfaces['Root Object'] } :
           getPropInterface({ interfaces, keys: path.slice(1, (index + 1)) })
         );
         return {
           ...getColumnData({ propData, propInterface }),
-          interface: propInterface,
+          ...propInterface,
         };
       });
     },

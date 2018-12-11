@@ -19,15 +19,20 @@
 <script>
 export default {
   props: {
-    objectProps: {
-      type: Array,
+    data: {
+      type: [Object, Array],
       required: false,
-      default() { return []; },
+      default() { return {}; },
     },
     objectInterface: {
       type: Object,
       required: false,
       default() { return {}; },
+    },
+    interfaceKey: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
     columnIndex: {
       type: Number,
@@ -62,7 +67,8 @@ export default {
       );
     },
     computedProps() {
-      const { objectProps, objectInterface } = this;
+      const { data, objectInterface } = this;
+      const objectProps = Object.keys(data);
       const computedObjectProps = objectProps.map(prop => ({
         name: prop,
         exists: true,

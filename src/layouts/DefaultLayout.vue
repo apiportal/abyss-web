@@ -55,6 +55,21 @@ html {
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+}
+
+:hover::-webkit-scrollbar-thumb {
+  background-color: #bdbdbd;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #ddd;
+}
+
 .app-flex {
   position: absolute;
   top: 0;

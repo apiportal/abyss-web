@@ -173,7 +173,16 @@
     }
   },
   "Header Object":  {
-    "notDefinedYet": true
+    "description": {
+      "type": "string",
+      "Markdown": true
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "deprecated": {
+      "type": "boolean"
+    }
   },
   "Encoding Object": {
     "contentType": {
@@ -303,7 +312,7 @@
       "Map": true
     },
     "deprecated": {
-      "type": "Boolean"
+      "type": "boolean"
     },
     "security": {
       "type": "Security Requirement Object",
@@ -387,7 +396,7 @@
       "Map": true
     }
   },
-  "Licence Object": {
+  "License Object": {
     "name": {
       "type": "string",
       "Required": true
@@ -422,11 +431,11 @@
     "contact": {
       "type": "Contact Object"
     },
-    "licence": {
-      "type": "Licence Object"
+    "license": {
+      "type": "License Object"
     },
     "version": {
-      "type": "String",
+      "type": "string",
       "Required": true
     }
   },

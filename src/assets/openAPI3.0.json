@@ -169,7 +169,7 @@
     },
     "{HTTP status code}": {
       "type": "Response Object",
-      "regex": "{(.*?)}"
+      "regex": "(.*?)"
     }
   },
   "Header Object":  {
@@ -214,8 +214,57 @@
       "Markdown": true
     }
   },
+  "Discriminator Object": {
+    "propertyName": {
+      "type": "string"
+    },
+    "mapping": {
+      "type": "string",
+      "Map": true
+    }
+  },
+  "XML Object": {
+    "name": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "prefix": {
+      "type": "string"
+    },
+    "attribute": {
+      "type": "boolean"
+    },
+    "wrapped": {
+      "type": "boolean"
+    }
+  },
   "Schema Object":  {
-    "notDefinedYet": true
+    "nullable": {
+      "type": "boolean"
+    },
+    "discriminator": {
+      "type": "Discriminator Object"
+    },
+    "readOnly": {
+      "type": "boolean"
+    },
+    "writeOnly": {
+      "type": "boolean"
+    },
+    "xml": {
+      "type": "XML Object"
+    },
+    "externalDocs": {
+      "type": "External Documentation Object"
+    },
+    "example": {
+      "type": "Any"
+    },
+    "deprecated": {
+      "type": "boolean"
+    }
   },
   "Media Type Object": {
     "schema": {
@@ -305,7 +354,8 @@
     },
     "responses": {
       "type": "Responses Object",
-      "Required": true
+      "Required": true,
+      "MapWithRegex": true
     },
     "callbacks": {
       "type": "Callback Object",
@@ -326,7 +376,7 @@
   "Paths Object": {
     "{path}": {
       "type": "Path Item Object",
-      "regex": "{(.*?)}"
+      "regex": "(.*?)"
     }
   },
   "Path Item Object": {
@@ -454,7 +504,8 @@
     },
     "paths": {
       "type": "Paths Object",
-      "Required": true
+      "Required": true,
+      "MapWithRegex": true
     },
     "components": {
       "type": "Components Object"

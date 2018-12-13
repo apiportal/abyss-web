@@ -10,7 +10,7 @@ import monokai from 'brace/theme/monokai'; // eslint-disable-line no-unused-vars
 export default {
   props: {
     value: {
-      type: String,
+      type: Object,
       required: true,
     },
     lang: {

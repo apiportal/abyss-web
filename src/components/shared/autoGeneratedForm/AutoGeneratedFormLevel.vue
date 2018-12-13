@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div style="position: relative" v-if="levelTitle">
+    <div style="position: relative" v-if="levelTitle" @mouseover.once="handleMouseOver">
       <b-link class="collapse-button" @click="handleCollapse" v-if="isCollapsible">
         <Icon :icon="isCollapsed ? 'minus-square' : 'plus-square'" />
       </b-link>
-      <legend>{{ levelTitle }}</legend>
+      <legend :class="`form-level-legend-${level}`">{{ levelTitle }}</legend>
     </div>
     <div v-if="!isCollapsible || (isCollapsible && isCollapsed)">
       <div class="form-level">
@@ -17,8 +17,10 @@
               :isMap="false"
               :isCollapsible="(interfaceKey !== 'string')"
               :levelData="(interfaceKey !== 'string') ? levelData[levelDataItemKey] : { string: levelData[levelDataItemKey]}"
+              :levelPath="[...levelPath, levelDataItemKey]"
               :levelTitle="levelDataItemKey"
               :level="(level + 1)"
+              :setPath="setPath"
             />
           </div>
         </div>
@@ -32,7 +34,7 @@
                 ) && !isElementArray(formElement)
               "
             >
-              <div v-if="isElementMarkdown(formElement)">
+              <div v-if="isElementMarkdown(formElement)" @mouseover.once="() => handleMouseOver({ key: formElement })">
                 <b-form-group
                   :label="`${formElement}${isElementRequired(formElement) ? '*' : ''}:`"
                 >
@@ -45,7 +47,7 @@
                   </b-form-textarea>
                 </b-form-group>
               </div>
-              <div v-else>
+              <div v-else @mouseover.once="() => handleMouseOver({ key: formElement })">
                 <b-form-group
                   :label="`${formElement}${isElementRequired(formElement) ? '*' : ''}:`"
                 >
@@ -85,8 +87,10 @@
                 :isMapWithRegex="isElementMapWithRegex(formElement)"
                 :isCollapsible="true"
                 :levelData="levelData[formElement]"
+                :levelPath="[...levelPath, formElement]"
                 :levelTitle="formElement"
                 :level="(level + 1)"
+                :setPath="setPath"
               />
             </div>
           </div>
@@ -117,6 +121,11 @@ export default {
       required: false,
       default() { return {}; },
     },
+    levelPath: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     levelTitle: {
       type: String,
       required: false,
@@ -144,6 +153,10 @@ export default {
       type: Boolean,
       required: false,
       default() { return false; },
+    },
+    setPath: {
+      type: Function,
+      required: true,
     },
   },
   components: {
@@ -176,6 +189,15 @@ export default {
   methods: {
     handleCollapse() {
       this.isCollapsed = !this.isCollapsed;
+    },
+    handleMouseOver({ key = null }) {
+      if (this.levelPath.length > 1) {
+        if (key === null) {
+          this.setPath(this.levelPath);
+        } else {
+          this.setPath([...this.levelPath, key]);
+        }
+      }
     },
     getRegexInterfaceKey(propName) {
       const { interfaceKey, interfaces } = this;
@@ -254,13 +276,15 @@ legend {
   position: relative;
   font-size: 1em;
 
-  &::after {
-    content: " ";
-    position: absolute;
-    top: 10px;
-    left: -1em;
-    border-top: 5px solid #00adee;
-    width: .9em;
+  &:not(.form-level-legend-0) {
+    &::after {
+      content: " ";
+      position: absolute;
+      top: 10px;
+      left: -1em;
+      border-top: 5px solid #00adee;
+      width: .9em;
+    }
   }
 }
 </style>

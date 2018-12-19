@@ -6,10 +6,11 @@
     :no-close-on-backdrop="noCloseOnBackdrop"
     :no-close-on-esc="noCloseOnEsc"
     :hide-header-close="hideHeaderClose"
+    :body-class="bodyClass"
     v-model="isModalVisible"
     @hide="handleClose"
   >
-    <div slot="modal-header" class="w-100">
+    <div slot="modal-header">
       <header>
         <slot name="header"></slot>
       </header>
@@ -30,6 +31,11 @@
 <script>
 export default {
   props: {
+    bodyClass: {
+      type: [Array, String],
+      required: false,
+      default() { return ''; },
+    },
     hideHeader: {
       type: Boolean,
       required: true,

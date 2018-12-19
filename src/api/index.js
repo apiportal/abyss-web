@@ -1,10 +1,5 @@
 import axios from 'axios';
 
-// const verapi = axios.create(
-//   {
-//     baseURL: 'https://dev2.apiportal.com/abyss',
-//   },
-// );
 axios.defaults.baseURL = 'https://dev2.apiportal.com/abyss';
 axios.defaults.headers.common.Accept = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -16,5 +11,15 @@ axios.defaults.responseType = 'json';
 export default {
   getSubjectDirectories() {
     return axios.get('/oapi/subject-directories');
+  },
+  putSubjectDirectories(subjectDirectory) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectDirectory;
+    return axios.put(`/oapi/subject-directories/${uuid}`, rest);
+  },
+  getSubjectDirectoryTypes() {
+    return axios.get('/oapi/subject-directory-types');
+  },
+  getOrganizations() {
+    return axios.get('/oapi/organizations');
   },
 };

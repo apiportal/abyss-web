@@ -17,11 +17,23 @@ const actions = {
       commit('setSubjectDirectories', response.data);
     });
   },
+  putSubjectDirectories: ({ commit }, subjectDirectory) => {
+    api.putSubjectDirectories(subjectDirectory).then((response) => {
+      commit('updateSubjectDirectories', response.data);
+    });
+  },
 };
 
 const mutations = {
   setSubjectDirectories: (state, subjectDirectories) => {
     state.items = subjectDirectories;
+  },
+  updateSubjectDirectories: (state, subjectDirectories) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = subjectDirectories
+        .find(subjectDirectory => subjectDirectory.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
   },
 };
 

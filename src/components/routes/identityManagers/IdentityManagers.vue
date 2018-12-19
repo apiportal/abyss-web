@@ -3,9 +3,6 @@
     <table class="table">
       <tr v-for="(item, index) in subjectDirectories" v-bind:key="index">
         <td>
-          {{ item.uuid }}
-        </td>
-        <td>
           {{ item.directoryname }}
         </td>
         <td>
@@ -34,9 +31,11 @@ export default {
   },
   created() {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
+    this.$store.dispatch('organizations/getOrganizations');
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=c122499d77c62a30a5531f0d68c24f06';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=cd0b6012c3d442d53b683d287429f0f3';
   },
 };
 </script>

@@ -18,12 +18,15 @@ import {
   faFilter,
   faPlusSquare,
   faMinusSquare,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vue from 'vue';
+import Vuex from 'vuex';
 import BootstrapVue from 'bootstrap-vue';
 import App from './App';
 import router from './router';
+import store from './store';
 
 library.add(
   faTachometerAlt,
@@ -40,8 +43,10 @@ library.add(
   faFilter,
   faPlusSquare,
   faMinusSquare,
+  faEdit,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.use(Vuex);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 
@@ -49,6 +54,7 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App },
 });

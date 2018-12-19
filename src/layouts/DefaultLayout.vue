@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import AppHeader from '@/components/shared/AppHeader';
 import AppSidenav from '@/components/shared/AppSidenav';
 import LoadingModal from '@/components/shared/modals/LoadingModal';
@@ -27,13 +28,15 @@ export default {
     AppSidenav,
     LoadingModal,
   },
-  data() {
-    return {
-      isLoadingModalVisible: true,
-    };
-  },
-  mounted() {
-    setTimeout(() => { this.isLoadingModalVisible = false; }, 1000);
+  computed: {
+    ...mapState({
+      requestsCount: state => state.traffic.requestsCount,
+      responsesCount: state => state.traffic.responsesCount,
+    }),
+    isLoadingModalVisible() {
+      const { requestsCount, responsesCount } = this;
+      return requestsCount !== responsesCount;
+    },
   },
 };
 </script>

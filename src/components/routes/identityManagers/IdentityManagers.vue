@@ -35,7 +35,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=cd0b6012c3d442d53b683d287429f0f3';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=d1ca7288dd69a3d61b2580576ff1b8da';
   },
 };
 </script>

@@ -1,6 +1,11 @@
 <template>
   <div>
     <EditIdentityManagerModal
+      v-if="
+        isSubjectDirectoriesLoaded &&
+        isSubjectDirectoryTypesLoaded &&
+        isOrganizationsLoaded
+      "
       :onClose="handleEditIdentityManagerModalClose"
       :onUpdate="handleEditIdentityManagerModalUpdate"
       :subjectDirectory="subjectDirectories.find(item => item.uuid === subjectDirectoryId)"
@@ -31,6 +36,9 @@ export default {
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
+      isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
+      isSubjectDirectoryTypesLoaded: state => state.subjectDirectoryTypes.lastUpdatedAt,
+      isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
     }),
   },
   data() {

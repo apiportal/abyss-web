@@ -11,19 +11,15 @@
     @hide="handleClose"
   >
     <div slot="modal-header">
-      <header>
-        <slot name="header"></slot>
-      </header>
+      <slot name="header"></slot>
     </div>
     <div>
       <main>
         <slot></slot>
       </main>
     </div>
-    <div slot="modal-footer" class="w-100">
-      <footer>
-        <slot name="footer"></slot>
-      </footer>
+    <div class="w-100">
+      <slot slot="modal-footer" name="footer"></slot>
     </div>
   </b-modal>
 </template>

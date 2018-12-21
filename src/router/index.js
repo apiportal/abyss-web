@@ -6,6 +6,7 @@ import MyApis from '@/components/routes/myApis/MyApis';
 import Api from '@/components/routes/myApis/api/Api';
 import IdentityManagers from '@/components/routes/identityManagers/IdentityManagers';
 import EditIdentityManager from '@/components/routes/identityManagers/EditIdentityManager';
+import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
 
 Vue.use(Router);
 
@@ -36,6 +37,10 @@ export default new Router({
             {
               path: 'edit/:id',
               component: EditIdentityManager,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteIdentityManager,
             },
           ],
         },

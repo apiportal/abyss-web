@@ -18,12 +18,18 @@
           <th>
             Organization
           </th>
+          <th>
+            &nbsp;
+          </th>
+          <th>
+            &nbsp;
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in tableRows" v-bind:key="index">
           <td>
-            {{ item.isactive }}
+            <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" />
           </td>
           <td>
             {{ item.directoryname }}
@@ -38,8 +44,25 @@
             {{ item.organizationname }}
           </td>
           <td>
-            <b-button :to="`/app/identity-managers/edit/${item.uuid}`" size="sm">
+            <b-button
+              :to="`/app/identity-managers/edit/${item.uuid}`"
+              size="sm"
+              variant="secondary"
+              v-b-tooltip.hover
+              title="Edit"
+            >
               <Icon icon="edit" />
+            </b-button>
+          </td>
+          <td>
+            <b-button
+              :to="`/app/identity-managers/delete/${item.uuid}`"
+              size="sm"
+              variant="danger"
+              v-b-tooltip.hover
+              title="Delete"              
+            >
+              <Icon icon="trash-alt" />
             </b-button>
           </td>
         </tr>
@@ -86,7 +109,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=25c22ff4a8f4949660eb57d9e44e2302';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=b97c9b1861070b8360f61ae0f30105dd';
   },
   methods: {
   },

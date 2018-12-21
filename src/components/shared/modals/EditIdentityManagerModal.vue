@@ -83,7 +83,7 @@
           </b-form-group>
           <b-form-group 
             id="directoryOrganizationIdGroup"
-            label="Organization Id:"
+            label="Organization:"
             label-for="directoryOrganizationIdInput"
           >
             <b-form-select
@@ -95,20 +95,194 @@
               }))"
             />
           </b-form-group>
-          <b-form-group 
-            id="directoryTypeGroup"
-            label="Directory Type:"
-            label-for="directoryTypeInput"
+          <div class="row">
+            <div class="col-12">
+              <label for="directoryTypeInput">Directory Type:</label>
+            </div>
+            <div class="col-10">
+              <b-form-group 
+                id="directoryTypeGroup"
+              >
+                <b-form-select
+                  id="directoryTypeInput"
+                  v-model="subjectDirectoryEditable.directorytypeid" 
+                  :options="subjectDirectoryTypes.map(subjectDirectoryType => ({
+                    value: subjectDirectoryType.uuid,
+                    text: subjectDirectoryType.typename,
+                  }))"
+                />
+              </b-form-group>
+            </div>
+            <div class="col-2">
+              <b-button
+                variant="primary"
+                block
+                v-b-tooltip.hover
+                title="Configure Directory"
+                @click="toggleConfigureDirectory"
+              >
+                <Icon icon="cog" />
+              </b-button>
+            </div>
+          </div>
+          <div 
+            :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
-            <b-form-select
-              id="directoryTypeInput"
-              v-model="subjectDirectoryEditable.directorytypeid" 
-              :options="subjectDirectoryTypes.map(subjectDirectoryType => ({
-                value: subjectDirectoryType.uuid,
-                text: subjectDirectoryType.typename,
-              }))"
-            />
-          </b-form-group>
+            <h6>Configure Directory</h6>
+            <b-form-group 
+              id="directoryLdapUrlGroup"
+              label="Ldap Connection Url - Host and Port:"
+              label-for="directoryLdapUrlInput"
+            >
+              <b-form-input
+                id="directoryLdapUrlInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.url']"
+                placeholder="Ldap Connection Url - Host and Port"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapBaseDnGroup"
+              label="Base DN:"
+              label-for="directoryLdapBaseDnInput"
+            >
+              <b-form-input
+                id="directoryLdapBaseDnInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.basedn']"
+                placeholder="Base DN"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group id="directoryLdapSecureGroup">
+              <b-form-checkbox
+                id="directoryLdapSecureCheck"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.secure']"
+                :value="true"
+                :unchecked-value="false"
+              >
+                Use SSL
+              </b-form-checkbox>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserDnGroup"
+              label="Ldap User DN:"
+              label-for="directoryLdapUserDnInput"
+            >
+              <b-form-input
+                id="directoryLdapUserDnInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.userdn']"
+                placeholder="Ldap User DN"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapPasswordGroup"
+              label="Ldap Password:"
+              label-for="directoryLdapPasswordInput"
+            >
+              <b-form-input
+                id="directoryLdapPasswordInput"
+                type="password"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.password']"
+                placeholder="Ldap Password"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserFilterGroup"
+              label="User Object Filter:"
+              label-for="directoryLdapUserFilterInput"
+            >
+              <b-form-input
+                id="directoryLdapUserObjectFilterInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.filter']"
+                placeholder="User Object Filter"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapReadTimeoutGroup"
+              label="LDAP Read Timeout:"
+              label-for="directoryLdapReadTimeoutInput"
+            >
+              <b-form-input
+                id="directoryLdapReadTimeoutInput"
+                type="number"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.read.timeout']"
+                placeholder="LDAP Read Timeout"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserNameGroup"
+              label="User Name Field Name:"
+              label-for="directoryLdapUserNameInput"
+            >
+              <b-form-input
+                id="directoryLdapUserNameInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.username']"
+                placeholder="User Name Field Name"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserFirstNameGroup"
+              label="User First Name Field Name:"
+              label-for="directoryLdapUserFirstNameInput"
+            >
+              <b-form-input
+                id="directoryLdapUserFirstNameInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.firstname']"
+                placeholder="User First Name Field Name"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserLastNameGroup"
+              label="User Last Name Field Name:"
+              label-for="directoryLdapUserLastNameInput"
+            >
+              <b-form-input
+                id="directoryLdapUserLastNameInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.lastname']"
+                placeholder="User Last Name Field Name"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserPasswordGroup"
+              label="User Password Field Name:"
+              label-for="directoryLdapUserPasswordInput"
+            >
+              <b-form-input
+                id="directoryLdapUserPasswordInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.password']"
+                placeholder="User Password Field Name"
+              >
+              </b-form-input>
+            </b-form-group>
+            <b-form-group 
+              id="directoryLdapUserObjectClassGroup"
+              label="User Object Class:"
+              label-for="directoryLdapUserObjectClassInput"
+            >
+              <b-form-input
+                id="directoryLdapUserObjectClassInput"
+                type="text"
+                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.objectclass']"
+                placeholder="User Object Class"
+              >
+              </b-form-input>
+            </b-form-group>
+          </div>
         </div>
         <footer class="modal-footer">
           <b-button
@@ -118,7 +292,7 @@
             Cancel
           </b-button>
           <b-button
-            variant="primary"
+            variant="success"
             type="submit"
           >
             Save
@@ -132,10 +306,12 @@
 <script>
 import { mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
+import Icon from '@/components/shared/Icon';
 
 export default {
   components: {
     Modal,
+    Icon,
   },
   props: {
     hideHeader: {
@@ -194,6 +370,7 @@ export default {
   data() {
     return {
       subjectDirectoryEditable: JSON.parse(JSON.stringify(this.subjectDirectory)),
+      isConfigureDirectoryVisible: false,
     };
   },
   methods: {
@@ -203,6 +380,9 @@ export default {
       this.putSubjectDirectories(this.subjectDirectoryEditable);
       this.onUpdate();
     },
+    toggleConfigureDirectory() {
+      this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;
+    },
   },
 };
 </script>
@@ -211,6 +391,28 @@ export default {
 .modal-body {
   &.edit-identity-manager {
     padding: 0;
+  }
+}
+
+.configure-directory {
+  border: 1px solid #e9ecef;
+  border-radius: .3rem;
+  padding: 1rem;
+  position: relative;
+
+  &:before {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(233, 236, 239, 0);
+    border-bottom-color: #e9ecef;
+    border-width: 11px;
+    margin-left: -11px;
   }
 }
 </style>

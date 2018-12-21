@@ -16,6 +16,9 @@ export default {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectDirectory;
     return axios.put(`/oapi/subject-directories/${uuid}`, rest);
   },
+  deleteSubjectDirectories(uuid) {
+    return axios.delete(`/oapi/subject-directories/${uuid}`);
+  },
   getSubjectDirectoryTypes() {
     return axios.get('/oapi/subject-directory-types');
   },

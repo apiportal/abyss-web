@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  lastUpdatedAt: 0,
 };
 
 const getters = {};
@@ -18,6 +19,7 @@ const actions = {
 const mutations = {
   setSubjectDirectoryTypes: (state, subjectDirectoryTypes) => {
     state.items = subjectDirectoryTypes;
+    state.lastUpdatedAt = (new Date()).getTime();
   },
 };
 

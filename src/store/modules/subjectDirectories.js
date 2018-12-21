@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  lastUpdatedAt: 0,
 };
 
 const getters = {
@@ -27,6 +28,7 @@ const actions = {
 const mutations = {
   setSubjectDirectories: (state, subjectDirectories) => {
     state.items = subjectDirectories;
+    state.lastUpdatedAt = (new Date()).getTime();
   },
   updateSubjectDirectories: (state, subjectDirectories) => {
     state.items = state.items.map((item) => {
@@ -34,6 +36,7 @@ const mutations = {
         .find(subjectDirectory => subjectDirectory.uuid === item.uuid);
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
+    state.lastUpdatedAt = (new Date()).getTime();
   },
 };
 

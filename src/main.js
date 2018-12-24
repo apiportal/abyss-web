@@ -23,6 +23,11 @@ import {
   faCheckCircle,
   faTimesCircle,
   faCog,
+  faSort,
+  faSortUp,
+  faSortDown,
+  faCaretUp,
+  faCaretDown,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vue from 'vue';
@@ -52,6 +57,11 @@ library.add(
   faCheckCircle,
   faTimesCircle,
   faCog,
+  faSort,
+  faSortUp,
+  faSortDown,
+  faCaretUp,
+  faCaretDown,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

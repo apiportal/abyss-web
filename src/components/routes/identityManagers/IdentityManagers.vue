@@ -11,6 +11,13 @@
           </th>
           <th>
             Priority Order
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              sortByKey="directorypriorityorder"
+              sortByKeyType="string"
+            />
           </th>
           <th>
             Directory Type
@@ -60,7 +67,7 @@
               size="sm"
               variant="danger"
               v-b-tooltip.hover
-              title="Delete"              
+              title="Delete"
             >
               <Icon icon="trash-alt" />
             </b-button>
@@ -75,10 +82,13 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import SortBy from '@/components/shared/SortBy';
+import Helpers from '@/helpers';
 
 export default {
   components: {
     Icon,
+    SortBy,
   },
   computed: {
     ...mapState({
@@ -96,11 +106,17 @@ export default {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
-      return subjectDirectories.map(item => ({
-        ...item,
-        directorytypename: getDirectoryTypeName(item.directorytypeid),
-        organizationname: getOrganizationName(item.organizationid),
-      }));
+      const { sortByKey, sortByKeyType, sortDirection } = this;
+      return Helpers.sortArrayOfObjects({
+        array: subjectDirectories.map(item => ({
+          ...item,
+          directorytypename: getDirectoryTypeName(item.directorytypeid),
+          organizationname: getOrganizationName(item.organizationid),
+        })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
     },
   },
   created() {
@@ -109,9 +125,19 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=b97c9b1861070b8360f61ae0f30105dd';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.name=Abyss; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.session=27a0723dca2ee8a80b49160875761198';
+  },
+  data() {
+    return {
+      sortByKey: 'directorypriorityorder',
+      sortByKeyType: 'number',
+      sortDirection: 'desc',
+    };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      console.log(sortByKey, sortByKeyType, sortDirection);
+    },
   },
 };
 </script>

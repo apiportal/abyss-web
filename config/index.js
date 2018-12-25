@@ -27,6 +27,7 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    disableHostCheck: true,
     historyApiFallback: true,
     proxyTable: {},
     // CSS Sourcemaps off by default because relative paths are "buggy"

@@ -195,7 +195,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=6358dfa0095382a0cddf74fdf3364418';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=7afa16aca743d33e5938854819554044';
   },
   data() {
     return {
@@ -226,6 +226,7 @@ export default {
   flex-direction: column;
 
   .identity-managers-header {
+    border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }

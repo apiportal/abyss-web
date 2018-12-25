@@ -6,6 +6,7 @@ import MyApis from '@/components/routes/myApis/MyApis';
 import Api from '@/components/routes/myApis/api/Api';
 import Home from '@/components/routes/home/Home';
 import IdentityManagers from '@/components/routes/identityManagers/IdentityManagers';
+import AddIdentityManager from '@/components/routes/identityManagers/AddIdentityManager';
 import EditIdentityManager from '@/components/routes/identityManagers/EditIdentityManager';
 import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
 
@@ -39,6 +40,10 @@ export default new Router({
           path: 'identity-managers/:page',
           component: IdentityManagers,
           children: [
+            {
+              path: 'add-new',
+              component: AddIdentityManager,
+            },
             {
               path: 'edit/:id',
               component: EditIdentityManager,

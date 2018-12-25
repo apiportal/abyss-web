@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit Identity Manager
+        {{ role === 'edit' ? 'Edit Identity Manager' : 'Add New Identity Manager' }}
       </h5>
     </template>
     <template>
@@ -128,6 +128,7 @@
             </div>
           </div>
           <div 
+            v-if="subjectDirectoryEditable.directorytypeid"
             :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Directory</h6>
@@ -367,6 +368,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    role: {
+      type: String,
+      required: false,
+      default() { return 'edit'; },
     },
   },
   data() {

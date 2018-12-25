@@ -2,14 +2,13 @@
   <div>
     <EditIdentityManagerModal
       v-if="
-        isSubjectDirectoriesLoaded &&
         isSubjectDirectoryTypesLoaded &&
         isOrganizationsLoaded
       "
-      role="edit"
+      role="add"
       :onClose="handleEditIdentityManagerModalClose"
       :onUpdate="handleEditIdentityManagerModalUpdate"
-      :subjectDirectory="subjectDirectories.find(item => item.uuid === subjectDirectoryId)"
+      :subjectDirectory="subjectDirectory"
       :subjectDirectoryTypes="subjectDirectoryTypes"
       :organizations="organizations"
     />
@@ -34,17 +33,15 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
-      isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
       isSubjectDirectoryTypesLoaded: state => state.subjectDirectoryTypes.lastUpdatedAt,
       isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
     }),
   },
   data() {
     return {
-      subjectDirectoryId: this.$route.params.id,
+      subjectDirectory: {},
       page: this.$route.params.page,
     };
   },

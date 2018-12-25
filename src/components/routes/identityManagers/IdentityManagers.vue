@@ -11,6 +11,7 @@
         </div>
         <div class="col-md-2">
           <b-button
+            :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
             block
           >
@@ -66,55 +67,55 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              &nbsp;
-            </th>
-            <th>
-              &nbsp;
-            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="(item, index) in tableRows" v-bind:key="index">
-            <td>
+        <TbodyCollapsible
+          v-for="(item, index) in tableRows" v-bind:key="index"
+          :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+        >
+          <tr slot="main">
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" />
             </td>
-            <td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directoryname }}
             </td>
-            <td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directorypriorityorder }}
             </td>
-            <td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directorytypename }}
             </td>
-            <td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
-            <td>
-              <b-button
-                :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
-                size="sm"
-                variant="secondary"
-                v-b-tooltip.hover
-                title="Edit"
-              >
-                <Icon icon="edit" />
-              </b-button>
-            </td>
-            <td>
-              <b-button
-                :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
-                size="sm"
-                variant="danger"
-                v-b-tooltip.hover
-                title="Delete"
-              >
-                <Icon icon="trash-alt" />
-              </b-button>
+          </tr>
+          <tr slot="footer">
+            <td colspan="5">
+              {{ item }}
+              <div>
+                <b-button
+                  :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
+                  size="sm"
+                  variant="secondary"
+                  v-b-tooltip.hover
+                  title="Edit"
+                >
+                  <Icon icon="edit" />
+                </b-button>
+                <b-button
+                  :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
+                  size="sm"
+                  variant="danger"
+                  v-b-tooltip.hover
+                  title="Delete"
+                >
+                  <Icon icon="trash-alt" />
+                </b-button>
+              </div>
             </td>
           </tr>
-        </tbody>
+        </TbodyCollapsible>
       </table>
       <router-view></router-view>
     </div>
@@ -125,6 +126,7 @@
         v-model="page" 
         :per-page="10"
         align="center"
+        @change="handlePageChange"
       >
       </b-pagination>
     </div>
@@ -136,6 +138,7 @@ import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
+import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Helpers from '@/helpers';
 
 export default {
@@ -143,6 +146,7 @@ export default {
     InputWithIcon,
     Icon,
     SortBy,
+    TbodyCollapsible,
   },
   computed: {
     ...mapState({
@@ -204,6 +208,7 @@ export default {
       sortByKeyType: 'number',
       sortDirection: 'desc',
       filterKey: '',
+      collapsedRows: [],
     };
   },
   methods: {
@@ -214,6 +219,17 @@ export default {
     },
     handleFilterKeyup({ value }) {
       this.filterKey = value;
+    },
+    handlePageChange(page) {
+      this.$router.push(`/app/identity-managers/${page}`);
+    },
+    handleCollapseTableRows(itemId) {
+      const rowIndex = this.collapsedRows.indexOf(itemId);
+      if (rowIndex === -1) {
+        this.collapsedRows.push(itemId);
+      } else {
+        this.collapsedRows.splice(rowIndex, 1);
+      }
     },
   },
 };
@@ -237,7 +253,7 @@ export default {
     padding: 1rem;
 
     ul {
-      margin: 0 auto;
+      margin: 0;
     }
   }
 

@@ -25,10 +25,10 @@ export default {
   },
   methods: {
     handleEditIdentityManagerModalClose() {
-      this.$router.push('/app/identity-managers/');
+      this.$router.push(`/app/identity-managers/${this.page}`);
     },
     handleEditIdentityManagerModalUpdate() {
-      this.$router.push('/app/identity-managers/');
+      this.$router.push(`/app/identity-managers/${this.page}`);
     },
   },
   computed: {
@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       subjectDirectoryId: this.$route.params.id,
+      page: this.$route.params.page,
     };
   },
 };

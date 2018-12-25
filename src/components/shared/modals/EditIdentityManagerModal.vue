@@ -110,6 +110,7 @@
                     value: subjectDirectoryType.uuid,
                     text: subjectDirectoryType.typename,
                   }))"
+                  @change="handleDirectoryTypeChange"
                 />
               </b-form-group>
             </div>
@@ -120,6 +121,7 @@
                 v-b-tooltip.hover
                 title="Configure Directory"
                 @click="toggleConfigureDirectory"
+                :disabled="!subjectDirectoryEditable.directorytypeid"
               >
                 <Icon icon="cog" />
               </b-button>
@@ -377,11 +379,17 @@ export default {
     ...mapActions('subjectDirectories', ['putSubjectDirectories']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putSubjectDirectories(this.subjectDirectoryEditable);
+      this.putSubjectDirectories({
+        ...this.subjectDirectoryEditable,
+        directorypriorityorder: parseInt(this.subjectDirectoryEditable.directorypriorityorder, 10),
+      });
       this.onUpdate();
     },
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;
+    },
+    handleDirectoryTypeChange() {
+      this.isConfigureDirectoryVisible = true;
     },
   },
 };

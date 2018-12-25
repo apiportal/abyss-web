@@ -20,10 +20,10 @@ export default {
   },
   methods: {
     handleDeleteIdentityManagerModalClose() {
-      this.$router.push('/app/identity-managers/');
+      this.$router.push(`/app/identity-managers/${this.page}`);
     },
     handleDeleteIdentityManagerModalConfirm() {
-      this.$router.push('/app/identity-managers/');
+      this.$router.push(`/app/identity-managers/${this.page}`);
     },
   },
   computed: {
@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       subjectDirectoryId: this.$route.params.id,
+      page: this.$route.params.page,
     };
   },
 };

@@ -1,6 +1,9 @@
 <template>
-  <b-link @click="handleClick">
-    <Icon :icon="`${'caret-up'}`" />
+  <b-link 
+    @click="() => onClick({ sortByKey, sortByKeyType, sortDirection: selectedSortDirection })"
+    :class="`${ sortByKey === selectedSortByKey ? 'active' : 'inactive'}`"
+  >
+    <Icon :icon="`${ selectedSortDirection === 'desc' ? 'caret-up' : 'caret-down'}`" />
   </b-link>
 </template>
 
@@ -33,8 +36,11 @@ export default {
       required: true,
     },
   },
-  methods: {
-    handleClick() {},
-  },
 };
 </script>
+
+<style lang="scss" scoped>
+.inactive {
+  color: silver;
+}
+</style>

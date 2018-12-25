@@ -31,7 +31,7 @@ export default new Router({
           ],
         },
         {
-          path: 'identity-managers',
+          path: 'identity-managers/:page',
           component: IdentityManagers,
           children: [
             {

@@ -9,6 +9,7 @@ axios.defaults.timeout = 10000;
 axios.defaults.responseType = 'json';
 
 export default {
+  // subject-directories
   getSubjectDirectories() {
     return axios.get('/oapi/subject-directories');
   },
@@ -19,10 +20,16 @@ export default {
   deleteSubjectDirectories(uuid) {
     return axios.delete(`/oapi/subject-directories/${uuid}`);
   },
+  // subject-directory-types
   getSubjectDirectoryTypes() {
     return axios.get('/oapi/subject-directory-types');
   },
+  // organizations
   getOrganizations() {
     return axios.get('/oapi/organizations');
+  },
+  // users
+  getUsers() {
+    return axios.get('/oapi/subjects/users/');
   },
 };

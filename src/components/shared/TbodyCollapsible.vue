@@ -25,6 +25,19 @@ export default {
         cursor: pointer;
       }
     }
+
+    &.footer {
+      td {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+
+  .collapsible-content {
+    border: 1px solid #e7eaf3;
+    border-radius: .25em;
+    padding: 1rem;
   }
 }
 </style>

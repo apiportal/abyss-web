@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import Dashboard from '@/components/routes/dashboard/Dashboard';
+// My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Api from '@/components/routes/myApis/api/Api';
+// Dashboard Routes Components
+import Dashboard from '@/components/routes/dashboard/Dashboard';
+// Home Routes Components
 import Home from '@/components/routes/home/Home';
+// Identity Managers Routes Components
 import IdentityManagers from '@/components/routes/identityManagers/IdentityManagers';
 import AddIdentityManager from '@/components/routes/identityManagers/AddIdentityManager';
 import EditIdentityManager from '@/components/routes/identityManagers/EditIdentityManager';
 import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
+// Administer Users Routes Components
+import AdministerUsers from '@/components/routes/administerUsers/AdministerUsers';
 
 Vue.use(Router);
 
@@ -53,6 +59,11 @@ export default new Router({
               component: DeleteIdentityManager,
             },
           ],
+        },
+        {
+          path: 'administer-users/:page',
+          component: AdministerUsers,
+          children: [],
         },
       ],
     },

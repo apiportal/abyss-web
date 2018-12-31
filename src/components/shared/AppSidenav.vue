@@ -51,6 +51,16 @@ export default {
           name: 'Explore',
           to: '/app/explore',
         },
+        {
+          icon: 'users',
+          name: 'Identity Managers',
+          to: '/app/identity-managers/1',
+        },
+        {
+          icon: 'users',
+          name: 'Administer Users',
+          to: '/app/administer-users/1',
+        },
       ],
     };
   },

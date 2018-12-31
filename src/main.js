@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@/assets/scss/main.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faSpinner,
@@ -28,6 +29,7 @@ import {
   faSortDown,
   faCaretUp,
   faCaretDown,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vue from 'vue';
@@ -62,6 +64,7 @@ library.add(
   faSortDown,
   faCaretUp,
   faCaretDown,
+  faUsers,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

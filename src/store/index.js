@@ -5,6 +5,7 @@ import traffic from '@/store/modules/traffic';
 import subjectDirectories from '@/store/modules/subjectDirectories';
 import subjectDirectoryTypes from '@/store/modules/subjectDirectoryTypes';
 import organizations from '@/store/modules/organizations';
+import users from '@/store/modules/users';
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     subjectDirectories,
     subjectDirectoryTypes,
     organizations,
+    users,
   },
   debug: true,
 });

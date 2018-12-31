@@ -25,32 +25,42 @@
         <thead>
           <tr>
             <th>
-              Name
+              First Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directoryname"
+                sortByKey="firstname"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Priority Order
+              Last Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directorypriorityorder"
-                sortByKeyType="number"
+                sortByKey="lastname"
+                sortByKeyType="string"
               />
             </th>
             <th>
-              Directory Type
+              Display Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directorytypename"
+                sortByKey="displayname"
+                sortByKeyType="string"
+              />
+            </th>
+            <th>
+              E-mail
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="email"
                 sortByKeyType="string"
               />
             </th>
@@ -75,19 +85,22 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directoryname }}
+              {{ item.firstname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorypriorityorder }}
+              {{ item.lastname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorytypename }}
+              {{ item.displayname }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.email }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" />
+              <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" />
             </td>
           </tr>
           <tr slot="footer" class="footer">
@@ -137,7 +150,7 @@
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="10"
+        :per-page="20"
         align="center"
         @change="handlePageChange"
       >
@@ -166,9 +179,10 @@ export default {
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
+      users: state => state.users.items,
     }),
     tableRows() {
-      const { subjectDirectories, subjectDirectoryTypes, organizations } = this;
+      const { subjectDirectoryTypes, organizations, users } = this;
       const getDirectoryTypeName = (directoryId) => {
         const directory = subjectDirectoryTypes.find(item => item.uuid === directoryId);
         return directory ? directory.typename : directoryId;
@@ -179,7 +193,7 @@ export default {
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
-        array: subjectDirectories.map(item => ({
+        array: users.map(item => ({
           ...item,
           directorytypename: getDirectoryTypeName(item.directorytypeid),
           organizationname: getOrganizationName(item.organizationid),
@@ -191,12 +205,20 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.directoryname &&
-              item.directoryname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.firstname &&
+              item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.directorytypename &&
-              item.directorytypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.lastname &&
+              item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.displayname &&
+              item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.email &&
+              item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -210,12 +232,13 @@ export default {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('users/getUsers');
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'directorypriorityorder',
-      sortByKeyType: 'number',
+      sortByKey: 'firstname',
+      sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],

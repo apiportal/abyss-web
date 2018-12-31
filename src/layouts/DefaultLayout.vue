@@ -38,41 +38,13 @@ export default {
       return requestsCount !== responsesCount;
     },
   },
+  mounted() {
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=458600ffe5c0ae9ece8a3c2597a4d9c2';
+  },
 };
 </script>
 
 <style lang="scss">
-html {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 8px;
-  height: 8px;
-}
-
-:hover::-webkit-scrollbar-thumb {
-  background-color: #bdbdbd;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: #ddd;
-}
-
 .app-flex {
   position: absolute;
   top: 0;

@@ -55,6 +55,16 @@
               />
             </th>
             <th>
+              User Name
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="subjectname"
+                sortByKeyType="string"
+              />
+            </th>
+            <th>
               E-mail
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -80,7 +90,7 @@
           </tr>
         </thead>
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
@@ -94,6 +104,9 @@
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.subjectname }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.email }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -104,15 +117,19 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="5">
+            <td colspan="7">
               <div class="collapsible-content">
-                <p>Name: {{ item.directoryname }}</p>
+                <p>First Name: {{ item.firstname }}</p>
+                <p>Last Name: {{ item.lastname }}</p>
+                <p>Display Name: {{ item.displayname }}</p>
+                <p>User Name: {{ item.subjectname }}</p>
+                <p>Email: {{ item.email }}</p>
+                <p>Secondary Email: {{ item.secondaryemail }}</p>
                 <p>Description: {{ item.description }}</p>
-                <p>Active: {{ item.isactive }}</p>
-                <p>Template: {{ item.istemplate }}</p>
+                <p>Active: {{ item.isactivated }}</p>
                 <p>Deleted: {{ item.isdeleted }}</p>
-                <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                <p>Directory Type: {{ item.directorytypename }}</p>
+                <p>Locked: {{ item.islocked }}</p>
+                <p>Directory: {{ item.directoryname }}</p>
                 <p>Organization: {{ item.organizationname }}</p>
                 <p>Created: {{ item.created }}</p>
                 <p>Updated: {{ item.updated }}</p>
@@ -148,9 +165,9 @@
     <div class="identity-managers-footer">
       <b-pagination 
         size="md"
-        :total-rows="tableRows.length"
+        :total-rows="totalRows.length"
         v-model="page" 
-        :per-page="20"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -181,21 +198,22 @@ export default {
       organizations: state => state.organizations.items,
       users: state => state.users.items,
     }),
-    tableRows() {
-      const { subjectDirectoryTypes, organizations, users } = this;
-      const getDirectoryTypeName = (directoryId) => {
-        const directory = subjectDirectoryTypes.find(item => item.uuid === directoryId);
-        return directory ? directory.typename : directoryId;
+    totalRows() {
+      const { subjectDirectories, organizations, users } = this;
+      const getDirectoryName = (subjectdirectoryid) => {
+        const directory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
+        return directory ? directory.directoryname : subjectdirectoryid;
       };
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
-      return Helpers.sortArrayOfObjects({
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
         array: users.map(item => ({
           ...item,
-          directorytypename: getDirectoryTypeName(item.directorytypeid),
+          directoryname: getDirectoryName(item.subjectdirectoryid),
           organizationname: getOrganizationName(item.organizationid),
         })).filter((item) => {
           const { filterKey } = this;
@@ -227,6 +245,15 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { totalRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: totalRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
@@ -242,6 +269,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -254,7 +282,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/identity-managers/${page}`);
+      this.$router.push(`/app/administer-users/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);

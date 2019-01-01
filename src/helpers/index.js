@@ -16,6 +16,14 @@ const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = '
   return array;
 };
 
+const paginateArray = ({ array, itemsPerPage, page }) => {
+  const totalItems = array.length;
+  const startIndex = (itemsPerPage * (page - 1));
+  const endIndex = (startIndex + itemsPerPage);
+  return array.slice(startIndex, (endIndex <= totalItems ? endIndex : totalItems));
+};
+
 export default {
   sortArrayOfObjects,
+  paginateArray,
 };

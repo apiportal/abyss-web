@@ -134,8 +134,15 @@
                 <p>Created: {{ item.created }}</p>
                 <p>Updated: {{ item.updated }}</p>
                 <div>
+                  <b-dropdown variant="secondary" size="sm">
+                    <template slot="button-content">
+                      <Icon icon="list-ol" />
+                      <span>Logs</span>
+                    </template>
+                    <b-dropdown-item :to="`/app/administer-users/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
+                  </b-dropdown>
                   <b-button
-                    :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
+                    :to="`/app/administer-users/${page}/edit/${item.uuid}`"
                     size="sm"
                     variant="secondary"
                     v-b-tooltip.hover
@@ -145,7 +152,7 @@
                     <span>Edit</span>
                   </b-button>
                   <b-button
-                    :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
+                    :to="`/app/administer-users/${page}/delete/${item.uuid}`"
                     size="sm"
                     variant="danger"
                     v-b-tooltip.hover

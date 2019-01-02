@@ -15,6 +15,7 @@ import EditIdentityManager from '@/components/routes/identityManagers/EditIdenti
 import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
 // Administer Users Routes Components
 import AdministerUsers from '@/components/routes/administerUsers/AdministerUsers';
+import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerUsersLogs';
 
 Vue.use(Router);
 
@@ -63,7 +64,12 @@ export default new Router({
         {
           path: 'administer-users/:page',
           component: AdministerUsers,
-          children: [],
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: AdministerUsersLogs,
+            },
+          ],
         },
       ],
     },

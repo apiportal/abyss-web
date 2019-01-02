@@ -7,6 +7,8 @@
     :no-close-on-esc="noCloseOnEsc"
     :hide-header-close="hideHeaderClose"
     :body-class="bodyClass"
+    :header-class="headerClass"
+    :footer-class="footerClass"
     v-model="isModalVisible"
     @hide="handleClose"
   >
@@ -18,8 +20,8 @@
         <slot></slot>
       </main>
     </div>
-    <div class="w-100">
-      <slot slot="modal-footer" name="footer"></slot>
+    <div slot="modal-footer">
+      <slot name="footer"></slot>
     </div>
   </b-modal>
 </template>
@@ -28,6 +30,16 @@
 export default {
   props: {
     bodyClass: {
+      type: [Array, String],
+      required: false,
+      default() { return ''; },
+    },
+    headerClass: {
+      type: [Array, String],
+      required: false,
+      default() { return ''; },
+    },
+    footerClass: {
       type: [Array, String],
       required: false,
       default() { return ''; },

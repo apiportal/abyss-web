@@ -61,6 +61,11 @@ export default {
           name: 'Administer Users',
           to: '/app/administer-users/1',
         },
+        {
+          icon: 'users',
+          name: 'Access Managers',
+          to: '/app/access-managers/1',
+        },
       ],
     };
   },

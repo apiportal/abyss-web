@@ -19,6 +19,11 @@ import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerU
 import AddAdministerUser from '@/components/routes/administerUsers/AddAdministerUser';
 import EditAdministerUser from '@/components/routes/administerUsers/EditAdministerUser';
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
+// Access Managers Routes Components
+import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
+import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
+import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
+import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
 
 Vue.use(Router);
 
@@ -83,6 +88,24 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAdministerUser,
+            },
+          ],
+        },
+        {
+          path: 'access-managers/:page',
+          component: AccessManagers,
+          children: [
+            {
+              path: 'add-new',
+              component: AddAccessManager,
+            },
+            {
+              path: 'edit/:id',
+              component: EditAccessManager,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteAccessManager,
             },
           ],
         },

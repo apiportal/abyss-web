@@ -132,6 +132,7 @@
             :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Directory</h6>
+            <!-- TODO generate form from attributes -->
             <b-form-group 
               id="directoryLdapUrlGroup"
               label="Ldap Connection Url - Host and Port:"

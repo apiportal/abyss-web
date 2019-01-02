@@ -38,4 +38,18 @@ export default {
       withCredentials: false,
     });
   },
+  // access managers
+  getAccessManagers() {
+    return axios.get('/abyss/oapi/access-managers');
+  },
+  putAccessManagers(accessManager) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = accessManager;
+    return axios.put(`/abyss/oapi/access-managers/${uuid}`, rest);
+  },
+  deleteAccessManagers(uuid) {
+    return axios.delete(`/abyss/oapi/access-managers/${uuid}`);
+  },
+  getAccessManagerTypes() {
+    return axios.get('/abyss/oapi/access-manager-types');
+  },
 };

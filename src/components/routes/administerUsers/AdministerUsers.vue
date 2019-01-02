@@ -113,7 +113,10 @@
               {{ item.organizationname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" />
+              <Icon 
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+                :class="item.isactivated ? 'text-success' : 'text-danger'"
+              />
             </td>
           </tr>
           <tr slot="footer" class="footer">

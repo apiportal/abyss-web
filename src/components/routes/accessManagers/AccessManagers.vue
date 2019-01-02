@@ -1,6 +1,6 @@
 <template>
-  <div class="identity-managers-container">
-    <div class="identity-managers-header">
+  <div class="access-managers-container">
+    <div class="access-managers-header">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon
@@ -11,16 +11,16 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/access-managers/${page}/add-new`"
             variant="primary"
             block
           >
-            Add
+            <span>Add</span>
           </b-button>
         </div>
       </div>
     </div>
-    <div class="identity-managers-content">
+    <div class="access-managers-content">
       <table class="table verapi-table">
         <thead>
           <tr>
@@ -30,27 +30,17 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directoryname"
+                sortByKey="accessmanagername"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Priority Order
+              Access Manager Type
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directorypriorityorder"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
-              Directory Type
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="directorytypename"
+                sortByKey="accessmanagertypename"
                 sortByKeyType="string"
               />
             </th>
@@ -64,7 +54,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th class="abyss-table-td-70">
               Status
             </th>
           </tr>
@@ -73,15 +63,12 @@
           v-for="(item, index) in tableRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directoryname }}
+              {{ item.accessmanagername }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorypriorityorder }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorytypename }}
+              {{ item.accessmanagertypename }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
@@ -91,48 +78,45 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="5">
+            <td colspan="4">
               <div class="collapsible-content">
-                <p>Name: {{ item.directoryname }}</p>
-                <p>Description: {{ item.description }}</p>
-                <p>Active: {{ item.isactive }}</p>
-                <p>Template: {{ item.istemplate }}</p>
-                <p>Deleted: {{ item.isdeleted }}</p>
-                <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                <p>Directory Type: {{ item.directorytypename }}</p>
+                <p>Access Manager Name: {{ item.accessmanagername }}</p>
+                <p>Access Manager Type: {{ item.accessmanagertypename }}</p>
                 <p>Organization: {{ item.organizationname }}</p>
+                <p>Description: {{ item.description }}</p>
                 <p>Created: {{ item.created }}</p>
                 <p>Updated: {{ item.updated }}</p>
+                <p>Deleted: {{ item.deleted }}</p>
                 <div>
                   <b-button
-                    :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
-                    size="sm"
-                    variant="secondary"
+                    :to="`/app/access-managers/${page}/edit/${item.uuid}`"
+                    size="md"
+                    variant="primary"
                     v-b-tooltip.hover
                     title="Edit"
                   >
-                    <Icon icon="edit" />
-                    <span>Edit</span>
+                    Edit <Icon icon="edit" />
                   </b-button>
                   <b-button
-                    :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
-                    size="sm"
+                    :to="`/app/access-managers/${page}/delete/${item.uuid}`"
+                    size="md"
                     variant="danger"
                     v-b-tooltip.hover
                     title="Delete"
                   >
-                    <Icon icon="trash-alt" />
-                    <span>Delete</span>
+                    Delete <Icon icon="trash-alt" /> 
                   </b-button>
+
                 </div>
               </div>
             </td>
+            <td></td>
           </tr>
         </TbodyCollapsible>
+        <router-view></router-view>
       </table>
-      <router-view></router-view>
     </div>
-    <div class="identity-managers-footer">
+    <div class="access-managers-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -163,15 +147,15 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
+      accessManagers: state => state.accessManagers.items,
+      accessManagerTypes: state => state.accessManagerTypes.items,
       organizations: state => state.organizations.items,
     }),
     tableRows() {
-      const { subjectDirectories, subjectDirectoryTypes, organizations } = this;
-      const getDirectoryTypeName = (directoryId) => {
-        const directory = subjectDirectoryTypes.find(item => item.uuid === directoryId);
-        return directory ? directory.typename : directoryId;
+      const { accessManagers, accessManagerTypes, organizations } = this;
+      const getAccessManagerTypeName = (accessManagerId) => {
+        const accessManager = accessManagerTypes.find(item => item.uuid === accessManagerId);
+        return accessManager ? accessManager.typename : accessManagerId;
       };
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
@@ -179,9 +163,9 @@ export default {
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
-        array: subjectDirectories.map(item => ({
+        array: accessManagers.map(item => ({
           ...item,
-          directorytypename: getDirectoryTypeName(item.directorytypeid),
+          accessmanagertypename: getAccessManagerTypeName(item.accessmanagertypeid),
           organizationname: getOrganizationName(item.organizationid),
         })).filter((item) => {
           const { filterKey } = this;
@@ -191,12 +175,12 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.directoryname &&
-              item.directoryname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.accessmanagername &&
+              item.accessmanagername.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.directorytypename &&
-              item.directorytypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.accessmanagertypename &&
+              item.accessmanagertypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -207,15 +191,18 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
+    this.$store.dispatch('accessManagers/getAccessManagers');
+    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes');
     this.$store.dispatch('organizations/getOrganizations');
+  },
+  mounted() {
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=7afa16aca743d33e5938854819554044';
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'directorypriorityorder',
-      sortByKeyType: 'number',
+      sortByKey: 'accessmanagername',
+      sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
@@ -231,7 +218,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/identity-managers/${page}`);
+      this.$router.push(`/app/access-managers/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -246,18 +233,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.identity-managers-container {
+.access-managers-container {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
 
-  .identity-managers-header {
+  .access-managers-header {
     border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }
 
-  .identity-managers-footer {
+  .access-managers-footer {
     border-top: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
@@ -267,7 +254,7 @@ export default {
     }
   }
 
-  .identity-managers-content {
+  .access-managers-content {
     flex: 1 0 0;
     overflow-y: auto;
     padding: 1rem;

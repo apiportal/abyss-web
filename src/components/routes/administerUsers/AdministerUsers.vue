@@ -119,7 +119,7 @@
           <tr slot="footer" class="footer">
             <td colspan="7">
               <div class="collapsible-content">
-                <p>First Name: {{ item.firstname }}</p>
+                <p>First Name: {{ item.firstname }}</p> 
                 <p>Last Name: {{ item.lastname }}</p>
                 <p>Display Name: {{ item.displayname }}</p>
                 <p>User Name: {{ item.subjectname }}</p>

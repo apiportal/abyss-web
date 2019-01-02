@@ -54,8 +54,7 @@
       </table>
     </template>
     <template slot="footer">
-      <div class="w-100">
-        {{ logPage }}
+      <div class="w-100" v-if="logs.length > 0">
         <b-pagination 
           size="md"
           :total-rows="totalCount"
@@ -135,7 +134,6 @@ export default {
     return {
       itemsPerPage: 10,
       collapsedRows: [],
-      // TO DO
       logPage: parseInt(this.$route.params.logPage, 10),
     };
   },

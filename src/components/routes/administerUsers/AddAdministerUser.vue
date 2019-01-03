@@ -1,16 +1,15 @@
 <template>
   <div>
-    <EditIdentityManagerModal
+    <EditAdministerUserModal
       v-if="
         isSubjectDirectoriesLoaded &&
-        isSubjectDirectoryTypesLoaded &&
         isOrganizationsLoaded
       "
-      role="edit"
+      role="add"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :subjectDirectory="subjectDirectories.find(item => item.uuid === subjectDirectoryId)"
-      :subjectDirectoryTypes="subjectDirectoryTypes"
+      :user="user"
+      :subjectDirectories="subjectDirectories"
       :organizations="organizations"
     />
   </div>
@@ -18,33 +17,31 @@
 
 <script>
 import { mapState } from 'vuex';
-import EditIdentityManagerModal from '@/components/shared/modals/EditIdentityManagerModal';
+import EditAdministerUserModal from '@/components/shared/modals/EditAdministerUserModal';
 
 export default {
   components: {
-    EditIdentityManagerModal,
+    EditAdministerUserModal,
   },
   computed: {
     ...mapState({
       subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
       isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
-      isSubjectDirectoryTypesLoaded: state => state.subjectDirectoryTypes.lastUpdatedAt,
       isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
     }),
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/identity-managers/${this.page}`);
+      this.$router.push(`/app/administer-users/${this.page}`);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/identity-managers/${this.page}`);
+      this.$router.push(`/app/administer-users/${this.page}`);
     },
   },
   data() {
     return {
-      subjectDirectoryId: this.$route.params.id,
+      user: {},
       page: this.$route.params.page,
     };
   },

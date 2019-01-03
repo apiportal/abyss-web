@@ -4,8 +4,8 @@
       v-if="isSubjectDirectoriesLoaded"
       title="Are you sure?"
       :text="`${subjectDirectory.directoryname} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteIdentityManagerModalClose"
-      :onConfirm="handleDeleteIdentityManagerModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -19,10 +19,10 @@ export default {
     ConfirmModal,
   },
   methods: {
-    handleDeleteIdentityManagerModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
-    handleDeleteIdentityManagerModalConfirm() {
+    handleModalConfirm() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
   },

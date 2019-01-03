@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/administer-users/${page}/add-new`"
             variant="primary"
             block
           >

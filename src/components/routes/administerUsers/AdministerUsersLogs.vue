@@ -5,11 +5,13 @@
       :onPageChange="handlePageChange"
       :logs="logs"
       :totalCount="totalCount"
+      :title="`${user.subjectname} Logs (${totalCount} records)`"
     />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import api from '@/api';
 import LogsModal from '@/components/shared/modals/LogsModal';
 
@@ -23,6 +25,15 @@ export default {
         const { id, logPage } = to.params;
         this.getSubjectSearch({ query: id, from: ((logPage - 1) * 10) });
       }
+    },
+  },
+  computed: {
+    ...mapState({
+      users: state => state.users.items,
+    }),
+    user() {
+      const { users, id } = this;
+      return users.find(item => item.uuid === id);
     },
   },
   data() {

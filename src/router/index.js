@@ -16,6 +16,9 @@ import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteId
 // Administer Users Routes Components
 import AdministerUsers from '@/components/routes/administerUsers/AdministerUsers';
 import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerUsersLogs';
+import AddAdministerUser from '@/components/routes/administerUsers/AddAdministerUser';
+import EditAdministerUser from '@/components/routes/administerUsers/EditAdministerUser';
+import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
 
 Vue.use(Router);
 
@@ -68,6 +71,18 @@ export default new Router({
             {
               path: 'logs/:id/:logType/:logPage',
               component: AdministerUsersLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddAdministerUser,
+            },
+            {
+              path: 'edit/:id',
+              component: EditAdministerUser,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteAdministerUser,
             },
           ],
         },

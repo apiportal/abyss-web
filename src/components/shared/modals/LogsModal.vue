@@ -12,7 +12,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Logs ({{ totalCount }} records)
+        {{ title }}
       </h5>
     </template>
     <template>
@@ -128,6 +128,11 @@ export default {
       type: Number,
       required: false,
       default() { return 0; },
+    },
+    title: {
+      type: String,
+      required: false,
+      default() { return 'Logs'; },
     },
   },
   data() {

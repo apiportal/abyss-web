@@ -19,7 +19,152 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          {{ userEditable }}
+          <b-form-group 
+            id="firstNameGroup"
+            label="First Name:"
+            label-for="firstNameInput"
+          >
+            <b-form-input
+              id="firstNameInput"
+              type="text"
+              v-model="userEditable.firstname"
+              placeholder="First Name"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="lastNameGroup"
+            label="Last Name:"
+            label-for="lastNameInput"
+          >
+            <b-form-input
+              id="lastNameInput"
+              type="text"
+              v-model="userEditable.lastname"
+              placeholder="Last Name"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="userNameGroup"
+            label="User Name:"
+            label-for="userNameInput"
+          >
+            <b-form-input
+              id="userNameInput"
+              type="text"
+              v-model="userEditable.subjectname"
+              placeholder="User Name"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="displayNameGroup"
+            label="Display Name:"
+            label-for="displayNameInput"
+          >
+            <b-form-input
+              id="displayNameInput"
+              type="text"
+              v-model="userEditable.displayname"
+              placeholder="Display Name"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="emailGroup"
+            label="Email:"
+            label-for="emailInput"
+          >
+            <b-form-input
+              id="emailInput"
+              type="email"
+              v-model="userEditable.email"
+              placeholder="Email"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="secondaryEmailGroup"
+            label="Secondary Email:"
+            label-for="secondaryEmailInput"
+          >
+            <b-form-input
+              id="secondaryEmailInput"
+              type="email"
+              v-model="userEditable.secondaryemail"
+              placeholder="Secondary Email"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="urlGroup"
+            label="URL:"
+            label-for="urlInput"
+          >
+            <b-form-input
+              id="urlInput"
+              type="text"
+              v-model="userEditable.url"
+              placeholder="URL"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="userOrganizationIdGroup"
+            label="Organization:"
+            label-for="userOrganizationIdInput"
+          >
+            <b-form-select
+              id="userOrganizationIdInput"
+              v-model="userEditable.organizationid" 
+              :options="organizations.map(organization => ({
+                value: organization.uuid,
+                text: organization.name,
+              }))"
+            />
+          </b-form-group>
+          <b-form-group 
+            id="userDirectoryIdGroup"
+            label="Directory:"
+            label-for="userDirectoryIdInput"
+          >
+            <b-form-select
+              id="userDirectoryIdInput"
+              v-model="userEditable.subjectdirectoryid" 
+              :options="subjectDirectories.map(subjectDirectory => ({
+                value: subjectDirectory.uuid,
+                text: subjectDirectory.directoryname,
+              }))"
+            />
+          </b-form-group>
+          <b-form-group 
+            id="userDescriptionGroup"
+            label="Description:"
+            label-for="userDescriptionTextarea"
+          >
+            <b-form-textarea
+              id="userDescriptionTextarea"
+              v-model="userEditable.description"
+              placeholder="Description"
+              :rows="3"
+              required
+            >
+            </b-form-textarea>
+          </b-form-group>
+          <div>
+            <label>User Groups</label>
+            <Chips
+              :chips="computedMemberships"
+            />
+          </div>
         </div>
         <footer class="modal-footer">
           <b-button
@@ -43,11 +188,13 @@
 <script>
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
+import Chips from '@/components/shared/Chips';
 
 export default {
   components: {
     Modal,
     Icon,
+    Chips,
   },
   props: {
     hideHeader: {
@@ -102,10 +249,31 @@ export default {
       required: false,
       default() { return []; },
     },
+    groups: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    memberships: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     role: {
       type: String,
       required: false,
       default() { return 'edit'; },
+    },
+  },
+  computed: {
+    computedMemberships() {
+      return this.memberships.map((item) => {
+        const itemGroup = this.groups.find(group => group.uuid === item.subjectgroupid);
+        return {
+          value: item.uuid,
+          text: (itemGroup ? itemGroup.subjectname : item.uuid),
+        };
+      });
     },
   },
   data() {

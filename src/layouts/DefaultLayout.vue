@@ -39,7 +39,7 @@ export default {
     },
   },
   mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=65fe29ce7ce4f0d242d6da04d8603b00';
+    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=3c65fafc-8f3a-4243-9c4e-2821aa32d293; abyss.login.organization.name=Abyss; abyss.session=0ccb90fed94f176955c72fe3b5c4c3ef';
   },
 };
 </script>

@@ -52,4 +52,12 @@ export default {
   getAccessManagerTypes() {
     return axios.get('/abyss/oapi/access-manager-types');
   },
+  // groups
+  getGroups() {
+    return axios.get('/abyss/oapi/subjects/groups/');
+  },
+  // subject-memberships
+  getSubjectMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
+  },
 };

@@ -207,6 +207,7 @@ export default {
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
+      groups: state => state.users.groups,
     }),
     totalRows() {
       const { subjectDirectories, organizations, users } = this;
@@ -270,6 +271,7 @@ export default {
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('users/getUsers');
+    this.$store.dispatch('groups/getGroups');
   },
   data() {
     return {

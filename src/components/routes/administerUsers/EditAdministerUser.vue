@@ -50,7 +50,9 @@ export default {
     },
     getSubjectMemberships() {
       api.getSubjectMemberships(this.userId).then((response) => {
-        this.memberships = response.data;
+        if (response && response.data) {
+          this.memberships = response.data;
+        }
         this.isMembershipsLoaded = true;
       });
     },

@@ -10,10 +10,16 @@ export default {
     axios.interceptors.request.use((config) => {
       this.$store.commit('traffic/increaseRequests');
       return config;
+    }, () => {
+      // error
+      this.$store.commit('traffic/increaseRequests');
     });
     axios.interceptors.response.use((response) => {
       this.$store.commit('traffic/increaseResponses');
       return response;
+    }, () => {
+      // error
+      this.$store.commit('traffic/increaseResponses');
     });
   },
 };

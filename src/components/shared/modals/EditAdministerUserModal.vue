@@ -160,9 +160,15 @@
             </b-form-textarea>
           </b-form-group>
           <div>
-            <label>User Groups</label>
             <Chips
               :chips="computedMemberships"
+              :autocompleteOptions="this.groups.map((item) => ({
+                text: item.subjectname,
+                value: item.uuid,
+              }))"
+              :onDeleteChip="handleDeleteMembership"
+              :onAddChip="handleAddMembership"
+              label="User Groups"
             />
           </div>
         </div>
@@ -267,24 +273,58 @@ export default {
   },
   computed: {
     computedMemberships() {
-      return this.memberships.map((item) => {
-        const itemGroup = this.groups.find(group => group.uuid === item.subjectgroupid);
-        return {
-          value: item.uuid,
-          text: (itemGroup ? itemGroup.subjectname : item.uuid),
-        };
-      });
+      const { groupsEditable } = this;
+      return groupsEditable
+      .filter(group => group.isMembership)
+      .sort((a, b) => b.sortTime - a.sortTime)
+      .map(group => ({
+        value: group.uuid,
+        text: group.subjectname,
+      }));
     },
   },
   data() {
+    const { user, groups, memberships } = this;
     return {
-      userEditable: JSON.parse(JSON.stringify(this.user)),
+      userEditable: JSON.parse(JSON.stringify(user)),
+      groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
+        const isMembership =
+          Boolean(memberships.find(membership => membership.subjectgroupid === group.uuid));
+        const sortTime = (new Date()).getTime();
+        return {
+          ...group,
+          isMembership,
+          sortTime,
+        };
+      }),
     };
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
       // console.log(this.userEditable);
+    },
+    handleDeleteMembership({ uuid }) {
+      const { groupsEditable } = this;
+      this.groupsEditable = groupsEditable.map((group) => {
+        const isMembership = group.uuid === uuid ? false : group.isMembership;
+        return {
+          ...group,
+          isMembership,
+        };
+      });
+    },
+    handleAddMembership({ uuid }) {
+      const { groupsEditable } = this;
+      this.groupsEditable = groupsEditable.map((group) => {
+        const isMembership = group.uuid === uuid ? true : group.isMembership;
+        const sortTime = (new Date()).getTime();
+        return {
+          ...group,
+          isMembership,
+          sortTime,
+        };
+      });
     },
   },
 };

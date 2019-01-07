@@ -1,9 +1,9 @@
 const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = 'desc' }) => {
   if (sortByKeyType === 'string') {
     const arr = array.sort((a, b) => {
-      if (a[sortByKey] < b[sortByKey]) {
+      if (a[sortByKey].toLowerCase() < b[sortByKey].toLowerCase()) {
         return -1;
-      } else if (a[sortByKey] > b[sortByKey]) {
+      } else if (a[sortByKey].toLowerCase() > b[sortByKey].toLowerCase()) {
         return 1;
       }
       return 0;

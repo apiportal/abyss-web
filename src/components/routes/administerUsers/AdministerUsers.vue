@@ -119,9 +119,10 @@
               />
             </td>
           </tr>
-          <tr slot="footer" class="footer">
+          <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
             <td colspan="7">
               <div class="collapsible-content">
+                <!-- TO DO: CREATE COMPONENT WITH LAZY LOAD -->
                 <p>First Name: {{ item.firstname }}</p> 
                 <p>Last Name: {{ item.lastname }}</p>
                 <p>Display Name: {{ item.displayname }}</p>

@@ -14,11 +14,24 @@ const actions = {
       commit('setGroups', response.data);
     });
   },
+  putGroups: ({ commit }, group) => {
+    // api.putSubjects(group).then((response) => {
+    //   commit('updateGroups', response.data);
+    // });
+  },
 };
 
 const mutations = {
   setGroups: (state, groups) => {
     state.items = groups;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  updateGroups: (state, groups) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = groups
+        .find(group => group.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

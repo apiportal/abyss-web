@@ -9,6 +9,7 @@ import users from '@/store/modules/users';
 import accessManagers from '@/store/modules/accessManagers';
 import accessManagerTypes from '@/store/modules/accessManagerTypes';
 import groups from '@/store/modules/groups';
+import subjectMemberships from '@/store/modules/subjectMemberships';
 
 Vue.use(Vuex);
 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     accessManagers,
     accessManagerTypes,
     groups,
+    subjectMemberships,
   },
   debug: true,
 });

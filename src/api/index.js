@@ -60,4 +60,16 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  // subject-memberships all
+  getAllSubjectMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships');
+  },
+  // update subjects
+  putSubjects(subject) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
 };

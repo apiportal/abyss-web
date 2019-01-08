@@ -19,6 +19,12 @@ import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerU
 import AddAdministerUser from '@/components/routes/administerUsers/AddAdministerUser';
 import EditAdministerUser from '@/components/routes/administerUsers/EditAdministerUser';
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
+// Administer Groups Routes Components
+import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
+import AdministerGroupsLogs from '@/components/routes/administerGroups/AdministerGroupsLogs';
+import AddAdministerGroup from '@/components/routes/administerGroups/AddAdministerGroup';
+import EditAdministerGroup from '@/components/routes/administerGroups/EditAdministerGroup';
+import DeleteAdministerGroup from '@/components/routes/administerGroups/DeleteAdministerGroup';
 // Access Managers Routes Components
 import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
@@ -88,6 +94,28 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAdministerUser,
+            },
+          ],
+        },
+        {
+          path: 'administer-groups/:page',
+          component: AdministerGroups,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: AdministerGroupsLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddAdministerGroup,
+            },
+            {
+              path: 'edit/:id',
+              component: EditAdministerGroup,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteAdministerGroup,
             },
           ],
         },

@@ -122,50 +122,11 @@
           <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
             <td colspan="7">
               <div class="collapsible-content">
-                <!-- TO DO: CREATE COMPONENT WITH LAZY LOAD -->
-                <p>First Name: {{ item.firstname }}</p> 
-                <p>Last Name: {{ item.lastname }}</p>
-                <p>Display Name: {{ item.displayname }}</p>
-                <p>User Name: {{ item.subjectname }}</p>
-                <p>Email: {{ item.email }}</p>
-                <p>Secondary Email: {{ item.secondaryemail }}</p>
-                <p>Description: {{ item.description }}</p>
-                <p>Active: {{ item.isactivated }}</p>
-                <p>Deleted: {{ item.isdeleted }}</p>
-                <p>Locked: {{ item.islocked }}</p>
-                <p>Directory: {{ item.directoryname }}</p>
-                <p>Organization: {{ item.organizationname }}</p>
-                <p>Created: {{ item.created }}</p>
-                <p>Updated: {{ item.updated }}</p>
-                <div>
-                  <b-dropdown variant="secondary" size="sm">
-                    <template slot="button-content">
-                      <Icon icon="list-ol" />
-                      <span>Logs</span>
-                    </template>
-                    <b-dropdown-item :to="`/app/administer-users/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
-                  </b-dropdown>
-                  <b-button
-                    :to="`/app/administer-users/${page}/edit/${item.uuid}`"
-                    size="sm"
-                    variant="secondary"
-                    v-b-tooltip.hover
-                    title="Edit"
-                  >
-                    <Icon icon="edit" />
-                    <span>Edit</span>
-                  </b-button>
-                  <b-button
-                    :to="`/app/administer-users/${page}/delete/${item.uuid}`"
-                    size="sm"
-                    variant="danger"
-                    v-b-tooltip.hover
-                    title="Delete"
-                  >
-                    <Icon icon="trash-alt" />
-                    <span>Delete</span>
-                  </b-button>
-                </div>
+                <AdministerUser
+                  :user="item"
+                  :groups="groups"
+                  :page="page"
+                />
               </div>
             </td>
           </tr>
@@ -189,6 +150,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import AdministerUser from '@/components/routes/administerUsers/AdministerUser';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
@@ -197,6 +159,7 @@ import Helpers from '@/helpers';
 
 export default {
   components: {
+    AdministerUser,
     InputWithIcon,
     Icon,
     SortBy,
@@ -208,7 +171,7 @@ export default {
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
-      groups: state => state.users.groups,
+      groups: state => state.groups.items,
     }),
     totalRows() {
       const { subjectDirectories, organizations, users } = this;

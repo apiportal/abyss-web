@@ -19,8 +19,9 @@ const actions = {
     });
   },
   putSubjectDirectories: ({ commit }, subjectDirectory) => {
-    api.putSubjectDirectories(subjectDirectory).then((response) => {
+    return api.putSubjectDirectories(subjectDirectory).then((response) => {
       commit('updateSubjectDirectories', response.data);
+      return response;
     });
   },
 };

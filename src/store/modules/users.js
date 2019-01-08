@@ -10,6 +10,10 @@ const getters = {};
 
 const actions = {
   getUsers: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getUsers().then((response) => {
       commit('setUsers', response.data);
     });

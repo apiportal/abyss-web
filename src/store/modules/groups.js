@@ -10,6 +10,10 @@ const getters = {};
 
 const actions = {
   getGroups: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getGroups().then((response) => {
       commit('setGroups', response.data);
     });

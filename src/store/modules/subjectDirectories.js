@@ -14,6 +14,10 @@ const getters = {
 
 const actions = {
   getSubjectDirectories: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getSubjectDirectories().then((response) => {
       commit('setSubjectDirectories', response.data);
     });

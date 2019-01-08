@@ -10,6 +10,10 @@ const getters = {};
 
 const actions = {
   getAccessManagerTypes: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getAccessManagerTypes().then((response) => {
       commit('setAccessManagerTypes', response.data);
     });

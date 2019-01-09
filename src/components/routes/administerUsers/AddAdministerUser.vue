@@ -41,7 +41,9 @@ export default {
   },
   data() {
     return {
-      user: {},
+      user: {
+        firstname: '',
+      },
       page: this.$route.params.page,
     };
   },

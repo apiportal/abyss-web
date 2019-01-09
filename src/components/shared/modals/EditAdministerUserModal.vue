@@ -23,12 +23,15 @@
             id="firstNameGroup"
             label="First Name*:"
             label-for="firstNameInput"
+            :invalid-feedback="firstNameInvalidFeedback"
+            :state="firstNameState"
           >
             <b-form-input
               id="firstNameInput"
               type="text"
               v-model="userEditable.firstname"
               placeholder="First Name"
+              :state="firstNameState"
               required
             >
             </b-form-input>
@@ -263,6 +266,19 @@ export default {
       type: String,
       required: false,
       default() { return 'edit'; },
+    },
+  },
+  computed: {
+    firstNameState() {
+      const { firstname } = this.userEditable;
+      return firstname.length > 0;
+    },
+    firstNameInvalidFeedback() {
+      const { firstname } = this.userEditable;
+      if (firstname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
     },
   },
   data() {

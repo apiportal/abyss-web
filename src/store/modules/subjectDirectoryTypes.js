@@ -15,7 +15,9 @@ const actions = {
       return false;
     }
     api.getSubjectDirectoryTypes().then((response) => {
-      commit('setSubjectDirectoryTypes', response.data);
+      if (response && response.data) {
+        commit('setSubjectDirectoryTypes', response.data);
+      }
     });
   },
 };

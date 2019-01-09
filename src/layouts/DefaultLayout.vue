@@ -12,6 +12,7 @@
       </div>
     </div>
     <LoadingModal v-if="isLoadingModalVisible" />
+    <SetCookieModal v-if="isSetCookieModalVisible" />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import { mapState } from 'vuex';
 import AppHeader from '@/components/shared/AppHeader';
 import AppSidenav from '@/components/shared/AppSidenav';
 import LoadingModal from '@/components/shared/modals/LoadingModal';
+import SetCookieModal from '@/components/shared/modals/SetCookieModal';
 
 export default {
   name: 'default-layout',
@@ -27,15 +29,21 @@ export default {
     AppHeader,
     AppSidenav,
     LoadingModal,
+    SetCookieModal,
   },
   computed: {
     ...mapState({
       requestsCount: state => state.traffic.requestsCount,
       responsesCount: state => state.traffic.responsesCount,
+      hasValidToken: state => state.user.hasValidToken,
     }),
     isLoadingModalVisible() {
       const { requestsCount, responsesCount } = this;
       return requestsCount !== responsesCount;
+    },
+    isSetCookieModalVisible() {
+      const { hasValidToken } = this;
+      return !hasValidToken;
     },
   },
   mounted() {

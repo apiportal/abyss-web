@@ -1,17 +1,19 @@
 /* eslint-disable */
 const state = {
-  user: {},
+  hasValidToken: true,
+  lastUpdatedAt: 0,
 };
 
-const getters = {
-  GET_USER: (state) => {
-    return state.user;
-  },
-};
+const getters = {};
 
 const actions = {};
 
-const mutations = {};
+const mutations = {
+  setTokenStatus: (state, tokenStatus) => {
+    state.hasValidToken = tokenStatus;
+    state.lastUpdatedAt = (new Date()).getTime();
+  }
+};
 
 export default {
   namespaced: true,

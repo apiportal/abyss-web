@@ -33,6 +33,8 @@ import {
   faListOl,
   faTimes,
   faPlus,
+  faUsersCog,
+  faEye,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Vue from 'vue';
@@ -71,6 +73,8 @@ library.add(
   faListOl,
   faTimes,
   faPlus,
+  faUsersCog,
+  faEye,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

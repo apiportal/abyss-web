@@ -32,6 +32,19 @@ export default {
   getUsers() {
     return axios.get('/abyss/oapi/subjects/users/');
   },
+  putUsers(user) {
+    const { uuid, created, deleted, updated, totallogincount,
+      failedlogincount, invalidpasswordattemptcount, isactivated,
+      ispasswordchangerequired, lastauthenticatedat, lastfailedloginat,
+      lastloginat, lastpasswordchangeat, passwordexpiresat, ...rest } = user;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  deleteUsers(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
+  },
+  postUsers(user) {
+    return axios.post('/abyss/oapi/subjects/', user);
+  },
   // subject search
   getSubjectSearch(params) {
     return axios.post('/subject*/_search', params, {

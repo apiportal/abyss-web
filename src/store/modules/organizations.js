@@ -10,6 +10,10 @@ const getters = {};
 
 const actions = {
   getOrganizations: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getOrganizations().then((response) => {
       commit('setOrganizations', response.data);
     });

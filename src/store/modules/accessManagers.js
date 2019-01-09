@@ -14,6 +14,10 @@ const getters = {
 
 const actions = {
   getAccessManagers: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getAccessManagers().then((response) => {
       commit('setAccessManagers', response.data);
     });

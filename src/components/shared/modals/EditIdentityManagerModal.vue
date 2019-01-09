@@ -386,11 +386,15 @@ export default {
     ...mapActions('subjectDirectories', ['putSubjectDirectories']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putSubjectDirectories({
-        ...this.subjectDirectoryEditable,
-        directorypriorityorder: parseInt(this.subjectDirectoryEditable.directorypriorityorder, 10),
+      const { putSubjectDirectories, subjectDirectoryEditable, onUpdate } = this;
+      putSubjectDirectories({
+        ...subjectDirectoryEditable,
+        directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
+      }).then((response) => {
+        if (response && response.data) {
+          onUpdate();
+        }
       });
-      this.onUpdate();
     },
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;

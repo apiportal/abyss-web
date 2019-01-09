@@ -21,21 +21,24 @@
         <div style="padding: 1rem;">
           <b-form-group 
             id="firstNameGroup"
-            label="First Name:"
+            label="First Name*:"
             label-for="firstNameInput"
+            :invalid-feedback="firstNameInvalidFeedback"
+            :state="firstNameState"
           >
             <b-form-input
               id="firstNameInput"
               type="text"
               v-model="userEditable.firstname"
               placeholder="First Name"
+              :state="firstNameState"
               required
             >
             </b-form-input>
           </b-form-group>
           <b-form-group 
             id="lastNameGroup"
-            label="Last Name:"
+            label="Last Name*:"
             label-for="lastNameInput"
           >
             <b-form-input
@@ -48,22 +51,8 @@
             </b-form-input>
           </b-form-group>
           <b-form-group 
-            id="userNameGroup"
-            label="User Name:"
-            label-for="userNameInput"
-          >
-            <b-form-input
-              id="userNameInput"
-              type="text"
-              v-model="userEditable.subjectname"
-              placeholder="User Name"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
             id="displayNameGroup"
-            label="Display Name:"
+            label="Display Name*:"
             label-for="displayNameInput"
           >
             <b-form-input
@@ -76,8 +65,42 @@
             </b-form-input>
           </b-form-group>
           <b-form-group 
+            id="userNameGroup"
+            label="User Name*:"
+            label-for="userNameInput"
+          >
+            <b-form-input
+              id="userNameInput"
+              type="text"
+              v-model="userEditable.subjectname"
+              placeholder="User Name"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group
+            v-if="isPasswordInputVisible"
+            id="userPasswordGroup"
+            label="Password*:"
+            label-for="userPasswordInput"
+          >
+            <b-input-group>
+              <b-form-input
+                id="userPasswordInput"
+                type="text"
+                v-model="userEditable.password"
+                placeholder="Password"
+                required
+              >
+              </b-form-input>
+              <b-input-group-append>
+                <b-button variant="secondary"><Icon icon="eye" /></b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+          <b-form-group 
             id="emailGroup"
-            label="Email:"
+            label="Email*:"
             label-for="emailInput"
           >
             <b-form-input
@@ -99,7 +122,6 @@
               type="email"
               v-model="userEditable.secondaryemail"
               placeholder="Secondary Email"
-              required
             >
             </b-form-input>
           </b-form-group>
@@ -113,13 +135,12 @@
               type="text"
               v-model="userEditable.url"
               placeholder="URL"
-              required
             >
             </b-form-input>
           </b-form-group>
           <b-form-group 
             id="userOrganizationIdGroup"
-            label="Organization:"
+            label="Organization*:"
             label-for="userOrganizationIdInput"
           >
             <b-form-select
@@ -133,7 +154,7 @@
           </b-form-group>
           <b-form-group 
             id="userDirectoryIdGroup"
-            label="Directory:"
+            label="Directory*:"
             label-for="userDirectoryIdInput"
           >
             <b-form-select
@@ -155,16 +176,9 @@
               v-model="userEditable.description"
               placeholder="Description"
               :rows="3"
-              required
             >
             </b-form-textarea>
           </b-form-group>
-          <div>
-            <label>User Groups</label>
-            <Chips
-              :chips="computedMemberships"
-            />
-          </div>
         </div>
         <footer class="modal-footer">
           <b-button
@@ -186,15 +200,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
-import Chips from '@/components/shared/Chips';
 
 export default {
   components: {
     Modal,
     Icon,
-    Chips,
   },
   props: {
     hideHeader: {
@@ -249,16 +262,6 @@ export default {
       required: false,
       default() { return []; },
     },
-    groups: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
-    memberships: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
     role: {
       type: String,
       required: false,
@@ -266,25 +269,52 @@ export default {
     },
   },
   computed: {
-    computedMemberships() {
-      return this.memberships.map((item) => {
-        const itemGroup = this.groups.find(group => group.uuid === item.subjectgroupid);
-        return {
-          value: item.uuid,
-          text: (itemGroup ? itemGroup.subjectname : item.uuid),
-        };
-      });
+    firstNameState() {
+      const { firstname } = this.userEditable;
+      return firstname.length > 0;
+    },
+    firstNameInvalidFeedback() {
+      const { firstname } = this.userEditable;
+      if (firstname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
     },
   },
   data() {
+    const { user, role } = this;
     return {
-      userEditable: JSON.parse(JSON.stringify(this.user)),
+      userEditable: JSON.parse(JSON.stringify(user)),
+      isPasswordInputVisible: (role === 'add'),
     };
   },
   methods: {
+    ...mapActions('users', ['putUsers', 'postUsers']),
     handleSubmit(evt) {
       evt.preventDefault();
-      // console.log(this.userEditable);
+      const { userEditable, putUsers, onUpdate, role } = this;
+      const { description, url, effectiveenddate, secondaryemail, email } = userEditable;
+      const userToUpdate = {
+        ...userEditable,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? '' : email),
+      };
+
+      if (role === 'edit') {
+        putUsers(userToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        putUsers(userToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
     },
   },
 };

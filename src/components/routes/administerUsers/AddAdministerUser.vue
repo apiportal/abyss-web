@@ -8,7 +8,7 @@
       role="add"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :user="user"
+      :user="newUser"
       :subjectDirectories="subjectDirectories"
       :organizations="organizations"
     />
@@ -40,9 +40,25 @@ export default {
     },
   },
   data() {
+    const now = new Date();
     return {
-      user: {
+      newUser: {
         firstname: '',
+        lastname: '',
+        displayname: '',
+        subjectname: '',
+        password: '',
+        email: '',
+        url: '',
+        description: '',
+        organizationid: null,
+        subjectdirectoryid: null,
+        islocked: false,
+        isrestrictedtoprocessing: false,
+        issandbox: false,
+        picture: '',
+        effectiveenddate: now,
+        effectivestartdate: now,
       },
       page: this.$route.params.page,
     };

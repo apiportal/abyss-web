@@ -34,7 +34,19 @@ const actions = {
   },
   postUsers: ({ commit }, user) => {
     return api.postUsers(user).then((response) => {
-      console.log(response);
+      let error = false;
+
+      response.data.map((status) => {
+        if (status.error.code !==0) {
+          error = true;
+          alert(status.error.usermessage);
+        } else {
+          commit('addNewUser', status.response);
+        }
+      });
+      if (error) {
+        return false;
+      }
       return response;
     });
   },
@@ -63,6 +75,12 @@ const mutations = {
       }
       return item;
     });
+  },
+  addNewUser: (state, newUser) => {
+    state.items = [
+      ...state.items,
+      newUser,
+    ];
   },
 };
 

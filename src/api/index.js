@@ -9,6 +9,13 @@ axios.defaults.withCredentials = true;
 // axios.defaults.responseType = 'json';
 
 export default {
+  // auth
+  getUser(uuid) {
+    return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
+  postLogin(user) {
+    return axios.post('/abyss/login-auth', user);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');

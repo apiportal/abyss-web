@@ -15,7 +15,9 @@ const actions = {
       return false;
     }
     api.getOrganizations().then((response) => {
-      commit('setOrganizations', response.data);
+      if (response && response.data) {
+        commit('setOrganizations', response.data);
+      }
     });
   },
 };

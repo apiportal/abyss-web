@@ -12,6 +12,7 @@
       </div>
     </div>
     <LoadingModal v-if="isLoadingModalVisible" />
+    <SetCookieModal v-if="isSetCookieModalVisible" />
   </div>
 </template>
 
@@ -20,6 +21,7 @@ import { mapState } from 'vuex';
 import AppHeader from '@/components/shared/AppHeader';
 import AppSidenav from '@/components/shared/AppSidenav';
 import LoadingModal from '@/components/shared/modals/LoadingModal';
+import SetCookieModal from '@/components/shared/modals/SetCookieModal';
 
 export default {
   name: 'default-layout',
@@ -27,19 +29,22 @@ export default {
     AppHeader,
     AppSidenav,
     LoadingModal,
+    SetCookieModal,
   },
   computed: {
     ...mapState({
       requestsCount: state => state.traffic.requestsCount,
       responsesCount: state => state.traffic.responsesCount,
+      hasValidToken: state => state.user.hasValidToken,
     }),
     isLoadingModalVisible() {
       const { requestsCount, responsesCount } = this;
       return requestsCount !== responsesCount;
     },
-  },
-  mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=e1105933-b965-44a8-992b-5d853a61e154; abyss.login.organization.name=DEVELOPMENT; abyss.session=118f021ccbd9da45951aedd5a0e93871';
+    isSetCookieModalVisible() {
+      const { hasValidToken } = this;
+      return !hasValidToken;
+    },
   },
 };
 </script>

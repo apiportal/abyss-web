@@ -19,12 +19,16 @@ const actions = {
       return false;
     }
     api.getSubjectDirectories().then((response) => {
-      commit('setSubjectDirectories', response.data);
+      if (response && response.data) {
+        commit('setSubjectDirectories', response.data);
+      }
     });
   },
   putSubjectDirectories: ({ commit }, subjectDirectory) => {
     return api.putSubjectDirectories(subjectDirectory).then((response) => {
-      commit('updateSubjectDirectories', response.data);
+      if (response && response.data) {
+        commit('updateSubjectDirectories', response.data);
+      }
       return response;
     });
   },

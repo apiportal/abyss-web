@@ -15,7 +15,9 @@ const actions = {
       return false;
     }
     api.getUsers().then((response) => {
-      commit('setUsers', response.data);
+      if (response && response.data) {
+        commit('setUsers', response.data);
+      }
     });
   },
   putUsers: ({ commit }, user) => {

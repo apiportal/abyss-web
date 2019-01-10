@@ -15,7 +15,9 @@ const actions = {
       return false;
     }
     api.getGroups().then((response) => {
-      commit('setGroups', response.data);
+      if (response && response.data) {
+        commit('setGroups', response.data);
+      }
     });
   },
 };

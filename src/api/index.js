@@ -10,6 +10,9 @@ axios.defaults.withCredentials = true;
 
 export default {
   // auth
+  getUser(uuid) {
+    return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
   postLogin(user) {
     return axios.post('/abyss/login-auth', user);
   },

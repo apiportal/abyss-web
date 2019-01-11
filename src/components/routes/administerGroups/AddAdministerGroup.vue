@@ -41,6 +41,10 @@ export default {
   },
   data() {
     const now = new Date();
+    const end = new Date();
+    // 50 years * 365.25 = 18262.5
+    // const endDate = new Date(now.getTime() + (24 * 60 * 60 * 1000 * 18262.5));
+    const endDate = new Date(end.setFullYear(end.getFullYear() + 50));
     return {
       newGroup: {
         firstname: '',
@@ -57,8 +61,8 @@ export default {
         isrestrictedtoprocessing: false,
         issandbox: false,
         picture: '',
-        effectiveenddate: now,
-        effectivestartdate: now,
+        effectiveenddate: endDate.toISOString(),
+        effectivestartdate: now.toISOString(),
       },
       page: this.$route.params.page,
     };

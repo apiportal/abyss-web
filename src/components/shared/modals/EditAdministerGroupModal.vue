@@ -32,6 +32,7 @@
               v-model="groupEditable.subjectname"
               placeholder="Group Name"
               :state="groupNameState"
+              :formatter="setValidSubjectName"
               required
             >
             </b-form-input>
@@ -68,12 +69,15 @@
             id="urlGroup"
             label="URL:"
             label-for="urlInput"
+            :invalid-feedback="urlInvalidFeedback"
+            :state="urlState"
           >
             <b-form-input
               id="urlInput"
-              type="text"
+              type="url"
               v-model="groupEditable.url"
               placeholder="URL"
+              :state="urlState"
               required
             >
             </b-form-input>
@@ -130,12 +134,15 @@
             id="effectiveStartDateGroup"
             label="Effective Start Date:"
             label-for="effectiveStartDateInput"
+            :invalid-feedback="effectiveStartDateInvalidFeedback"
+            :state="effectiveStartDateState"
           >
             <b-form-input
               id="effectiveStartDateInput"
               type="date"
-              v-model="groupEditable.effectivestartdate"
+              v-model="effectiveStartDate"
               placeholder="Effective Start Date"
+              :state="effectiveStartDateState"
               required
             >
             </b-form-input>
@@ -144,12 +151,15 @@
             id="effectiveEndDateGroup"
             label="Effective End Date:"
             label-for="effectiveEndDateInput"
+            :invalid-feedback="effectiveEndDateInvalidFeedback"
+            :state="effectiveEndDateState"
           >
             <b-form-input
               id="effectiveEndDateInput"
               type="date"
-              v-model="groupEditable.effectiveenddate"
+              v-model="effectiveEndDate"
               placeholder="Effective End Date"
+              :state="effectiveEndDateState"
               required
             >
             </b-form-input>
@@ -159,12 +169,15 @@
             id="groupDescriptionGroup"
             label="Description:"
             label-for="groupDescriptionTextarea"
+            :invalid-feedback="descriptionInvalidFeedback"
+            :state="descriptionState"
           >
             <b-form-textarea
               id="groupDescriptionTextarea"
               v-model="groupEditable.description"
               placeholder="Description"
               :rows="3"
+              :state="descriptionState"
               required
             >
             </b-form-textarea>
@@ -272,9 +285,30 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
+    effectiveStartDate: {
+      get() {
+        return this.groupEditable.effectivestartdate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.groupEditable.effectivestartdate = date.toISOString();
+      },
+    },
+    effectiveEndDate: {
+      get() {
+        return this.groupEditable.effectiveenddate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.groupEditable.effectiveenddate = date.toISOString();
+      },
+    },
     displayNameState() {
       const { displayname } = this.groupEditable;
-      return displayname.length > 0;
+      const re = /^[0-9A-Za-z_@.-\s]{2,30}$/;
+      return displayname.length > 0
+        && re.test(String(displayname))
+      ;
     },
     displayNameInvalidFeedback() {
       const { displayname } = this.groupEditable;
@@ -285,7 +319,10 @@ export default {
     },
     groupNameState() {
       const { subjectname } = this.groupEditable;
-      return subjectname.length > 0;
+      const re = /^[0-9a-z_@.-]{2,30}$/;
+      return subjectname.length > 0
+        && re.test(String(subjectname))
+      ;
     },
     groupNameInvalidFeedback() {
       const { subjectname } = this.groupEditable;
@@ -294,13 +331,55 @@ export default {
       }
       return '';
     },
-    emailState() {
-      const { email } = this.groupEditable;
-      return email.length > 0;
+    urlState() {
+      const { url } = this.groupEditable;
+      const re = /https?:\/\/[^\s]+/;
+      return re.test(String(url));
+      // return url.length > 0
+      //   && document.getElementById('urlInput').validity.valid
+      // ;
     },
-    emailInvalidFeedback() {
-      const { email } = this.groupEditable;
-      if (email.length === 0) {
+    urlInvalidFeedback() {
+      const { url } = this.groupEditable;
+      // if (url.length === 0) {
+      const re = /https?:\/\/[^\s]+/;
+      if (!url || url.length === 0) {
+        return 'Please enter url';
+      // } else if (document.getElementById('urlInput')) {
+      } else if (re.test(String(url))) {
+        return 'Please enter a valid url';
+      }
+      return '';
+    },
+    descriptionState() {
+      const { description } = this.groupEditable;
+      return description.length > 0;
+    },
+    descriptionInvalidFeedback() {
+      const { description } = this.groupEditable;
+      if (description.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    effectiveStartDateState() {
+      const { effectivestartdate } = this.groupEditable;
+      return effectivestartdate.length > 0;
+    },
+    effectiveStartDateInvalidFeedback() {
+      const { effectivestartdate } = this.groupEditable;
+      if (effectivestartdate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    effectiveEndDateState() {
+      const { effectiveenddate } = this.groupEditable;
+      return effectiveenddate.length > 0;
+    },
+    effectiveEndDateInvalidFeedback() {
+      const { effectiveenddate } = this.groupEditable;
+      if (effectiveenddate.length === 0) {
         return 'Please enter something';
       }
       return '';
@@ -337,6 +416,9 @@ export default {
   },
   methods: {
     ...mapActions('groups', ['putGroups']),
+    setValidSubjectName(value) {
+      return value.replace(/ /g, '').toLowerCase();
+    },
     handleSubmit(evt) {
       evt.preventDefault();
       const { groupEditable, putGroups, postGroups, onUpdate, role } = this;

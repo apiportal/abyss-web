@@ -96,83 +96,11 @@
           <tr slot="footer" class="footer">
             <td colspan="7">
               <div class="collapsible-content">
-                <div class="row">
-                  <dl class="px-3">
-                    <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
-                  </dl>
-                  <dl class="col">
-                    <dt>Group Name:</dt>
-                    <dd>{{ item.subjectname }}</dd>
-                    <dt>Group Display Name:</dt>
-                    <dd>{{ item.displayname }}</dd>
-                    <dt>Description:</dt>
-                    <dd>{{ item.description }}</dd>
-                  </dl>
-                  <dl class="col">
-                    <dt>Organization:</dt>
-                    <dd>{{ item.organizationname }}</dd>
-                    <dt>Directory:</dt>
-                    <dd>{{ item.directoryname }}</dd>
-                    <dt>url:</dt>
-                    <dd>{{ item.url }}</dd>
-                  </dl>
-                 
-                  <dl class="col">
-                    <dt>effectiveenddate:</dt>
-                    <dd>{{ item.effectiveenddate }}</dd>
-                    <dt>effectivestartdate:</dt>
-                    <dd>{{ item.effectivestartdate }}</dd>
-                    <dt>uuid:</dt>
-                    <dd><code>{{ item.uuid }}</code></dd>
-                  </dl>
-                  
-                  <dl class="col-1">
-                    <dt>Active:</dt>
-                    <dd>{{ item.isactivated }}</dd>
-                    <dt>Deleted:</dt>
-                    <dd>{{ item.isdeleted }}</dd>
-                    <dt>Locked:</dt>
-                    <dd>{{ item.islocked }}</dd>
-                  </dl>
-                  
-                  <dl class="col">
-                    <dt>Created:</dt>
-                    <dd>{{ item.created }}</dd>
-                    <dt>Updated:</dt>
-                    <dd>{{ item.updated }}</dd>
-                    <dt>Deleted:</dt>
-                    <dd>{{ item.deleted }}</dd>
-                  </dl>
-                </div>
-                <div>
-                  <b-dropdown variant="secondary" size="sm">
-                    <template slot="button-content">
-                      <Icon icon="list-ol" />
-                      <span>Logs</span>
-                    </template>
-                    <b-dropdown-item :to="`/app/administer-groups/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
-                  </b-dropdown>
-                  <b-button
-                    :to="`/app/administer-groups/${page}/edit/${item.uuid}`"
-                    size="sm"
-                    variant="secondary"
-                    v-b-tooltip.hover
-                    title="Edit"
-                  >
-                    <Icon icon="edit" />
-                    <span>Edit</span>
-                  </b-button>
-                  <b-button
-                    :to="`/app/administer-groups/${page}/delete/${item.uuid}`"
-                    size="sm"
-                    variant="danger"
-                    v-b-tooltip.hover
-                    title="Delete"
-                  >
-                    <Icon icon="trash-alt" />
-                    <span>Delete</span>
-                  </b-button>
-                </div>
+                <AdministerGroup
+                  :group="item"
+                  :users="users"
+                  :page="page"
+                />
               </div>
             </td>
           </tr>
@@ -196,6 +124,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import AdministerGroup from '@/components/routes/administerGroups/AdministerGroup';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
@@ -204,6 +133,7 @@ import Helpers from '@/helpers';
 
 export default {
   components: {
+    AdministerGroup,
     InputWithIcon,
     Icon,
     SortBy,

@@ -3,7 +3,7 @@
     <ConfirmModal
       v-if="isGroupsLoaded"
       title="Are you sure?"
-      :text="`${group.subjectname} will be deleted. You can't revert your action.`"
+      :text="`${group.displayname} will be deleted. You can't revert your action.`"
       :onClose="handleModalClose"
       :onConfirm="handleModalConfirm"
     />
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,15 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('groups', ['deleteGroups']),
     handleModalClose() {
       this.$router.push(`/app/administer-groups/${this.page}`);
     },
     handleModalConfirm() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      const { deleteGroups, group } = this;
+      deleteGroups({ ...group }).then(() => {
+        this.$router.push(`/app/administer-groups/${this.page}`);
+      });
     },
   },
   computed: {

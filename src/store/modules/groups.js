@@ -21,9 +21,34 @@ const actions = {
     });
   },
   putGroups: ({ commit }, group) => {
-    // api.putSubjects(group).then((response) => {
-    //   commit('updateGroups', response.data);
-    // });
+    api.putGroups(group).then((response) => {
+      commit('updateGroups', response.data);
+      return response;
+    });
+  },
+  deleteGroups: ({ commit }, group) => {
+    return api.deleteGroups(group.uuid).then((response) => {
+      commit('setGroupDeleted', group.uuid);
+      return response;
+    });
+  },
+  postGroups: ({ commit }, group) => {
+    return api.postGroups(group).then((response) => {
+      let error = false;
+
+      response.data.map((status) => {
+        if (status.error.code !==0) {
+          error = true;
+          alert(status.error.groupmessage);
+        } else {
+          commit('addNewGroup', status.response);
+        }
+      });
+      if (error) {
+        return false;
+      }
+      return response;
+    });
   },
 };
 
@@ -39,6 +64,23 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setGroupDeleted: (state, groupUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === groupUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
+  },
+  addNewGroup: (state, newGroup) => {
+    state.items = [
+      ...state.items,
+      newGroup,
+    ];
   },
 };
 

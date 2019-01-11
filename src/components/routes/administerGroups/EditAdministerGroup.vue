@@ -5,8 +5,7 @@
         isGroupsLoaded &&
         isSubjectDirectoriesLoaded &&
         isOrganizationsLoaded &&
-        isGroupsLoaded &&
-        isMembershipsLoaded
+        isGroupsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -22,7 +21,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import EditAdministerGroupModal from '@/components/shared/modals/EditAdministerGroupModal';
 
 export default {
@@ -35,10 +33,12 @@ export default {
       subjectDirectories: state => state.subjectDirectories.items,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
+      memberships: state => state.subjectMemberships.items,
       isGroupsLoaded: state => state.groups.lastUpdatedAt,
       isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
       isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
       isUsersLoaded: state => state.users.lastUpdatedAt,
+      isMembershipsLoaded: state => state.subjectMemberships.lastUpdatedAt,
     }),
   },
   methods: {
@@ -48,26 +48,12 @@ export default {
     handleModalUpdate() {
       this.$router.push(`/app/administer-groups/${this.page}`);
     },
-    getSubjectMemberships() {
-      api.getAllSubjectMemberships(this.groupId).then((response) => {
-        if (response && response.data) {
-          // this.memberships = response.data;
-          this.memberships = response.data.filter(group => group.subjectgroupid === this.groupId);
-        }
-        this.isMembershipsLoaded = true;
-      });
-    },
   },
   data() {
     return {
       groupId: this.$route.params.id,
       page: this.$route.params.page,
-      memberships: [],
-      isMembershipsLoaded: false,
     };
-  },
-  mounted() {
-    this.getSubjectMemberships();
   },
 };
 </script>

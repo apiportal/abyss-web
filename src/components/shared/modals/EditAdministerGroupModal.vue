@@ -23,12 +23,15 @@
             id="groupNameGroup"
             label="Group Name:"
             label-for="groupNameInput"
+            :invalid-feedback="groupNameInvalidFeedback"
+            :state="groupNameState"
           >
             <b-form-input
               id="groupNameInput"
               type="text"
               v-model="groupEditable.subjectname"
               placeholder="Group Name"
+              :state="groupNameState"
               required
             >
             </b-form-input>
@@ -37,12 +40,15 @@
             id="displayNameGroup"
             label="Display Name:"
             label-for="displayNameInput"
+            :invalid-feedback="displayNameInvalidFeedback"
+            :state="displayNameState"
           >
             <b-form-input
               id="displayNameInput"
               type="text"
               v-model="groupEditable.displayname"
               placeholder="Display Name"
+              :state="displayNameState"
               required
             >
             </b-form-input>
@@ -72,34 +78,83 @@
             >
             </b-form-input>
           </b-form-group>
+
           <b-form-group 
             id="groupOrganizationIdGroup"
             label="Organization:"
             label-for="groupOrganizationIdInput"
+            :invalid-feedback="organizationIdInvalidFeedback"
+            :state="organizationIdState"
           >
             <b-form-select
               id="groupOrganizationIdInput"
               v-model="groupEditable.organizationid" 
-              :options="organizations.map(organization => ({
-                value: organization.uuid,
-                text: organization.name,
-              }))"
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                })),
+              ]"
+              :state="organizationIdState"
             />
           </b-form-group>
           <b-form-group 
             id="groupDirectoryIdGroup"
             label="Directory:"
             label-for="groupDirectoryIdInput"
+            :invalid-feedback="subjectDirectoryIdInvalidFeedback"
+            :state="subjectDirectoryIdState"
           >
             <b-form-select
               id="groupDirectoryIdInput"
               v-model="groupEditable.subjectdirectoryid" 
-              :options="subjectDirectories.map(subjectDirectory => ({
-                value: subjectDirectory.uuid,
-                text: subjectDirectory.directoryname,
-              }))"
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...subjectDirectories.map(subjectDirectory => ({
+                  value: subjectDirectory.uuid,
+                  text: subjectDirectory.directoryname,
+                })),
+              ]"
+              :state="subjectDirectoryIdState"
             />
           </b-form-group>
+
+          <b-form-group 
+            id="effectiveStartDateGroup"
+            label="Effective Start Date:"
+            label-for="effectiveStartDateInput"
+          >
+            <b-form-input
+              id="effectiveStartDateInput"
+              type="date"
+              v-model="groupEditable.effectivestartdate"
+              placeholder="Effective Start Date"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="effectiveEndDateGroup"
+            label="Effective End Date:"
+            label-for="effectiveEndDateInput"
+          >
+            <b-form-input
+              id="effectiveEndDateInput"
+              type="date"
+              v-model="groupEditable.effectiveenddate"
+              placeholder="Effective End Date"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+
           <b-form-group 
             id="groupDescriptionGroup"
             label="Description:"
@@ -135,7 +190,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 
@@ -214,33 +269,110 @@ export default {
     },
   },
   computed: {
-    computedMemberships() {
-      return this.memberships.map((item) => {
-        const itemUser = this.users.find(user => user.uuid === item.subjectid);
-        return {
-          value: itemUser.uuid,
-          text: (itemUser ? itemUser.displayname : itemUser.uuid),
-        };
-      });
+    ...mapState({
+      currentUser: state => state.user,
+    }),
+    displayNameState() {
+      const { displayname } = this.groupEditable;
+      return displayname.length > 0;
+    },
+    displayNameInvalidFeedback() {
+      const { displayname } = this.groupEditable;
+      if (displayname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    groupNameState() {
+      const { subjectname } = this.groupEditable;
+      return subjectname.length > 0;
+    },
+    groupNameInvalidFeedback() {
+      const { subjectname } = this.groupEditable;
+      if (subjectname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    emailState() {
+      const { email } = this.groupEditable;
+      return email.length > 0;
+    },
+    emailInvalidFeedback() {
+      const { email } = this.groupEditable;
+      if (email.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    organizationIdState() {
+      const { organizationid } = this.groupEditable;
+      return organizationid !== null;
+    },
+    organizationIdInvalidFeedback() {
+      const { organizationid } = this.groupEditable;
+      if (organizationid === null) {
+        return 'Please select organization';
+      }
+      return '';
+    },
+    subjectDirectoryIdState() {
+      const { subjectdirectoryid } = this.groupEditable;
+      return subjectdirectoryid !== null;
+    },
+    subjectDirectoryIdInvalidFeedback() {
+      const { subjectdirectoryid } = this.groupEditable;
+      if (subjectdirectoryid === null) {
+        return 'Please select directory';
+      }
+      return '';
     },
   },
   data() {
+    const { group, role } = this;
     return {
-      groupEditable: JSON.parse(JSON.stringify(this.group)),
+      groupEditable: JSON.parse(JSON.stringify(group)),
+      isPasswordInputVisible: (role === 'add'),
     };
   },
   methods: {
     ...mapActions('groups', ['putGroups']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putGroups({
-        ...this.groupEditable,
-        firstname: this.groupEditable.displayname,
-        lastname: this.groupEditable.displayname,
-        email: `${this.groupEditable.subjectname}@verapi.com`,
-        secondaryemail: `${this.groupEditable.subjectname}@verapi.com`,
-      });
-      this.onUpdate();
+      const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
+      const { description, url, effectiveenddate, displayname, subjectname } = groupEditable;
+      let groupToUpdate = {
+        ...groupEditable,
+        firstname: displayname,
+        lastname: displayname,
+        email: `${subjectname}@verapi.com`,
+        secondaryemail: `${subjectname}@verapi.com`,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+      };
+
+      if (role === 'edit') {
+        putGroups(groupToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentGroup } = this;
+        const { uuid, subjecttypeid } = currentGroup.props;
+        const crudsubjectid = uuid;
+        groupToUpdate = [{
+          ...groupToUpdate,
+          crudsubjectid,
+          subjecttypeid,
+        }];
+        postGroups(groupToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
     },
   },
 };

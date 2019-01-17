@@ -80,4 +80,20 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  // resources
+  getResources() {
+    return axios.get('/abyss/oapi/resources');
+  },
+  // resource-types
+  getResourceTypes() {
+    return axios.get('/abyss/oapi/resource-types');
+  },
+  // resource-actions
+  getResourceActions() {
+    return axios.get('/abyss/oapi/resource-actions/');
+  },
+  // subject-permissions
+  getPermissions() {
+    return axios.get('/abyss/oapi/subject-permissions/');
+  },
 };

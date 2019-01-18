@@ -30,7 +30,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  sortByKey="permissionname"
+                  sortByKey="permission"
                   sortByKeyType="string"
                 />
               </th>
@@ -40,7 +40,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  sortByKey="resourcetype"
+                  sortByKey="resourcetypename"
                   sortByKeyType="string"
                 />
               </th>
@@ -50,7 +50,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  sortByKey="subject"
+                  sortByKey="subjectname"
                   sortByKeyType="string"
                 />
               </th>
@@ -60,7 +60,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  sortByKey="subjecttype"
+                  sortByKey="subjecttypename"
                   sortByKeyType="string"
                 />
               </th>
@@ -90,7 +90,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  sortByKey="organization"
+                  sortByKey="organizationname"
                   sortByKeyType="string"
                 />
               </th>
@@ -111,10 +111,10 @@
                 {{ item.resourcetypename }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.subject }}
+                {{ item.subjectname }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.subjecttype }}
+                {{ item.subjecttypename }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.resourceactionname }}
@@ -135,12 +135,11 @@
             <tr slot="footer" class="footer">
               <td colspan="9">
                 <div class="collapsible-content">
-                  <!-- TODO: Content Sources -->
                   <p>Permission Name: {{ item.permission }}</p>
                   <p>Resource: {{ item.resourcename}}</p>
                   <p>Resource Type: {{ item.resourcetypename }}</p>
-                  <!-- <p>Subject: {{ item.subject }}</p> -->
-                  <!-- <p>Subject Type: {{ item.subjecttype }}</p> -->
+                  <p>Subject: {{ item.subjectname }}</p>
+                  <p>Subject Type: {{ item.subjecttypename }}</p>
                   <p>Resource Action: {{ item.resourceactionname }}</p>
                   <p>Access Manager: {{ item.accessmanagername }}</p>
                   <p>Organization: {{ item.organizationname }}</p>
@@ -148,8 +147,7 @@
                   <p>Effective End Date: {{item.effectiveenddate}}</p>
                   <p>Created: {{ item.created }}</p>
                   <p>Updated: {{ item.updated }}</p>
-                  <p>Deleted: {{ item.deleted }}</p>
-
+                  <!-- <p>Deleted: {{ item.deleted }}</p> -->
                   <div>
                     <b-button
                       :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"
@@ -214,38 +212,59 @@ export default {
       resources: state => state.resources.items,
       resourceTypes: state => state.resourceTypes.items,
       resourceActions: state => state.resourceActions.items,
+      subjectTypes: state => state.subjectTypes.items,
+      users: state => state.users.items,
+      groups: state => state.groups.items,
+      apps: state => state.apps.items,
     }),
     tableRows() {
       const { accessManagers,
       organizations,
       permissions,
+      subjectTypes,
       resources,
       resourceTypes,
-      resourceActions } = this;
+      resourceActions,
+      users,
+      groups,
+      apps } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
-        return organization ? organization.name : organizationId;
+        return organization.name || organizationId;
       };
       const getResourceName = (resourceId) => {
         const resource = resources.find(item => item.uuid === resourceId);
-        return resource ? resource.resourcename : resourceId;
+        return resource.resourcename || resourceId;
       };
       const getResourceActions = (resourceActionId) => {
         const resourceAction = resourceActions.find(item => item.uuid === resourceActionId);
-        return resourceAction ? resourceAction.actionname : resourceActionId;
+        return resourceAction.actionname || resourceActionId;
       };
       const getAccessManagerName = (accessManagerId) => {
         const accessManager = accessManagers.find(item => item.uuid === accessManagerId);
-        return accessManager ? accessManager.accessmanagername : accessManagerId;
+        return accessManager.accessmanagername || accessManagerId;
       };
       const getResourceTypeId = (resourceId) => {
         const resource = resources.find(item => item.uuid === resourceId);
-        return resource ? resource.resourcetypeid : resourceId;
+        return resource.resourcetypeid || resourceId;
       };
       const getResourceTypeName = (resourceId) => {
         const resourceTypeId = getResourceTypeId(resourceId);
         const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId);
-        return resourceType ? resourceType.type : resourceTypeId;
+        return resourceType.type || resourceTypeId;
+      };
+      const getSubjectDisplayName = (subjectId) => {
+        const foundItem = [...users, ...groups, ...apps].find(i => i.uuid === subjectId) || {};
+        return foundItem.displayname || 'NOT User, Group or App';
+      };
+      const getSubjectTypeId = (subjectId) => {
+        const foundItem = [...users, ...groups, ...apps].find(i => i.uuid === subjectId) || {};
+        return foundItem.subjecttypeid || 'NOT User, Group or App';
+      };
+      const getSubjectTypeName = (subjectId) => {
+        const subjectTypeId = getSubjectTypeId(subjectId);
+        const subjectType = subjectTypes.find(item => item.uuid === subjectTypeId) || {};
+        return subjectType.typename || 'NOT User, Group or App';
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
@@ -256,20 +275,46 @@ export default {
           resourcename: getResourceName(item.resourceid),
           accessmanagername: getAccessManagerName(item.accessmanagerid),
           resourcetypename: getResourceTypeName(item.resourceid),
-        })),
-        // .filter((item) => {
-        //   const { filterKey } = this;
-        //   if (filterKey === '') {
-        //     return true;
-        //   }
-        //   const filterKeyLowerCase = filterKey.toLowerCase();
-        //   return (
-        //     (
-        //       item.resourcename &&
-        //       item.resourcename.toLowerCase().indexOf(filterKeyLowerCase) > -1
-        //     )
-        //   );
-        // }),
+          subjecttypename: getSubjectTypeName(item.subjectid),
+          subjectname: getSubjectDisplayName(item.subjectid),
+        }))
+        .filter((item) => {
+          const { filterKey } = this;
+          if (filterKey === '') {
+            return true;
+          }
+          const filterKeyLowerCase = filterKey.toLowerCase();
+          return (
+            (
+              item.permission &&
+              item.permission.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.resourcetypename &&
+              item.resourcetypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.subjectname &&
+              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.subjecttypename &&
+              item.subjecttypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.resourceactionname &&
+              item.resourceactionname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.accessmanagername &&
+              item.accessmanagername.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.organizationname &&
+              item.organizationname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            )
+          );
+        }),
         sortByKey,
         sortByKeyType,
         sortDirection,
@@ -277,14 +322,16 @@ export default {
     },
   },
   created() {
-    // this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    // this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('resources/getResources');
     this.$store.dispatch('resourceTypes/getResourceTypes');
     this.$store.dispatch('resourceActions/getResourceActions');
     this.$store.dispatch('permissions/getPermissions');
     this.$store.dispatch('accessManagers/getAccessManagers');
+    this.$store.dispatch('subjectTypes/getSubjectTypes');
+    this.$store.dispatch('users/getUsers');
+    this.$store.dispatch('groups/getGroups');
+    this.$store.dispatch('apps/getApps');
   },
   data() {
     return {

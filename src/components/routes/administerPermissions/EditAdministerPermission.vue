@@ -2,15 +2,20 @@
   <div>
     <EditAccessManagerModal
       v-if="
-        isSubjectDirectoriesLoaded &&
-        isSubjectDirectoryTypesLoaded &&
-        isOrganizationsLoaded
+        areAccessManagersLoaded &&
+        areOrganizationsLoaded && 
+        arePermissionsLoaded &&
+        areResourcesLoaded &&
+        areResourceTypesLoaded &&
+        areResourceActionsLoaded &&
+        areSubjectTypesLoaded &&
+        areUsersLoaded &&
+        areGroupsLoaded &&
+        areAppsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :subjectDirectory="subjectDirectories.find(item => item.uuid === subjectDirectoryId)"
-      :subjectDirectoryTypes="subjectDirectoryTypes"
       :organizations="organizations"
     />
   </div>
@@ -26,12 +31,17 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
-      isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
-      isSubjectDirectoryTypesLoaded: state => state.subjectDirectoryTypes.lastUpdatedAt,
-      isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
+      areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
+      areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
+      arePermissionsLoaded: state => state.permissions.lastUpdatedAt,
+      areResourcesLoaded: state => state.resources.lastUpdatedAt,
+      areResourceTypesLoaded: state => state.resourceTypes.lastUpdatedAt,
+      areResourceActionsLoaded: state => state.resourceActions.lastUpdatedAt,
+      areSubjectTypesLoaded: state => state.subjectTypes.lastUpdatedAt,
+      areUsersLoaded: state => state.users.lastUpdatedAt,
+      areGroupsLoaded: state => state.groups.lastUpdatedAt,
+      areAppsLoaded: state => state.apps.lastUpdatedAt,
     }),
   },
   methods: {

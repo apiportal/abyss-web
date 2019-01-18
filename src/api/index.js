@@ -96,4 +96,10 @@ export default {
   getPermissions() {
     return axios.get('/abyss/oapi/subject-permissions/');
   },
+  getSubjectTypes() {
+    return axios.get('/abyss/oapi/subject-types');
+  },
+  getApps() {
+    return axios.get('/abyss/oapi/subjects/apps/');
+  },
 };

@@ -223,14 +223,17 @@ export default {
     ...mapActions('administerPermissions', ['putAdministerPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putAdministerPermissions({
-        ...this.administerPermissionEditable,
+      const { putAdministerPermissions, administerPermissionEditable, onUpdate } = this;
+      putAdministerPermissions({
+        ...administerPermissionEditable,
         administerpermissionpriorityorder: parseInt(
-          this.administerPermissionEditable.administerpermissionpriorityorder,
-          10,
-        ),
+          administerPermissionEditable.administerpermissionpriorityorder,
+          10),
+      }).then((response) => {
+        if (response && response.data) {
+          onUpdate();
+        }
       });
-      this.onUpdate();
     },
     toggleConfigureAdministerPermission() {
       this.isConfigureAdministerPermissionVisible = !this.isConfigureAdministerPermissionVisible;

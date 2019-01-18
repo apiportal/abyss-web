@@ -2,14 +2,20 @@
   <div>
     <EditAdministerPermissionModal
       v-if="
-        isSubjectDirectoriesLoaded &&
-        isOrganizationsLoaded
+        areAccessManagersLoaded &&
+        areOrganizationsLoaded && 
+        arePermissionsLoaded &&
+        areResourcesLoaded &&
+        areResourceTypesLoaded &&
+        areResourceActionsLoaded &&
+        areSubjectTypesLoaded &&
+        areUsersLoaded &&
+        areGroupsLoaded &&
+        areAppsLoaded
       "
       role="add"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :user="newUser"
-      :subjectDirectories="subjectDirectories"
       :organizations="organizations"
     />
   </div>
@@ -24,21 +30,27 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectDirectories: state => state.subjectDirectories.items,
       organizations: state => state.organizations.items,
-      isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
-      isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
+      areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
+      areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
+      arePermissionsLoaded: state => state.permissions.lastUpdatedAt,
+      areResourcesLoaded: state => state.resources.lastUpdatedAt,
+      areResourceTypesLoaded: state => state.resourceTypes.lastUpdatedAt,
+      areResourceActionsLoaded: state => state.resourceActions.lastUpdatedAt,
+      areSubjectTypesLoaded: state => state.subjectTypes.lastUpdatedAt,
+      areUsersLoaded: state => state.users.lastUpdatedAt,
+      areGroupsLoaded: state => state.groups.lastUpdatedAt,
+      areAppsLoaded: state => state.apps.lastUpdatedAt,
     }),
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/administer-permission/${this.page}`);
+      this.$router.push(`/app/administer-permissions/${this.page}`);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/administer-permission/${this.page}`);
+      this.$router.push(`/app/administer-permissions/${this.page}`);
     },
   },
-  // Bu kısıma tekrar bakılacak
   data() {
     return {
       userId: this.$route.params.id,

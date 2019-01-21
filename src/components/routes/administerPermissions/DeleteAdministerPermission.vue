@@ -1,9 +1,9 @@
 <template>
   <div>
     <ConfirmModal
-      v-if="isAdministerPermissionsLoaded"
+      v-if="arePermissionsLoaded"
       title="Are you sure?"
-      :text="`${administerPermission.administerpermissionname} will be deleted. You can't revert your action.`"
+      :text="`${permission.permission} will be deleted. You can't revert your action.`"
       :onClose="handleDeleteAdministerPermissionModalClose"
       :onConfirm="handleDeleteAdministerPermissionModalConfirm"
     />
@@ -27,17 +27,17 @@ export default {
   },
   computed: {
     ...mapState({
-      administerPermissions: state => state.administerPermissions.items,
-      isAdministerPermissionsLoaded: state => state.administerPermissions.lastUpdatedAt,
+      permissions: state => state.permissions.items,
+      arePermissionsLoaded: state => state.permissions.lastUpdatedAt,
     }),
-    administerPermission() {
-      const { administerPermissionId, administerPermissions } = this;
-      return administerPermissions.find(item => item.uuid === administerPermissionId);
+    permission() {
+      const { permissionId, permissions } = this;
+      return permissions.find(item => item.uuid === permissionId);
     },
   },
   data() {
     return {
-      userId: this.$route.params.id,
+      permissionId: this.$route.params.id,
       page: this.$route.params.page,
     };
   },

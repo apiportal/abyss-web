@@ -9,38 +9,36 @@
     :size="size"
     :onClose="onClose"
   >
-    <template slot="header">
+      <template slot="header">
       <h5 class="modal-title">
         {{ role === 'edit' ? 'Edit Administer Permission' : 'Add New Administer Permission' }}
       </h5>
     </template>
     <template>
-      <b-form
-        @submit="handleSubmit"
+      <b-form 
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="administerPermissionNameGroup"
-            label="Name:"
-            label-for="administerPermissionNameInput"
+          <b-form-group
+            id="permissionNameGroup"
+            label="Permission Name:"
           >
-            <b-form-input
-              id="administerPermissionNameInput"
-              type="text"
-              v-model="administerPermissionEditable.administerpermissionname"
-              placeholder="Name"
-              required
-            >
-            </b-form-input>
+          <b-form-input
+            id="permissionNameInput"
+            type="text"
+            v-model="permissionEditable.permission"
+            placeholder="Permission Name"
+            required
+          >
+          </b-form-input>
           </b-form-group>
           <b-form-group 
-            id="administerPermissionDescriptionGroup"
-            label="Description:"
-            label-for="administerPermissionDescriptionTextarea"
+          id="permissionDescriptionGroup"
+          label="Description:"
+          label-for="permissionDescriptionTextarea"
           >
             <b-form-textarea
-              id="administerPermissionDescriptionTextarea"
-              v-model="administerPermissionEditable.description"
+              id="permissionDescriptionTextarea"
+              v-model="permissionEditable.description"
               placeholder="Description"
               :rows="3"
               required
@@ -48,95 +46,132 @@
             </b-form-textarea>
           </b-form-group>
           <b-form-group 
-            id="administerPermissionPriorityOrderGroup"
-            label="Priority Order:"
-            label-for="administerPermissionPriorityOrderInput"
+          id="permissionOrganizationIdGroup"
+          label="Organization:"
+          label-for="permissionOrganizationIdInput"
           >
-            <b-form-input
-              id="administerPermissionPriorityOrderInput"
-              type="number"
-              v-model="administerPermissionEditable.administerPermissionpriorityorder"
-              placeholder="Priority Order"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group id="administerPermissionEnabledGroup">
-            <b-form-checkbox
-              id="administerPermissionEnabledChecks"
-              v-model="administerPermissionEditable.isactive"
-              :value="true"
-              :unchecked-value="false"
-            >
-              Enabled
-            </b-form-checkbox>
+          <b-form-select
+              id="permissionOrganizationIdInput"
+              v-model="permissionEditable.organizationid"
+              :options="organizations.map(organization => ({
+              value: organization.uuid,
+              text: organization.name,
+              }))"
+          />
           </b-form-group>
           <b-form-group 
-            id="administerPermissionOrganizationIdGroup"
-            label="Organization:"
-            label-for="administerPermissionOrganizationIdInput"
+          id="permissionAccessManagerIdGroup"
+          label="Access Manager:"
+          label-for="permissionAccessManagerIdInput"
           >
-            <b-form-select
-              id="administerPermissionOrganizationIdInput"
-              v-model="administerPermissionEditable.organizationid" 
-              :options="organizations.map(organization => ({
-                value: organization.uuid,
-                text: organization.name,
+          <b-form-select
+              id="permissionAccessManagerIdInput"
+              v-model="permissionEditable.accessmanagerid"
+              :options="accessManagers.map(accessManager => ({
+              value: accessManager.uuid,
+              text: accessManager.accessmanagername,
               }))"
-            />
+          />
           </b-form-group>
-          <div class="row">
-            <div class="col-12">
-              <label for="administerPermissionTypeInput">AdministerPermission Type:</label>
-            </div>
-            <div class="col-10">
-              <b-form-group 
-                id="administerPermissionTypeGroup"
-              >
-                <b-form-select
-                  id="administerPermissionTypeInput"
-                  v-model="administerPermissionEditable.administerpermissiontypeid" 
-                  :options="administerPermissionTypes.map(administerPermissionType => ({
-                    value: administerPermissionType.uuid,
-                    text: administerPermissionType.typename,
-                  }))"
-                  @change="handleAdministerPermissionTypeChange"
-                />
-              </b-form-group>
-            </div>
-            <div class="col-2">
-              <b-button
-                variant="primary"
-                block
-                v-b-tooltip.hover
-                title="Configure AdministerPermission"
-                @click="toggleConfigureAdministerPermission"
-                :disabled="!administerPermissionEditable.administerpermissiontypeid"
-              >
-                <Icon icon="cog" />
-              </b-button>
-            </div>
-          </div>
-          <div 
-            v-if="administerPermissionEditable.administerpermissiontypeid"
-            :class="`configure-administer-permission ${isConfigureAdministerPermissionVisible ? 'd-block' : 'd-none'}`"
+          <b-form-group 
+          id="resourceTypeGroup"
+          label="Resource Type:"
+          label-for="resourceTypeInput"
           >
-            <h6>Configure Administer Permission</h6>
-            <!-- TODO generate form from attributes -->
-          </div>
+          <b-form-select
+              id="resourceTypeInput"
+              :options="resourceTypes.map(resourcetype => ({
+              value: resourcetype.uuid,
+              text: resourcetype.type,
+              }))"
+          />
+          </b-form-group>
+          <b-form-group 
+          id="resourceGroup"
+          label="Resource:"
+          label-for="resourceInput"
+          >
+          <b-form-select
+              id="resourceInput"
+              v-model="permissionEditable.resourceid"
+              :options="resources.map(resource => ({
+              value: resource.uuid,
+              text: resource.resourcename,
+              }))"
+          />
+          </b-form-group>
+          <b-form-group 
+          id="resourceActionGroup"
+          label="Resource Action:"
+          label-for="resourceActionInput"
+          >
+          <b-form-select
+              id="resourceActionInput"
+              v-model="permissionEditable.resourceactionid"
+              :options="resourceActions.map(resourceaction => ({
+              value: resourceaction.uuid,
+              text: resourceaction.actionname,
+              }))"
+          />
+          </b-form-group>
+          <b-form-group 
+          id="subjectGroup"
+          label="Subject:"
+          label-for="subjectInput"
+          >
+          <b-form-select id="subjectInput">
+            <optgroup label='GROUPS'>
+              <!-- <option>{{this.groups.map(group => (group.displayname))}}</option> -->
+            </optgroup>
+            <optgroup label='USERS'>
+              <!-- <option>{{this.users.map(user => (user.displayname))}}</option> -->
+            </optgroup>
+          </b-form-select>
+          </b-form-group>
+          <b-form-group id="permissionEnabledGroup">
+          <b-form-checkbox
+              id="permissionEnabledChecks"
+              :value="true"
+              :unchecked-value="false"
+          >
+              Enabled
+          </b-form-checkbox>
+          </b-form-group>
+          <b-form-group
+            id="permissionEffectiveFrom"
+            label="Effective From:"
+          >
+          <b-form-input
+            id="permissionEffectiveFromInput"
+            type="datetime-local"
+            required
+          >
+          </b-form-input>
+          </b-form-group>
+          <b-form-group
+            id="permissionEffectiveTo"
+            label="Effective To:"
+          >
+          <b-form-input
+            id="permissionEffectiveToInput"
+            type="datetime-local"
+            required
+          >
+          </b-form-input>
+          </b-form-group>
         </div>
         <footer class="modal-footer">
-          <b-button
-            variant="secondary"
-            @click="onClose"
+        <b-button
+          variant="secondary"
+          @click="onClose"
           >
-            Cancel
+          Cancel
           </b-button>
           <b-button
-            variant="success"
-            type="submit"
+          variant="success"
+          type="submit"
           >
-            Save
+          Save
           </b-button>
         </footer>
       </b-form>
@@ -193,7 +228,7 @@ export default {
       type: Function,
       required: true,
     },
-    administerPermission: {
+    permission: {
       type: Object,
       required: false,
     },
@@ -207,33 +242,66 @@ export default {
       required: false,
       default() { return []; },
     },
+    accessManagers: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    resources: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    resourceTypes: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    resourceActions: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     role: {
       type: String,
       required: false,
       default() { return 'edit'; },
     },
+    users: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    groups: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   data() {
     return {
-      administerPermissionEditable: JSON.parse(JSON.stringify(this.administerPermission)),
+      permissionEditable: JSON.parse(JSON.stringify(this.permission)),
       isConfigureAdministerPermissionVisible: false,
+      // options: {
+      //   USERS: this.users.map(user => ({
+      //     value: user.uuid,
+      //     text: user.displayname,
+      //   })),
+      //   GROUPS: this.groups.map(group => ({
+      //     value: group.uuid,
+      //     text: group.displayname,
+      //   })),
+      // },
     };
   },
   methods: {
-    ...mapActions('administerPermissions', ['putAdministerPermissions']),
+    ...mapActions('permissions', ['putPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { putAdministerPermissions, administerPermissionEditable, onUpdate } = this;
-      putAdministerPermissions({
-        ...administerPermissionEditable,
-        administerpermissionpriorityorder: parseInt(
-          administerPermissionEditable.administerpermissionpriorityorder,
-          10),
-      }).then((response) => {
-        if (response && response.data) {
-          onUpdate();
-        }
+      this.putPermissions({
+        ...this.permissionEditable,
       });
+      this.onUpdate();
     },
     toggleConfigureAdministerPermission() {
       this.isConfigureAdministerPermissionVisible = !this.isConfigureAdministerPermissionVisible;

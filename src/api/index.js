@@ -96,9 +96,17 @@ export default {
   getPermissions() {
     return axios.get('/abyss/oapi/subject-permissions/');
   },
+  putPermissions(administerPermission) {
+    const { uuid, created, deleted, effectiveenddate,
+      effectivestartdate, isactive, isdeleted,
+      permission, updated, ...rest } = administerPermission;
+    return axios.put(`/abyss/oapi/subject-permissions/${uuid}`, rest);
+  },
+  // subject-types
   getSubjectTypes() {
     return axios.get('/abyss/oapi/subject-types');
   },
+  // apps
   getApps() {
     return axios.get('/abyss/oapi/subjects/apps/');
   },

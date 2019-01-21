@@ -17,6 +17,13 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :organizations="organizations"
+      :accessManagers="accessManagers"
+      :resourceTypes="resourceTypes"
+      :resourceActions="resourceActions"
+      :resources="resources"
+      :users="users"
+      :groups="groups"
+      :permission="permission"
     />
   </div>
 </template>
@@ -31,6 +38,12 @@ export default {
   computed: {
     ...mapState({
       organizations: state => state.organizations.items,
+      accessManagers: state => state.accessManagers.items,
+      resourceTypes: state => state.resourceTypes.items,
+      resources: state => state.resources.items,
+      resourceActions: state => state.resourceActions.items,
+      users: state => state.users.items,
+      groups: state => state.groups.items,
       areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
       areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
       arePermissionsLoaded: state => state.permissions.lastUpdatedAt,
@@ -53,7 +66,7 @@ export default {
   },
   data() {
     return {
-      userId: this.$route.params.id,
+      permission: {},
       page: this.$route.params.page,
     };
   },

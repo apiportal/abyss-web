@@ -104,7 +104,7 @@
             :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           >
             <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-              <td @click="() => handleCollapseTableRows(item.permission)">
+              <td @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.permission }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -147,7 +147,7 @@
                   <p>Effective End Date: {{item.effectiveenddate}}</p>
                   <p>Created: {{ item.created }}</p>
                   <p>Updated: {{ item.updated }}</p>
-                  <!-- <p>Deleted: {{ item.deleted }}</p> -->
+                  <p v-if="item.isdeleted">Deleted: {{ item.deleted }}</p>
                   <div>
                     <b-button
                       :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"

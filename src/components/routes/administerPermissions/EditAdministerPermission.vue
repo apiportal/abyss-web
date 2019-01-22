@@ -1,6 +1,6 @@
 <template>
   <div>
-    <EditAccessManagerModal
+    <EditAdministerPermissionModal
       v-if="
         areAccessManagersLoaded &&
         areOrganizationsLoaded && 

@@ -143,8 +143,8 @@
           >
           <b-form-input
             id="permissionEffectiveFromInput"
+            v-model="permissionEditable.effectivestartdate"
             type="datetime-local"
-            required
           >
           </b-form-input>
           </b-form-group>
@@ -154,8 +154,8 @@
           >
           <b-form-input
             id="permissionEffectiveToInput"
+            v-model="permissionEditable.effectiveenddate"
             type="datetime-local"
-            required
           >
           </b-form-input>
           </b-form-group>

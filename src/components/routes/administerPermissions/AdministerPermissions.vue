@@ -100,7 +100,7 @@
             </tr>
           </thead>
           <TbodyCollapsible
-            v-for="(item, index) in tableRows" v-bind:key="index"
+            v-for="(item, index) in paginatedRows" v-bind:key="index"
             :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           >
             <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
@@ -176,7 +176,7 @@
         </table>
         <router-view></router-view>
       </div>
-      <div class="administer-permissions-footer">
+      <div class="administer-permissions-footer" v-if="tableRows.length > 0">
         <b-pagination 
           size="md"
           :total-rows="tableRows.length"
@@ -320,6 +320,15 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
     this.$store.dispatch('organizations/getOrganizations');
@@ -341,7 +350,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
-      itemsPerPage: 20,
+      itemsPerPage: 10,
     };
   },
   methods: {

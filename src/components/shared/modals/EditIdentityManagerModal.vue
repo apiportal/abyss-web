@@ -110,7 +110,7 @@
                     value: subjectDirectoryType.uuid,
                     text: subjectDirectoryType.typename,
                   }))"
-                  @change="handleDirectoryTypeChange"
+                  @change="(val) => handleDirectoryTypeChange(val)"
                 />
               </b-form-group>
             </div>
@@ -129,11 +129,16 @@
           </div>
           <div 
             v-if="subjectDirectoryEditable.directorytypeid"
-            :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
+            :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-nonen'}`"
           >
             <h6>Configure Directory</h6>
             <!-- TODO generate form from attributes -->
-            <b-form-group 
+
+            <DynamicForm 
+              :formData="directoryConfiguration" 
+            />
+            
+            <!-- <b-form-group 
               id="directoryLdapUrlGroup"
               label="Ldap Connection Url - Host and Port:"
               label-for="directoryLdapUrlInput"
@@ -285,7 +290,7 @@
                 placeholder="User Object Class"
               >
               </b-form-input>
-            </b-form-group>
+            </b-form-group> -->
           </div>
         </div>
         <footer class="modal-footer">
@@ -311,11 +316,13 @@
 import { mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
+import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
 
 export default {
   components: {
     Modal,
     Icon,
+    DynamicForm,
   },
   props: {
     hideHeader: {
@@ -380,6 +387,7 @@ export default {
     return {
       subjectDirectoryEditable: JSON.parse(JSON.stringify(this.subjectDirectory)),
       isConfigureDirectoryVisible: false,
+      directoryConfiguration: {},
     };
   },
   methods: {
@@ -399,8 +407,12 @@ export default {
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;
     },
-    handleDirectoryTypeChange() {
+    handleDirectoryTypeChange(selectedDirectoryId) {
       this.isConfigureDirectoryVisible = true;
+      const { subjectDirectoryTypes } = this;
+      const directory = subjectDirectoryTypes.find(item => item.uuid === selectedDirectoryId);
+      const directoryConfiguration = directory.attributetemplate.components.schemas;
+      this.directoryConfiguration = directoryConfiguration;
     },
   },
 };

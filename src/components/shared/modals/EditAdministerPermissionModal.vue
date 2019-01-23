@@ -16,6 +16,7 @@
     </template>
     <template>
       <b-form 
+        @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
           <b-form-group
@@ -80,6 +81,7 @@
           >
           <b-form-select
               id="resourceTypeInput"
+              v-model="resourceTypeIdEditable"
               :options="resourceTypes.map(resourcetype => ({
               value: resourcetype.uuid,
               text: resourcetype.type,
@@ -94,7 +96,9 @@
           <b-form-select
               id="resourceInput"
               v-model="permissionEditable.resourceid"
-              :options="resources.map(resource => ({
+              :options="resources
+              .filter(resource => resource.resourcetypeid === resourceTypeIdEditable)
+              .map(resource => ({
               value: resource.uuid,
               text: resource.resourcename,
               }))"
@@ -108,7 +112,9 @@
           <b-form-select
               id="resourceActionInput"
               v-model="permissionEditable.resourceactionid"
-              :options="resourceActions.map(resourceaction => ({
+              :options="resourceActions
+              .filter(resource => resource.resourcetypeid === resourceTypeIdEditable)
+              .map(resourceaction => ({
               value: resourceaction.uuid,
               text: resourceaction.actionname,
               }))"
@@ -119,12 +125,27 @@
           label="Subject:"
           label-for="subjectInput"
           >
-          <b-form-select id="subjectInput">
-            <optgroup label='GROUPS'>
-              <!-- <option>{{this.groups.map(group => (group.displayname))}}</option> -->
+          <b-form-select 
+            id="subjectInput"
+            v-model="permissionEditable.subjectid"
+          >
+            <optgroup label="GROUPS">
+              <option
+                v-for="(option, index) in groups"
+                v-bind:key="index"
+                :value="option.uuid"
+              >
+                {{ option.displayname }}
+            </option>
             </optgroup>
-            <optgroup label='USERS'>
-              <!-- <option>{{this.users.map(user => (user.displayname))}}</option> -->
+            <optgroup label="USERS">
+              <option
+                v-for="(option, index) in users"
+                v-bind:key="index"
+                :value="option.uuid"
+              >
+                {{ option.displayname }}
+            </option>
             </optgroup>
           </b-form-select>
           </b-form-group>
@@ -144,7 +165,7 @@
           <b-form-input
             id="permissionEffectiveFromInput"
             v-model="permissionEditable.effectivestartdate"
-            type="datetime-local"
+            type="text"
           >
           </b-form-input>
           </b-form-group>
@@ -155,7 +176,7 @@
           <b-form-input
             id="permissionEffectiveToInput"
             v-model="permissionEditable.effectiveenddate"
-            type="datetime-local"
+            type="text"
           >
           </b-form-input>
           </b-form-group>
@@ -277,30 +298,31 @@ export default {
       required: false,
       default() { return []; },
     },
+    resourceTypeId: {
+      type: String,
+      required: false,
+    },
   },
   data() {
+    const { permission } = this;
+    const permissionEditable = JSON.parse(JSON.stringify(permission));
+
     return {
-      permissionEditable: JSON.parse(JSON.stringify(this.permission)),
+      permissionEditable: {
+        ...permissionEditable,
+        effectivestartdate: new Date(permissionEditable.effectivestartdate),
+        effectiveenddate: permissionEditable.effectiveenddate === null ?
+          '' : new Date(permissionEditable.effectiveenddate),
+      },
       isConfigureAdministerPermissionVisible: false,
-      // options: {
-      //   USERS: this.users.map(user => ({
-      //     value: user.uuid,
-      //     text: user.displayname,
-      //   })),
-      //   GROUPS: this.groups.map(group => ({
-      //     value: group.uuid,
-      //     text: group.displayname,
-      //   })),
-      // },
+      resourceTypeIdEditable: this.resourceTypeId,
     };
   },
   methods: {
     ...mapActions('permissions', ['putPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putPermissions({
-        ...this.permissionEditable,
-      });
+      this.putPermissions(this.permissionEditable);
       this.onUpdate();
     },
     toggleConfigureAdministerPermission() {
@@ -309,6 +331,7 @@ export default {
     handleAdministerPermissionTypeChange() {
       this.isConfigureAdministerPermissionVisible = true;
     },
+
   },
 };
 </script>

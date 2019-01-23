@@ -136,6 +136,7 @@
               <td colspan="9">
                 <div class="collapsible-content">
                   <p>Permission Name: {{ item.permission }}</p>
+                  <p>Description: {{ item.description }}</p>
                   <p>Resource: {{ item.resourcename}}</p>
                   <p>Resource Type: {{ item.resourcetypename }}</p>
                   <p>Subject: {{ item.subjectname }}</p>
@@ -229,28 +230,28 @@ export default {
       groups,
       apps } = this;
       const getOrganizationName = (organizationId) => {
-        const organization = organizations.find(item => item.uuid === organizationId);
+        const organization = organizations.find(item => item.uuid === organizationId) || {};
         return organization.name || organizationId;
       };
       const getResourceName = (resourceId) => {
-        const resource = resources.find(item => item.uuid === resourceId);
+        const resource = resources.find(item => item.uuid === resourceId) || {};
         return resource.resourcename || resourceId;
       };
       const getResourceActions = (resourceActionId) => {
-        const resourceAction = resourceActions.find(item => item.uuid === resourceActionId);
+        const resourceAction = resourceActions.find(item => item.uuid === resourceActionId) || {};
         return resourceAction.actionname || resourceActionId;
       };
       const getAccessManagerName = (accessManagerId) => {
-        const accessManager = accessManagers.find(item => item.uuid === accessManagerId);
+        const accessManager = accessManagers.find(item => item.uuid === accessManagerId) || {};
         return accessManager.accessmanagername || accessManagerId;
       };
       const getResourceTypeId = (resourceId) => {
-        const resource = resources.find(item => item.uuid === resourceId);
+        const resource = resources.find(item => item.uuid === resourceId) || {};
         return resource.resourcetypeid || resourceId;
       };
       const getResourceTypeName = (resourceId) => {
         const resourceTypeId = getResourceTypeId(resourceId);
-        const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId);
+        const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId) || {};
         return resourceType.type || resourceTypeId;
       };
       const getSubjectDisplayName = (subjectId) => {

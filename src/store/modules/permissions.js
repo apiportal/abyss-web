@@ -20,11 +20,23 @@ const actions = {
       }
     });
   },
+  putPermissions: ({ commit }, permission) => {
+    api.putPermissions(permission).then((response) => {
+      commit('updatePermissions', response.data);
+    });
+  },
 };
-
 const mutations = {
   setPermissions: (state, permissions) => {
     state.items = permissions;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  updatePermissions: (state, permissions) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = permissions
+        .find(permission => permission.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

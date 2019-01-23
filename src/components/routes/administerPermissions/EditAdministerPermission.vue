@@ -23,7 +23,8 @@
       :resources="resources"
       :users="users"
       :groups="groups"
-      :permission="permissions.find(item => item.uuid === permissionId)"
+      :permission="getPermission(permissionId)"
+      :resourceTypeId="getResourceTypeIdByPermision(getPermission(permissionId))"
     />
   </div>
 </template>
@@ -60,10 +61,16 @@ export default {
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/administer-permission/${this.page}`);
+      this.$router.push(`/app/administer-permissions/${this.page}`);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/administer-permission/${this.page}`);
+      this.$router.push(`/app/administer-permissions/${this.page}`);
+    },
+    getPermission(permissionId) {
+      return this.permissions.find(item => item.uuid === permissionId);
+    },
+    getResourceTypeIdByPermision(permission) {
+      return this.resources.find(item => item.uuid === permission.resourceid).resourcetypeid;
     },
   },
   data() {

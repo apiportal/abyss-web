@@ -3,9 +3,10 @@
     :description="label"
   >
     <b-form-checkbox
-      :checked="example"
+      v-model="inputValue"
       :value="true"
       :unchecked-value="false"
+      @change="handleChange"
     >
       {{ description }}
     </b-form-checkbox>
@@ -44,6 +45,22 @@ export default {
     onChange: {
       type: Function,
       required: true,
+    },
+    value: {
+      required: false,
+    },
+  },
+  data() {
+    const { example, value } = this;
+
+    return {
+      inputValue: (value !== undefined ? value : example),
+    };
+  },
+  methods: {
+    handleChange(evt) {
+      const { propAddress, onChange } = this;
+      onChange(propAddress, evt);
     },
   },
 };

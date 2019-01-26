@@ -21,13 +21,16 @@
         <div style="padding: 1rem;">
           <b-form-group 
             id="directoryNameGroup"
-            label="Name:"
-            label-for="directoryNameInput"
           >
+            <label>
+              Name:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-input
               id="directoryNameInput"
               type="text"
               v-model="subjectDirectoryEditable.directoryname"
+              :state="directoryNameState"
               placeholder="Name"
               required
             >
@@ -35,12 +38,15 @@
           </b-form-group>
           <b-form-group 
             id="directoryDescriptionGroup"
-            label="Description:"
-            label-for="directoryDescriptionTextarea"
           >
+            <label>
+              Description:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-textarea
               id="directoryDescriptionTextarea"
               v-model="subjectDirectoryEditable.description"
+              :state="descriptionState"
               placeholder="Description"
               :rows="3"
               required
@@ -49,13 +55,16 @@
           </b-form-group>
           <b-form-group 
             id="directoryPriorityOrderGroup"
-            label="Priority Order:"
-            label-for="directoryPriorityOrderInput"
           >
+            <label>
+              Priority Order:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-input
               id="directoryPriorityOrderInput"
               type="number"
               v-model="subjectDirectoryEditable.directorypriorityorder"
+              :state="directoryPriorityOrderState"
               placeholder="Priority Order"
               required
             >
@@ -83,21 +92,25 @@
           </b-form-group>
           <b-form-group 
             id="directoryOrganizationIdGroup"
-            label="Organization:"
-            label-for="directoryOrganizationIdInput"
           >
+            <label>
+              Organization:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-select
               id="directoryOrganizationIdInput"
               v-model="subjectDirectoryEditable.organizationid" 
+              :state="directoryOrganizationIdState"
               :options="organizations.map(organization => ({
                 value: organization.uuid,
                 text: organization.name,
               }))"
+              required
             />
           </b-form-group>
           <div class="row">
             <div class="col-12">
-              <label for="directoryTypeInput">Directory Type:</label>
+              <label for="directoryTypeInput">Directory Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
               <b-form-group 
@@ -106,11 +119,13 @@
                 <b-form-select
                   id="directoryTypeInput"
                   v-model="subjectDirectoryEditable.directorytypeid" 
+                  :state="directoryTypeState"
                   :options="subjectDirectoryTypes.map(subjectDirectoryType => ({
                     value: subjectDirectoryType.uuid,
                     text: subjectDirectoryType.typename,
                   }))"
                   @change="(val) => handleDirectoryTypeChange(val)"
+                  required
                 />
               </b-form-group>
             </div>
@@ -238,6 +253,53 @@ export default {
       type: String,
       required: false,
       default() { return 'edit'; },
+    },
+  },
+  computed: {
+    directoryNameState() {
+      const { directoryname } = this.subjectDirectoryEditable;
+
+      if (directoryname && directoryname.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    descriptionState() {
+      const { description } = this.subjectDirectoryEditable;
+
+      if (description && description.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryPriorityOrderState() {
+      const { directorypriorityorder } = this.subjectDirectoryEditable;
+
+      if (directorypriorityorder) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryOrganizationIdState() {
+      const { organizationid } = this.subjectDirectoryEditable;
+
+      if (organizationid) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryTypeState() {
+      const { directorytypeid } = this.subjectDirectoryEditable;
+
+      if (directorytypeid) {
+        return true;
+      }
+
+      return false;
     },
   },
   data() {

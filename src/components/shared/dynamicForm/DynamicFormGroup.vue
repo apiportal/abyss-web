@@ -31,6 +31,7 @@
       :required="required"
       :propAddress="propAddress"
       :onChange="onChange"
+      :value="value"
     />
     <div v-else>
       <span style="color: red">Unknown Type: {{ type }}</span>

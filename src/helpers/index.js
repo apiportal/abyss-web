@@ -23,7 +23,16 @@ const paginateArray = ({ array, itemsPerPage, page }) => {
   return array.slice(startIndex, (endIndex <= totalItems ? endIndex : totalItems));
 };
 
+const objectDeepUpdate = (propPath, value, object) => {
+  if (propPath.length > 1) {
+    return objectDeepUpdate(propPath.slice(1), value, object[propPath[0]]);
+  }
+  object[propPath[0]] = value; // eslint-disable-line
+  return true;
+};
+
 export default {
   sortArrayOfObjects,
   paginateArray,
+  objectDeepUpdate,
 };

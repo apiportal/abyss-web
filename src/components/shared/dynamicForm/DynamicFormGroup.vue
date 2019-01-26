@@ -6,6 +6,10 @@
       :example="example"
       :description="description"
       :readonly="readonly"
+      :required="required"
+      :propAddress="propAddress"
+      :onChange="onChange"
+      :value="value"
     />
     <DynamicFormInputInteger
       v-else-if="type === 'integer'"
@@ -13,6 +17,10 @@
       :example="example"
       :description="description"
       :readonly="readonly"
+      :required="required"
+      :propAddress="propAddress"
+      :onChange="onChange"
+      :value="value"
     />
     <DynamicFormCheckbox
       v-else-if="type === 'boolean'"
@@ -20,9 +28,14 @@
       :example="example"
       :description="description"
       :readonly="readonly"
+      :required="required"
+      :propAddress="propAddress"
+      :onChange="onChange"
     />
     <div v-else>
-      {{ title }} {{ type }} {{ example }} {{ readonly }}
+      <span style="color: red">Unknown Type: {{ type }}</span>
+      <br>
+      {{ title }}
     </div>
   </div>
 </template>
@@ -52,6 +65,23 @@ export default {
     },
     readonly: {
       type: Boolean,
+      required: false,
+    },
+    required: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    propAddress: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    onChange: {
+      type: Function,
+      required: true,
+    },
+    value: {
       required: false,
     },
   },

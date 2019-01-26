@@ -31,6 +31,20 @@ export default {
       type: Boolean,
       required: false,
     },
+    required: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    propAddress: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    onChange: {
+      type: Function,
+      required: true,
+    },
   },
 };
 </script>

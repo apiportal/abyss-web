@@ -129,168 +129,25 @@
           </div>
           <div 
             v-if="subjectDirectoryEditable.directorytypeid"
-            :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-nonen'}`"
+            :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Directory</h6>
-            <!-- TODO generate form from attributes -->
-
-            <DynamicForm 
-              :formData="directoryConfiguration" 
-            />
-            
-            <!-- <b-form-group 
-              id="directoryLdapUrlGroup"
-              label="Ldap Connection Url - Host and Port:"
-              label-for="directoryLdapUrlInput"
+            <div
+              v-if="
+                subjectDirectoryEditable &&
+                subjectDirectoryEditable.directoryattributes &&
+                subjectDirectoryEditable.directoryattributes.components &&
+                subjectDirectoryEditable.directoryattributes.components.schemas
+              "
             >
-              <b-form-input
-                id="directoryLdapUrlInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.url']"
-                placeholder="Ldap Connection Url - Host and Port"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapBaseDnGroup"
-              label="Base DN:"
-              label-for="directoryLdapBaseDnInput"
-            >
-              <b-form-input
-                id="directoryLdapBaseDnInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.basedn']"
-                placeholder="Base DN"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group id="directoryLdapSecureGroup">
-              <b-form-checkbox
-                id="directoryLdapSecureCheck"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.secure']"
-                :value="true"
-                :unchecked-value="false"
-              >
-                Use SSL
-              </b-form-checkbox>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserDnGroup"
-              label="Ldap User DN:"
-              label-for="directoryLdapUserDnInput"
-            >
-              <b-form-input
-                id="directoryLdapUserDnInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.userdn']"
-                placeholder="Ldap User DN"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapPasswordGroup"
-              label="Ldap Password:"
-              label-for="directoryLdapPasswordInput"
-            >
-              <b-form-input
-                id="directoryLdapPasswordInput"
-                type="password"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.password']"
-                placeholder="Ldap Password"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserFilterGroup"
-              label="User Object Filter:"
-              label-for="directoryLdapUserFilterInput"
-            >
-              <b-form-input
-                id="directoryLdapUserObjectFilterInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.filter']"
-                placeholder="User Object Filter"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapReadTimeoutGroup"
-              label="LDAP Read Timeout:"
-              label-for="directoryLdapReadTimeoutInput"
-            >
-              <b-form-input
-                id="directoryLdapReadTimeoutInput"
-                type="number"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.read.timeout']"
-                placeholder="LDAP Read Timeout"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserNameGroup"
-              label="User Name Field Name:"
-              label-for="directoryLdapUserNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.username']"
-                placeholder="User Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserFirstNameGroup"
-              label="User First Name Field Name:"
-              label-for="directoryLdapUserFirstNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserFirstNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.firstname']"
-                placeholder="User First Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserLastNameGroup"
-              label="User Last Name Field Name:"
-              label-for="directoryLdapUserLastNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserLastNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.lastname']"
-                placeholder="User Last Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserPasswordGroup"
-              label="User Password Field Name:"
-              label-for="directoryLdapUserPasswordInput"
-            >
-              <b-form-input
-                id="directoryLdapUserPasswordInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.password']"
-                placeholder="User Password Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserObjectClassGroup"
-              label="User Object Class:"
-              label-for="directoryLdapUserObjectClassInput"
-            >
-              <b-form-input
-                id="directoryLdapUserObjectClassInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.objectclass']"
-                placeholder="User Object Class"
-              >
-              </b-form-input>
-            </b-form-group> -->
+              <DynamicForm
+                :formData="subjectDirectoryEditable.directoryattributes.components.schemas"
+                :onUpdate="handleConfigurationUpdate"
+              />
+            </div>
+            <div v-else>
+              <span style="color: red;">Current configuration is not valid.</span>
+            </div>
           </div>
         </div>
         <footer class="modal-footer">
@@ -387,7 +244,6 @@ export default {
     return {
       subjectDirectoryEditable: JSON.parse(JSON.stringify(this.subjectDirectory)),
       isConfigureDirectoryVisible: false,
-      directoryConfiguration: {},
     };
   },
   methods: {
@@ -409,10 +265,29 @@ export default {
     },
     handleDirectoryTypeChange(selectedDirectoryId) {
       this.isConfigureDirectoryVisible = true;
-      const { subjectDirectoryTypes } = this;
+      const { subjectDirectoryTypes, subjectDirectoryEditable } = this;
       const directory = subjectDirectoryTypes.find(item => item.uuid === selectedDirectoryId);
-      const directoryConfiguration = directory.attributetemplate.components.schemas;
-      this.directoryConfiguration = directoryConfiguration;
+      this.subjectDirectoryEditable = {
+        ...subjectDirectoryEditable,
+        directoryattributes: directory.attributetemplate,
+      };
+    },
+    handleConfigurationUpdate(newDirecoryConfiguration) {
+      // subjectDirectoryEditable.directoryattributes.components.schemas
+      const { subjectDirectoryEditable } = this;
+      this.subjectDirectoryEditable = {
+        ...subjectDirectoryEditable,
+        directoryattributes: {
+          ...subjectDirectoryEditable.directoryattributes,
+          components: {
+            ...subjectDirectoryEditable.directoryattributes.components,
+            schemas: {
+              ...subjectDirectoryEditable.directoryattributes.components.schemas,
+              ...newDirecoryConfiguration,
+            },
+          },
+        },
+      };
     },
   },
 };

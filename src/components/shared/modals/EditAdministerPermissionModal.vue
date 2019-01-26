@@ -152,6 +152,7 @@
           <b-form-group id="permissionEnabledGroup">
           <b-form-checkbox
               id="permissionEnabledChecks"
+              v-model="permissionEditable.isactive"
               :value="true"
               :unchecked-value="false"
           >
@@ -201,7 +202,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 
@@ -303,6 +304,11 @@ export default {
       required: false,
     },
   },
+  computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
+  },
   data() {
     const { permission } = this;
     const permissionEditable = JSON.parse(JSON.stringify(permission));
@@ -319,11 +325,31 @@ export default {
     };
   },
   methods: {
-    ...mapActions('permissions', ['putPermissions']),
+    ...mapActions('permissions', ['putPermissions', 'postPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putPermissions(this.permissionEditable);
-      this.onUpdate();
+      const { permissionEditable, putPermissions, postPermissions, onUpdate, role } = this;
+      if (role === 'edit') {
+        putPermissions(permissionEditable).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        const permissionToUpdate = [{
+          ...permissionEditable,
+          crudsubjectid,
+        }];
+        postPermissions(permissionToUpdate)
+          .then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+      }
     },
     toggleConfigureAdministerPermission() {
       this.isConfigureAdministerPermissionVisible = !this.isConfigureAdministerPermissionVisible;

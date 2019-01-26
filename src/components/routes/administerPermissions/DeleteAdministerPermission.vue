@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -18,11 +18,15 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('permissions', ['deletePermissions']),
     handleDeleteAdministerPermissionModalClose() {
       this.$router.push(`/app/administer-permissions/${this.page}`);
     },
     handleDeleteAdministerPermissionModalConfirm() {
-      this.$router.push(`/app/administer-permissions/${this.page}`);
+      const { deletePermissions, permission } = this;
+      deletePermissions({ ...permission }).then(() => {
+        this.$router.push(`/app/administer-permissions/${this.page}`);
+      });
     },
   },
   computed: {

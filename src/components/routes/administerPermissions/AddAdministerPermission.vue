@@ -23,7 +23,7 @@
       :resources="resources"
       :users="users"
       :groups="groups"
-      :permission="permission"
+      :permission="newPermission"
     />
   </div>
 </template>
@@ -65,8 +65,20 @@ export default {
     },
   },
   data() {
+    const now = new Date();
     return {
-      permission: {},
+      newPermission: {
+        permission: '',
+        description: '',
+        organizationid: null,
+        accessmanagerid: null,
+        resourceid: null,
+        resourceactionid: null,
+        subjectid: null,
+        isactive: true,
+        effectiveenddate: now,
+        effectivestartdate: now,
+      },
       page: this.$route.params.page,
     };
   },

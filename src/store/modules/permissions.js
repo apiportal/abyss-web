@@ -21,8 +21,32 @@ const actions = {
     });
   },
   putPermissions: ({ commit }, permission) => {
-    api.putPermissions(permission).then((response) => {
+    return api.putPermissions(permission).then((response) => {
       commit('updatePermissions', response.data);
+    });
+  },
+  deletePermissions: ({ commit }, permission) => {
+    return api.deletePermissions(permission.uuid).then((response) => {
+      commit('setPermissionDeleted', permission.uuid);
+      return response;
+    });
+  },
+  postPermissions: ({ commit }, permission) => {
+    return api.postPermissions(permission).then((response) => {
+      let error = false;
+
+      response.data.map((status) => {
+        if (status.error.code !==0) {
+          error = true;
+          // alert(status.error.permissionmessage);
+        } else {
+          commit('addNewPermission', status.response);
+        }
+      });
+      if (error) {
+        return false;
+      }
+      return response;
     });
   },
 };
@@ -38,6 +62,23 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setPermissionDeleted: (state, permissionUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === permissionUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
+  },
+  addNewPermission: (state, newPermission) => {
+    state.items = [
+      ...state.items,
+      newPermission,
+    ];
   },
 };
 

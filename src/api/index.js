@@ -80,4 +80,38 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  // resources
+  getResources() {
+    return axios.get('/abyss/oapi/resources');
+  },
+  // resource-types
+  getResourceTypes() {
+    return axios.get('/abyss/oapi/resource-types');
+  },
+  // resource-actions
+  getResourceActions() {
+    return axios.get('/abyss/oapi/resource-actions/');
+  },
+  // subject-permissions
+  getPermissions() {
+    return axios.get('/abyss/oapi/subject-permissions/');
+  },
+  putPermissions(permission) {
+    const { uuid, created, deleted, updated, isdeleted, ...rest } = permission;
+    return axios.put(`/abyss/oapi/subject-permissions/${uuid}`, rest);
+  },
+  deletePermissions(uuid) {
+    return axios.delete(`/abyss/oapi/subject-permissions/${uuid}`);
+  },
+  postPermissions(permission) {
+    return axios.post('/abyss/oapi/subject-permissions/', permission);
+  },
+  // subject-types
+  getSubjectTypes() {
+    return axios.get('/abyss/oapi/subject-types');
+  },
+  // apps
+  getApps() {
+    return axios.get('/abyss/oapi/subjects/apps/');
+  },
 };

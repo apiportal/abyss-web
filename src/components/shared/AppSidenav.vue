@@ -66,6 +66,11 @@ export default {
           name: 'Access Managers',
           to: '/app/access-managers/1',
         },
+        {
+          icon: 'users',
+          name: 'Administer Permissions',
+          to: '/app/administer-permissions/1',
+        },
       ],
     };
   },

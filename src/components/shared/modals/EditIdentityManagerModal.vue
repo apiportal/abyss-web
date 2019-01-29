@@ -147,22 +147,11 @@
             :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Directory</h6>
-            <div
-              v-if="
-                subjectDirectoryEditable &&
-                subjectDirectoryEditable.directoryattributes &&
-                subjectDirectoryEditable.directoryattributes.components &&
-                subjectDirectoryEditable.directoryattributes.components.schemas
-              "
-            >
-              <DynamicForm
-                :formData="subjectDirectoryEditable.directoryattributes.components.schemas"
-                :onUpdate="handleConfigurationUpdate"
-              />
-            </div>
-            <div v-else>
-              <span style="color: red;">Current configuration is not valid.</span>
-            </div>
+            <DynamicForm
+              :formTemplate="directoryConfigurationTemplate"
+              :formData="{ LdapConfiguration: subjectDirectoryEditable.directoryattributes }"
+              :onUpdate="handleConfigurationUpdate"
+            />
           </div>
         </div>
         <footer class="modal-footer">
@@ -306,6 +295,7 @@ export default {
     return {
       subjectDirectoryEditable: JSON.parse(JSON.stringify(this.subjectDirectory)),
       isConfigureDirectoryVisible: false,
+      directoryConfigurationTemplate: {},
     };
   },
   methods: {
@@ -325,32 +315,34 @@ export default {
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;
     },
-    handleDirectoryTypeChange(selectedDirectoryId) {
+    handleDirectoryTypeChange(newDirectoryTypeId) {
       this.isConfigureDirectoryVisible = true;
-      const { subjectDirectoryTypes, subjectDirectoryEditable } = this;
-      const directory = subjectDirectoryTypes.find(item => item.uuid === selectedDirectoryId);
-      this.subjectDirectoryEditable = {
-        ...subjectDirectoryEditable,
-        directoryattributes: directory.attributetemplate,
-      };
+      this.setDirectoryConfigurationTemplate({ directorytypeid: newDirectoryTypeId });
     },
     handleConfigurationUpdate(newDirecoryConfiguration) {
-      // subjectDirectoryEditable.directoryattributes.components.schemas
       const { subjectDirectoryEditable } = this;
       this.subjectDirectoryEditable = {
         ...subjectDirectoryEditable,
         directoryattributes: {
-          ...subjectDirectoryEditable.directoryattributes,
-          components: {
-            ...subjectDirectoryEditable.directoryattributes.components,
-            schemas: {
-              ...subjectDirectoryEditable.directoryattributes.components.schemas,
-              ...newDirecoryConfiguration,
-            },
-          },
+          ...newDirecoryConfiguration.LdapConfiguration,
         },
       };
     },
+    setDirectoryConfigurationTemplate(newDirectoryTypeId) {
+      const { directorytypeid } = newDirectoryTypeId || this.subjectDirectoryEditable;
+      if (directorytypeid) {
+        const { subjectDirectoryTypes } = this;
+        this.directoryConfigurationTemplate =
+          subjectDirectoryTypes
+          .find(item => item.uuid === directorytypeid)
+          .attributetemplate
+          .components
+          .schemas;
+      }
+    },
+  },
+  mounted() {
+    this.setDirectoryConfigurationTemplate();
   },
 };
 </script>

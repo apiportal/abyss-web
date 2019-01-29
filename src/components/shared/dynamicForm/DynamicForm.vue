@@ -3,9 +3,9 @@
     <DynamicFormSection
       v-for="(key, index) in keys" v-bind:key="index"
       :title="key"
-      :properties="formDataEditable[key].properties"
-      :required="formDataEditable[key].required"
-      :type="formDataEditable[key].type"
+      :properties="formTemplateWithData[key].properties"
+      :required="formTemplateWithData[key].required"
+      :type="formTemplateWithData[key].type"
       :propAddress="[key]"
       :level="0"
       :onChange="handleChange"
@@ -22,6 +22,11 @@ export default {
     DynamicFormSection,
   },
   props: {
+    formTemplate: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
     formData: {
       type: Object,
       required: false,
@@ -33,30 +38,46 @@ export default {
     },
   },
   watch: {
-    formData(newVal) {
-      this.formDataEditable = newVal;
+    formData() {
+      this.mergeDataIntoTemplate();
+    },
+    formTemplate() {
+      this.mergeDataIntoTemplate();
     },
   },
   computed: {
     keys() {
-      return Object.keys(this.formData);
+      const { formTemplateWithData } = this;
+      return Object.keys(formTemplateWithData);
     },
   },
   data() {
-    const { formData } = this;
-
     return {
-      formDataEditable: { ...formData },
+      formTemplateWithData: {},
     };
   },
   methods: {
-    handleChange(propAddress, newValue) {
-      const { formDataEditable, onUpdate } = this;
-      const { objectDeepUpdate } = Helpers;
-      let formDataEdited = { ...formDataEditable }; // eslint-disable-line
-      objectDeepUpdate([...propAddress, 'value'], newValue, formDataEdited);
-      onUpdate(formDataEdited);
+    handleChange(propAddress, newPropValue) {
+      const { formTemplateWithData, onUpdate } = this;
+      const { objectDeepUpdate, openApiObjectToFlatObject } = Helpers;
+      let formTemplateWithDataClone = JSON.parse(JSON.stringify(formTemplateWithData)); // eslint-disable-line
+      let flatObject = {}; // eslint-disable-line
+      objectDeepUpdate([...propAddress, 'value'], newPropValue, formTemplateWithDataClone);
+      openApiObjectToFlatObject(formTemplateWithDataClone, flatObject);
+      onUpdate(flatObject);
     },
+    mergeDataIntoTemplate() {
+      const { mergeFlatObjectIntoOpenApiObject } = Helpers;
+      const { formTemplate, formData } = this;
+      const formTemplateClone = JSON.parse(JSON.stringify(formTemplate));
+      const formDataClone = JSON.parse(JSON.stringify(formData));
+      let mergedObject = {}; // eslint-disable-line
+      mergeFlatObjectIntoOpenApiObject(formTemplateClone, formDataClone, mergedObject);
+      this.formTemplateWithData = mergedObject;
+    },
+  },
+  mounted() {
+    this.mergeDataIntoTemplate();
   },
 };
 </script>

@@ -45,26 +45,6 @@
                 />
               </th>
               <th>
-                Subject
-                <SortBy
-                  :selectedSortByKey="sortByKey"
-                  :selectedSortDirection="sortDirection"
-                  :onClick="handleSortByClick"
-                  sortByKey="subjectname"
-                  sortByKeyType="string"
-                />
-              </th>
-              <th>
-                Subject Type
-                <SortBy
-                  :selectedSortByKey="sortByKey"
-                  :selectedSortDirection="sortDirection"
-                  :onClick="handleSortByClick"
-                  sortByKey="subjecttypename"
-                  sortByKeyType="string"
-                />
-              </th>
-              <th>
                 Resource Action
                 <SortBy
                   :selectedSortByKey="sortByKey"
@@ -111,12 +91,6 @@
                 {{ item.resourcetypename }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.subjectname }}
-              </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.subjecttypename }}
-              </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.resourceactionname }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -132,43 +106,14 @@
                 <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
               </td>
             </tr>
-            <tr slot="footer" class="footer">
-              <td colspan="9">
+            <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+              <td colspan="7">
                 <div class="collapsible-content">
-                  <p>Permission Name: {{ item.permission }}</p>
-                  <p>Description: {{ item.description }}</p>
-                  <p>Resource: {{ item.resourcename}}</p>
-                  <p>Resource Type: {{ item.resourcetypename }}</p>
-                  <p>Subject: {{ item.subjectname }}</p>
-                  <p>Subject Type: {{ item.subjecttypename }}</p>
-                  <p>Resource Action: {{ item.resourceactionname }}</p>
-                  <p>Access Manager: {{ item.accessmanagername }}</p>
-                  <p>Organization: {{ item.organizationname }}</p>
-                  <p>Effective Start Date: {{ item.effectivestartdate }}</p>
-                  <p>Effective End Date: {{item.effectiveenddate}}</p>
-                  <p>Created: {{ item.created }}</p>
-                  <p>Updated: {{ item.updated }}</p>
-                  <p v-if="item.isdeleted">Deleted: {{ item.deleted }}</p>
-                  <div>
-                    <b-button
-                      :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"
-                      size="md"
-                      variant="primary"
-                      v-b-tooltip.hover
-                      title="Edit"
-                    >
-                      Edit <Icon icon="edit" />
-                    </b-button>
-                    <b-button
-                      :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"
-                      size="md"
-                      variant="danger"
-                      v-b-tooltip.hover
-                      title="Delete"
-                    >
-                      Delete <Icon icon="trash-alt" /> 
-                    </b-button>
-                  </div>
+                  <AdministerPermission
+                    :permission="item"
+                    :subjectTypes="subjectTypes"
+                    :page="page"
+                  />
                 </div>
               </td>
               <td></td>
@@ -196,6 +141,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import AdministerPermission from '@/components/routes/administerPermissions/AdministerPermission';
 import Helpers from '@/helpers';
 
 export default {
@@ -204,6 +150,7 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    AdministerPermission,
   },
   computed: {
     ...mapState({
@@ -214,21 +161,14 @@ export default {
       resourceTypes: state => state.resourceTypes.items,
       resourceActions: state => state.resourceActions.items,
       subjectTypes: state => state.subjectTypes.items,
-      users: state => state.users.items,
-      groups: state => state.groups.items,
-      apps: state => state.apps.items,
     }),
     tableRows() {
       const { accessManagers,
       organizations,
       permissions,
-      subjectTypes,
       resources,
       resourceTypes,
-      resourceActions,
-      users,
-      groups,
-      apps } = this;
+      resourceActions } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId) || {};
         return organization.name || organizationId;
@@ -254,19 +194,6 @@ export default {
         const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId) || {};
         return resourceType.type || resourceTypeId;
       };
-      const getSubjectDisplayName = (subjectId) => {
-        const foundItem = [...users, ...groups, ...apps].find(i => i.uuid === subjectId) || {};
-        return foundItem.displayname || 'NOT User, Group or App';
-      };
-      const getSubjectTypeId = (subjectId) => {
-        const foundItem = [...users, ...groups, ...apps].find(i => i.uuid === subjectId) || {};
-        return foundItem.subjecttypeid || 'NOT User, Group or App';
-      };
-      const getSubjectTypeName = (subjectId) => {
-        const subjectTypeId = getSubjectTypeId(subjectId);
-        const subjectType = subjectTypes.find(item => item.uuid === subjectTypeId) || {};
-        return subjectType.typename || 'NOT User, Group or App';
-      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: permissions.map(item => ({
@@ -276,8 +203,6 @@ export default {
           resourcename: getResourceName(item.resourceid),
           accessmanagername: getAccessManagerName(item.accessmanagerid),
           resourcetypename: getResourceTypeName(item.resourceid),
-          subjecttypename: getSubjectTypeName(item.subjectid),
-          subjectname: getSubjectDisplayName(item.subjectid),
         }))
         .filter((item) => {
           const { filterKey } = this;
@@ -341,7 +266,6 @@ export default {
     this.$store.dispatch('subjectTypes/getSubjectTypes');
     this.$store.dispatch('users/getUsers');
     this.$store.dispatch('groups/getGroups');
-    this.$store.dispatch('apps/getApps');
   },
   data() {
     return {

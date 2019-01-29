@@ -114,4 +114,7 @@ export default {
   getApps() {
     return axios.get('/abyss/oapi/subjects/apps/');
   },
+  getSubject(uuid) {
+    return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
 };

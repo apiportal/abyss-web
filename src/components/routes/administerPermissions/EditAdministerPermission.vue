@@ -8,10 +8,7 @@
         areResourcesLoaded &&
         areResourceTypesLoaded &&
         areResourceActionsLoaded &&
-        areSubjectTypesLoaded &&
-        areUsersLoaded &&
-        areGroupsLoaded &&
-        areAppsLoaded
+        areSubjectTypesLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -54,9 +51,6 @@ export default {
       areResourceTypesLoaded: state => state.resourceTypes.lastUpdatedAt,
       areResourceActionsLoaded: state => state.resourceActions.lastUpdatedAt,
       areSubjectTypesLoaded: state => state.subjectTypes.lastUpdatedAt,
-      areUsersLoaded: state => state.users.lastUpdatedAt,
-      areGroupsLoaded: state => state.groups.lastUpdatedAt,
-      areAppsLoaded: state => state.apps.lastUpdatedAt,
     }),
   },
   methods: {

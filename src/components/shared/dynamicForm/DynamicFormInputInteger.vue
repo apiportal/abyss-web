@@ -12,6 +12,7 @@
       :state="state"
       :placeholder="example.toString()"
       :required="required"
+      :disabled="readonly"
       @keyup.native="handleKeyup"
     >
     </b-form-input>

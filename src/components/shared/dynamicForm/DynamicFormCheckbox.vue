@@ -7,6 +7,7 @@
       :value="true"
       :unchecked-value="false"
       @change="handleChange"
+      :disabled="readonly"
     >
       {{ description }}
     </b-form-checkbox>

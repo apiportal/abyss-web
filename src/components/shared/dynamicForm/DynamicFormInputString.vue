@@ -12,6 +12,7 @@
       :state="state"
       :placeholder="example"
       :required="required"
+      :disabled="readonly"
       @keyup.native="handleKeyup"
     ></b-form-input>
   </b-form-group>

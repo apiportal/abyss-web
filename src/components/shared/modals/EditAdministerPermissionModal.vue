@@ -21,71 +21,104 @@
         <div style="padding: 1rem;">
           <b-form-group
             id="permissionNameGroup"
-            label="Permission Name:"
+            label="Permission Name*:"
+            :invalid-feedback="permissionNameInvalidFeedback"
+            :state="permissionNameState"
           >
           <b-form-input
             id="permissionNameInput"
             type="text"
             v-model="permissionEditable.permission"
             placeholder="Permission Name"
+            :state="permissionNameState"
             required
           >
           </b-form-input>
           </b-form-group>
           <b-form-group 
           id="permissionDescriptionGroup"
-          label="Description:"
+          label="Description*:"
           label-for="permissionDescriptionTextarea"
+          :invalid-feedback="descriptionInvalidFeedback"
+          :state="descriptionState"
           >
             <b-form-textarea
               id="permissionDescriptionTextarea"
               v-model="permissionEditable.description"
               placeholder="Description"
               :rows="3"
+              :state="descriptionState"
               required
             >
             </b-form-textarea>
           </b-form-group>
           <b-form-group 
           id="permissionOrganizationIdGroup"
-          label="Organization:"
+          label="Organization*:"
           label-for="permissionOrganizationIdInput"
+          :invalid-feedback="organizationIdInvalidFeedback"
+          :state="organizationIdState"
           >
           <b-form-select
               id="permissionOrganizationIdInput"
               v-model="permissionEditable.organizationid"
-              :options="organizations.map(organization => ({
-              value: organization.uuid,
-              text: organization.name,
-              }))"
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                })),
+              ]"
+              :state="organizationIdState"
           />
           </b-form-group>
           <b-form-group 
           id="permissionAccessManagerIdGroup"
-          label="Access Manager:"
+          label="Access Manager*:"
           label-for="permissionAccessManagerIdInput"
+          :invalid-feedback="accessManagerIdInvalidFeedback"
+          :state="accessManagerIdState"
           >
           <b-form-select
               id="permissionAccessManagerIdInput"
               v-model="permissionEditable.accessmanagerid"
-              :options="accessManagers.map(accessManager => ({
+              :options="[
+              {
+                value: null,
+                text: 'Please select',
+              },
+              ...accessManagers.map(accessManager => ({
               value: accessManager.uuid,
               text: accessManager.accessmanagername,
-              }))"
+              })),
+              ]"
+              :state="accessManagerIdState"
           />
           </b-form-group>
           <b-form-group 
           id="resourceTypeGroup"
-          label="Resource Type:"
+          label="Resource Type*:"
           label-for="resourceTypeInput"
+          :invalid-feedback="resourceTypeIdInvalidFeedback"
+          :state="resourceTypeIdState"
           >
           <b-form-select
               id="resourceTypeInput"
               v-model="resourceTypeIdEditable"
-              :options="resourceTypes.map(resourcetype => ({
+              :options="[
+              {
+                value: null,
+                text: 'Please select',
+              },
+              ...resourceTypes.map(resourcetype => ({
               value: resourcetype.uuid,
               text: resourcetype.type,
-              }))"
+              })),
+              ]"
+              :state="resourceTypeIdState"
           />
           </b-form-group>
           <b-form-group 
@@ -96,12 +129,18 @@
           <b-form-select
               id="resourceInput"
               v-model="permissionEditable.resourceid"
-              :options="resources
+              :options="[
+              {
+                value: null,
+                text: 'Please select',
+              },
+              ...resources
               .filter(resource => resource.resourcetypeid === resourceTypeIdEditable)
               .map(resource => ({
               value: resource.uuid,
               text: resource.resourcename,
-              }))"
+              })),
+              ]"
           />
           </b-form-group>
           <b-form-group 
@@ -112,12 +151,18 @@
           <b-form-select
               id="resourceActionInput"
               v-model="permissionEditable.resourceactionid"
-              :options="resourceActions
+              :options="[
+              {
+                value: null,
+                text: 'Please Select',
+              },
+              ...resourceActions
               .filter(resource => resource.resourcetypeid === resourceTypeIdEditable)
               .map(resourceaction => ({
               value: resourceaction.uuid,
               text: resourceaction.actionname,
-              }))"
+              })),
+              ]"
           />
           </b-form-group>
           <b-form-group 
@@ -308,6 +353,59 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
+    permissionNameState() {
+      const { permission } = this.permissionEditable;
+      return permission.length > 0;
+    },
+    permissionNameInvalidFeedback() {
+      const { permission } = this.permissionEditable;
+      if (permission.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    descriptionState() {
+      const { description } = this.permissionEditable;
+      return description.length > 0;
+    },
+    descriptionInvalidFeedback() {
+      const { description } = this.permissionEditable;
+      if (description.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    organizationIdState() {
+      const { organizationid } = this.permissionEditable;
+      return organizationid !== null;
+    },
+    organizationIdInvalidFeedback() {
+      const { organizationid } = this.permissionEditable;
+      if (organizationid === null) {
+        return 'Please select organization';
+      }
+      return '';
+    },
+    accessManagerIdState() {
+      const { accessmanagerid } = this.permissionEditable;
+      return accessmanagerid !== null;
+    },
+    accessManagerIdInvalidFeedback() {
+      const { accessmanagerid } = this.permissionEditable;
+      if (accessmanagerid === null) {
+        return 'Please select Access Manager';
+      }
+      return '';
+    },
+    resourceTypeIdState() {
+      return this.resourceTypeIdEditable !== null;
+    },
+    resourceTypeIdInvalidFeedback() {
+      if (this.resourceTypeIdEditable === null) {
+        return 'Please select Resource Type';
+      }
+      return '';
+    },
   },
   data() {
     const { permission } = this;

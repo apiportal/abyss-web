@@ -41,7 +41,15 @@ export default {
   },
   data() {
     return {
-      subjectDirectory: {},
+      subjectDirectory: {
+        directoryname: '',
+        description: '',
+        directorypriorityorder: 1,
+        isactive: true,
+        istemplate: false,
+        organizationid: null,
+        directorytypeid: null,
+      },
       page: this.$route.params.page,
     };
   },

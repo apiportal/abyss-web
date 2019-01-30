@@ -51,7 +51,7 @@ const mergeFlatObjectIntoOpenApiObject = (openApiObject, flatObject, mergedObjec
     const { type } = openApiObject[keys[i]];
     if (type === 'object') {
       mergedObject[keys[i]] = { ...openApiObject[keys[i]] }; // eslint-disable-line
-      const subFlatChild = (flatObject[keys[i]] || null);
+      const subFlatChild = (flatObject ? flatObject[keys[i]] : null);
       mergeFlatObjectIntoOpenApiObject(
         openApiObject[keys[i]].properties,
         subFlatChild,

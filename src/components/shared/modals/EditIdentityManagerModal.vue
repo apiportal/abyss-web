@@ -101,10 +101,13 @@
               id="directoryOrganizationIdInput"
               v-model="subjectDirectoryEditable.organizationid" 
               :state="directoryOrganizationIdState"
-              :options="organizations.map(organization => ({
-                value: organization.uuid,
-                text: organization.name,
-              }))"
+              :options="[
+                { value: null, text: 'Please Select'},
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                }))
+              ]"
               required
             />
           </b-form-group>
@@ -120,10 +123,13 @@
                   id="directoryTypeInput"
                   v-model="subjectDirectoryEditable.directorytypeid" 
                   :state="directoryTypeState"
-                  :options="subjectDirectoryTypes.map(subjectDirectoryType => ({
-                    value: subjectDirectoryType.uuid,
-                    text: subjectDirectoryType.typename,
-                  }))"
+                  :options="[
+                    { value: null, text: 'Please Select'},
+                    ...subjectDirectoryTypes.map(subjectDirectoryType => ({
+                      value: subjectDirectoryType.uuid,
+                      text: subjectDirectoryType.typename,
+                    }))
+                  ]"
                   @change="(val) => handleDirectoryTypeChange(val)"
                   required
                 />

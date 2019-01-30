@@ -14,13 +14,22 @@ const getters = {
 
 const actions = {
   getSubjectDirectories: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getSubjectDirectories().then((response) => {
-      commit('setSubjectDirectories', response.data);
+      if (response && response.data) {
+        commit('setSubjectDirectories', response.data);
+      }
     });
   },
   putSubjectDirectories: ({ commit }, subjectDirectory) => {
-    api.putSubjectDirectories(subjectDirectory).then((response) => {
-      commit('updateSubjectDirectories', response.data);
+    return api.putSubjectDirectories(subjectDirectory).then((response) => {
+      if (response && response.data) {
+        commit('updateSubjectDirectories', response.data);
+      }
+      return response;
     });
   },
 };

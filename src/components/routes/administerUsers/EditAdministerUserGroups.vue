@@ -1,10 +1,8 @@
 <template>
   <div>
-    <EditAdministerUserModal
+    <EditAdministerUserGroupsModal
       v-if="
         isUsersLoaded &&
-        isSubjectDirectoriesLoaded &&
-        isOrganizationsLoaded &&
         isGroupsLoaded &&
         isMembershipsLoaded
       "
@@ -12,8 +10,6 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :user="users.find(item => item.uuid === userId)"
-      :subjectDirectories="subjectDirectories"
-      :organizations="organizations"
       :groups="groups"
       :memberships="memberships"
     />
@@ -23,21 +19,17 @@
 <script>
 import { mapState } from 'vuex';
 import api from '@/api';
-import EditAdministerUserModal from '@/components/shared/modals/EditAdministerUserModal';
+import EditAdministerUserGroupsModal from '@/components/shared/modals/EditAdministerUserGroupsModal';
 
 export default {
   components: {
-    EditAdministerUserModal,
+    EditAdministerUserGroupsModal,
   },
   computed: {
     ...mapState({
       users: state => state.users.items,
-      subjectDirectories: state => state.subjectDirectories.items,
-      organizations: state => state.organizations.items,
       groups: state => state.groups.items,
       isUsersLoaded: state => state.users.lastUpdatedAt,
-      isSubjectDirectoriesLoaded: state => state.subjectDirectories.lastUpdatedAt,
-      isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
       isGroupsLoaded: state => state.groups.lastUpdatedAt,
     }),
   },

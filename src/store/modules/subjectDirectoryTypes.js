@@ -10,8 +10,14 @@ const getters = {};
 
 const actions = {
   getSubjectDirectoryTypes: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
     api.getSubjectDirectoryTypes().then((response) => {
-      commit('setSubjectDirectoryTypes', response.data);
+      if (response && response.data) {
+        commit('setSubjectDirectoryTypes', response.data);
+      }
     });
   },
 };

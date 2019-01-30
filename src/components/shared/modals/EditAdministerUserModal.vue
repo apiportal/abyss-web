@@ -19,7 +19,201 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          {{ userEditable }}
+          <b-form-group 
+            id="firstNameGroup"
+            label="First Name*:"
+            label-for="firstNameInput"
+            :invalid-feedback="firstNameInvalidFeedback"
+            :state="firstNameState"
+          >
+            <b-form-input
+              id="firstNameInput"
+              type="text"
+              v-model="userEditable.firstname"
+              placeholder="First Name"
+              :state="firstNameState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="lastNameGroup"
+            label="Last Name*:"
+            label-for="lastNameInput"
+            :invalid-feedback="lastNameInvalidFeedback"
+            :state="lastNameState"
+          >
+            <b-form-input
+              id="lastNameInput"
+              type="text"
+              v-model="userEditable.lastname"
+              placeholder="Last Name"
+              :state="lastNameState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="displayNameGroup"
+            label="Display Name*:"
+            label-for="displayNameInput"
+            :invalid-feedback="displayNameInvalidFeedback"
+            :state="displayNameState"
+          >
+            <b-form-input
+              id="displayNameInput"
+              type="text"
+              v-model="userEditable.displayname"
+              placeholder="Display Name"
+              :state="displayNameState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="userNameGroup"
+            label="User Name*:"
+            label-for="userNameInput"
+            :invalid-feedback="userNameInvalidFeedback"
+            :state="userNameState"
+          >
+            <b-form-input
+              id="userNameInput"
+              type="text"
+              v-model="userEditable.subjectname"
+              placeholder="User Name"
+              :state="userNameState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group
+            v-if="isPasswordInputVisible"
+            id="userPasswordGroup"
+            label="Password*:"
+            label-for="userPasswordInput"
+            :invalid-feedback="passwordInvalidFeedback"
+            :state="passwordState"
+          >
+            <b-input-group>
+              <b-form-input
+                id="userPasswordInput"
+                :type="`${isPasswordVisible ? 'text' : 'password'}`"
+                v-model="userEditable.password"
+                placeholder="Password"
+                :state="passwordState"
+                required
+              >
+              </b-form-input>
+              <b-input-group-append>
+                <b-button variant="secondary" @click="togglePasswordVisibility">
+                  <Icon :icon="`${isPasswordVisible ? 'eye-slash' : 'eye'}`" />
+                </b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+          <b-form-group 
+            id="emailGroup"
+            label="Email*:"
+            label-for="emailInput"
+            :invalid-feedback="emailInvalidFeedback"
+            :state="emailState"
+          >
+            <b-form-input
+              id="emailInput"
+              type="email"
+              v-model="userEditable.email"
+              placeholder="Email"
+              :state="emailState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="secondaryEmailGroup"
+            label="Secondary Email:"
+            label-for="secondaryEmailInput"
+          >
+            <b-form-input
+              id="secondaryEmailInput"
+              type="email"
+              v-model="userEditable.secondaryemail"
+              placeholder="Secondary Email"
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="urlGroup"
+            label="URL:"
+            label-for="urlInput"
+          >
+            <b-form-input
+              id="urlInput"
+              type="text"
+              v-model="userEditable.url"
+              placeholder="URL"
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="userOrganizationIdGroup"
+            label="Organization*:"
+            label-for="userOrganizationIdInput"
+            :invalid-feedback="organizationIdInvalidFeedback"
+            :state="organizationIdState"
+          >
+            <b-form-select
+              id="userOrganizationIdInput"
+              v-model="userEditable.organizationid" 
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                })),
+              ]"
+              :state="organizationIdState"
+            />
+          </b-form-group>
+          <b-form-group 
+            id="userDirectoryIdGroup"
+            label="Directory*:"
+            label-for="userDirectoryIdInput"
+            :invalid-feedback="subjectDirectoryIdInvalidFeedback"
+            :state="subjectDirectoryIdState"
+          >
+            <b-form-select
+              id="userDirectoryIdInput"
+              v-model="userEditable.subjectdirectoryid" 
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...subjectDirectories.map(subjectDirectory => ({
+                  value: subjectDirectory.uuid,
+                  text: subjectDirectory.directoryname,
+                })),
+              ]"
+              :state="subjectDirectoryIdState"
+            />
+          </b-form-group>
+          <b-form-group 
+            id="userDescriptionGroup"
+            label="Description:"
+            label-for="userDescriptionTextarea"
+          >
+            <b-form-textarea
+              id="userDescriptionTextarea"
+              v-model="userEditable.description"
+              placeholder="Description"
+              :rows="3"
+            >
+            </b-form-textarea>
+          </b-form-group>
         </div>
         <footer class="modal-footer">
           <b-button
@@ -41,6 +235,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 
@@ -108,15 +303,145 @@ export default {
       default() { return 'edit'; },
     },
   },
+  computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
+    firstNameState() {
+      const { firstname } = this.userEditable;
+      return firstname.length > 0;
+    },
+    firstNameInvalidFeedback() {
+      const { firstname } = this.userEditable;
+      if (firstname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    lastNameState() {
+      const { lastname } = this.userEditable;
+      return lastname.length > 0;
+    },
+    lastNameInvalidFeedback() {
+      const { lastname } = this.userEditable;
+      if (lastname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    displayNameState() {
+      const { displayname } = this.userEditable;
+      return displayname.length > 0;
+    },
+    displayNameInvalidFeedback() {
+      const { displayname } = this.userEditable;
+      if (displayname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    userNameState() {
+      const { subjectname } = this.userEditable;
+      return subjectname.length > 0;
+    },
+    userNameInvalidFeedback() {
+      const { subjectname } = this.userEditable;
+      if (subjectname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    passwordState() {
+      const { password } = this.userEditable;
+      return password.length > 0;
+    },
+    passwordInvalidFeedback() {
+      const { password } = this.userEditable;
+      if (password.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    emailState() {
+      const { email } = this.userEditable;
+      return email.length > 0;
+    },
+    emailInvalidFeedback() {
+      const { email } = this.userEditable;
+      if (email.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    organizationIdState() {
+      const { organizationid } = this.userEditable;
+      return organizationid !== null;
+    },
+    organizationIdInvalidFeedback() {
+      const { organizationid } = this.userEditable;
+      if (organizationid === null) {
+        return 'Please select organization';
+      }
+      return '';
+    },
+    subjectDirectoryIdState() {
+      const { subjectdirectoryid } = this.userEditable;
+      return subjectdirectoryid !== null;
+    },
+    subjectDirectoryIdInvalidFeedback() {
+      const { subjectdirectoryid } = this.userEditable;
+      if (subjectdirectoryid === null) {
+        return 'Please select directory';
+      }
+      return '';
+    },
+  },
   data() {
+    const { user, role } = this;
     return {
-      userEditable: JSON.parse(JSON.stringify(this.user)),
+      userEditable: JSON.parse(JSON.stringify(user)),
+      isPasswordInputVisible: (role === 'add'),
+      isPasswordVisible: false,
     };
   },
   methods: {
+    ...mapActions('users', ['putUsers', 'postUsers']),
     handleSubmit(evt) {
       evt.preventDefault();
-      // console.log(this.userEditable);
+      const { userEditable, putUsers, postUsers, onUpdate, role } = this;
+      const { description, url, effectiveenddate, secondaryemail, email } = userEditable;
+      let userToUpdate = {
+        ...userEditable,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? '' : email),
+      };
+
+      if (role === 'edit') {
+        putUsers(userToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid, subjecttypeid } = currentUser.props;
+        const crudsubjectid = uuid;
+        userToUpdate = [{
+          ...userToUpdate,
+          crudsubjectid,
+          subjecttypeid,
+        }];
+        postUsers(userToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
+    },
+    togglePasswordVisibility() {
+      this.isPasswordVisible = !this.isPasswordVisible;
     },
   },
 };

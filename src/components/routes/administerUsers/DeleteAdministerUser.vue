@@ -3,7 +3,7 @@
     <ConfirmModal
       v-if="isUsersLoaded"
       title="Are you sure?"
-      :text="`${user.subjectname} will be deleted. You can't revert your action.`"
+      :text="`${user.displayname} will be deleted. You can't revert your action.`"
       :onClose="handleModalClose"
       :onConfirm="handleModalConfirm"
     />
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,15 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('users', ['deleteUsers']),
     handleModalClose() {
       this.$router.push(`/app/administer-users/${this.page}`);
     },
     handleModalConfirm() {
-      this.$router.push(`/app/administer-users/${this.page}`);
+      const { deleteUsers, user } = this;
+      deleteUsers({ ...user }).then(() => {
+        this.$router.push(`/app/administer-users/${this.page}`);
+      });
     },
   },
   computed: {

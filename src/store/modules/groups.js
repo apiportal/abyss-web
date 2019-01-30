@@ -9,20 +9,22 @@ const state = {
 const getters = {};
 
 const actions = {
-  getAccessManagerTypes: ({ commit }) => {
+  getGroups: ({ commit }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getAccessManagerTypes().then((response) => {
-      commit('setAccessManagerTypes', response.data);
+    api.getGroups().then((response) => {
+      if (response && response.data) {
+        commit('setGroups', response.data);
+      }
     });
   },
 };
 
 const mutations = {
-  setAccessManagerTypes: (state, accessManagerTypes) => {
-    state.items = accessManagerTypes;
+  setGroups: (state, groups) => {
+    state.items = groups;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

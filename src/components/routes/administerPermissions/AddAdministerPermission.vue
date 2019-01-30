@@ -23,6 +23,7 @@
       :users="users"
       :groups="groups"
       :permission="newPermission"
+      :resourceTypeId="null"
     />
   </div>
 </template>

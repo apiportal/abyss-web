@@ -225,10 +225,6 @@ export default {
       evt.preventDefault();
       this.putAccessManagers({
         ...this.accessManagerEditable,
-        accessmanagerpriorityorder: parseInt(
-          this.accessManagerEditable.accessmanagerpriorityorder,
-          10,
-        ),
       });
       this.onUpdate();
     },

@@ -63,6 +63,11 @@ export default {
         },
         {
           icon: 'users',
+          name: 'Administer Groups',
+          to: '/app/administer-groups/1',
+        },
+        {
+          icon: 'users',
           name: 'Access Managers',
           to: '/app/access-managers/1',
         },

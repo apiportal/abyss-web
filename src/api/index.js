@@ -76,6 +76,20 @@ export default {
   getGroups() {
     return axios.get('/abyss/oapi/subjects/groups/');
   },
+  // update subjects
+  putGroups(group) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = group;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  deleteGroups(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
+  },
+  postGroups(group) {
+    return axios.post('/abyss/oapi/subjects/', group);
+  },
   // subject-memberships
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
@@ -116,5 +130,17 @@ export default {
   },
   getSubject(uuid) {
     return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
+  // subject-memberships all
+  getAllSubjectMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships');
+  },
+  // update subjects
+  putSubjects(subject) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
 };

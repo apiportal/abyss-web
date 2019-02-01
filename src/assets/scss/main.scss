@@ -55,3 +55,15 @@ html {
     }
   }
 }
+
+dd:empty {
+  &:after {
+    content: '-';
+  }
+}
+
+.bg-cover {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}

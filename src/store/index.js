@@ -15,6 +15,7 @@ import resourceActions from '@/store/modules/resourceActions';
 import resources from '@/store/modules/resources';
 import subjectTypes from '@/store/modules/subjectTypes';
 import apps from '@/store/modules/apps';
+import subjectMemberships from '@/store/modules/subjectMemberships';
 
 Vue.use(Vuex);
 
@@ -35,6 +36,7 @@ export default new Vuex.Store({
     resources,
     subjectTypes,
     apps,
+    subjectMemberships,
   },
   debug: true,
 });

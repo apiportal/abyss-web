@@ -13,6 +13,11 @@ import IdentityManagers from '@/components/routes/identityManagers/IdentityManag
 import AddIdentityManager from '@/components/routes/identityManagers/AddIdentityManager';
 import EditIdentityManager from '@/components/routes/identityManagers/EditIdentityManager';
 import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
+// Identity Manager Types Routes Components
+import IdentityManagerTypes from '@/components/routes/identityManagerTypes/IdentityManagerTypes';
+import AddIdentityManagerType from '@/components/routes/identityManagerTypes/AddIdentityManagerType';
+import EditIdentityManagerType from '@/components/routes/identityManagerTypes/EditIdentityManagerType';
+import DeleteIdentityManagerType from '@/components/routes/identityManagerTypes/DeleteIdentityManagerType';
 // Administer Users Routes Components
 import AdministerUsers from '@/components/routes/administerUsers/AdministerUsers';
 import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerUsersLogs';
@@ -31,6 +36,11 @@ import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
+// Access Manager Types Routes Components
+import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
+import AddAccessManagerType from '@/components/routes/accessManagerTypes/AddAccessManagerType';
+import EditAccessManagerType from '@/components/routes/accessManagerTypes/EditAccessManagerType';
+import DeleteAccessManagerType from '@/components/routes/accessManagerTypes/DeleteAccessManagerType';
 // Administer Permissions Routes Components
 import AdministerPermissions from '@/components/routes/administerPermissions/AdministerPermissions';
 import AddAdministerPermission from '@/components/routes/administerPermissions/AddAdministerPermission';
@@ -78,6 +88,24 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteIdentityManager,
+            },
+          ],
+        },
+        {
+          path: 'identity-manager-types/:page',
+          component: IdentityManagerTypes,
+          children: [
+            {
+              path: 'add-new',
+              component: AddIdentityManagerType,
+            },
+            {
+              path: 'edit/:id',
+              component: EditIdentityManagerType,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteIdentityManagerType,
             },
           ],
         },
@@ -144,6 +172,24 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAccessManager,
+            },
+          ],
+        },
+        {
+          path: 'access-manager-types/:page',
+          component: AccessManagerTypes,
+          children: [
+            {
+              path: 'add-new',
+              component: AddAccessManagerType,
+            },
+            {
+              path: 'edit/:id',
+              component: EditAccessManagerType,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteAccessManagerType,
             },
           ],
         },

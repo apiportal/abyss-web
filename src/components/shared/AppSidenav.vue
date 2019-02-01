@@ -58,6 +58,11 @@ export default {
         },
         {
           icon: 'users',
+          name: 'Identity Manager Types',
+          to: '/app/identity-manager-types/1',
+        },
+        {
+          icon: 'users',
           name: 'Administer Users',
           to: '/app/administer-users/1',
         },
@@ -70,6 +75,11 @@ export default {
           icon: 'users',
           name: 'Access Managers',
           to: '/app/access-managers/1',
+        },
+        {
+          icon: 'users',
+          name: 'Access Manager Types',
+          to: '/app/access-manager-types/1',
         },
         {
           icon: 'users',

@@ -21,13 +21,16 @@
         <div style="padding: 1rem;">
           <b-form-group 
             id="accessManagerNameGroup"
-            label="Name:"
-            label-for="accessManagerNameInput"
           >
+            <label>
+              Name:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-input
               id="accessManagerNameInput"
               type="text"
               v-model="accessManagerEditable.accessmanagername"
+              :state="accessManagerNameState"
               placeholder="Name"
               required
             >
@@ -35,31 +38,20 @@
           </b-form-group>
           <b-form-group 
             id="accessManagerDescriptionGroup"
-            label="Description:"
-            label-for="accessManagerDescriptionTextarea"
           >
+            <label>
+              Description:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-textarea
               id="accessManagerDescriptionTextarea"
               v-model="accessManagerEditable.description"
+              :state="descriptionState"
               placeholder="Description"
               :rows="3"
               required
             >
             </b-form-textarea>
-          </b-form-group>
-          <b-form-group 
-            id="accessManagerPriorityOrderGroup"
-            label="Priority Order:"
-            label-for="accessManagerPriorityOrderInput"
-          >
-            <b-form-input
-              id="accessManagerPriorityOrderInput"
-              type="number"
-              v-model="accessManagerEditable.accessManagerpriorityorder"
-              placeholder="Priority Order"
-              required
-            >
-            </b-form-input>
           </b-form-group>
           <b-form-group id="accessManagerEnabledGroup">
             <b-form-checkbox
@@ -73,21 +65,28 @@
           </b-form-group>
           <b-form-group 
             id="accessManagerOrganizationIdGroup"
-            label="Organization:"
-            label-for="accessManagerOrganizationIdInput"
           >
+            <label>
+              Organization:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-select
               id="accessManagerOrganizationIdInput"
               v-model="accessManagerEditable.organizationid" 
-              :options="organizations.map(organization => ({
-                value: organization.uuid,
-                text: organization.name,
-              }))"
+              :state="accessManagerOrganizationIdState"
+              :options="[
+                { value: null, text: 'Please Select'},
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                }))
+              ]"
+              required
             />
           </b-form-group>
           <div class="row">
             <div class="col-12">
-              <label for="accessManagerTypeInput">AccessManager Type:</label>
+              <label for="accessManagerTypeInput">AccessManager Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
               <b-form-group 
@@ -96,11 +95,16 @@
                 <b-form-select
                   id="accessManagerTypeInput"
                   v-model="accessManagerEditable.accessmanagertypeid" 
-                  :options="accessManagerTypes.map(accessManagerType => ({
-                    value: accessManagerType.uuid,
-                    text: accessManagerType.typename,
-                  }))"
-                  @change="handleAccessManagerTypeChange"
+                  :state="accessManagerTypeState"
+                  :options="[
+                    { value: null, text: 'Please Select'},
+                    ...accessManagerTypes.map(accessManagerType => ({
+                      value: accessManagerType.uuid,
+                      text: accessManagerType.typename,
+                    }))
+                  ]"
+                  @change="(val) => handleAccessManagerTypeChange(val)"
+                  required
                 />
               </b-form-group>
             </div>
@@ -122,7 +126,11 @@
             :class="`configure-access-manager ${isConfigureAccessManagerVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Access Manager</h6>
-            <!-- TODO generate form from attributes -->
+            <DynamicForm
+              :formTemplate="accessManagerConfigurationTemplate"
+              :formData="{ LdapConfiguration: accessManagerEditable.accessmanagerattributes }"
+              :onUpdate="handleConfigurationUpdate"
+            />
           </div>
         </div>
         <footer class="modal-footer">
@@ -148,11 +156,13 @@
 import { mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
+import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
 
 export default {
   components: {
     Modal,
     Icon,
+    DynamicForm,
   },
   props: {
     hideHeader: {
@@ -213,27 +223,95 @@ export default {
       default() { return 'edit'; },
     },
   },
+  computed: {
+    accessManagerNameState() {
+      const { accessmanagername } = this.accessManagerEditable;
+
+      if (accessmanagername && accessmanagername.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    descriptionState() {
+      const { description } = this.accessManagerEditable;
+
+      if (description && description.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    accessManagerOrganizationIdState() {
+      const { organizationid } = this.accessManagerEditable;
+
+      if (organizationid) {
+        return true;
+      }
+
+      return false;
+    },
+    accessManagerTypeState() {
+      const { accessmanagertypeid } = this.accessManagerEditable;
+
+      if (accessmanagertypeid) {
+        return true;
+      }
+
+      return false;
+    },
+  },
   data() {
     return {
       accessManagerEditable: JSON.parse(JSON.stringify(this.accessManager)),
       isConfigureAccessManagerVisible: false,
+      accessManagerConfigurationTemplate: {},
     };
   },
   methods: {
     ...mapActions('accessManagers', ['putAccessManagers']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putAccessManagers({
-        ...this.accessManagerEditable,
+      const { putAccessManagers, accessManagerEditable, onUpdate } = this;
+      putAccessManagers({
+        ...accessManagerEditable,
+      }).then((response) => {
+        if (response && response.data) {
+          onUpdate();
+        }
       });
-      this.onUpdate();
     },
     toggleConfigureAccessManager() {
       this.isConfigureAccessManagerVisible = !this.isConfigureAccessManagerVisible;
     },
-    handleAccessManagerTypeChange() {
+    handleAccessManagerTypeChange(newAccessManagerTypeId) {
       this.isConfigureAccessManagerVisible = true;
+      this.setAccessManagerConfigurationTemplate({ accessmanagertypeid: newAccessManagerTypeId });
     },
+    handleConfigurationUpdate(newDirecoryConfiguration) {
+      const { accessManagerEditable } = this;
+      this.accessManagerEditable = {
+        ...accessManagerEditable,
+        accessmanagerattributes: {
+          ...newDirecoryConfiguration.LdapConfiguration,
+        },
+      };
+    },
+    setAccessManagerConfigurationTemplate(newAccessManagerTypeId) {
+      const { accessmanagertypeid } = newAccessManagerTypeId || this.accessManagerEditable;
+      if (accessmanagertypeid) {
+        const { accessManagerTypes } = this;
+        this.accessManagerConfigurationTemplate =
+          accessManagerTypes
+          .find(item => item.uuid === accessmanagertypeid)
+          .attributetemplate
+          .components
+          .schemas;
+      }
+    },
+  },
+  mounted() {
+    this.setAccessManagerConfigurationTemplate();
   },
 };
 </script>

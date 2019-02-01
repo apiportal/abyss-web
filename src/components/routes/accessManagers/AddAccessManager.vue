@@ -41,7 +41,13 @@ export default {
   },
   data() {
     return {
-      accessManager: {},
+      accessManager: {
+        accessmanagername: '',
+        description: '',
+        isactive: true,
+        organizationid: null,
+        accessmanagertypeid: null,
+      },
       page: this.$route.params.page,
     };
   },

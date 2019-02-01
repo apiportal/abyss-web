@@ -24,12 +24,25 @@ export default {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectDirectory;
     return axios.put(`/abyss/oapi/subject-directories/${uuid}`, rest);
   },
+  postSubjectDirectories(subjectDirectory) {
+    return axios.post('/abyss/oapi/subject-directories/', subjectDirectory);
+  },
   deleteSubjectDirectories(uuid) {
     return axios.delete(`/abyss/oapi/subject-directories/${uuid}`);
   },
   // subject-directory-types
   getSubjectDirectoryTypes() {
     return axios.get('/abyss/oapi/subject-directory-types');
+  },
+  putSubjectDirectoryTypes(subjectDirectoryType) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectDirectoryType;
+    return axios.put(`/abyss/oapi/subject-directory-types/${uuid}`, rest);
+  },
+  postSubjectDirectoryTypes(subjectDirectoryType) {
+    return axios.post('/abyss/oapi/subject-directory-types/', subjectDirectoryType);
+  },
+  deleteSubjectDirectoryTypes(uuid) {
+    return axios.delete(`/abyss/oapi/subject-directory-types/${uuid}`);
   },
   // organizations
   getOrganizations() {
@@ -66,11 +79,25 @@ export default {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = accessManager;
     return axios.put(`/abyss/oapi/access-managers/${uuid}`, rest);
   },
+  postAccessManagers(accessManager) {
+    return axios.post('/abyss/oapi/access-managers/', accessManager);
+  },
   deleteAccessManagers(uuid) {
     return axios.delete(`/abyss/oapi/access-managers/${uuid}`);
   },
+  // access manager types
   getAccessManagerTypes() {
     return axios.get('/abyss/oapi/access-manager-types');
+  },
+  putAccessManagerTypes(accessManagerType) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = accessManagerType;
+    return axios.put(`/abyss/oapi/access-manager-types/${uuid}`, rest);
+  },
+  postAccessManagerTypes(accessManagerType) {
+    return axios.post('/abyss/oapi/access-manager-types/', accessManagerType);
+  },
+  deleteAccessManagerTypes(uuid) {
+    return axios.delete(`/abyss/oapi/access-manager-types/${uuid}`);
   },
   // groups
   getGroups() {

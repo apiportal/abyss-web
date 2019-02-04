@@ -2,7 +2,7 @@
   <b-form-group
     :description="label"
   >
-    <label>
+    <label v-if="description">
       {{ description }}
       <span v-if="required" class="text-danger">*</span>
     </label>
@@ -23,7 +23,8 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
+      required: false,
+      default() { return ''; },
     },
     example: {
       type: [String, Number],

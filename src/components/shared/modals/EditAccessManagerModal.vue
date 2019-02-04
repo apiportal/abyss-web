@@ -128,7 +128,7 @@
             <h6>Configure Access Manager</h6>
             <DynamicForm
               :formTemplate="accessManagerConfigurationTemplate"
-              :formData="{ LdapConfiguration: accessManagerEditable.accessmanagerattributes }"
+              :formData="{ AccessManagerConfiguration: accessManagerEditable.accessmanagerattributes }"
               :onUpdate="handleConfigurationUpdate"
             />
           </div>

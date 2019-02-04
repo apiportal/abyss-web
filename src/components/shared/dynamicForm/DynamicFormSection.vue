@@ -25,6 +25,7 @@
           :example="properties[key].example"
           :description="properties[key].description"
           :value="properties[key].value"
+          :items="properties[key].items"
           :readonly="properties[key]['x-readonly']"
           :required="required.indexOf(key) > -1"
           :propAddress="[ ...propAddress, ...[ 'properties', key] ]"

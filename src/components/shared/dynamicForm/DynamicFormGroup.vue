@@ -12,7 +12,7 @@
       :value="value"
     />
     <DynamicFormInputInteger
-      v-else-if="type === 'integer'"
+      v-else-if="type === 'integer' || type === 'number'"
       :label="title"
       :example="example"
       :description="description"
@@ -33,8 +33,16 @@
       :onChange="onChange"
       :value="value"
     />
+    <DynamicFormArray
+      v-else-if="type === 'array'"
+      :label="title"
+      :items="items"
+      :propAddress="propAddress"
+      :onChange="onChange"
+      :value="value"
+    />
     <div v-else>
-      <span style="color: red">Unknown Type: {{ type }}</span>
+      <span style="color: red">Unknown Type: {{ type }} {{ example }}</span>
       <br>
       {{ title }}
     </div>
@@ -45,6 +53,7 @@
 import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormInputString';
 import DynamicFormInputInteger from '@/components/shared/dynamicForm/DynamicFormInputInteger';
 import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
+import DynamicFormArray from '@/components/shared/dynamicForm/DynamicFormArray';
 
 export default {
   props: {
@@ -85,11 +94,17 @@ export default {
     value: {
       required: false,
     },
+    items: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
   },
   components: {
     DynamicFormInputString,
     DynamicFormInputInteger,
     DynamicFormCheckbox,
+    DynamicFormArray,
   },
 };
 </script>

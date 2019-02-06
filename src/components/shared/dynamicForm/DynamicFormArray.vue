@@ -12,7 +12,7 @@
           <DynamicFormInputString
             v-if="items.properties[templateItem].type === 'string'"
             :propAddress="propAddress"
-            :onChange="handleInputValueChange"
+            :onChange="(propAddress, val) => handleInputValueChange(val, valueIndex, templateItem)"
             :value="valueItem[templateItem]"
             :description="items.properties[templateItem].description"
             :example="items.properties[templateItem].example"
@@ -20,55 +20,31 @@
           <DynamicFormInputInteger
             v-else-if="items.properties[templateItem].type === 'integer' || items.properties[templateItem].type === 'number'"
             :propAddress="propAddress"
-            :onChange="handleInputValueChange"
+            :onChange="(propAddress, val) => handleInputValueChange(val, valueIndex, templateItem)"
             :value="valueItem[templateItem]"
             :description="items.properties[templateItem].description"
             :example="items.properties[templateItem].example"
           />
         </div>
         <div class="col-md-1">
-          <b-button style="margin-top: 32px;">
+          <b-button @click="handleDeleteItemArrayObject(valueIndex)" style="margin-top: 32px;">
             <Icon icon="trash-alt" />
           </b-button>
         </div>
       </div>
       <div>
-        <b-button style="margin-top: .5rem;">
+        <b-button variant="info" @click="handleAddItemArrayObj" style="margin-top: .5rem;">
           <Icon icon="plus" /> Add Item
         </b-button>
       </div>
     </div>
     <div class="form-array-items" v-else>
-      <div v-for="(valueItem, index) in value" v-bind:key="index" class="row">
-        <div class="col-md-4">
-          <DynamicFormInputString
-            v-if="items.type === 'string'"
-            :propAddress="propAddress"
-            :onChange="handleInputValueChange"
-            :value="valueItem"
-            :disabled="true"
-          />
-          <DynamicFormInputInteger
-            v-else-if="items.type === 'integer' || items.type === 'number'"
-            :propAddress="propAddress"
-            :onChange="handleInputValueChange"
-            :value="valueItem"
-            :disabled="true"
-          />
-        </div>
-        <div class="col-md-1">
-          <b-button>
-            <Icon icon="trash-alt" />
-          </b-button>
-        </div>
-      </div>
-      <div>
         <Chips
           :autocompleteOptions="items.enum.map(chip => ({ text: chip, value: chip }))"
+          :chips="value.map(chip => ({ text: chip, value: chip }))"
           :onDeleteChip="handleDeleteChip"
           :onAddChip="handleAddChip"
         />
-      </div>
     </div>
   </div>
 </template>
@@ -111,14 +87,39 @@ export default {
     Chips,
   },
   methods: {
-    handleInputValueChange() {
-      console.log('yo');
+    handleInputValueChange(val, index, key) {
+      const { value, propAddress, onChange } = this;
+      const valueEditable = [...value];
+      valueEditable[index][key] = val;
+      onChange(propAddress, valueEditable);
     },
-    handleDeleteChip() {
-      console.log('yo');
+    handleDeleteChip(index) {
+      const { value, propAddress, onChange } = this;
+      const valueEditable = [...value];
+      valueEditable.splice(index, 1);
+      onChange(propAddress, valueEditable);
     },
-    handleAddChip() {
-      console.log('yo');
+    handleAddChip(chip) {
+      const { value, propAddress, onChange } = this;
+      onChange(propAddress, [...value, chip.value]);
+    },
+    handleAddItemArrayObj() {
+      const { value, propAddress, onChange } = this;
+      const newItemArrayObj = {};
+      const { properties } = this.items;
+      const propertiesKeys = Object.keys(properties);
+
+      for (let i = 0; i < propertiesKeys.length; i += 1) {
+        newItemArrayObj[propertiesKeys[i]] = properties[propertiesKeys[i]].example;
+      }
+
+      onChange(propAddress, [...value, newItemArrayObj]);
+    },
+    handleDeleteItemArrayObject(index) {
+      const { value, propAddress, onChange } = this;
+      const valueEditable = [...value];
+      valueEditable.splice(index, 1);
+      onChange(propAddress, valueEditable);
     },
   },
 };

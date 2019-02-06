@@ -14,18 +14,18 @@
           <b-link
             v-b-tooltip.hover 
             title="Delete"
-            @click="() => onDeleteChip({ uuid: chip.value })"
+            @click="() => onDeleteChip(index)"
           >
             <Icon icon="times" />
           </b-link>
         </li>
         <li class="chip-btn">
           <b-button
-            variant="success"
+            variant="info"
             id="addPopover"
             @click="toggleAddPopover"
           >
-            <Icon icon="plus" /> Add
+            <Icon icon="plus" /> Add Item
           </b-button>
           <b-popover target="addPopover" :show.sync="isAddPopoverVisible">
             <template slot="title">Add Item</template>
@@ -36,7 +36,7 @@
                 <b-button
                   v-for="(chip, index) in computedOptions" 
                   v-bind:key="index"
-                  variant="primary"
+                  variant="secondary"
                   @click="() => addChip({ chip })"
                   style="margin: .125em;"
                 >
@@ -99,7 +99,7 @@ export default {
       this.isAddPopoverVisible = !this.isAddPopoverVisible;
     },
     addChip({ chip }) {
-      this.onAddChip({ uuid: chip.value });
+      this.onAddChip(chip);
       this.toggleAddPopover();
     },
   },
@@ -108,26 +108,26 @@ export default {
 
 <style lang="scss" scoped>
 .chips-container {
-  border: 1px solid #ced4da;
-  border-radius: .25em;
-  padding: 1em;
-}
+  // border: 1px solid #ced4da;
+  // border-radius: .25em;
+  // padding: 1em;
 
-.chips-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 -.125rem;
+  .chips-ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 -.125rem;
 
-  li {
-    display: inline-block;
-    margin: .125rem;
+    li {
+      display: inline-block;
+      margin: .125rem;
 
-    &.chip-btn {
-      cursor: default;
+      &.chip-btn {
+        cursor: default;
 
-      a {
-        color: white;
-        text-decoration: none;
+        a {
+          color: white;
+          text-decoration: none;
+        }
       }
     }
   }

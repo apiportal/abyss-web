@@ -275,10 +275,8 @@ export default {
       const { putAccessManagers, accessManagerEditable, onUpdate } = this;
       putAccessManagers({
         ...accessManagerEditable,
-      }).then((response) => {
-        if (response && response.data) {
-          onUpdate();
-        }
+      }).then(() => {
+        onUpdate();
       });
     },
     toggleConfigureAccessManager() {
@@ -293,7 +291,7 @@ export default {
       this.accessManagerEditable = {
         ...accessManagerEditable,
         accessmanagerattributes: {
-          ...newDirecoryConfiguration.LdapConfiguration,
+          ...newDirecoryConfiguration.AccessManagerConfiguration,
         },
       };
     },

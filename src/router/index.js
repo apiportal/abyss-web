@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
+import Businesses from '@/components/routes/myApis/businesses/Businesses';
 import Api from '@/components/routes/myApis/api/Api';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
@@ -67,6 +68,10 @@ export default new Router({
           path: 'my-apis',
           component: MyApis,
           children: [
+            {
+              path: 'businesses/:page',
+              component: Businesses,
+            },
             {
               path: 'api/:id',
               component: Api,

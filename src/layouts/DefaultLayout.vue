@@ -72,6 +72,7 @@ export default {
     .app-sidenav-flex {
       flex: 0 0 200px;
       border-right: 1px solid silver;
+      overflow-y: auto;
     }
 
     .app-content-flex {

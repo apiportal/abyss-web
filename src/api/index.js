@@ -170,4 +170,26 @@ export default {
       isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
+  // my-apis
+  getBusinessApis(uuid) {
+    return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
+  },
+  getApiSubscriptions(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);
+  },
+  getApisSharedWithUser(uuid) {
+    return axios.get(`/abyss/oapi/apis/sharedwith/subject/${uuid}`);
+  },
+  getApisSharedByUser(uuid) {
+    return axios.get(`/abyss/oapi/apis/sharedby/subject/${uuid}`);
+  },
+  getApiStates() {
+    return axios.get('/abyss/oapi/api-states');
+  },
+  getApiVisibilityTypes() {
+    return axios.get('/abyss/oapi/api-visibility-types');
+  },
+  getProxies(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
+  },
 };

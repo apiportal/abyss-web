@@ -32,10 +32,12 @@ html {
 
 .table {
   &.verapi-table {
+    margin-bottom: 0;
+
     thead {
       th {
         border: 0;
-        font-size: 0.875em;
+        font-size: 0.875rem;
         font-weight: 500;
       }
     }
@@ -45,7 +47,7 @@ html {
       tr {
         td {
           border: 0;
-          font-size: 0.875em;
+          font-size: 0.875rem;
         }
 
         &.odd {

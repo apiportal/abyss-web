@@ -27,16 +27,13 @@ export default {
     }
 
     &.footer {
-      td {
-        padding-left: 0;
-        padding-right: 0;
+      > td {
+        padding: 0;
       }
     }
   }
 
   .collapsible-content {
-    border: 1px solid #e7eaf3;
-    border-radius: .25em;
     padding: 1rem;
   }
 }

@@ -185,4 +185,14 @@ export default {
       isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
+  // apis
+  getApis() {
+    return axios.get('/abyss/oapi/apis/');
+  },
+  getBusinessApis() {
+    return axios.get('/abyss/oapi/apis/businesses');
+  },
+  getProxyApis() {
+    return axios.get('/abyss/oapi/apis/proxies');
+  },
 };

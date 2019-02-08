@@ -15,7 +15,19 @@
         <dt>uuid:</dt>
         <dd><code>{{ organization.uuid }}</code></dd>
       </dl>
-      <dl class="col">
+      <dl class="col-1">
+        <dt>Users:</dt>
+        <dd>{{ organizationUsers.length }}</dd>
+        <dt>Groups:</dt>
+        <dd>{{ organizationGroups.length }}</dd>
+      </dl>
+      <dl class="col-1">
+        <dt>APPs:</dt>
+        <dd>{{ organizationApps.length }}</dd>
+        <dt>APIs:</dt>
+        <dd>{{ organizationApis.length }}</dd>
+      </dl>
+      <dl class="col-3 col-xl-2">
         <dt>Created:</dt>
         <dd>{{ organization.created }}</dd>
         <dt>Updated:</dt>
@@ -51,8 +63,7 @@
         Delete <Icon icon="trash-alt" /> 
       </b-button>
     </div>
-    <!--  v-if="suborganizations > 0" -->
-    <table class="table verapi-table" v-if="organization.suborganizations > 0">
+    <table class="table verapi-table" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization">
       <thead>
         <tr>
           <th>
@@ -146,6 +157,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
@@ -179,15 +191,42 @@ export default {
       default() { return []; },
     },
   },
-  computed: {},
-  mounted() {},
+  computed: {
+    ...mapState({
+      groups: state => state.groups.items,
+      users: state => state.users.items,
+      apps: state => state.apps.items,
+      apis: state => state.apis.items,
+    }),
+    organizationUsers() {
+      const { users, organization } = this;
+      return users.filter(item => item.organizationid === organization.uuid);
+    },
+    organizationGroups() {
+      const { groups, organization } = this;
+      return groups.filter(item => item.organizationid === organization.uuid);
+    },
+    organizationApps() {
+      const { apps, organization } = this;
+      return apps.filter(item => item.organizationid === organization.uuid);
+    },
+    organizationApis() {
+      const { apis, organization } = this;
+      return apis.filter(item => item.organizationid === organization.uuid);
+    },
+  },
+  mounted() {
+    this.$store.dispatch('users/getUsers');
+    this.$store.dispatch('groups/getGroups');
+    this.$store.dispatch('apps/getApps');
+    this.$store.dispatch('apis/getApis');
+  },
   data() {
     return {
       sortByKey: 'name',
       sortByKeyType: 'string',
       sortDirection: 'desc',
       collapsedRows: [],
-      memberships: [],
     };
   },
   methods: {

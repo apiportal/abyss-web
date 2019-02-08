@@ -32,6 +32,10 @@ html {
 
 .table {
   &.verapi-table {
+    margin-bottom: 0;
+    .verapi-table {
+      margin-top: 1rem;
+    }
     > thead {
       > tr {
         > th {
@@ -46,15 +50,23 @@ html {
       border: 0;
       &:nth-child(even) {
         > tr:first-child {
-          background: #fff
+          background-color: #f1f5f9;
         }
       }
       &:nth-child(odd) {
         > tr:first-child {
-          background: #edf0f4
+          background-color: #fff;
         }
       }
+      > tr:first-child:hover {
+          background-color: lighten(#007BFF, 45%);
+      }
+      > tr.is-deleted:first-child:hover {
+          background-color: lighten(red, 40%);
+      }
       > tr {
+        border-left: 1px solid #dee2e6;
+        border-right: 1px solid #dee2e6;
         > td {
           // border: 0;
           font-size: 0.85rem;
@@ -62,6 +74,26 @@ html {
         // &.odd {
         //   background-color: #edf0f4;
         // }
+      }
+    }
+    // td {
+    //   border: 1px solid #dee2e6;
+    // }
+    tr.is-deleted {
+      opacity: 0.35;
+      td:first-child { position: relative;
+        &:before  {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          border-right: 10px solid transparent;
+          border-left: 10px solid red;
+          border-bottom: 10px solid transparent;
+          height: 0;
+          width: 0;
+          z-index: 1;
+        }
       }
     }
   }

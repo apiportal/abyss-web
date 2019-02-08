@@ -52,6 +52,11 @@ export default {
           to: '/app/explore',
         },
         {
+          icon: 'globe',
+          name: 'Organizations',
+          to: '/app/organizations/1',
+        },
+        {
           icon: 'users',
           name: 'Identity Managers',
           to: '/app/identity-managers/1',

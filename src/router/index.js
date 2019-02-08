@@ -46,6 +46,12 @@ import AdministerPermissions from '@/components/routes/administerPermissions/Adm
 import AddAdministerPermission from '@/components/routes/administerPermissions/AddAdministerPermission';
 import EditAdministerPermission from '@/components/routes/administerPermissions/EditAdministerPermission';
 import DeleteAdministerPermission from '@/components/routes/administerPermissions/DeleteAdministerPermission';
+// Organizations Routes Components
+import Organizations from '@/components/routes/organizations/Organizations';
+import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
+import AddOrganization from '@/components/routes/organizations/AddOrganization';
+import EditOrganization from '@/components/routes/organizations/EditOrganization';
+import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
 
 Vue.use(Router);
 
@@ -208,6 +214,28 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAdministerPermission,
+            },
+          ],
+        },
+        {
+          path: 'organizations/:page',
+          component: Organizations,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: OrganizationsLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddOrganization,
+            },
+            {
+              path: 'edit/:id',
+              component: EditOrganization,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteOrganization,
             },
           ],
         },

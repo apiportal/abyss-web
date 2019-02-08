@@ -32,25 +32,36 @@ html {
 
 .table {
   &.verapi-table {
-    thead {
-      th {
-        border: 0;
-        font-size: 0.875em;
-        font-weight: 500;
+    > thead {
+      > tr {
+        > th {
+          border: 0;
+          font-size: 0.85rem;
+          font-weight: 500;
+          text-transform: uppercase;
+        }
       }
     }
-    tbody {
+    > tbody {
       border: 0;
-
-      tr {
-        td {
-          border: 0;
-          font-size: 0.875em;
+      &:nth-child(even) {
+        > tr:first-child {
+          background: #fff
         }
-
-        &.odd {
-          background-color: #f8fafd;
+      }
+      &:nth-child(odd) {
+        > tr:first-child {
+          background: #edf0f4
         }
+      }
+      > tr {
+        > td {
+          // border: 0;
+          font-size: 0.85rem;
+        }
+        // &.odd {
+        //   background-color: #edf0f4;
+        // }
       }
     }
   }

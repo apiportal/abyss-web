@@ -48,6 +48,16 @@ export default {
   getOrganizations() {
     return axios.get('/abyss/oapi/organizations');
   },
+  putOrganizations(organization) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = organization;
+    return axios.put(`/abyss/oapi/organizations/${uuid}`, rest);
+  },
+  postOrganizations(organization) {
+    return axios.post('/abyss/oapi/organizations/', organization);
+  },
+  deleteOrganizations(uuid) {
+    return axios.delete(`/abyss/oapi/organizations/${uuid}`);
+  },
   // users
   getUsers() {
     return axios.get('/abyss/oapi/subjects/users/');
@@ -68,6 +78,11 @@ export default {
   // subject search
   getSubjectSearch(params) {
     return axios.post('/subject*/_search', params, {
+      withCredentials: false,
+    });
+  },
+  getOrganizationSearch(params) {
+    return axios.post('/organization*/_search', params, {
       withCredentials: false,
     });
   },

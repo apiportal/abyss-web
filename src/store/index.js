@@ -23,6 +23,8 @@ import apisSharedByUser from '@/store/modules/apisSharedByUser';
 import apiStates from '@/store/modules/apiStates';
 import apiVisibilityTypes from '@/store/modules/apiVisibilityTypes';
 import proxies from '@/store/modules/proxies';
+import policies from '@/store/modules/policies';
+import policyTypes from '@/store/modules/policyTypes';
 
 Vue.use(Vuex);
 
@@ -51,6 +53,8 @@ export default new Vuex.Store({
     apiStates,
     apiVisibilityTypes,
     proxies,
+    policies,
+    policyTypes,
   },
   debug: true,
 });

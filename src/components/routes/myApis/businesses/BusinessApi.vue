@@ -3,8 +3,15 @@
     <p><strong>Title:</strong> {{ item.openapidocument.info.title }}</p>
     <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
     <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
-    <p v-if="apiProxies.length > 0"><strong>Proxy APIs:</strong></p>
-    <div style="border: 1px solid #e7eaf3; border-radius: .3rem; padding: 1rem;" v-if="apiProxies.length > 0">
+    <p>
+      <strong>Proxy APIs:</strong>
+      <span v-if="apiProxies.length === 0">{{ apiProxies.length }}</span>
+      <b-link @click="handleToggleApiProxiesTable" v-else>
+        <span>{{ apiProxies.length }}</span>
+        <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+      </b-link>
+    </p>
+    <div v-if="isApiProxiesTableVisible">
       <table class="table verapi-table">
         <thead>
           <tr>
@@ -18,6 +25,7 @@
         <TbodyCollapsible
           v-for="(proxyItem, proxyIndex) in apiProxies" v-bind:key="proxyIndex"
           :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
+          :level="1"
         >
           <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'}`">
             <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -56,6 +64,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Proxy from '@/components/routes/myApis/businesses/Proxy';
+import Icon from '@/components/shared/Icon';
 
 export default {
   props: {
@@ -67,6 +76,7 @@ export default {
   components: {
     TbodyCollapsible,
     Proxy,
+    Icon,
   },
   computed: {
     ...mapState({
@@ -103,6 +113,7 @@ export default {
   },
   data() {
     return {
+      isApiProxiesTableVisible: false,
       collapsedRows: [],
       subcriptions: {
         lastUpdated: 0,
@@ -120,9 +131,14 @@ export default {
     },
     getApiLicenses(uuid) {
       api.getApiLicenses(uuid).then((response) => {
-        this.subcriptions[uuid] = response.data;
-        this.subcriptions.lastUpdated = (new Date()).getTime();
+        if (response && response.data) {
+          this.subcriptions[uuid] = response.data;
+          this.subcriptions.lastUpdated = (new Date()).getTime();
+        }
       });
+    },
+    handleToggleApiProxiesTable() {
+      this.isApiProxiesTableVisible = !this.isApiProxiesTableVisible;
     },
   },
   mounted() {

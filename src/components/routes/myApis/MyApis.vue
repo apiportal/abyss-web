@@ -51,6 +51,8 @@ export default {
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
     this.$store.dispatch('proxies/getProxies', this.currentUser.uuid);
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('policies/getPolicies', this.currentUser.uuid);
+    this.$store.dispatch('policyTypes/getPolicyTypes');
   },
 };
 </script>
@@ -68,7 +70,6 @@ export default {
 
   .my-apis-content {
     flex: 1 0 0;
-    overflow-y: auto;
     display: flex;
   }
 }

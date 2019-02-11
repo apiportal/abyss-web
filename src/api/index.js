@@ -195,4 +195,10 @@ export default {
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
+  getPolicies(uuid) {
+    return axios.get(`/abyss/oapi/policies/subject/${uuid}`);
+  },
+  getPolicyTypes() {
+    return axios.get('/abyss/oapi/policy-types');
+  },
 };

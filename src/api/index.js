@@ -192,4 +192,7 @@ export default {
   getProxies(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
   },
+  getApiLicenses(uuid) {
+    return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
+  },
 };

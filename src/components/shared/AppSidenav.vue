@@ -29,7 +29,7 @@ export default {
         {
           icon: 'cube',
           name: 'My APIs',
-          to: '/app/my-apis',
+          to: '/app/my-apis/businesses/1',
         },
         {
           icon: 'cubes',

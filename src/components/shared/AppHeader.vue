@@ -4,7 +4,7 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand to="/app/dashboard"><img src="../../assets/verapi.png" class="logo" /></b-navbar-brand>
+      <b-navbar-brand to="/app/dashboard"><img src="//dev2.apiportal.com/dist/img/abyss_light.png" class="logo" /></b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse" v-if="user.uuid">
 

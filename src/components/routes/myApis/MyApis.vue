@@ -50,6 +50,7 @@ export default {
     this.$store.dispatch('apiStates/getApiStates');
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
     this.$store.dispatch('proxies/getProxies', this.currentUser.uuid);
+    this.$store.dispatch('organizations/getOrganizations');
   },
 };
 </script>

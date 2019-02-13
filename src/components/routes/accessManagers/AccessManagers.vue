@@ -110,7 +110,6 @@
                 </div>
               </div>
             </td>
-            <td></td>
           </tr>
         </TbodyCollapsible>
         <router-view></router-view>

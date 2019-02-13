@@ -9,7 +9,7 @@
         <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
       </b-link>
     </p>
-    <div v-if="isPoliciesTableVisible">
+    <div v-if="isPoliciesTableVisible" style="margin-bottom: 1rem;">
       <table class="table verapi-table">
         <thead>
           <tr>
@@ -70,6 +70,16 @@
         </TbodyCollapsible>
       </table>
     </div>
+
+    <div>
+      <b-dropdown variant="secondary" size="sm">
+        <template slot="button-content">
+          <Icon icon="list-ol" />
+          <span>License Logs</span>
+        </template>
+        <b-dropdown-item :to="`/app/my-apis/businesses/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
+      </b-dropdown>
+    </div>
   </div>
 </template>
 
@@ -113,6 +123,7 @@ export default {
   },
   data() {
     return {
+      page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
       isPoliciesTableVisible: false,
     };

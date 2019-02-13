@@ -5,6 +5,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
 import Api from '@/components/routes/myApis/api/Api';
+import Logs from '@/components/routes/myApis/Logs';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -71,6 +72,12 @@ export default new Router({
             {
               path: 'businesses/:page',
               component: Businesses,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: Logs,
+                },
+              ],
             },
             {
               path: 'api/:id',

@@ -11,7 +11,7 @@
         <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
       </b-link>
     </p>
-    <div v-if="isApiProxiesTableVisible">
+    <div v-if="isApiProxiesTableVisible" style="margin-bottom: 1rem;">
       <table class="table verapi-table">
         <thead>
           <tr>
@@ -55,6 +55,15 @@
           </tr>
         </TbodyCollapsible>
       </table>
+    </div>
+    <div>
+      <b-dropdown variant="secondary" size="sm">
+        <template slot="button-content">
+          <Icon icon="list-ol" />
+          <span>API Logs</span>
+        </template>
+        <b-dropdown-item :to="`/app/my-apis/businesses/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
+      </b-dropdown>
     </div>
   </div>
 </template>
@@ -113,6 +122,7 @@ export default {
   },
   data() {
     return {
+      page: parseInt(this.$route.params.page, 10),
       isApiProxiesTableVisible: false,
       collapsedRows: [],
       subcriptions: {

@@ -16,7 +16,7 @@
       </h5>
     </template>
     <template>
-      <table class="table verapi-table">
+      <table class="table verapi-table" v-if="totalCount > 0">
         <thead>
           <tr>
             <th>Method</th>
@@ -52,8 +52,11 @@
         </tr>
         </TbodyCollapsible>
       </table>
+      <div v-else>
+        <p class="text-center">No logs for this subject</p>
+      </div>
     </template>
-    <template slot="footer">
+    <template slot="footer" v-if="totalCount > 0">
       <div class="w-100" v-if="logs.length > 0">
         <b-pagination 
           size="md"

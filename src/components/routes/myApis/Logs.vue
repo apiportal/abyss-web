@@ -1,7 +1,7 @@
 <template>
   <SubjectLogs
     title="Logs"
-    :routeAddress="`/app/administer-users/${page}`"
+    :routeAddress="`/app/my-apis/businesses/${page}`"
   />
 </template>
 

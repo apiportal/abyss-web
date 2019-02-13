@@ -67,6 +67,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
+      <router-view></router-view>
     </div>
     <div class="businesses-footer">
       <b-pagination 

@@ -52,6 +52,7 @@ import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLo
 import AddOrganization from '@/components/routes/organizations/AddOrganization';
 import EditOrganization from '@/components/routes/organizations/EditOrganization';
 import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
+import EditOrganizationUser from '@/components/routes/organizations/EditOrganizationUser';
 
 Vue.use(Router);
 
@@ -236,6 +237,10 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteOrganization,
+            },
+            {
+              path: 'edit-user/:id',
+              component: EditOrganizationUser,
             },
           ],
         },

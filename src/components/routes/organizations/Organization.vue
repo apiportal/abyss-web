@@ -18,16 +18,12 @@
       <dl class="col-1">
         <dt>Users:</dt>
         <dd>{{ organizationUsers.length }}</dd>
-        <dt>Groups:</dt>
-        <dd>{{ organizationGroups.length }}</dd>
-      </dl>
-      <dl class="col-1">
         <dt>APPs:</dt>
         <dd>{{ organizationApps.length }}</dd>
         <dt>APIs:</dt>
         <dd>{{ organizationApis.length }}</dd>
       </dl>
-      <dl class="col-3 col-xl-2">
+      <dl class="col-3">
         <dt>Created:</dt>
         <dd>{{ organization.created }}</dd>
         <dt>Updated:</dt>
@@ -62,6 +58,23 @@
       >
         Delete <Icon icon="trash-alt" /> 
       </b-button>
+      <b-button
+        size="sm"
+        variant="info"
+        v-b-tooltip.hover
+        title="Users"
+        @click="listOrganizationUsers"
+      >
+        Users <Icon icon="users" />
+      </b-button>
+    </div>
+    <div v-if="isShowOrganizationUsers && organizationUsers.length">
+      <Users
+        :users="organizationUsers"
+        path="organizations"
+        title="Organization"
+        :page="page"
+      />
     </div>
     <table class="table verapi-table" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization">
       <thead>
@@ -93,6 +106,16 @@
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               sortByKey="suborganizations"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            Users
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              sortByKey="organizationusers"
               sortByKeyType="number"
             />
           </th>
@@ -134,6 +157,9 @@
             {{ item.suborganizations }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.organizationusers }}
+          </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.url }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -141,7 +167,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <Organization
                 :organizations="organizations"
@@ -161,6 +187,7 @@ import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import Users from '@/components/shared/Users';
 
 export default {
   name: 'Organization',
@@ -168,6 +195,7 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    Users,
   },
   props: {
     organization: {
@@ -227,9 +255,13 @@ export default {
       sortByKeyType: 'string',
       sortDirection: 'desc',
       collapsedRows: [],
+      isShowOrganizationUsers: false,
     };
   },
   methods: {
+    listOrganizationUsers() {
+      this.isShowOrganizationUsers = !this.isShowOrganizationUsers;
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

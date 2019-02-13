@@ -55,6 +55,16 @@
               />
             </th>
             <th>
+              Users
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="organizationusers"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
               Url
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -92,6 +102,9 @@
               {{ item.suborganizations }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.url }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -99,7 +112,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="5">
+            <td colspan="6">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -148,9 +161,10 @@ export default {
   computed: {
     ...mapState({
       organizations: state => state.organizations.items,
+      users: state => state.users.items,
     }),
     tableRows() {
-      const { organizations } = this;
+      const { organizations, users } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -160,12 +174,17 @@ export default {
           item => item.organizationid === organizationId);
         return subOrganizations;
       };
+      const getOrganizationUsers = (organizationId) => {
+        const organizationUsers = users.filter(item => item.organizationid === organizationId);
+        return organizationUsers;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: organizations.map(item => ({
           ...item,
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid).length,
+          organizationusers: getOrganizationUsers(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -191,6 +210,7 @@ export default {
   },
   created() {
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('users/getUsers');
   },
   data() {
     return {

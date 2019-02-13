@@ -409,13 +409,14 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { userEditable, putUsers, postUsers, onUpdate, role } = this;
-      const { description, url, effectiveenddate, secondaryemail, email } = userEditable;
+      const { description, url, effectiveenddate, secondaryemail, email, picture } = userEditable;
       let userToUpdate = {
         ...userEditable,
         description: (description === null ? '' : description),
         url: (url === null ? '' : url),
+        picture: (picture === null ? '' : picture),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? '' : email),
+        secondaryemail: (secondaryemail === null ? email : email),
       };
 
       if (role === 'edit') {

@@ -76,17 +76,39 @@
         <Icon icon="trash-alt" />
         <span>Delete</span>
       </b-button>
+      <b-button
+        size="sm"
+        variant="info"
+        v-b-tooltip.hover
+        title="Users"
+        @click="listGroupUsers"
+      >
+        Users <Icon icon="users" />
+      </b-button>
+    </div>
+    <div v-if="isShowGroupUsers && group.users.length">
+      <Users
+        :users="group.users"
+        path="administer-groups"
+        title="Group"
+        :page="page"
+      />
     </div>
   </div>
 </template>
 
 <script>
-// import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import SortBy from '@/components/shared/SortBy';
+import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import Users from '@/components/shared/Users';
 
 export default {
   components: {
     Icon,
+    SortBy,
+    TbodyCollapsible,
+    Users,
   },
   props: {
     group: {
@@ -104,36 +126,23 @@ export default {
       required: false,
       default() { return []; },
     },
+    memberships: {
+      Type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
-  computed: {
-    // computedMemberships() {
-    //   const { memberships, users } = this;
-    //   return memberships.map((item) => {
-    //     const subjectgroup = users.find(group => group.uuid === item.subjectgroupid);
-    //     return {
-    //       subjectgroupid: item.subjectgroupid,
-    //       subjectgroupname: subjectgroup ? subjectgroup.displayname : item.subjectgroupid,
-    //     };
-    //   });
-    // },
-  },
+  computed: {},
   data() {
     return {
-      memberships: [],
+      isShowGroupUsers: false,
     };
   },
-  mounted() {
-    // this.getSubjectMemberships();
-  },
+  mounted() {},
   methods: {
-    // getSubjectMemberships() {
-    //   api.getSubjectMemberships(this.user.uuid).then((response) => {
-    //     if (response && response.data) {
-    //       this.memberships = response.data;
-    //     }
-    //     this.isMembershipsLoaded = true;
-    //   });
-    // },
+    listGroupUsers() {
+      this.isShowGroupUsers = !this.isShowGroupUsers;
+    },
   },
 };
 </script>

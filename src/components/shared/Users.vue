@@ -67,7 +67,7 @@
         </td>
         <td class="py-2 text-right">
           <b-button
-            :to="`/app/organizations/${page}/edit-user/${item.uuid}`"
+            :to="`/app/${path}/${page}/edit-user/${item.uuid}`"
             size="sm"
             variant="secondary"
             v-b-tooltip.hover
@@ -86,56 +86,6 @@
               :groups="groups"
               :page="page"
             />
-            <!-- <div class="row">
-              <dl class="px-3">
-                <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
-              </dl>
-              <dl class="col">
-                <dt>First Name:</dt>
-                <dd>{{ item.firstname }}</dd>
-                <dt>Last Name:</dt>
-                <dd>{{ item.lastname }}</dd>
-                <dt>User Name:</dt>
-                <dd>{{ item.subjectname }}</dd>
-                <dt>Display Name:</dt>
-                <dd>{{ item.displayname }}</dd>
-              </dl>
-              <dl class="col">
-                <dt>Organization:</dt>
-                <dd>{{ item.organizationname }}</dd>
-                <dt>Directory:</dt>
-                <dd>{{ item.directoryname }}</dd>
-                <dt>Description:</dt>
-                <dd>{{ item.description }}</dd>
-              </dl>
-             
-              <dl class="col">
-                <dt>Email:</dt>
-                <dd>{{ item.email }}</dd>
-                <dt>Secondary Email:</dt>
-                <dd>{{ item.secondaryemail }}</dd>
-                <dt>uuid:</dt>
-                <dd><code>{{ item.uuid }}</code></dd>
-              </dl>
-              
-              <dl class="col-1">
-                <dt>Active:</dt>
-                <dd>{{ item.isactivated }}</dd>
-                <dt>Deleted:</dt>
-                <dd>{{ item.isdeleted }}</dd>
-                <dt>Locked:</dt>
-                <dd>{{ item.islocked }}</dd>
-              </dl>
-              
-              <dl class="col">
-                <dt>Created:</dt>
-                <dd>{{ item.created }}</dd>
-                <dt>Updated:</dt>
-                <dd>{{ item.updated }}</dd>
-                <dt>Deleted:</dt>
-                <dd>{{ item.deleted }}</dd>
-              </dl>
-            </div> -->
           </div>
         </td>
       </tr>

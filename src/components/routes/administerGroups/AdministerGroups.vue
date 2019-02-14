@@ -25,6 +25,16 @@
         <thead>
           <tr>
             <th>
+              Status
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="isactivated"
+                sortByKeyType="boolean"
+              />
+            </th>
+            <th>
               Display Name
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -50,7 +60,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="groupusers"
+                sortByKey="userscount"
                 sortByKeyType="number"
               />
             </th>
@@ -64,9 +74,6 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Status
-            </th>
           </tr>
         </thead>
         <TbodyCollapsible
@@ -75,30 +82,35 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon 
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+                :class="item.isactivated ? 'text-success' : 'text-danger'"
+              />
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.subjectname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.groupusers }}
+              {{ item.userscount }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
-                :class="item.isactivated ? 'text-success' : 'text-danger'"
-              />
             </td>
           </tr>
           <tr slot="footer" class="footer">
             <td colspan="7">
               <div class="collapsible-content">
-                <AdministerGroup
+                <!-- <AdministerGroup
                   :group="item"
                   :users="users"
+                  :memberships="memberships"
+                  :page="page"
+                /> -->
+                <AdministerGroup
+                  :group="item"
                   :page="page"
                 />
               </div>
@@ -145,11 +157,11 @@ export default {
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
       groups: state => state.groups.items,
-      users: state => state.groups.users,
+      users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
     }),
     totalRows() {
-      const { subjectDirectories, organizations, groups } = this;
+      const { subjectDirectories, organizations, groups, users } = this;
       const getDirectoryName = (subjectdirectoryid) => {
         const directory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
         return directory ? directory.directoryname : subjectdirectoryid;
@@ -159,8 +171,17 @@ export default {
         return organization ? organization.name : organizationId;
       };
       const getUsers = (groupId) => {
-        const users = this.memberships.filter(item => item.subjectgroupid === groupId);
-        return users;
+        const members = this.memberships.filter(item =>
+          !item.isdeleted &&
+          item.subjectgroupid === groupId);
+        // console.log('members.length: ', members.length);
+        const groupUsers = users.filter(el =>
+          members.some(f =>
+            f.subjectid === el.uuid,
+          ),
+        );
+        // console.log('users.length: ', groupUsers.length);
+        return groupUsers;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
@@ -169,7 +190,8 @@ export default {
           ...item,
           directoryname: getDirectoryName(item.subjectdirectoryid),
           organizationname: getOrganizationName(item.organizationid),
-          groupusers: getUsers(item.uuid).length,
+          users: getUsers(item.uuid),
+          userscount: getUsers(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

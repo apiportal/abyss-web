@@ -12,49 +12,9 @@
       </b-link>
     </p>
     <div v-if="isApiProxiesTableVisible" style="margin-bottom: 1rem;">
-      <table class="table verapi-table">
-        <thead>
-          <tr>
-            <th>Proxy Api Name</th>
-            <th>Version</th>
-            <th>State</th>
-            <th>Visibility</th>
-            <th># of Subscriptions</th>
-          </tr>
-        </thead>
-        <TbodyCollapsible
-          v-for="(proxyItem, proxyIndex) in apiProxies" v-bind:key="proxyIndex"
-          :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
-          :level="1"
-        >
-          <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'}`">
-            <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-              {{ proxyItem.openapidocument.info.title }}
-            </td>
-            <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-              {{ proxyItem.version }}
-            </td>
-            <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-              {{ proxyItem.apistatename }}
-            </td>
-            <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-              {{ proxyItem.apivisibilityname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-              {{ proxyItem.subcriptions.length }}
-            </td>
-          </tr>
-          <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-            <td colspan="6">
-              <div class="collapsible-content">
-                <Proxy
-                  :item="proxyItem"
-                />
-              </div>
-            </td>
-          </tr>
-        </TbodyCollapsible>
-      </table>
+      <Proxies
+        :rows="apiProxies"
+      />
     </div>
     <div>
       <b-dropdown variant="secondary" size="sm">
@@ -72,8 +32,8 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Proxy from '@/components/routes/myApis/businesses/Proxy';
 import Icon from '@/components/shared/Icon';
+import Proxies from '@/components/shared/subjects/proxies/Proxies';
 
 export default {
   props: {
@@ -84,8 +44,8 @@ export default {
   },
   components: {
     TbodyCollapsible,
-    Proxy,
     Icon,
+    Proxies,
   },
   computed: {
     ...mapState({

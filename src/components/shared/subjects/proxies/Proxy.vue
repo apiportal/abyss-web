@@ -14,37 +14,9 @@
     </p>
 
     <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
-      <table class="table verapi-table">
-        <thead>
-          <tr>
-            <th>License Name</th>
-            <th># of Policies</th>
-          </tr>
-        </thead>
-        <TbodyCollapsible
-          v-for="(licenseItem, licenseIndex) in item.subcriptions" v-bind:key="licenseIndex"
-          :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
-          :level="2"
-        >
-          <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'}`">
-            <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-              {{ licenseItem.name }}
-            </td>
-            <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-              {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
-            </td>
-          </tr>
-          <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-            <td colspan="2">
-              <div class="collapsible-content">
-                <License
-                  :item="licenseItem"
-                />
-              </div>
-            </td>
-          </tr>
-        </TbodyCollapsible>
-      </table>
+      <Licenses
+        :rows="item.subcriptions"
+      />
     </div>
 
     <div>
@@ -62,7 +34,7 @@
 <script>
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import License from '@/components/routes/myApis/businesses/License';
+import Licenses from '@/components/shared/subjects/licenses/Licenses';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -75,8 +47,8 @@ export default {
   },
   components: {
     TbodyCollapsible,
-    License,
     Icon,
+    Licenses,
   },
   props: {
     item: {

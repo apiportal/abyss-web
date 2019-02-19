@@ -21,52 +21,9 @@
       </div>
     </div>
     <div class="businesses-content">
-      <table class="table verapi-table">
-        <thead>
-          <tr>
-            <th>Api Name</th>
-            <th>Version</th>
-            <th>State</th>
-            <th>Visibility</th>
-            <th># of Proxies</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
-          :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-        >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.openapidocument.info.title }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.version }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.apistatename }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.apivisibilityname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.numberofproxies }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.islive ? 'check-circle' : 'times-circle'" :class="item.islive ? 'text-success' : 'text-danger'" />
-            </td>
-          </tr>
-          <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-            <td colspan="6">
-              <div class="collapsible-content">
-                <BusinessApi
-                  :item="item"
-                />
-              </div>
-            </td>
-          </tr>
-        </TbodyCollapsible>
-      </table>
+      <Apis
+        :rows="tableRows"
+      />
       <router-view></router-view>
     </div>
     <div class="businesses-footer">
@@ -85,18 +42,16 @@
 
 <script>
 import { mapState } from 'vuex';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import InputWithIcon from '@/components/shared/InputWithIcon';
+import Apis from '@/components/shared/subjects/apis/Apis';
 import Icon from '@/components/shared/Icon';
-import BusinessApi from '@/components/routes/myApis/businesses/BusinessApi';
 import Helpers from '@/helpers';
 
 export default {
   components: {
-    TbodyCollapsible,
     InputWithIcon,
+    Apis,
     Icon,
-    BusinessApi,
   },
   computed: {
     ...mapState({

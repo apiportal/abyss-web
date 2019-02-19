@@ -3,11 +3,10 @@
     <table class="table verapi-table">
       <thead>
         <tr>
-          <th>Api Name</th>
-          <th>Version</th>
-          <th>State</th>
-          <th>Visibility</th>
-          <th># of Proxies</th>
+          <th>App Name</th>
+          <th>Organization</th>
+          <th>URL</th>
+          <th># of Subscriptions</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -17,28 +16,25 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.openapidocument.info.title }}
+            {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.version }}
+            {{ item.organizationname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.apistatename }}
+            {{ item.url }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.apivisibilityname }}
+            {{ item.contracts ? item.contracts.length : '' }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.numberofproxies }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon :icon="item.islive ? 'check-circle' : 'times-circle'" :class="item.islive ? 'text-success' : 'text-danger'" />
+            <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="6">
+          <td colspan="5">
             <div class="collapsible-content">
-              <Api
+              <App
                 :item="item"
               />
             </div>
@@ -50,7 +46,7 @@
 </template>
 
 <script>
-import Api from '@/components/shared/subjects/apis/Api';
+import App from '@/components/shared/subjects/apps/App';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
@@ -63,7 +59,7 @@ export default {
     },
   },
   components: {
-    Api,
+    App,
     TbodyCollapsible,
     Icon,
   },

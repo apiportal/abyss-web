@@ -201,4 +201,13 @@ export default {
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
   },
+  getSubjectApps(uuid) {
+    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+  },
+  getAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
+  },
+  getSubjectLicenses(uuid) {
+    return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
+  },
 };

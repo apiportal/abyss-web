@@ -1,6 +1,5 @@
 <template>
   <div class="verapi-table-container">
-    PROXIES
     <table class="table verapi-table">
       <thead>
         <tr>
@@ -30,7 +29,7 @@
             {{ proxyItem.apivisibilityname }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.subcriptions.length }}
+            {{ proxyItem.subscriptions.length }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">

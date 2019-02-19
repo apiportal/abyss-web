@@ -75,8 +75,8 @@ export default {
         apistatename: getApiStateName(item.apistateid),
         apivisibilityname: getApiVisibilityName(item.apivisibilityid),
         organizationame: getOrganizationName(item.organizationid),
-        subcriptions: this.subcriptions[item.uuid] || [],
-        subcriptionsUpdated: this.subcriptions.lastUpdated,
+        subscriptions: this.subscriptions[item.uuid] || [],
+        subscriptionsUpdated: this.subscriptions.lastUpdated,
       }));
     },
   },
@@ -85,7 +85,7 @@ export default {
       page: parseInt(this.$route.params.page, 10),
       isApiProxiesTableVisible: false,
       collapsedRows: [],
-      subcriptions: {
+      subscriptions: {
         lastUpdated: 0,
       },
     };
@@ -102,8 +102,8 @@ export default {
     getApiLicenses(uuid) {
       api.getApiLicenses(uuid).then((response) => {
         if (response && response.data) {
-          this.subcriptions[uuid] = response.data;
-          this.subcriptions.lastUpdated = (new Date()).getTime();
+          this.subscriptions[uuid] = response.data;
+          this.subscriptions.lastUpdated = (new Date()).getTime();
         }
       });
     },

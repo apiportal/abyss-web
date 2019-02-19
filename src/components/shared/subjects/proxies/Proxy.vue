@@ -6,16 +6,16 @@
     <p><strong>Organization:</strong> {{ item.organizationame }}</p>
     <p>
       <strong>Licenses:</strong>
-      <span v-if="item.subcriptions.length === 0">{{ item.subcriptions.length }}</span>
+      <span v-if="item.subscriptions.length === 0">{{ item.susbcriptions.length }}</span>
       <b-link @click="handleToggleLicensesTable" v-else>
-        <span>{{ item.subcriptions.length }}</span>
+        <span>{{ item.subscriptions.length }}</span>
         <Icon :icon="`${isLicensesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
       </b-link>
     </p>
 
     <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
       <Licenses
-        :rows="item.subcriptions"
+        :rows="item.subscriptions"
       />
     </div>
 

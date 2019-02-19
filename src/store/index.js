@@ -25,6 +25,8 @@ import apiVisibilityTypes from '@/store/modules/apiVisibilityTypes';
 import proxies from '@/store/modules/proxies';
 import policies from '@/store/modules/policies';
 import policyTypes from '@/store/modules/policyTypes';
+import subjectApps from '@/store/modules/subjectApps';
+import subjectLicenses from '@/store/modules/subjectLicenses';
 
 Vue.use(Vuex);
 
@@ -55,6 +57,8 @@ export default new Vuex.Store({
     proxies,
     policies,
     policyTypes,
+    subjectApps,
+    subjectLicenses,
   },
   debug: true,
 });

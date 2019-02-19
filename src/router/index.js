@@ -48,6 +48,15 @@ import AdministerPermissions from '@/components/routes/administerPermissions/Adm
 import AddAdministerPermission from '@/components/routes/administerPermissions/AddAdministerPermission';
 import EditAdministerPermission from '@/components/routes/administerPermissions/EditAdministerPermission';
 import DeleteAdministerPermission from '@/components/routes/administerPermissions/DeleteAdministerPermission';
+// My APPs Routes
+import MyApps from '@/components/routes/myApps/MyApps';
+import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
+// My Licenses
+import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
+import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
+// My Policies
+import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
+import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
 
 Vue.use(Router);
 
@@ -220,6 +229,36 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAdministerPermission,
+            },
+          ],
+        },
+        {
+          path: 'my-apps',
+          component: MyApps,
+          children: [
+            {
+              path: 'my-apps/:page',
+              component: SubjectApps,
+            },
+          ],
+        },
+        {
+          path: 'my-licenses',
+          component: MyLicenses,
+          children: [
+            {
+              path: 'my-licenses/:page',
+              component: SubjectLicenses,
+            },
+          ],
+        },
+        {
+          path: 'my-policies',
+          component: MyPolicies,
+          children: [
+            {
+              path: 'my-policies/:page',
+              component: SubjectPolicies,
             },
           ],
         },

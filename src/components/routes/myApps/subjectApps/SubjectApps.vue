@@ -1,6 +1,6 @@
 <template>
-  <div class="businesses-container">
-    <div class="businesses-header">
+  <div class="subject-apps-container">
+    <div class="subject-apps-header">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon
@@ -20,13 +20,12 @@
         </div>
       </div>
     </div>
-    <div class="businesses-content">
-      <Apis
-        :rows="tableRows"
+    <div class="subject-apps-content">
+      <Apps
+        :rows="paginatedRows"
       />
-      <router-view></router-view>
     </div>
-    <div class="businesses-footer">
+    <div class="subject-apps-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -43,46 +42,40 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Apis from '@/components/shared/subjects/apis/Apis';
+import Apps from '@/components/shared/subjects/apps/Apps';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Apis,
+    Apps,
     Icon,
   },
   computed: {
     ...mapState({
-      businessApis: state => state.businessApis.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      businesses: state => state.businesses.items,
-      proxies: state => state.proxies.items,
+      apps: state => state.apps.items,
+      subjectApps: state => state.subjectApps.items,
+      organizations: state => state.organizations.items,
     }),
+    userApps() {
+      const { apps, subjectApps } = this;
+      const subjectAppsIds = subjectApps.map(item => item.appid);
+      return apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
+    },
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { businessApis, apiStates, apiVisibilityTypes, proxies } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
+      const { userApps, organizations } = this;
+      const getOrganizationName = (organizationId) => {
+        const organization = organizations.find(item => item.uuid === organizationId);
+        return organization ? organization.name : organizationId;
       };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
       return sortArrayOfObjects({
-        array: businessApis
-          .filter(item => item.isproxyapi === false)
+        array: userApps
           .map(item => ({
             ...item,
-            apistatename: getApiStateName(item.apistateid),
-            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            numberofproxies: getNumberOfProxies(item.uuid),
+            organizationname: getOrganizationName(item.organizationid),
           })),
         sortByKey,
         sortByKeyType,
@@ -108,6 +101,9 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
+      subscriptions: {
+        lastUpdated: 0,
+      },
     };
   },
   methods: {
@@ -130,24 +126,24 @@ export default {
 </script>
 
 <style lang="scss">
-.businesses-container {
+.subject-apps-container {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
 
-  .businesses-header {
+  .subject-apps-header {
     border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }
 
-  .businesses-content {
+  .subject-apps-content {
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;
   }
 
-  .businesses-footer {
+  .subject-apps-footer {
     border-top: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;

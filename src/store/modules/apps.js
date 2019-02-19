@@ -20,11 +20,31 @@ const actions = {
       }
     });
   },
+  getAppContracts: ({ commit }, appIdsArray) => {
+    for (let i = 0; i < appIdsArray.length; i += 1) {
+      api.getAppContracts(appIdsArray[i]).then((response) => {
+        commit('setAppContracts', { appId: appIdsArray[i], contracts: response.data});
+      });
+    }
+  },
 };
 
 const mutations = {
   setApps: (state, apps) => {
     state.items = apps;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setAppContracts: (state, { appId, contracts }) => {
+    state.items = state.items.map(item => {
+      if (item.uuid === appId) {
+        return {
+          ...item,
+          contracts,
+        };
+      } else {
+        return item;
+      }
+    });
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

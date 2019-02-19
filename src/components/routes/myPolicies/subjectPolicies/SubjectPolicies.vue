@@ -1,6 +1,6 @@
 <template>
-  <div class="businesses-container">
-    <div class="businesses-header">
+  <div class="subject-licenses-container">
+    <div class="subject-licenses-header">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon
@@ -20,13 +20,12 @@
         </div>
       </div>
     </div>
-    <div class="businesses-content">
-      <Apis
-        :rows="tableRows"
+    <div class="subject-licenses-content">
+      <Policies
+        :rows="paginatedRows"
       />
-      <router-view></router-view>
     </div>
-    <div class="businesses-footer">
+    <div class="subject-licenses-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -43,46 +42,34 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Apis from '@/components/shared/subjects/apis/Apis';
+import Policies from '@/components/shared/subjects/policies/Policies';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Apis,
+    Policies,
     Icon,
   },
   computed: {
     ...mapState({
-      businessApis: state => state.businessApis.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      businesses: state => state.businesses.items,
-      proxies: state => state.proxies.items,
+      policies: state => state.policies.items,
+      policyTypes: state => state.policyTypes.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { businessApis, apiStates, apiVisibilityTypes, proxies } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
+      const { policies, policyTypes } = this;
+      const getTypeName = (typeId) => {
+        const type = policyTypes.find(policyType => policyType.uuid === typeId);
+        return type ? type.name : typeId;
       };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
       return sortArrayOfObjects({
-        array: businessApis
-          .filter(item => item.isproxyapi === false)
+        array: policies
           .map(item => ({
             ...item,
-            apistatename: getApiStateName(item.apistateid),
-            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            numberofproxies: getNumberOfProxies(item.uuid),
+            typename: getTypeName(item.typeid),
           })),
         sortByKey,
         sortByKeyType,
@@ -108,6 +95,9 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
+      subscriptions: {
+        lastUpdated: 0,
+      },
     };
   },
   methods: {
@@ -130,24 +120,24 @@ export default {
 </script>
 
 <style lang="scss">
-.businesses-container {
+.subject-licenses-container {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
 
-  .businesses-header {
+  .subject-licenses-header {
     border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }
 
-  .businesses-content {
+  .subject-licenses-content {
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;
   }
 
-  .businesses-footer {
+  .subject-licenses-footer {
     border-top: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;

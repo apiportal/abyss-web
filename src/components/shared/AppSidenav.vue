@@ -34,17 +34,17 @@ export default {
         {
           icon: 'cubes',
           name: 'My Apps',
-          to: '/app/my-apps',
+          to: '/app/my-apps/my-apps/1',
         },
         {
           icon: 'certificate',
           name: 'My Licenses',
-          to: '/app/my-licenses',
+          to: '/app/my-licenses/my-licenses/1',
         },
         {
           icon: 'file-powerpoint',
           name: 'My Policies',
-          to: '/app/my-policies',
+          to: '/app/my-policies/my-policies/1',
         },
         {
           icon: 'globe',

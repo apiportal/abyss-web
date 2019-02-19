@@ -1,6 +1,5 @@
 <template>
   <div class="verapi-table-container">
-    LICENSES
     <table class="table verapi-table">
       <thead>
         <tr>

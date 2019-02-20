@@ -36,6 +36,7 @@
             <div class="collapsible-content">
               <App
                 :item="item"
+                :routePath="routePath"
               />
             </div>
           </td>
@@ -56,6 +57,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   components: {

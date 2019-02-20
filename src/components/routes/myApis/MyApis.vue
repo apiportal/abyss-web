@@ -53,6 +53,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('policies/getPolicies', this.currentUser.uuid);
     this.$store.dispatch('policyTypes/getPolicyTypes');
+    this.$store.dispatch('licenses/getLicenses');
   },
 };
 </script>

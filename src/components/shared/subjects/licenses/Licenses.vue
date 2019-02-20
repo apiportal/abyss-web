@@ -4,6 +4,8 @@
       <thead>
         <tr>
           <th>License Name</th>
+          <th>Version</th>
+          <th>Visibility</th>
           <th># of Policies</th>
         </tr>
       </thead>
@@ -17,14 +19,21 @@
             {{ licenseItem.name }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.version }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.licensedocument.info.visibility }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="2">
+          <td colspan="4">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"
+                :routePath="routePath"
               />
             </div>
           </td>
@@ -45,6 +54,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   components: {

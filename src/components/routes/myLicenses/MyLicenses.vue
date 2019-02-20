@@ -2,7 +2,7 @@
   <div class="my-licenses-container">
     <div class="my-licenses-header">
       <b-button variant="primary">
-        My Licenses <b-badge variant="light">{{ subjectLicenses.length }}</b-badge>
+        My Licenses <b-badge variant="light">{{ licenses.length }}</b-badge>
       </b-button>
     </div>
     <div class="my-licenses-content">
@@ -18,12 +18,14 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      subjectLicenses: state => state.subjectLicenses.items,
+      licenses: state => state.licenses.items,
     }),
   },
   mounted() {
-    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('policies/getPolicies', this.currentUser.uuid);
+    this.$store.dispatch('licenses/getLicenses');
+    this.$store.dispatch('policies/getPolicies');
+    this.$store.dispatch('policyTypes/getPolicyTypes');
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
   },
 };
 </script>

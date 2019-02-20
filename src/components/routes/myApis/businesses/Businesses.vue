@@ -22,7 +22,8 @@
     </div>
     <div class="businesses-content">
       <Apis
-        :rows="tableRows"
+        :rows="paginatedRows"
+        :routePath="`/app/my-apis/businesses/${page}`"
       />
       <router-view></router-view>
     </div>

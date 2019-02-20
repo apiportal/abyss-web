@@ -21,8 +21,8 @@ export default {
   watch: {
     $route(to, from) {
       if (to.params.logPage !== from.params.logPage) {
-        const { id, logPage } = to.params;
-        this.getSubjectSearch({ query: id, from: ((logPage - 1) * 10) });
+        const { id, logPage, logType } = to.params;
+        this.getSubjectSearch({ query: id, from: ((logPage - 1) * 10), type: logType });
       }
     },
   },
@@ -32,7 +32,7 @@ export default {
       required: false,
       default() { return ''; },
     },
-    routeAddress: {
+    routePath: {
       type: String,
       required: true,
     },
@@ -48,14 +48,14 @@ export default {
   },
   methods: {
     handleClose() {
-      const { routeAddress } = this;
-      this.$router.push(routeAddress);
+      const { routePath } = this;
+      this.$router.push(routePath);
     },
     handlePageChange(goToPage) {
-      const { routeAddress, id, logType } = this;
-      this.$router.push(`${routeAddress}/logs/${id}/${logType}/${goToPage}`);
+      const { routePath, id, logType } = this;
+      this.$router.push(`${routePath}/logs/${id}/${logType}/${goToPage}`);
     },
-    getSubjectSearch({ query, from = 0, size = 10 }) {
+    getSubjectSearch({ query, from = 0, size = 10, type = 'subject' }) {
       api.getSubjectSearch({
         from,
         size,
@@ -64,15 +64,15 @@ export default {
             query,
           },
         },
-      }).then((response) => {
+      }, type).then((response) => {
         this.logs = response.data.hits.hits;
         this.totalCount = response.data.hits.total;
       });
     },
   },
   mounted() {
-    const { id, logPage } = this;
-    this.getSubjectSearch({ query: id, from: ((logPage - 1) * 10) });
+    const { id, logPage, logType } = this;
+    this.getSubjectSearch({ query: id, from: ((logPage - 1) * 10), type: logType });
   },
 };
 </script>

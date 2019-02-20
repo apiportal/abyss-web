@@ -23,7 +23,9 @@
     <div class="subject-licenses-content">
       <Licenses
         :rows="paginatedRows"
+        :routePath="`/app/my-licenses/my-licenses/${page}`"
       />
+      <router-view></router-view>
     </div>
     <div class="subject-licenses-footer">
       <b-pagination 
@@ -54,7 +56,8 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectLicenses: state => state.subjectLicenses.items,
+      currentUser: state => state.user,
+      subjectLicenses: state => state.licenses.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
@@ -62,6 +65,7 @@ export default {
       const { subjectLicenses } = this;
       return sortArrayOfObjects({
         array: subjectLicenses
+          // .filter(item => item.subjectid === currentUser.uuid)
           .map(item => ({
             ...item,
           })),
@@ -99,7 +103,7 @@ export default {
       console.log('filter');
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-apis/businesses/${page}`);
+      this.$router.push(`/app/my-licenses/my-licenses/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);

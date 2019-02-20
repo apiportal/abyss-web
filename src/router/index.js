@@ -5,7 +5,8 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
 import Api from '@/components/routes/myApis/api/Api';
-import Logs from '@/components/routes/myApis/Logs';
+import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
+import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -51,12 +52,16 @@ import DeleteAdministerPermission from '@/components/routes/administerPermission
 // My APPs Routes
 import MyApps from '@/components/routes/myApps/MyApps';
 import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
+import MyAppsLogs from '@/components/routes/myApps/MyAppsLogs';
 // My Licenses
 import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
 import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
+import MyLicensesLogs from '@/components/routes/myLicenses/MyLicensesLogs';
+import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
 // My Policies
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
+import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
 
 Vue.use(Router);
 
@@ -84,7 +89,11 @@ export default new Router({
               children: [
                 {
                   path: 'logs/:id/:logType/:logPage',
-                  component: Logs,
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
                 },
               ],
             },
@@ -239,6 +248,12 @@ export default new Router({
             {
               path: 'my-apps/:page',
               component: SubjectApps,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyAppsLogs,
+                },
+              ],
             },
           ],
         },
@@ -249,6 +264,16 @@ export default new Router({
             {
               path: 'my-licenses/:page',
               component: SubjectLicenses,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyLicensesLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyLicense,
+                },
+              ],
             },
           ],
         },
@@ -259,6 +284,12 @@ export default new Router({
             {
               path: 'my-policies/:page',
               component: SubjectPolicies,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyPoliciesLogs,
+                },
+              ],
             },
           ],
         },

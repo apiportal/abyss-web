@@ -66,8 +66,8 @@ export default {
     return axios.post('/abyss/oapi/subjects/', user);
   },
   // subject search
-  getSubjectSearch(params) {
-    return axios.post('/subject*/_search', params, {
+  getSubjectSearch(params, type) {
+    return axios.post(`/${type}*/_search`, params, {
       withCredentials: false,
     });
   },
@@ -195,8 +195,8 @@ export default {
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
-  getPolicies(uuid) {
-    return axios.get(`/abyss/oapi/policies/subject/${uuid}`);
+  getPolicies() {
+    return axios.get('/abyss/oapi/policies');
   },
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
@@ -209,5 +209,19 @@ export default {
   },
   getSubjectLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
+  },
+  // licenses
+  getLicenses() {
+    return axios.get('/abyss/oapi/licenses/');
+  },
+  putLicenses(license) {
+    const { uuid, created, updated, deleted, isdeleted, openApiLicense, ...rest } = license;
+    return axios.put(`/abyss/oapi/licenses/${uuid}`, rest);
+  },
+  deleteLicenses(uuid) {
+    return axios.delete(`/abyss/oapi/licenses/${uuid}`);
+  },
+  postLicenses(license) {
+    return axios.post('/abyss/oapi/licenses/', license);
   },
 };

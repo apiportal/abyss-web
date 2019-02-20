@@ -23,7 +23,9 @@
     <div class="subject-apps-content">
       <Apps
         :rows="paginatedRows"
+        :routePath="`/app/my-apps/my-apps/${page}`"
       />
+      <router-view></router-view>
     </div>
     <div class="subject-apps-footer">
       <b-pagination 

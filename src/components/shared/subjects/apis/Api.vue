@@ -1,29 +1,53 @@
 <template>
   <div>
-    <p><strong>Title:</strong> {{ item.openapidocument.info.title }}</p>
-    <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
-    <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
-    <p>
-      <strong>Proxy APIs:</strong>
-      <span v-if="apiProxies.length === 0">{{ apiProxies.length }}</span>
-      <b-link @click="handleToggleApiProxiesTable" v-else>
-        <span>{{ apiProxies.length }}</span>
-        <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-      </b-link>
-    </p>
-    <div v-if="isApiProxiesTableVisible" style="margin-bottom: 1rem;">
-      <Proxies
-        :rows="apiProxies"
-      />
-    </div>
-    <div>
-      <b-dropdown variant="secondary" size="sm">
-        <template slot="button-content">
-          <Icon icon="list-ol" />
-          <span>API Logs</span>
-        </template>
-        <b-dropdown-item :to="`/app/my-apis/businesses/${page}/logs/${item.uuid}/all/1`">All</b-dropdown-item>
-      </b-dropdown>
+    <b-navbar toggleable="lg" type="dark" variant="secondary">
+      <b-navbar-brand>{{ item.openapidocument.info.title }}</b-navbar-brand>
+
+      <b-navbar-toggle target="nav_collapse" />
+
+      <b-collapse is-nav id="nav_collapse">
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+
+          <b-nav-item-dropdown right>
+            <!-- Using button-content slot -->
+            <template slot="button-content">
+              <Icon icon="list-ol" />
+              <em>Logs</em>
+            </template>
+            <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
+          </b-nav-item-dropdown>
+
+          <b-nav-item-dropdown right>
+            <!-- Using button-content slot -->
+            <template slot="button-content">
+              <Icon icon="cog" />
+              <em>Operations</em>
+            </template>
+            <!-- <b-dropdown-item :to="`${routePath}/edit-license/${item.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item> -->
+            <!-- <b-dropdown-item :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item> -->
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <div style="margin: 2rem;">
+      <p><strong>Title:</strong> {{ item.openapidocument.info.title }}</p>
+      <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
+      <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
+      <p>
+        <strong>Proxy APIs:</strong>
+        <span v-if="apiProxies.length === 0">{{ apiProxies.length }}</span>
+        <b-link @click="handleToggleApiProxiesTable" v-else>
+          <span>{{ apiProxies.length }}</span>
+          <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        </b-link>
+      </p>
+      <div v-if="isApiProxiesTableVisible" style="margin-bottom: 1rem;">
+        <Proxies
+          :rows="apiProxies"
+          :routePath="routePath"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -40,6 +64,11 @@ export default {
     item: {
       type: Object,
       required: true,
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   components: {

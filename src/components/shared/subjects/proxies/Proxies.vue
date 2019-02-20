@@ -37,6 +37,7 @@
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
+                :routePath="routePath"
               />
             </div>
           </td>
@@ -57,6 +58,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   components: {

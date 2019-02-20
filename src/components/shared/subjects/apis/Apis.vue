@@ -40,6 +40,7 @@
             <div class="collapsible-content">
               <Api
                 :item="item"
+                :routePath="routePath"
               />
             </div>
           </td>
@@ -60,6 +61,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   components: {

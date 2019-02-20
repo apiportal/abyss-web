@@ -23,7 +23,9 @@
     <div class="subject-licenses-content">
       <Policies
         :rows="paginatedRows"
+        :routePath="`/app/my-policies/my-policies/${page}`"
       />
+      <router-view></router-view>
     </div>
     <div class="subject-licenses-footer">
       <b-pagination 
@@ -105,7 +107,7 @@ export default {
       console.log('filter');
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-apis/businesses/${page}`);
+      this.$router.push(`/app/my-policies/my-policies/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);

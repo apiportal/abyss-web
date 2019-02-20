@@ -27,6 +27,7 @@ import policies from '@/store/modules/policies';
 import policyTypes from '@/store/modules/policyTypes';
 import subjectApps from '@/store/modules/subjectApps';
 import subjectLicenses from '@/store/modules/subjectLicenses';
+import licenses from '@/store/modules/licenses';
 
 Vue.use(Vuex);
 
@@ -59,6 +60,7 @@ export default new Vuex.Store({
     policyTypes,
     subjectApps,
     subjectLicenses,
+    licenses,
   },
   debug: true,
 });

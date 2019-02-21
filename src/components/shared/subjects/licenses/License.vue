@@ -35,7 +35,7 @@
         <div>
           <p>License Name: {{ item.name }}</p>
           <p>Id: {{ item.uuid }}</p>
-          <p>Organization: {{ item.organizationname }}</p>
+          <p>Organization: {{ getOrganizationName(item.organizationid) }}</p>
           <p>Description: {{ item.licensedocument.sla.description }}</p>
           </div>
           <div>
@@ -99,6 +99,7 @@ export default {
     ...mapState({
       policies: state => state.policies.items,
       policyTypes: state => state.policyTypes.items,
+      organizations: state => state.organizations.items,
     }),
     tableRows() {
       const { item, policies, policyTypes } = this;
@@ -128,6 +129,11 @@ export default {
     };
   },
   methods: {
+    getOrganizationName(organizationId) {
+      const { organizations } = this;
+      const organization = organizations.find(i => i.uuid === organizationId) || {};
+      return organization.name || 'nope';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

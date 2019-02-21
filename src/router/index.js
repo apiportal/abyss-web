@@ -58,6 +58,7 @@ import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
 import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
 import MyLicensesLogs from '@/components/routes/myLicenses/MyLicensesLogs';
 import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
+import AddLicense from '@/components/routes/myLicenses/AddLicense';
 // My Policies
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
@@ -278,6 +279,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyLicense,
+                },
+                {
+                  path: 'add-new',
+                  component: AddLicense,
                 },
               ],
             },

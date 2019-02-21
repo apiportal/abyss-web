@@ -104,6 +104,7 @@ export default {
   },
   methods: {
     handleFilterKeyup() {
+      // eslint-disable-next-line
       console.log('filter');
     },
     handlePageChange(page) {

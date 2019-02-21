@@ -2,7 +2,13 @@
   <div class="my-licenses-container">
     <div class="my-licenses-header">
       <b-button variant="primary">
-        My Licenses <b-badge variant="light">{{ licenses.length }}</b-badge>
+        My All Licenses <b-badge variant="light">{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
+      </b-button>
+      <b-button >
+        My Licensed APIs <b-badge variant="light">0</b-badge>
+      </b-button>
+      <b-button>
+        My Licensed Contracts <b-badge variant="light">0</b-badge>
       </b-button>
     </div>
     <div class="my-licenses-content">
@@ -27,6 +33,7 @@ export default {
     this.$store.dispatch('policies/getPolicies');
     this.$store.dispatch('policyTypes/getPolicyTypes');
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
+    this.$store.dispatch('organizations/getOrganizations');
   },
 };
 </script>

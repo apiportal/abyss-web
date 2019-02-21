@@ -6,6 +6,8 @@
           <th>License Name</th>
           <th>Version</th>
           <th>Visibility</th>
+          <th>State</th>
+          <th>Created Date</th>
           <th># of Policies</th>
         </tr>
       </thead>
@@ -25,11 +27,17 @@
             {{ licenseItem.licensedocument.info.visibility }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.licensedocument.legal.documentState }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.created }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="4">
+          <td colspan="6">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"

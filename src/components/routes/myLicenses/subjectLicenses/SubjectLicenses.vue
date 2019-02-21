@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/my-licenses/my-licenses/${page}/add-new`"
             variant="primary"
             block
           >
@@ -62,10 +62,47 @@ export default {
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { subjectLicenses } = this;
+      const {
+        subjectLicenses,
+        currentUser,
+        } = this;
       return sortArrayOfObjects({
         array: subjectLicenses
-          // .filter(item => item.subjectid === currentUser.uuid)
+          .filter((item) => {
+            const { filterKey } = this;
+            if (item.subjectid === currentUser.uuid) {
+              if (filterKey === '') {
+                return true;
+              }
+              const filterKeyLowerCase = filterKey.toLowerCase();
+              return (
+                (
+                  item.name &&
+                  item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
+                ) ||
+                (
+                  item.version &&
+                  item.version.toLowerCase().indexOf(filterKeyLowerCase) > -1
+                ) ||
+                (
+                  item.licensedocument.info.visibility &&
+                  item.licensedocument.info.visibility
+                  .toLowerCase().indexOf(filterKeyLowerCase) > -1
+                ) ||
+                (
+                  item.licensedocument.legal.documentState &&
+                  item.licensedocument.legal.documentState
+                  .toLowerCase().indexOf(filterKeyLowerCase) > -1
+                ) ||
+                (
+                  item.created &&
+                  item.created.toLowerCase().indexOf(filterKeyLowerCase) > -1
+                )
+              );
+            }
+            return '';
+          },
+            )
           .map(item => ({
             ...item,
           })),
@@ -99,8 +136,8 @@ export default {
     };
   },
   methods: {
-    handleFilterKeyup() {
-      console.log('filter');
+    handleFilterKeyup({ value }) {
+      this.filterKey = value;
     },
     handlePageChange(page) {
       this.$router.push(`/app/my-licenses/my-licenses/${page}`);

@@ -22,6 +22,7 @@ export default {
     }),
   },
   mounted() {
+    this.$store.commit('currentPage/setRootPath', 'my-licenses');
     this.$store.dispatch('licenses/getLicenses');
     this.$store.dispatch('policies/getPolicies');
     this.$store.dispatch('policyTypes/getPolicyTypes');

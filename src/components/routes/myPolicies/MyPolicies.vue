@@ -22,6 +22,7 @@ export default {
     }),
   },
   mounted() {
+    this.$store.commit('currentPage/setRootPath', 'my-policies');
     this.$store.dispatch('policies/getPolicies', this.currentUser.uuid);
     this.$store.dispatch('policyTypes/getPolicyTypes');
   },

@@ -1,92 +1,78 @@
 <template>
   <div>
     <ul class="sidenav-links">
-      <li v-for="(route, index) in routes" v-bind:key="index">
-        <b-link :to="route.to">
-          <span class="route-icon"><Icon :icon="route.icon" /></span>
-          {{ route.name }}
+      <li>
+        <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`">
+          <span><span class="route-icon"><Icon icon="tachometer-alt" /></span> Dashboard</span>
         </b-link>
+
+        <b-link to="/app/my-apis/businesses/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="cube" /></span>  My APIs
+        </b-link>
+
+        <b-link to="/app/my-apps/my-apps/1" :class="`${currentPage.rootPath === 'my-apps' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="cubes" /></span> My Apps
+        </b-link>
+
+        <b-link to="/app/my-licenses/my-licenses/1" :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
+        </b-link> 
+
+        <b-link to="/app/my-policies/my-policies/1" :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="file-powerpoint" /></span> My Policies
+        </b-link> 
+
+        <b-link to="/app/explore" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="globe" /></span> Explore
+        </b-link> 
+
+        <b-link to="/app/identity-managers/1" :class="`${currentPage.rootPath === 'identity-managers' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Identity Managers
+        </b-link> 
+
+        <b-link to="/app/identity-manager-types/1" :class="`${currentPage.rootPath === 'identity-manager-types' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Identity Manager Types
+        </b-link> 
+
+        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Administer Users
+        </b-link> 
+
+        <b-link to="/app/administer-groups/1" :class="`${currentPage.rootPath === 'administer-groups' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Administer Groups
+        </b-link> 
+
+        <b-link to="/app/access-managers/1" :class="`${currentPage.rootPath === 'access-managers' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Access Managers
+        </b-link> 
+
+        <b-link to="/app/access-manager-types/1" :class="`${currentPage.rootPath === 'access-manager-types' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Access Manager Types
+        </b-link> 
+
+        <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Administer Permissions
+        </b-link> 
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
 
 export default {
   components: {
     Icon,
   },
+  computed: {
+    ...mapState({
+      currentPage: state => state.currentPage,
+    }),
+  },
   data() {
     return {
-      routes: [
-        {
-          icon: 'tachometer-alt',
-          name: 'Dashboard',
-          to: '/app/dashboard',
-        },
-        {
-          icon: 'cube',
-          name: 'My APIs',
-          to: '/app/my-apis/businesses/1',
-        },
-        {
-          icon: 'cubes',
-          name: 'My Apps',
-          to: '/app/my-apps/my-apps/1',
-        },
-        {
-          icon: 'certificate',
-          name: 'My Licenses',
-          to: '/app/my-licenses/my-licenses/1',
-        },
-        {
-          icon: 'file-powerpoint',
-          name: 'My Policies',
-          to: '/app/my-policies/my-policies/1',
-        },
-        {
-          icon: 'globe',
-          name: 'Explore',
-          to: '/app/explore',
-        },
-        {
-          icon: 'users',
-          name: 'Identity Managers',
-          to: '/app/identity-managers/1',
-        },
-        {
-          icon: 'users',
-          name: 'Identity Manager Types',
-          to: '/app/identity-manager-types/1',
-        },
-        {
-          icon: 'users',
-          name: 'Administer Users',
-          to: '/app/administer-users/1',
-        },
-        {
-          icon: 'users',
-          name: 'Administer Groups',
-          to: '/app/administer-groups/1',
-        },
-        {
-          icon: 'users',
-          name: 'Access Managers',
-          to: '/app/access-managers/1',
-        },
-        {
-          icon: 'users',
-          name: 'Access Manager Types',
-          to: '/app/access-manager-types/1',
-        },
-        {
-          icon: 'users',
-          name: 'Administer Permissions',
-          to: '/app/administer-permissions/1',
-        },
-      ],
     };
   },
 };
@@ -96,20 +82,30 @@ export default {
 ul.sidenav-links {
   list-style-type: none;
   padding: 0;
-  margin: 1em;
 
   li {
     a {
       display: block;
       position: relative;
-      padding-left: 2em;
-      padding-top: .5em;
-      padding-bottom: .5em;
+      padding-left: 2.5rem;
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      color: #C5B7C6;
+      text-decoration: none;
+
+      &:hover {
+        background-color: #350D36;
+      }
+
+      &.selected {
+        background-color: #1164A3;
+        color: white;
+      }
 
       .route-icon {
         position: absolute;
         top: .5em;
-        left: 0;
+        left: 1rem;
       }
     }
   }

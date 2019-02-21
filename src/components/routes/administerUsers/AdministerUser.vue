@@ -1,6 +1,37 @@
 <template>
   <div>
-    <div>
+    <b-navbar toggleable="lg" type="dark" variant="secondary">
+      <b-navbar-brand>{{ user.firstname }}</b-navbar-brand>
+
+      <b-navbar-toggle target="nav_collapse" />
+
+      <b-collapse is-nav id="nav_collapse">
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+
+          <b-nav-item-dropdown right>
+            <!-- Using button-content slot -->
+            <template slot="button-content">
+              <Icon icon="list-ol" />
+              <em>Logs</em>
+            </template>
+            <b-dropdown-item :to="`/app/administer-users/${page}/logs/${user.uuid}/subject/1`">All</b-dropdown-item>
+          </b-nav-item-dropdown>
+
+          <b-nav-item-dropdown right>
+            <!-- Using button-content slot -->
+            <template slot="button-content">
+              <Icon icon="cog" />
+              <em>Operations</em>
+            </template>
+            <b-dropdown-item :to="`/app/administer-users/${page}/edit/${user.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+            <b-dropdown-item :to="`/app/administer-users/${page}/edit-groups/${user.uuid}`"><Icon icon="edit" /> Edit User Groups</b-dropdown-item>
+            <b-dropdown-item :to="`/app/administer-users/${page}/delete/${user.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <div style="margin: 2rem;">
       <p>First Name: {{ user.firstname }}</p> 
       <p>Last Name: {{ user.lastname }}</p>
       <p>Display Name: {{ user.displayname }}</p>
@@ -24,46 +55,6 @@
           {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
         </span>
       </p>
-    </div>
-    <div>
-      <b-dropdown variant="secondary" size="sm">
-        <template slot="button-content">
-          <Icon icon="list-ol" />
-          <span>Logs</span>
-        </template>
-        <b-dropdown-item :to="`/app/administer-users/${page}/logs/${user.uuid}/all/1`">All</b-dropdown-item>
-      </b-dropdown>
-      <b-button
-        :to="`/app/administer-users/${page}/edit/${user.uuid}`"
-        size="sm"
-        variant="secondary"
-        v-b-tooltip.hover
-        title="Edit"
-      >
-        <Icon icon="edit" />
-        <span>Edit User</span>
-      </b-button>
-      <b-button
-        :to="`/app/administer-users/${page}/edit-groups/${user.uuid}`"
-        size="sm"
-        variant="secondary"
-        v-b-tooltip.hover
-        title="Edit Groups"
-      >
-        <Icon icon="users-cog" />
-        <span>Edit User Groups</span>
-      </b-button>
-      <b-button
-        :to="`/app/administer-users/${page}/delete/${user.uuid}`"
-        size="sm"
-        variant="danger"
-        v-b-tooltip.hover
-        title="Delete"
-        :disabled="user.isdeleted"
-      >
-        <Icon icon="trash-alt" />
-        <span>Delete</span>
-      </b-button>
     </div>
   </div>
 </template>

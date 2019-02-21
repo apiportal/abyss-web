@@ -64,16 +64,16 @@ export default {
 
     & > tr:first-child {
       & > td {
-        background: #29b6f6;
-        border-top: 2px solid #29b6f6; 
+        background: #1164A3;
+        border-top: 2px solid #1164A3; 
         color: white;
 
         &:first-child {
-         border-left: 2px solid #29b6f6; 
+         border-left: 2px solid #1164A3; 
         }
 
         &:last-child {
-         border-right: 2px solid #29b6f6; 
+         border-right: 2px solid #1164A3; 
         }
       }
     }
@@ -81,7 +81,7 @@ export default {
     & > tr:last-child {
       & > td {
         padding: 0;
-        border: 2px solid #29b6f6;
+        border: 2px solid #1164A3;
       }
     }
 

@@ -27,6 +27,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'my-apps');
     this.$store.dispatch('apps/getApps');
     this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid, withContracts: true });
     this.$store.dispatch('organizations/getOrganizations');

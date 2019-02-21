@@ -231,6 +231,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'administer-users');
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');

@@ -4,7 +4,7 @@
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand to="/app/dashboard"><img src="/static/abyss_light.png" class="logo" /></b-navbar-brand>
+      <b-navbar-brand to="/app/dashboard"><img src="/static/abyss_dark.png" class="logo" /></b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse" v-if="user.uuid">
 
@@ -43,7 +43,12 @@ export default {
 <style lang="scss" scoped>
 .app-header {
   .logo {
-    height: 60px;
+    height: 40px;
+    margin-left: 1rem;
+  }
+  .navbar-brand {
+    background: #400E40;
+    width: 250px;
   }
 }
 </style>

@@ -62,6 +62,8 @@ import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
 import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
+// Explore
+import Explore from '@/components/routes/explore/Explore';
 
 Vue.use(Router);
 
@@ -78,6 +80,10 @@ export default new Router({
         {
           path: 'dashboard',
           component: Dashboard,
+        },
+        {
+          path: 'explore',
+          component: Explore,
         },
         {
           path: 'my-apis',

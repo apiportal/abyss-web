@@ -43,6 +43,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'my-apis');
     this.$store.dispatch('businessApis/getBusinessApis', this.currentUser.uuid);
     this.$store.dispatch('apiSubscriptions/getApiSubscriptions', this.currentUser.uuid);
     this.$store.dispatch('apisSharedWithUser/getApisSharedWithUser', this.currentUser.uuid);

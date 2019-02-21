@@ -78,6 +78,9 @@ export default {
     ColumnChart,
     InformModal,
   },
+  created() {
+    this.$store.commit('currentPage/setRootPath', 'dashboard');
+  },
   data() {
     return {
       chartData: {

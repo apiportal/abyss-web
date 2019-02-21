@@ -28,6 +28,7 @@ import policyTypes from '@/store/modules/policyTypes';
 import subjectApps from '@/store/modules/subjectApps';
 import subjectLicenses from '@/store/modules/subjectLicenses';
 import licenses from '@/store/modules/licenses';
+import currentPage from '@/store/modules/currentPage';
 
 Vue.use(Vuex);
 
@@ -61,6 +62,7 @@ export default new Vuex.Store({
     subjectApps,
     subjectLicenses,
     licenses,
+    currentPage,
   },
   debug: true,
 });

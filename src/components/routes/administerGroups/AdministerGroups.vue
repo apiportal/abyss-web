@@ -211,6 +211,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'administer-groups');
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');

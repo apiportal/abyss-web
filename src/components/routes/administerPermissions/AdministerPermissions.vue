@@ -127,7 +127,7 @@
           size="md"
           :total-rows="tableRows.length"
           v-model="page" 
-          :per-page="10"
+          :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
         >
@@ -257,6 +257,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'administer-permissions');
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('resources/getResources');
     this.$store.dispatch('resourceTypes/getResourceTypes');
@@ -275,7 +276,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
-      itemsPerPage: 10,
+      itemsPerPage: 20,
     };
   },
   methods: {

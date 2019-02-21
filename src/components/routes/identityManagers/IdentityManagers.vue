@@ -93,37 +93,39 @@
           <tr slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
-                <p>Name: {{ item.directoryname }}</p>
-                <p>Description: {{ item.description }}</p>
-                <p>Active: {{ item.isactive }}</p>
-                <p>Template: {{ item.istemplate }}</p>
-                <p>Deleted: {{ item.isdeleted }}</p>
-                <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                <p>Directory Type: {{ item.directorytypename }}</p>
-                <p>Organization: {{ item.organizationname }}</p>
-                <p>Created: {{ item.created }}</p>
-                <p>Updated: {{ item.updated }}</p>
-                <div>
-                  <b-button
-                    :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
-                    size="sm"
-                    variant="secondary"
-                    v-b-tooltip.hover
-                    title="Edit"
-                  >
-                    <Icon icon="edit" />
-                    <span>Edit</span>
-                  </b-button>
-                  <b-button
-                    :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
-                    size="sm"
-                    variant="danger"
-                    v-b-tooltip.hover
-                    title="Delete"
-                  >
-                    <Icon icon="trash-alt" />
-                    <span>Delete</span>
-                  </b-button>
+                <b-navbar toggleable="lg" type="dark" variant="secondary">
+                  <b-navbar-brand>{{ item.directoryname }}</b-navbar-brand>
+
+                  <b-navbar-toggle target="nav_collapse" />
+
+                  <b-collapse is-nav id="nav_collapse">
+                    <!-- Right aligned nav items -->
+                    <b-navbar-nav class="ml-auto">
+
+                      <b-nav-item-dropdown right>
+                        <!-- Using button-content slot -->
+                        <template slot="button-content">
+                          <Icon icon="cog" />
+                          <em>Operations</em>
+                        </template>
+                        <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                        <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                      </b-nav-item-dropdown>
+                      
+                    </b-navbar-nav>
+                  </b-collapse>
+                </b-navbar>
+                <div style="margin: 2rem;">
+                  <p>Name: {{ item.directoryname }}</p>
+                  <p>Description: {{ item.description }}</p>
+                  <p>Active: {{ item.isactive }}</p>
+                  <p>Template: {{ item.istemplate }}</p>
+                  <p>Deleted: {{ item.isdeleted }}</p>
+                  <p>Priority Order: {{ item.directorypriorityorder }}</p>
+                  <p>Directory Type: {{ item.directorytypename }}</p>
+                  <p>Organization: {{ item.organizationname }}</p>
+                  <p>Created: {{ item.created }}</p>
+                  <p>Updated: {{ item.updated }}</p>
                 </div>
               </div>
             </td>
@@ -207,6 +209,7 @@ export default {
     },
   },
   created() {
+    this.$store.commit('currentPage/setRootPath', 'identity-managers');
     this.$store.dispatch('subjectDirectories/getSubjectDirectories');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
     this.$store.dispatch('organizations/getOrganizations');

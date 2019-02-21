@@ -60,8 +60,7 @@ export default {
   flex-direction: column;
 
   .app-header-flex {
-    flex: 0 0 60px;
-    border-bottom: 1px solid silver;
+    flex: 0 0 40px;
   }
 
   .app-body-flex {
@@ -70,15 +69,16 @@ export default {
     flex-direction: row;
 
     .app-sidenav-flex {
-      flex: 0 0 200px;
-      border-right: 1px solid silver;
+      flex: 0 0 250px;
       overflow-y: auto;
+      background-color: #400E40;
     }
 
     .app-content-flex {
       flex: 1 0 0;
       display: flex;
       flex-direction: column;
+      border-top: 1px solid silver;
     }
   }
 }

@@ -7,7 +7,7 @@
       <div class="app-sidenav-flex">
         <AppSidenav />
       </div>
-      <div class="app-content-flex">
+      <div class="app-content-flex" v-if="user.uuid">
         <router-view></router-view>
       </div>
     </div>
@@ -35,15 +35,15 @@ export default {
     ...mapState({
       requestsCount: state => state.traffic.requestsCount,
       responsesCount: state => state.traffic.responsesCount,
-      hasValidToken: state => state.user.hasValidToken,
+      user: state => state.user,
     }),
     isLoadingModalVisible() {
       const { requestsCount, responsesCount } = this;
       return requestsCount !== responsesCount;
     },
     isSetCookieModalVisible() {
-      const { hasValidToken } = this;
-      return !hasValidToken;
+      const { isUnauthorized } = this.user;
+      return isUnauthorized;
     },
   },
 };

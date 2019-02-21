@@ -31,7 +31,7 @@
               id="cookieInput"
               type="text"
               v-model="cookie"
-              placeholder="Cookie"
+              placeholder="abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d;"
               :state="cookieState"
               required
             >

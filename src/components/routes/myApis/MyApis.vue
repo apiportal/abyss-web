@@ -42,7 +42,7 @@ export default {
       return this.businessApis.filter(item => item.isproxyapi);
     },
   },
-  created() {
+  mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
     this.$store.dispatch('businessApis/getBusinessApis', this.currentUser.uuid);
     this.$store.dispatch('apiSubscriptions/getApiSubscriptions', this.currentUser.uuid);

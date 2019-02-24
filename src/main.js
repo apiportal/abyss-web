@@ -42,6 +42,8 @@ import {
   faArrowRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VueMoment from 'vue-moment';
+import moment from 'moment-timezone';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import BootstrapVue from 'bootstrap-vue';
@@ -90,7 +92,9 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
-
+Vue.use(VueMoment, {
+  moment,
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

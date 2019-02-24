@@ -84,6 +84,16 @@
         >
         </b-form-textarea>
         </b-form-group>
+        <b-form-group id="licenseEnabledGroup">
+          <b-form-checkbox
+              id="licenseEnabledChecks"
+              v-model="licenseEditable.isactive"
+              :value="true"
+              :unchecked-value="false"
+          >
+              Is Active?
+          </b-form-checkbox>
+          </b-form-group>
         <b-form-group
         id="licenseVisibilityGroup"
         label="Visibility*"
@@ -345,6 +355,7 @@
         <b-button
           variant="success"
           type="submit"
+          @click="onUpdate"
         >
           Save
         </b-button>

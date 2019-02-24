@@ -8,11 +8,21 @@
     :size="size"
     :onClose="onClose"
   >
+    <template slot="header">
+      <h5 class="modal-title">{{ title }}</h5>
+    </template>
     <template>
-      <slot></slot>
+      <div>{{ text }}</div>
     </template>
     <template slot="footer">
-      <slot name="footer"></slot>
+      <b-button 
+        class="float-right" 
+        variant="primary" 
+        size="sm" 
+        @click="onConfirm"
+      >
+        OK
+      </b-button>
     </template>
   </Modal>
 </template>
@@ -57,6 +67,18 @@ export default {
     },
     onClose: {
       type: Function,
+      required: false,
+    },
+    onConfirm: {
+      type: Function,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: false,
+    },
+    text: {
+      type: String,
       required: false,
     },
   },

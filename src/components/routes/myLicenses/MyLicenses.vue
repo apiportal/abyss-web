@@ -5,10 +5,10 @@
         My All Licenses <b-badge variant="light">{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
       </b-button>
       <b-button >
-        My Licensed APIs <b-badge variant="light">0</b-badge>
+        My Licenses Attached to APIs <b-badge variant="light">0</b-badge>
       </b-button>
       <b-button>
-        My Licensed Contracts <b-badge variant="light">0</b-badge>
+        My Licenses Under Contracts <b-badge variant="light">0</b-badge>
       </b-button>
     </div>
     <div class="my-licenses-content">

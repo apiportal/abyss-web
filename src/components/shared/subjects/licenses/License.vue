@@ -25,7 +25,7 @@
               <em>Operations</em>
             </template>
             <b-dropdown-item :to="`${routePath}/edit-license/${item.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
-            <b-dropdown-item :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
+            <b-dropdown-item @keyup.delete="handleDeleteModal" :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -33,30 +33,38 @@
     <div style="margin: 2rem;">
       <div class="flex-container">
         <div>
-          <p>License Name: {{ item.name }}</p>
-          <p>Id: {{ item.uuid }}</p>
-          <p>Organization: {{ getOrganizationName(item.organizationid) }}</p>
-          <p>Description: {{ item.licensedocument.sla.description }}</p>
+          <p><strong>Name:</strong> {{ item.name }}</p>
+          <p><strong>Id:</strong> {{ item.uuid }}</p>
+          <p><strong>Organization:</strong> {{ getOrganizationName(item.organizationid) }}</p>
+          <p><strong>Description:</strong> {{ item.licensedocument.sla.description }}</p>
           </div>
           <div>
-          <p>Performance: {{ item.licensedocument.sla.performance }}</p>
-          <p>Availability: {{ item.licensedocument.sla.availability }}</p>
-          <p>Support Hours: {{ item.licensedocument.sla.supportHours }}</p>
-          <p>BlackOutHours PerYear: {{ item.licensedocument.sla.blackOutHoursPerYear }}</p>
-          <p>Link: {{ item.licensedocument.legal.link }}</p>
+          <p><strong>Performance:</strong> {{ item.licensedocument.sla.performance }}</p>
+          <p><strong>Availability:</strong> {{ item.licensedocument.sla.availability }}</p>
+          <p><strong>Support Hours:</strong> {{ item.licensedocument.sla.supportHours }}</p>
+          <p><strong>BlackOutHours PerYear:</strong> {{ item.licensedocument.sla.blackOutHoursPerYear }}</p>
+          <p><strong>Link:</strong> {{ item.licensedocument.legal.link }}</p>
           <b-link
-            :to="`/app/my-licenses/${page}/legal/${item.uuid}`"
+            @click="toggleInformModal"  
             class="fas fa-search"
           >
             Show Legal Agreement 🔍
           </b-link>
+          <InformModal
+            v-if="isInformModalVisible"  
+            title="Legal Agreement"
+            :text="`${item.licensedocument.legal.documentText}`"
+            :onClose="toggleInformModal"
+            :onConfirm="toggleInformModal"
+          >
+          </InformModal>
           </div>
           <div>
-          <p>Created at: {{ formatTimeStamp(item.created) }}</p>
-          <p>Updated at: {{ formatTimeStamp(item.updated) }}</p>
-          <p>Deleted at: {{ formatTimeStamp(item.deleted) }}</p>
-          <p>Effective Start Date:</p>
-          <p>Effective End Date:</p>
+          <p><strong>Created at:</strong> {{ item.created | moment("DD.MM.YYYY HH:mm") }}</p>
+          <p><strong>Updated at:</strong> {{ item.updated | moment("DD.MM.YYYY HH:mm") }}</p>
+          <p v-if="item.isdeleted"><strong>Deleted at:</strong> {{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</p>
+          <p><strong>Effective Start Date:</strong></p>
+          <p><strong>Effective End Date:</strong></p>
         </div>
       </div>
       <p>
@@ -82,6 +90,7 @@ import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 import Policies from '@/components/shared/subjects/policies/Policies';
+import InformModal from '@/components/shared/modals/InformModal';
 
 export default {
   props: {
@@ -120,15 +129,20 @@ export default {
     TbodyCollapsible,
     Icon,
     Policies,
+    InformModal,
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
       isPoliciesTableVisible: false,
+      isInformModalVisible: false,
     };
   },
   methods: {
+    toggleInformModal() {
+      this.isInformModalVisible = !this.isInformModalVisible;
+    },
     getOrganizationName(organizationId) {
       const { organizations } = this;
       const organization = organizations.find(i => i.uuid === organizationId) || {};
@@ -145,13 +159,9 @@ export default {
     handleTogglePoliciesTable() {
       this.isPoliciesTableVisible = !this.isPoliciesTableVisible;
     },
-    formatTimeStamp(timeStamp) {
-      function fix(num, length = 2) {
-        return num.toString().padStart(length, '0');
-      }
-      const d = new Date(timeStamp);
-      const dateStr = `${fix(d.getDate())}.${fix(d.getMonth() + 1)}.${d.getFullYear()} ${fix(d.getHours())}:${fix(d.getMinutes())}`;
-      return dateStr;
+    handleDeleteModal() {
+      const { item, page } = this;
+      this.$router.push(`/app/my-licenses/${page}/delete/${item.uuid}`);
     },
   },
 };

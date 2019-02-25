@@ -69,7 +69,7 @@
 
       <label style="margin-top: 2rem;">APIs</label>
       <Apis
-        :rows="contractApis"
+        :rows="computedContractApis"
         :routePath="`/app/my-apps/my-apps/${page}`"
       />
     </div>
@@ -100,11 +100,25 @@ export default {
   },
   computed: {
     ...mapState({
-      apis: state => state.apis.items,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
     }),
-    contractApis() {
-      const { apis, item } = this;
-      return apis.filter(apiItem => apiItem.uuid === item.apiid);
+    computedContractApis() {
+      const { contractApis, apiStates, apiVisibilityTypes } = this;
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+
+      return contractApis.map(contractApiItem => ({
+        ...contractApiItem,
+        apistatename: getApiStateName(contractApiItem.apistateid),
+        apivisibilityname: getApiVisibilityName(contractApiItem.apivisibilityid),
+      }));
     },
   },
   data() {
@@ -112,6 +126,7 @@ export default {
       page: parseInt(this.$route.params.page, 10),
       isContractsTableVisible: false,
       accessTokens: [],
+      contractApis: [],
     };
   },
   methods: {
@@ -120,10 +135,17 @@ export default {
     },
   },
   mounted() {
+    // get tokens
     api
     .getResourceAccessTokens(this.item.subjectpermissionid)
     .then((response) => {
       this.accessTokens = response.data;
+    });
+    // get contract api
+    api
+    .getApi(this.item.apiid)
+    .then((response) => {
+      this.contractApis = response.data;
     });
   },
 };

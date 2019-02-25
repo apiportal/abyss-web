@@ -174,6 +174,9 @@ export default {
   getApis() {
     return axios.get('/abyss/oapi/apis');
   },
+  getApi(uuid) {
+    return axios.get(`/abyss/oapi/apis/${uuid}`);
+  },
   getBusinessApis(uuid) {
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
   },

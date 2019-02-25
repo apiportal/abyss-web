@@ -20,6 +20,13 @@ export default {
   components: {
     EditLicenseModal,
   },
+  props: {
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
+    },
+  },
   computed: {
     ...mapState({
       visibilityTypes: state => state.apiVisibilityTypes.items,
@@ -64,15 +71,14 @@ export default {
           },
         },
       },
-      page: this.$route.params.page,
     };
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/my-licenses/my-licenses/${this.page}`);
+      this.$router.push(this.routePath);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/my-licenses/my-licenses/${this.page}`);
+      this.$router.push(this.routePath);
     },
   },
 };

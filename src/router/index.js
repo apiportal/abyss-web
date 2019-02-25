@@ -58,7 +58,8 @@ import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
 import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
 import MyLicensesLogs from '@/components/routes/myLicenses/MyLicensesLogs';
 import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
-import AddLicense from '@/components/routes/myLicenses/AddLicense';
+import AddMyLicense from '@/components/routes/myLicenses/AddMyLicense';
+import DeleteMyLicense from '@/components/routes/myLicenses/DeleteMyLicense';
 // My Policies
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
@@ -282,7 +283,11 @@ export default new Router({
                 },
                 {
                   path: 'add-new',
-                  component: AddLicense,
+                  component: AddMyLicense,
+                },
+                {
+                  path: 'delete-license/:licenseId',
+                  component: DeleteMyLicense,
                 },
               ],
             },

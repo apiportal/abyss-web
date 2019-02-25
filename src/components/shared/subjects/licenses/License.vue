@@ -25,7 +25,7 @@
               <em>Operations</em>
             </template>
             <b-dropdown-item :to="`${routePath}/edit-license/${item.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
-            <b-dropdown-item @keyup.delete="handleDeleteModal" :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
+            <b-dropdown-item @keyup.8="handleDeleteModal" @click="handleDeleteModal"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -133,7 +133,6 @@ export default {
   },
   data() {
     return {
-      page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
       isPoliciesTableVisible: false,
       isInformModalVisible: false,
@@ -160,8 +159,8 @@ export default {
       this.isPoliciesTableVisible = !this.isPoliciesTableVisible;
     },
     handleDeleteModal() {
-      const { item, page } = this;
-      this.$router.push(`/app/my-licenses/${page}/delete/${item.uuid}`);
+      const { item, routePath } = this;
+      this.$router.push(`${routePath}/delete-license/${item.uuid}`);
     },
   },
 };

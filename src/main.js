@@ -40,6 +40,10 @@ import {
   faArrowDown,
   faArrowLeft,
   faArrowRight,
+  faIdCard,
+  faUserTie,
+  faUser,
+  faUserCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -87,6 +91,10 @@ library.add(
   faArrowDown,
   faArrowLeft,
   faArrowRight,
+  faIdCard,
+  faUserTie,
+  faUser,
+  faUserCog,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

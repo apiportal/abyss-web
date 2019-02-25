@@ -355,7 +355,6 @@
         <b-button
           variant="success"
           type="submit"
-          @click="onUpdate"
         >
           Save
         </b-button>
@@ -633,10 +632,8 @@ export default {
       evt.preventDefault();
       const { licenseEditable, putLicenses, postLicenses, onUpdate, role } = this;
       if (role === 'edit') {
-        putLicenses(licenseEditable).then((response) => {
-          if (response && response.data) {
-            onUpdate();
-          }
+        putLicenses(licenseEditable).then(() => {
+          onUpdate();
         });
       } else if (role === 'add') {
         const { currentUser } = this;

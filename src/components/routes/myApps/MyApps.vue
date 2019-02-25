@@ -31,6 +31,8 @@ export default {
     this.$store.dispatch('apps/getApps');
     this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid, withContracts: true });
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('contractStates/getContractStates');
+    this.$store.dispatch('apis/getApis');
   },
   watch: {
     userApps(newVal, oldVal) {

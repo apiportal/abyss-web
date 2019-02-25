@@ -171,6 +171,9 @@ export default {
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   // my-apis
+  getApis() {
+    return axios.get('/abyss/oapi/apis');
+  },
   getBusinessApis(uuid) {
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
   },
@@ -223,5 +226,11 @@ export default {
   },
   postLicenses(license) {
     return axios.post('/abyss/oapi/licenses/', license);
+  },
+  getContractStates() {
+    return axios.get('/abyss/oapi/contract-states');
+  },
+  getResourceAccessTokens(uuid) {
+    return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
   },
 };

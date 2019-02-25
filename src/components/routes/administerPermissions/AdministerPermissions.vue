@@ -116,7 +116,6 @@
                   />
                 </div>
               </td>
-              <td></td>
             </tr>
           </TbodyCollapsible>
         </table>

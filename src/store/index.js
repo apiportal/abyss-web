@@ -29,6 +29,8 @@ import subjectApps from '@/store/modules/subjectApps';
 import subjectLicenses from '@/store/modules/subjectLicenses';
 import licenses from '@/store/modules/licenses';
 import currentPage from '@/store/modules/currentPage';
+import contractStates from '@/store/modules/contractStates';
+import apis from '@/store/modules/apis';
 
 Vue.use(Vuex);
 
@@ -63,6 +65,8 @@ export default new Vuex.Store({
     subjectLicenses,
     licenses,
     currentPage,
+    contractStates,
+    apis,
   },
   debug: true,
 });

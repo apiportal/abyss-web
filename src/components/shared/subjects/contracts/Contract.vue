@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ item.displayname }}</b-navbar-brand>
+      <b-navbar-brand>{{ item.name }}</b-navbar-brand>
 
       <b-navbar-toggle target="nav_collapse" />
 
@@ -15,7 +15,7 @@
               <Icon icon="list-ol" />
               <em>Logs</em>
             </template>
-            <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+            <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`">All</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item-dropdown right>
@@ -31,28 +31,55 @@
       </b-collapse>
     </b-navbar>
     <div style="margin: 2rem;">
-      {{ item.subjectname }}
-      <p>
-        <strong>Contracts:</strong>
-        <span v-if="item.contracts.length === 0">{{ item.contracts.length }}</span>
-        <b-link @click="handleToggleContractsTable" v-else>
-          <span>{{ item.contracts.length }}</span>
-          <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-link>
-      </p>
-      <div v-if="isContractsTableVisible" style="margin-bottom: 1rem;">
-        <Contracts
-          :rows="appContracts"
-          :routePath="routePath"
-        />
-      </div>
+
+      <label>API ACCESS TOKENS</label>
+      <table class="table verapi-table">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Expire Date</th>
+            <th>isActive</th>
+            <th>Deleted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(accessToken, index) in accessTokens" v-bind:key="index" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+            <td>
+              <b-form-textarea
+                id="textarea1"
+                v-model="accessToken.token"
+                placeholder="Enter something"
+                rows="4"
+                max-rows="6"
+                :disabled="true"
+              />
+            </td>
+            <td>
+              {{ accessToken.expiredate }}
+            </td>
+            <td>
+              {{ accessToken.isactive }}
+            </td>
+            <td>
+              {{ accessToken.isdeleted }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label style="margin-top: 2rem;">APIs</label>
+      <Apis
+        :rows="contractApis"
+        :routePath="`/app/my-apps/my-apps/${page}`"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import Contracts from '@/components/shared/subjects/contracts/Contracts';
+import api from '@/api';
+import Apis from '@/components/shared/subjects/apis/Apis';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -68,36 +95,36 @@ export default {
     },
   },
   components: {
-    Contracts,
+    Apis,
     Icon,
   },
   computed: {
     ...mapState({
-      contractStates: state => state.contractStates.items,
+      apis: state => state.apis.items,
     }),
-    appContracts() {
-      const { item, contractStates } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
-      return item.contracts.map(contract => ({
-        ...contract,
-        contractstatename: getContractStateName(contract.contractstateid),
-      }));
+    contractApis() {
+      const { apis, item } = this;
+      return apis.filter(apiItem => apiItem.uuid === item.apiid);
     },
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
       isContractsTableVisible: false,
+      accessTokens: [],
     };
   },
   methods: {
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
     },
+  },
+  mounted() {
+    api
+    .getResourceAccessTokens(this.item.subjectpermissionid)
+    .then((response) => {
+      this.accessTokens = response.data;
+    });
   },
 };
 </script>

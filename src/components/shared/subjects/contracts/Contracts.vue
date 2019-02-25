@@ -3,11 +3,10 @@
     <table class="table verapi-table">
       <thead>
         <tr>
-          <th>App Name</th>
-          <th>Organization</th>
-          <th>URL</th>
-          <th># of Subscriptions</th>
+          <th>Contract Name</th>
+          <th>State</th>
           <th>Status</th>
+          <th>Environment</th>
         </tr>
       </thead>
       <TbodyCollapsible
@@ -16,25 +15,22 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.displayname }}
+            {{ item.name }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.organizationname }}
+            {{ item.contractstatename }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.url }}
+            {{ item.status }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.contracts ? item.contracts.length : '' }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
+            {{ item.environment }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">
+          <td colspan="4">
             <div class="collapsible-content">
-              <App
+              <Contract
                 :item="item"
                 :routePath="routePath"
               />
@@ -47,7 +43,7 @@
 </template>
 
 <script>
-import App from '@/components/shared/subjects/apps/App';
+import Contract from '@/components/shared/subjects/contracts/Contract';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
@@ -65,7 +61,7 @@ export default {
     },
   },
   components: {
-    App,
+    Contract,
     TbodyCollapsible,
     Icon,
   },
@@ -78,8 +74,7 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
-        this.collapsedRows = [itemId];
+        this.collapsedRows.push(itemId);
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

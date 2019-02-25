@@ -64,7 +64,7 @@ export default {
 
     & > tr:first-child {
       & > td {
-        background: #1164A3;
+        background: #1164A3 !important;
         border-top: 2px solid #1164A3; 
         color: white;
 

@@ -15,6 +15,7 @@ import resourceActions from '@/store/modules/resourceActions';
 import resources from '@/store/modules/resources';
 import subjectTypes from '@/store/modules/subjectTypes';
 import apps from '@/store/modules/apps';
+import apis from '@/store/modules/apis';
 import subjectMemberships from '@/store/modules/subjectMemberships';
 import businessApis from '@/store/modules/businessApis';
 import apiSubscriptions from '@/store/modules/apiSubscriptions';
@@ -30,7 +31,6 @@ import subjectLicenses from '@/store/modules/subjectLicenses';
 import licenses from '@/store/modules/licenses';
 import currentPage from '@/store/modules/currentPage';
 import contractStates from '@/store/modules/contractStates';
-import apis from '@/store/modules/apis';
 
 Vue.use(Vuex);
 
@@ -51,6 +51,7 @@ export default new Vuex.Store({
     resources,
     subjectTypes,
     apps,
+    apis,
     subjectMemberships,
     businessApis,
     apiSubscriptions,
@@ -66,7 +67,6 @@ export default new Vuex.Store({
     licenses,
     currentPage,
     contractStates,
-    apis,
   },
   debug: true,
 });

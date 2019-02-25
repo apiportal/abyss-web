@@ -25,6 +25,16 @@
         <thead>
           <tr>
             <th>
+              Status
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="isactivated"
+                sortByKeyType="boolean"
+              />
+            </th>
+            <th>
               First Name
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -84,16 +94,19 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Status
-            </th>
           </tr>
         </thead>
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon 
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+                :class="item.isactivated ? 'text-success' : 'text-danger'"
+              />
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.firstname }}
             </td>
@@ -111,12 +124,6 @@
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
-                :class="item.isactivated ? 'text-success' : 'text-danger'"
-              />
             </td>
           </tr>
           <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
@@ -297,7 +304,7 @@ export default {
 
   .identity-managers-content {
     flex: 1 0 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
   }
 }

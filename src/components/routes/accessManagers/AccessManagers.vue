@@ -256,7 +256,7 @@ export default {
 
   .access-managers-content {
     flex: 1 0 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
   }
 }

@@ -9,7 +9,7 @@ const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = '
       return 0;
     });
     return (sortDirection === 'desc' ? arr : arr.reverse());
-  } else if (sortByKeyType === 'number') {
+  } else if (sortByKeyType === 'number' || sortByKeyType === 'boolean') {
     const arr = array.sort((a, b) => (a[sortByKey] - b[sortByKey]));
     return (sortDirection === 'desc' ? arr : arr.reverse());
   }

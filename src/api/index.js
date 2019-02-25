@@ -48,6 +48,16 @@ export default {
   getOrganizations() {
     return axios.get('/abyss/oapi/organizations');
   },
+  putOrganizations(organization) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = organization;
+    return axios.put(`/abyss/oapi/organizations/${uuid}`, rest);
+  },
+  postOrganizations(organization) {
+    return axios.post('/abyss/oapi/organizations/', organization);
+  },
+  deleteOrganizations(uuid) {
+    return axios.delete(`/abyss/oapi/organizations/${uuid}`);
+  },
   // users
   getUsers() {
     return axios.get('/abyss/oapi/subjects/users/');
@@ -68,6 +78,11 @@ export default {
   // subject search
   getSubjectSearch(params, type) {
     return axios.post(`/${type}*/_search`, params, {
+      withCredentials: false,
+    });
+  },
+  getOrganizationSearch(params) {
+    return axios.post('/organization*/_search', params, {
       withCredentials: false,
     });
   },
@@ -178,7 +193,11 @@ export default {
     return axios.get(`/abyss/oapi/apis/${uuid}`);
   },
   getBusinessApis(uuid) {
+    // return axios.get('/abyss/oapi/apis/businesses');
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
+  },
+  getProxyApis() {
+    return axios.get('/abyss/oapi/apis/proxies');
   },
   getApiSubscriptions(uuid) {
     return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);

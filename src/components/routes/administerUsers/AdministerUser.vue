@@ -32,29 +32,66 @@
       </b-collapse>
     </b-navbar>
     <div style="margin: 2rem;">
-      <p>First Name: {{ user.firstname }}</p> 
-      <p>Last Name: {{ user.lastname }}</p>
-      <p>Display Name: {{ user.displayname }}</p>
-      <p>User Name: {{ user.subjectname }}</p>
-      <p>Email: {{ user.email }}</p>
-      <p>Secondary Email: {{ user.secondaryemail }}</p>
-      <p>Description: {{ user.description }}</p>
-      <p>Active: {{ user.isactivated }}</p>
-      <p>Deleted: {{ user.isdeleted }}</p>
-      <p>Locked: {{ user.islocked }}</p>
-      <p>Directory: {{ user.directoryname }}</p>
-      <p>Organization: {{ user.organizationname }}</p>
-      <p>Created: {{ user.created }}</p>
-      <p>Updated: {{ user.updated }}</p>
-      <p v-if="computedMemberships.length > 0">
-        Groups: 
-        <span 
-          v-for="(membership, index) in computedMemberships"
-          v-bind:key="index"
-        >
-          {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
-        </span>
-      </p>
+      <div class="row">
+        <dl class="px-3">
+          <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
+        </dl>
+        <dl class="col">
+          <dt>First Name:</dt>
+          <dd>{{ user.firstname }}</dd>
+          <dt>Last Name:</dt>
+          <dd>{{ user.lastname }}</dd>
+          <dt>User Name:</dt>
+          <dd>{{ user.subjectname }}</dd>
+          <dt>Display Name:</dt>
+          <dd>{{ user.displayname }}</dd>
+        </dl>
+        <dl class="col">
+          <dt>Organization:</dt>
+          <dd>{{ user.organizationname }}</dd>
+          <dt>Directory:</dt>
+          <dd>{{ user.directoryname }}</dd>
+          <dt>Description:</dt>
+          <dd>{{ user.description }}</dd>
+          <dt>Groups:</dt>
+          <dd v-if="computedMemberships.length > 0">
+            Groups: 
+            <span 
+              v-for="(membership, index) in computedMemberships"
+              v-bind:key="index"
+            >
+              {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
+            </span>
+          </dd>
+        </dl>
+
+        <dl class="col">
+          <dt>Email:</dt>
+          <dd>{{ user.email }}</dd>
+          <dt>Secondary Email:</dt>
+          <dd>{{ user.secondaryemail }}</dd>
+          <dt>uuid:</dt>
+          <dd><code>{{ user.uuid }}</code></dd>
+        </dl>
+        
+        <dl class="col-1">
+          <dt>Active:</dt>
+          <dd>{{ user.isactivated }}</dd>
+          <dt>Deleted:</dt>
+          <dd>{{ user.isdeleted }}</dd>
+          <dt>Locked:</dt>
+          <dd>{{ user.islocked }}</dd>
+        </dl>
+        
+        <dl class="col">
+          <dt>Created:</dt>
+          <dd>{{ user.created }}</dd>
+          <dt>Updated:</dt>
+          <dd>{{ user.updated }}</dd>
+          <dt>Deleted:</dt>
+          <dd>{{ user.deleted }}</dd>
+        </dl>
+      </div>
     </div>
   </div>
 </template>

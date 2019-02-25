@@ -1,6 +1,6 @@
 <template>
-  <div class="identity-managers-container">
-    <div class="identity-managers-header">
+  <div class="organizations-container">
+    <div class="organizations-header">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon
@@ -11,16 +11,16 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/organizations/${page}/add-new`"
             variant="primary"
             block
           >
-            Add
+            <span>Add</span>
           </b-button>
         </div>
       </div>
     </div>
-    <div class="identity-managers-content">
+    <div class="organizations-content">
       <table class="table verapi-table">
         <thead>
           <tr>
@@ -30,32 +30,12 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directoryname"
+                sortByKey="name"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Priority Order
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="directorypriorityorder"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
-              Directory Type
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="directorytypename"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Organization
+              Parent Organization
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -65,81 +45,93 @@
               />
             </th>
             <th>
-              Status
+              Sub Organizations
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="suborganizations"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
+              Users
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="organizationusers"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
+              Url
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="url"
+                sortByKeyType="string"
+              />
+            </th>
+            <th>
+              Description
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="description"
+                sortByKeyType="string"
+              />
             </th>
           </tr>
         </thead>
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directoryname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorypriorityorder }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.directorytypename }}
+              {{ item.name }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
+              {{ item.suborganizations }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.url }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.description }}
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="5">
+            <td colspan="6">
               <div class="collapsible-content">
-                <b-navbar toggleable="lg" type="dark" variant="secondary">
-                  <b-navbar-brand>{{ item.directoryname }}</b-navbar-brand>
-
-                  <b-navbar-toggle target="nav_collapse" />
-
-                  <b-collapse is-nav id="nav_collapse">
-                    <!-- Right aligned nav items -->
-                    <b-navbar-nav class="ml-auto">
-
-                      <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
-                        <template slot="button-content">
-                          <Icon icon="cog" />
-                          <em>Operations</em>
-                        </template>
-                        <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                        <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
-                      </b-nav-item-dropdown>
-                      
-                    </b-navbar-nav>
-                  </b-collapse>
-                </b-navbar>
-                <div style="margin: 2rem;">
-                  <p>Name: {{ item.directoryname }}</p>
-                  <p>Description: {{ item.description }}</p>
-                  <p>Active: {{ item.isactive }}</p>
-                  <p>Template: {{ item.istemplate }}</p>
-                  <p>Deleted: {{ item.isdeleted }}</p>
-                  <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                  <p>Directory Type: {{ item.directorytypename }}</p>
-                  <p>Organization: {{ item.organizationname }}</p>
-                  <p>Created: {{ item.created }}</p>
-                  <p>Updated: {{ item.updated }}</p>
-                </div>
+                <Organization
+                  :organizations="tableRows"
+                  :organization="item"
+                  :rootorganization="rootOrganization"
+                  :page="page"
+                />
               </div>
             </td>
           </tr>
         </TbodyCollapsible>
+        <router-view></router-view>
       </table>
-      <router-view></router-view>
     </div>
-    <div class="identity-managers-footer">
+    <div class="organizations-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="10"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -150,6 +142,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import Organization from '@/components/routes/organizations/Organization';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
@@ -158,6 +151,7 @@ import Helpers from '@/helpers';
 
 export default {
   components: {
+    Organization,
     InputWithIcon,
     Icon,
     SortBy,
@@ -165,26 +159,31 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
+      users: state => state.users.items,
     }),
     tableRows() {
-      const { subjectDirectories, subjectDirectoryTypes, organizations } = this;
-      const getDirectoryTypeName = (directoryId) => {
-        const directory = subjectDirectoryTypes.find(item => item.uuid === directoryId);
-        return directory ? directory.typename : directoryId;
-      };
+      const { organizations, users } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
+      const getSubOrganizations = (organizationId) => {
+        const subOrganizations = organizations.filter(
+          item => item.organizationid === organizationId);
+        return subOrganizations;
+      };
+      const getOrganizationUsers = (organizationId) => {
+        const organizationUsers = users.filter(item => item.organizationid === organizationId);
+        return organizationUsers;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
-        array: subjectDirectories.map(item => ({
+        array: organizations.map(item => ({
           ...item,
-          directorytypename: getDirectoryTypeName(item.directorytypeid),
           organizationname: getOrganizationName(item.organizationid),
+          suborganizations: getSubOrganizations(item.uuid).length,
+          organizationusers: getOrganizationUsers(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -193,12 +192,12 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.directoryname &&
-              item.directoryname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.name &&
+              item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.directorytypename &&
-              item.directorytypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.description &&
+              item.description.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -207,21 +206,31 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
-    this.$store.commit('currentPage/setRootPath', 'identity-managers');
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
+    this.$store.commit('currentPage/setRootPath', 'organizations');
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('users/getUsers');
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'directorypriorityorder',
-      sortByKeyType: 'number',
+      sortByKey: 'name',
+      sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
+      rootOrganization: '3c65fafc-8f3a-4243-9c4e-2821aa32d293',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -234,7 +243,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/identity-managers/${page}`);
+      this.$router.push(`/app/organizations/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -249,18 +258,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.identity-managers-container {
+.organizations-container {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
 
-  .identity-managers-header {
+  .organizations-header {
     border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }
 
-  .identity-managers-footer {
+  .organizations-footer {
     border-top: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
@@ -270,7 +279,7 @@ export default {
     }
   }
 
-  .identity-managers-content {
+  .organizations-content {
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;

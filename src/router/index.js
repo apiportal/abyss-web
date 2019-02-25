@@ -34,6 +34,7 @@ import AdministerGroupsLogs from '@/components/routes/administerGroups/Administe
 import AddAdministerGroup from '@/components/routes/administerGroups/AddAdministerGroup';
 import EditAdministerGroup from '@/components/routes/administerGroups/EditAdministerGroup';
 import DeleteAdministerGroup from '@/components/routes/administerGroups/DeleteAdministerGroup';
+import EditAdministerGroupUser from '@/components/routes/administerGroups/EditAdministerGroupUser';
 // Access Managers Routes Components
 import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
@@ -65,6 +66,13 @@ import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/Subj
 import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
 // Explore
 import Explore from '@/components/routes/explore/Explore';
+// Organizations Routes Components
+import Organizations from '@/components/routes/organizations/Organizations';
+import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
+import AddOrganization from '@/components/routes/organizations/AddOrganization';
+import EditOrganization from '@/components/routes/organizations/EditOrganization';
+import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
+import EditOrganizationUser from '@/components/routes/organizations/EditOrganizationUser';
 
 Vue.use(Router);
 
@@ -192,6 +200,10 @@ export default new Router({
               path: 'delete/:id',
               component: DeleteAdministerGroup,
             },
+            {
+              path: 'edit-user/:id',
+              component: EditAdministerGroupUser,
+            },
           ],
         },
         {
@@ -301,6 +313,32 @@ export default new Router({
                   component: MyPoliciesLogs,
                 },
               ],
+            },
+          ],
+        },
+        {
+          path: 'organizations/:page',
+          component: Organizations,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: OrganizationsLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddOrganization,
+            },
+            {
+              path: 'edit/:id',
+              component: EditOrganization,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteOrganization,
+            },
+            {
+              path: 'edit-user/:id',
+              component: EditOrganizationUser,
             },
           ],
         },

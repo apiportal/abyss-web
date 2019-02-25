@@ -422,7 +422,8 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
-      const { description, url, effectiveenddate, displayname, subjectname } = groupEditable;
+      const { description, url, effectiveenddate, displayname,
+        subjectname, picture } = groupEditable;
       let groupToUpdate = {
         ...groupEditable,
         firstname: displayname,
@@ -431,6 +432,7 @@ export default {
         secondaryemail: `${subjectname}@verapi.com`,
         description: (description === null ? '' : description),
         url: (url === null ? '' : url),
+        picture: (picture === null ? '' : picture),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
 

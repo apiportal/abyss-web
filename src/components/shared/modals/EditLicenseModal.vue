@@ -363,6 +363,7 @@
     </template>
   </Modal>
 </template>
+
 <script>
 import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';

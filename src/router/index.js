@@ -54,6 +54,8 @@ import DeleteAdministerPermission from '@/components/routes/administerPermission
 import MyApps from '@/components/routes/myApps/MyApps';
 import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
 import MyAppsLogs from '@/components/routes/myApps/MyAppsLogs';
+import EditMyApps from '@/components/routes/myApps/EditMyApps';
+import AddMyApps from '@/components/routes/myApps/AddMyApps';
 // My Licenses
 import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
 import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
@@ -272,6 +274,14 @@ export default new Router({
                 {
                   path: 'logs/:id/:logType/:logPage',
                   component: MyAppsLogs,
+                },
+                {
+                  path: 'edit-app/:appId',
+                  component: EditMyApps,
+                },
+                {
+                  path: 'add-new',
+                  component: AddMyApps,
                 },
               ],
             },

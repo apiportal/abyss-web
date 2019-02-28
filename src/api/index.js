@@ -173,6 +173,16 @@ export default {
   getSubject(uuid) {
     return axios.get(`/abyss/oapi/subjects/${uuid}`);
   },
+  putApps(subject) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  postApps(app) {
+    return axios.post('/abyss/oapi/subjects/', app);
+  },
   // subject-memberships all
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');

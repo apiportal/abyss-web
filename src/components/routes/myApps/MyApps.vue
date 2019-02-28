@@ -34,6 +34,8 @@ export default {
     this.$store.dispatch('contractStates/getContractStates');
     this.$store.dispatch('apiStates/getApiStates');
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
   },
   watch: {
     userApps(newVal, oldVal) {

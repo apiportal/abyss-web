@@ -32,11 +32,11 @@
       <p>Resource Action: {{ permission.resourceactionname }}</p>
       <p>Access Manager: {{ permission.accessmanagername }}</p>
       <p>Organization: {{ permission.organizationname }}</p>
-      <p>Effective Start Date: {{ permission.effectivestartdate }}</p>
-      <p>Effective End Date: {{permission.effectiveenddate}}</p>
-      <p>Created: {{ permission.created }}</p>
-      <p>Updated: {{ permission.updated }}</p>
-      <p v-if="permission.isdeleted">Deleted: {{ permission.deleted }}</p>
+      <p>Effective Start Date: {{ permission.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</p>
+      <p>Effective End Date: {{ permission.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</p>
+      <p>Created: {{ permission.created | moment("DD.MM.YYYY HH:mm") }}</p>
+      <p>Updated: {{ permission.updated | moment("DD.MM.YYYY HH:mm") }}</p>
+      <p v-if="permission.isdeleted">Deleted: {{ permission.deleted | moment("DD.MM.YYYY HH:mm") }}</p>
     </div>
   </div>
 </template>

@@ -23,6 +23,7 @@ const actions = {
   putPermissions: ({ commit }, permission) => {
     return api.putPermissions(permission).then((response) => {
       commit('updatePermissions', response.data);
+      return response;
     });
   },
   deletePermissions: ({ commit }, permission) => {

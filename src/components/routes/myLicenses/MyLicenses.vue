@@ -1,13 +1,13 @@
 <template>
   <div class="my-licenses-container">
     <div class="my-licenses-header">
-      <b-button variant="primary">
+      <b-button to="/app/my-licenses/my-licenses/1">
         My All Licenses <b-badge variant="light">{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
       </b-button>
-      <b-button >
+      <b-button to="/app/my-licenses/attached-to-apis/1">
         My Licenses Attached to APIs <b-badge variant="light">0</b-badge>
       </b-button>
-      <b-button>
+      <b-button to="/app/my-licenses/under-contracts/1">
         My Licenses Under Contracts <b-badge variant="light">0</b-badge>
       </b-button>
     </div>
@@ -34,6 +34,8 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes');
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
     this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('apiStates/getApiStates');
+    this.$store.dispatch('contractStates/getContractStates');
   },
 };
 </script>

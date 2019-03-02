@@ -17,13 +17,13 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.name }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.contractstatename }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.status }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.environment }}
           </td>
         </tr>

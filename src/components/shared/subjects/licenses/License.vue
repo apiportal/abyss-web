@@ -50,14 +50,14 @@
           >
             Show Legal Agreement 🔍
           </b-link>
-          <InformModal
+          <TextAreaModal
             v-if="isInformModalVisible"  
-            title="Legal Agreement"
-            :text="`${item.licensedocument.legal.documentText}`"
+            size="lg"
+            :item="item"
             :onClose="toggleInformModal"
             :onConfirm="toggleInformModal"
           >
-          </InformModal>
+          </TextAreaModal>
           </div>
           <div>
           <p><strong>Created at:</strong> {{ item.created | moment("DD.MM.YYYY HH:mm") }}</p>
@@ -67,19 +67,56 @@
           <p><strong>Effective End Date:</strong></p>
         </div>
       </div>
-      <p>
-        <strong>Policies:</strong>
-        <span v-if="tableRows.length === 0">{{ tableRows.length }}</span>
-        <b-link @click="handleTogglePoliciesTable" v-else>
-          <span>{{ tableRows.length }}</span>
-          <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-link>
-      </p>
-      <div v-if="isPoliciesTableVisible" style="margin-bottom: 1rem;">
-        <Policies
-          :rows="tableRows"
-          :routePath="routePath"
-        />
+      <!-- Policies -->
+      <div v-if="childComponent === 'policies'">
+        <p>
+          <strong>Policies:</strong>
+          <span v-if="tableRows.length === 0">{{ tableRows.length }}</span>
+          <b-link @click="handleTogglePoliciesTable" v-else>
+            <span>{{ tableRows.length }}</span>
+            <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+          </b-link>
+        </p>
+        <div v-if="isPoliciesTableVisible" style="margin-bottom: 1rem;">
+          <Policies
+            :rows="tableRows"
+            :routePath="routePath"
+          />
+        </div>
+      </div>
+      <!-- APIs -->
+      <div v-else-if="childComponent === 'apis'">
+        <p>
+          <strong>APIs:</strong>
+          <span v-if="licenseApis.length === 0">{{ licenseApis.length }}</span>
+          <b-link @click="handleToggleApisTable" v-else>
+            <span>{{ licenseApis.length }}</span>
+            <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+          </b-link>
+        </p>
+        <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
+          <Apis
+            :rows="computedLicenseApis"
+            :routePath="routePath"
+          />
+        </div>
+      </div>
+      <!-- Contracts -->
+      <div v-else-if="childComponent === 'contracts'">
+        <p>
+          <strong>Contracts:</strong>
+          <span v-if="licenseContracts.length === 0">{{ licenseContracts.length }}</span>
+          <b-link @click="handleToggleContractsTable" v-else>
+            <span>{{ licenseContracts.length }}</span>
+            <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+          </b-link>
+        </p>
+        <div v-if="isContractsTableVisible" style="margin-bottom: 1rem;">
+          <Contracts
+            :rows="computedLicenseContracts"
+            :routePath="routePath"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -87,12 +124,17 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
+
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
+import TextAreaModal from '@/components/shared/modals/TextAreaModal';
 import Policies from '@/components/shared/subjects/policies/Policies';
-import InformModal from '@/components/shared/modals/InformModal';
+import Apis from '@/components/shared/subjects/apis/Apis';
+import Contracts from '@/components/shared/subjects/contracts/Contracts';
 
 export default {
+  name: 'License',
   props: {
     item: {
       type: Object,
@@ -103,12 +145,28 @@ export default {
       required: false,
       default() { return ''; },
     },
+    childComponent: {
+      type: String,
+      required: true,
+    },
+  },
+  components: {
+    TbodyCollapsible,
+    Icon,
+    Policies,
+    Apis,
+    Contracts,
+    TextAreaModal,
   },
   computed: {
     ...mapState({
       policies: state => state.policies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      proxies: state => state.proxies.items,
+      contractStates: state => state.contractStates.items,
     }),
     tableRows() {
       const { item, policies, policyTypes } = this;
@@ -124,18 +182,47 @@ export default {
         typename: getTypeName(policy.typeid),
       }));
     },
-  },
-  components: {
-    TbodyCollapsible,
-    Icon,
-    Policies,
-    InformModal,
+    computedLicenseApis() {
+      const { licenseApis, apiStates, apiVisibilityTypes, proxies } = this;
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+      const getNumberOfProxies = apiUuid =>
+        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      return licenseApis.map(licenseApiItem => ({
+        ...licenseApiItem,
+        apistatename: getApiStateName(licenseApiItem.apistateid),
+        apivisibilityname: getApiVisibilityName(licenseApiItem.apivisibilityid),
+        numberofproxies: getNumberOfProxies(licenseApiItem.uuid),
+      }));
+    },
+    computedLicenseContracts() {
+      const { licenseContracts, contractStates } = this;
+      const getContractStateName = (contractStateId) => {
+        const contractState = contractStates
+          .find(contractStateItem => contractStateItem.uuid === contractStateId);
+        return contractState ? contractState.name : contractStateId;
+      };
+      return licenseContracts.map(licenseContractItem => ({
+        ...licenseContractItem,
+        contractstatename: getContractStateName(licenseContractItem.contractstateid),
+      }));
+    },
   },
   data() {
     return {
       collapsedRows: [],
       isPoliciesTableVisible: false,
+      isApisTableVisible: false,
+      isContractsTableVisible: false,
       isInformModalVisible: false,
+      licenseApis: [],
+      licenseContracts: [],
     };
   },
   methods: {
@@ -145,7 +232,7 @@ export default {
     getOrganizationName(organizationId) {
       const { organizations } = this;
       const organization = organizations.find(i => i.uuid === organizationId) || {};
-      return organization.name || 'nope';
+      return organization.name || organizationId;
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -158,10 +245,31 @@ export default {
     handleTogglePoliciesTable() {
       this.isPoliciesTableVisible = !this.isPoliciesTableVisible;
     },
+    handleToggleApisTable() {
+      this.isApisTableVisible = !this.isApisTableVisible;
+    },
+    handleToggleContractsTable() {
+      this.isContractsTableVisible = !this.isContractsTableVisible;
+    },
     handleDeleteModal() {
       const { item, routePath } = this;
       this.$router.push(`${routePath}/delete-license/${item.uuid}`);
     },
+  },
+  mounted() {
+    if (this.childComponent === 'contracts') {
+      api
+      .getLicenseContracts(this.item.uuid)
+      .then((response) => {
+        this.licenseContracts = response.data;
+      });
+    } else if (this.childComponent === 'apis') {
+      api
+      .getLicenseApis(this.item.uuid)
+      .then((response) => {
+        this.licenseApis = response.data;
+      });
+    }
   },
 };
 </script>

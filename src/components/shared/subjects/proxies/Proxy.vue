@@ -45,10 +45,10 @@
       </p>
 
       <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
-        <Licenses
+        <!-- <Licenses
           :rows="item.subscriptions"
           :routePath="routePath"
-        />
+        /> -->
       </div>
     </div>
   </div>
@@ -57,7 +57,7 @@
 <script>
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Licenses from '@/components/shared/subjects/licenses/Licenses';
+// import Licenses from '@/components/shared/subjects/licenses/Licenses';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -71,7 +71,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    Licenses,
+    // Licenses,
   },
   props: {
     item: {

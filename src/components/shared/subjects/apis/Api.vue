@@ -60,6 +60,7 @@ import Icon from '@/components/shared/Icon';
 import Proxies from '@/components/shared/subjects/proxies/Proxies';
 
 export default {
+  name: 'Api',
   props: {
     item: {
       type: Object,

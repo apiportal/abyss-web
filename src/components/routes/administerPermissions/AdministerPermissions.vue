@@ -100,14 +100,11 @@
                 {{ item.organizationname }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.createdupdateddeleted }}
-              </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
                 <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
               </td>
             </tr>
             <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-              <td colspan="7">
+              <td colspan="6">
                 <div class="collapsible-content">
                   <AdministerPermission
                     :permission="item"

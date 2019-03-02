@@ -56,6 +56,7 @@ import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
 export default {
+  name: 'Apis',
   props: {
     rows: {
       type: Array,

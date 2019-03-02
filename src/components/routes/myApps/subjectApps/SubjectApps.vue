@@ -109,21 +109,11 @@ export default {
     };
   },
   methods: {
-    handleFilterKeyup() {
-      // eslint-disable-next-line
-      console.log('filter');
+    handleFilterKeyup({ value }) {
+      this.filterKey = value;
     },
     handlePageChange(page) {
       this.$router.push(`/app/my-apis/businesses/${page}`);
-    },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
-        this.collapsedRows = [itemId];
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
     },
   },
 };

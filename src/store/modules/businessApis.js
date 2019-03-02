@@ -9,12 +9,12 @@ const state = {
 const getters = {};
 
 const actions = {
-  getBusinessApis: ({ commit }, userUuid) => {
+  getBusinessApis: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getBusinessApis(userUuid).then((response) => {
+    api.getBusinessApis(uuid).then((response) => {
       if (response && response.data) {
         commit('setBusinessApis', response.data);
       }

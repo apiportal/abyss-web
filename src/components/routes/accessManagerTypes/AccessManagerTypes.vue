@@ -1,6 +1,6 @@
 <template>
   <div class="access-manager-types-container">
-    <div class="access-manager-types-header">
+    <div class="access-manager-types-header silver-bg">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon

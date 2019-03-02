@@ -1,9 +1,11 @@
 <template>
   <div class="my-licenses-container">
-    <div class="my-licenses-header">
-      <b-button variant="primary">
-        My Policies <b-badge variant="light">{{ policies.length }}</b-badge>
-      </b-button>
+    <div class="my-licenses-header silver-bg">
+      <b-nav tabs>
+        <b-nav-item active>
+          My Policies <b-badge variant="light">{{ policies.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
     </div>
     <div class="my-licenses-content">
       <router-view></router-view>

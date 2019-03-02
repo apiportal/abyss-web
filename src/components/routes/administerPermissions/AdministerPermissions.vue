@@ -1,6 +1,6 @@
 <template>
     <div class="administer-permissions-container">
-      <div class="administer-permissions-header">
+      <div class="administer-permissions-header silver-bg">
         <div class="row">
           <div class="col-md-10">
             <InputWithIcon

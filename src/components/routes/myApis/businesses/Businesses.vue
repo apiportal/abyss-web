@@ -2,20 +2,32 @@
   <div class="businesses-container">
     <div class="businesses-header">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
         </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
+        </div>
         <div class="col-md-2">
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
+            v-b-tooltip.hover 
+            title="Add"
             variant="primary"
             block
           >
-            Add
+            <Icon icon="plus" /> Add
           </b-button>
         </div>
       </div>
@@ -56,6 +68,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       businessApis: state => state.businessApis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
@@ -84,7 +97,20 @@ export default {
             apistatename: getApiStateName(item.apistateid),
             apivisibilityname: getApiVisibilityName(item.apivisibilityid),
             numberofproxies: getNumberOfProxies(item.uuid),
-          })),
+          }))
+          .filter((item) => {
+            const { filterKey } = this;
+            if (filterKey === '') {
+              return true;
+            }
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.openapidocument.info.title &&
+                item.openapidocument.info.title.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
+          }),
         sortByKey,
         sortByKeyType,
         sortDirection,
@@ -112,21 +138,21 @@ export default {
     };
   },
   methods: {
-    handleFilterKeyup() {
-      // eslint-disable-next-line
-      console.log('filter');
+    handleFilterKeyup({ value }) {
+      this.filterKey = value;
     },
     handlePageChange(page) {
       this.$router.push(`/app/my-apis/businesses/${page}`);
     },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
+    refreshData() {
+      this.$store.dispatch('businessApis/getBusinessApis', {
+        uuid: this.currentUser.uuid,
+        refresh: true,
+      });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'businesses');
   },
 };
 </script>

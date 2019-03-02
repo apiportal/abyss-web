@@ -1,6 +1,6 @@
 <template>
   <div class="organizations-container">
-    <div class="organizations-header">
+    <div class="organizations-header silver-bg">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon

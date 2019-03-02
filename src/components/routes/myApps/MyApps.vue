@@ -1,9 +1,11 @@
 <template>
   <div class="my-apps-container">
-    <div class="my-apps-header">
-      <b-button variant="primary">
-        My APPs <b-badge variant="light">{{ userApps.length }}</b-badge>
-      </b-button>
+    <div class="my-apps-header silver-bg">
+      <b-nav tabs>
+        <b-nav-item active>
+          My APPs <b-badge variant="light">{{ userApps.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
     </div>
     <div class="my-apps-content">
       <router-view></router-view>

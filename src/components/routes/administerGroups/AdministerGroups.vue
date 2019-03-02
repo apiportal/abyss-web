@@ -1,6 +1,6 @@
 <template>
   <div class="identity-managers-container">
-    <div class="identity-managers-header">
+    <div class="identity-managers-header silver-bg">
       <div class="row">
         <div class="col-md-10">
           <InputWithIcon

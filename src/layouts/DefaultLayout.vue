@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app-flex">
-    <div class="app-header-flex">
+    <div class="app-header-flex silver-bg">
       <AppHeader />
     </div>
     <div class="app-body-flex">
@@ -78,7 +78,6 @@ export default {
       flex: 1 0 0;
       display: flex;
       flex-direction: column;
-      border-top: 1px solid silver;
     }
   }
 }

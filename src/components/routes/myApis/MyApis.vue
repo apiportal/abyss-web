@@ -1,21 +1,23 @@
 <template>
   <div class="my-apis-container">
-    <div class="my-apis-header">
-      <b-button variant="primary">
-        My Business APIs <b-badge variant="light">{{ myBusinessApis.length }}</b-badge>
-      </b-button>
-      <b-button>
-        My Proxy APIs <b-badge variant="light">{{ myProxyApis.length }}</b-badge>
-      </b-button>
-      <b-button>
-        My Subscriptions <b-badge variant="light">{{ apiSubscriptions.length }}</b-badge>
-      </b-button>
-      <b-button>
-        APIs Shared By Me <b-badge variant="light">{{ apisSharedByUser.length }}</b-badge>
-      </b-button>
-      <b-button>
-        APIs Shared With Me <b-badge variant="light">{{ apisSharedWithUser.length }}</b-badge>
-      </b-button>
+    <div class="my-apis-header silver-bg">
+      <b-nav tabs>
+        <b-nav-item :active="currentPage.firstChildPath === 'businesses'">
+          My Business APIs <b-badge variant="light">{{ myBusinessApis.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item>
+          My Proxy APIs <b-badge variant="light">{{ myProxyApis.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item>
+          My Subscriptions <b-badge variant="light">{{ apiSubscriptions.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item>
+          APIs Shared By Me <b-badge variant="light">{{ apisSharedByUser.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item>
+          APIs Shared With Me <b-badge variant="light">{{ apisSharedWithUser.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
     </div>
     <div class="my-apis-content">
       <router-view></router-view>
@@ -30,6 +32,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      currentPage: state => state.currentPage,
       businessApis: state => state.businessApis.items,
       apiSubscriptions: state => state.apiSubscriptions.items,
       apisSharedWithUser: state => state.apisSharedWithUser.items,
@@ -44,7 +47,7 @@ export default {
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
-    this.$store.dispatch('businessApis/getBusinessApis', this.currentUser.uuid);
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     this.$store.dispatch('apiSubscriptions/getApiSubscriptions', this.currentUser.uuid);
     this.$store.dispatch('apisSharedWithUser/getApisSharedWithUser', this.currentUser.uuid);
     this.$store.dispatch('apisSharedByUser/getApisSharedByUser', this.currentUser.uuid);
@@ -54,7 +57,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('policies/getPolicies', this.currentUser.uuid);
     this.$store.dispatch('policyTypes/getPolicyTypes');
-    this.$store.dispatch('licenses/getLicenses');
+    this.$store.dispatch('licenses/getLicenses', {});
   },
 };
 </script>

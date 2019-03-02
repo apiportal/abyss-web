@@ -2,12 +2,22 @@
   <div class="subject-licenses-container">
     <div class="subject-licenses-header">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -150,6 +160,12 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+    refreshData() {
+      this.$store.dispatch('licenses/getLicenses', { refresh: true });
+    },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-licenses');
   },
 };
 </script>

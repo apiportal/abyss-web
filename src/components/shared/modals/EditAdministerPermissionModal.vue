@@ -428,10 +428,9 @@ export default {
       evt.preventDefault();
       const { permissionEditable, putPermissions, postPermissions, onUpdate, role } = this;
       if (role === 'edit') {
-        putPermissions(permissionEditable).then((response) => {
-          if (response && response.data) {
-            onUpdate();
-          }
+        putPermissions(permissionEditable)
+        .then(() => {
+          onUpdate();
         });
       } else if (role === 'add') {
         const { currentUser } = this;
@@ -442,10 +441,8 @@ export default {
           crudsubjectid,
         }];
         postPermissions(permissionToUpdate)
-          .then((response) => {
-            if (response && response.data) {
-              onUpdate();
-            }
+          .then(() => {
+            onUpdate();
           });
       }
     },

@@ -61,6 +61,8 @@ import MyLicensesLogs from '@/components/routes/myLicenses/MyLicensesLogs';
 import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
 import AddMyLicense from '@/components/routes/myLicenses/AddMyLicense';
 import DeleteMyLicense from '@/components/routes/myLicenses/DeleteMyLicense';
+import LicensesAttachedToApis from '@/components/routes/myLicenses/licensesAttachedToApis/LicensesAttachedToApis';
+import MyLicensesUnderContracts from '@/components/routes/myLicenses/myLicensesUnderContracts/MyLicensesUnderContracts';
 // My Policies
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
@@ -302,6 +304,14 @@ export default new Router({
                   component: DeleteMyLicense,
                 },
               ],
+            },
+            {
+              path: 'attached-to-apis/:page',
+              component: LicensesAttachedToApis,
+            },
+            {
+              path: 'under-contracts/:page',
+              component: MyLicensesUnderContracts,
             },
           ],
         },

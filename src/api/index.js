@@ -255,4 +255,10 @@ export default {
   getResourceAccessTokens(uuid) {
     return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
   },
+  getLicenseContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
+  },
+  getLicenseApis(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
+  },
 };

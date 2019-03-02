@@ -3,6 +3,7 @@
     <table class="table verapi-table">
       <thead>
         <tr>
+          <th>Status</th>
           <th>
             License Name
             <SortBy
@@ -27,7 +28,6 @@
           <th>State</th>
           <th>Created Date</th>
           <th># of Policies</th>
-          <th>Status</th>
         </tr>
       </thead>
       <TbodyCollapsible
@@ -35,7 +35,10 @@
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'}`">
+        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            <Icon :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'" :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
+          </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.name }}
           </td>
@@ -54,9 +57,6 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            <Icon :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'" :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
-          </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
           <td colspan="7">
@@ -64,6 +64,7 @@
               <License
                 :item="licenseItem"
                 :routePath="routePath"
+                :childComponent="childComponent"
               />
             </div>
           </td>
@@ -80,6 +81,7 @@ import SortBy from '@/components/shared/SortBy';
 import License from '@/components/shared/subjects/licenses/License';
 
 export default {
+  name: 'Licenses',
   props: {
     rows: {
       type: Array,
@@ -91,6 +93,11 @@ export default {
       required: false,
       default() { return ''; },
     },
+    childComponent: {
+      type: String,
+      required: false,
+      default() { return 'policies'; },
+    },
   },
   components: {
     TbodyCollapsible,
@@ -101,7 +108,7 @@ export default {
   data() {
     return {
       collapsedRows: [],
-      sortByKey: 'permission',
+      sortByKey: 'name',
       sortByKeyType: 'string',
       sortDirection: 'desc',
     };

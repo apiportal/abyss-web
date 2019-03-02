@@ -23,6 +23,7 @@ const actions = {
   putLicenses: ({ commit }, license) => {
     return api.putLicenses(license).then((response) => {
       commit('updateLicenses', response.data);
+      return response;
     });
   },
   deleteLicenses: ({ commit }, license) => {

@@ -71,7 +71,7 @@
       <Apis
         :rows="computedContractApis"
         :routePath="`/app/my-apps/my-apps/${page}`"
-      />
+      ></Apis>
     </div>
   </div>
 </template>
@@ -79,7 +79,6 @@
 <script>
 import { mapState } from 'vuex';
 import api from '@/api';
-import Apis from '@/components/shared/subjects/apis/Apis';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -95,8 +94,8 @@ export default {
     },
   },
   components: {
-    Apis,
     Icon,
+    Apis: () => import('@/components/shared/subjects/apis/Apis'),
   },
   computed: {
     ...mapState({

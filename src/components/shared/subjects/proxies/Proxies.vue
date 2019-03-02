@@ -29,7 +29,7 @@
             {{ proxyItem.apivisibilityname }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.subscriptions.length }}
+            {{ proxyItem.subscriptions ? proxyItem.subscriptions.length : 0 }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
@@ -38,7 +38,8 @@
               <Proxy
                 :item="proxyItem"
                 :routePath="routePath"
-              />
+                childComponent="Licenses"
+              ></Proxy>
             </div>
           </td>
         </tr>

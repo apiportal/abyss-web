@@ -81,7 +81,7 @@
           <Policies
             :rows="tableRows"
             :routePath="routePath"
-          />
+          ></Policies>
         </div>
       </div>
       <!-- APIs -->
@@ -98,7 +98,24 @@
           <Apis
             :rows="computedLicenseApis"
             :routePath="routePath"
-          />
+          ></Apis>
+        </div>
+      </div>
+      <!-- Proxies -->
+      <div v-else-if="childComponent === 'proxies'">
+        <p>
+          <strong>Proxies:</strong>
+          <span v-if="licenseApis.length === 0">{{ licenseApis.length }}</span>
+          <b-link @click="handleToggleApisTable" v-else>
+            <span>{{ licenseApis.length }}</span>
+            <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+          </b-link>
+        </p>
+        <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
+          <Proxies
+            :rows="computedLicenseApis"
+            :routePath="routePath"
+          ></Proxies>
         </div>
       </div>
       <!-- Contracts -->
@@ -115,7 +132,7 @@
           <Contracts
             :rows="computedLicenseContracts"
             :routePath="routePath"
-          />
+          ></Contracts>
         </div>
       </div>
     </div>
@@ -129,9 +146,6 @@ import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 import TextAreaModal from '@/components/shared/modals/TextAreaModal';
-import Policies from '@/components/shared/subjects/policies/Policies';
-import Apis from '@/components/shared/subjects/apis/Apis';
-import Contracts from '@/components/shared/subjects/contracts/Contracts';
 
 export default {
   name: 'License',
@@ -153,10 +167,10 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    Policies,
-    Apis,
-    Contracts,
     TextAreaModal,
+    Policies: () => import('@/components/shared/subjects/policies/Policies'),
+    Proxies: () => import('@/components/shared/subjects/proxies/Proxies.vue'),
+    Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {
     ...mapState({
@@ -263,7 +277,7 @@ export default {
       .then((response) => {
         this.licenseContracts = response.data;
       });
-    } else if (this.childComponent === 'apis') {
+    } else if (this.childComponent === 'proxies') {
       api
       .getLicenseApis(this.item.uuid)
       .then((response) => {

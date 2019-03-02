@@ -24,8 +24,8 @@
       <Licenses
         :rows="paginatedRows"
         :routePath="`/app/my-licenses/my-licenses/${page}`"
-        childComponent="apis"
-      />
+        childComponent="proxies"
+      ></Licenses>
       <router-view></router-view>
     </div>
     <div class="subject-licenses-footer">

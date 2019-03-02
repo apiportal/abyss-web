@@ -37,7 +37,7 @@
               <App
                 :item="item"
                 :routePath="routePath"
-              />
+              ></App>
             </div>
           </td>
         </tr>

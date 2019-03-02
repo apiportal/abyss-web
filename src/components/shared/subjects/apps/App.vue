@@ -44,7 +44,7 @@
         <Contracts
           :rows="appContracts"
           :routePath="routePath"
-        />
+        ></Contracts>
       </div>
     </div>
   </div>
@@ -53,7 +53,6 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import Contracts from '@/components/shared/subjects/contracts/Contracts';
 
 export default {
   props: {
@@ -74,7 +73,7 @@ export default {
   },
   components: {
     Icon,
-    Contracts,
+    Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {
     ...mapState({

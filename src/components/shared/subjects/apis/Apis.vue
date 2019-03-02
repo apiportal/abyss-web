@@ -41,7 +41,7 @@
               <Api
                 :item="item"
                 :routePath="routePath"
-              />
+              ></Api>
             </div>
           </td>
         </tr>

@@ -46,7 +46,7 @@
         <Proxies
           :rows="apiProxies"
           :routePath="routePath"
-        />
+        ></Proxies>
       </div>
     </div>
   </div>
@@ -57,7 +57,6 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
-import Proxies from '@/components/shared/subjects/proxies/Proxies';
 
 export default {
   name: 'Api',
@@ -75,7 +74,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    Proxies,
+    Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({

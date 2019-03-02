@@ -54,7 +54,7 @@
               <Policy
                 :item="policyItem"
                 :routePath="routePath"
-              />
+              ></Policy>
             </div>
           </td>
         </tr>

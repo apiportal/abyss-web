@@ -65,7 +65,7 @@
                 :item="licenseItem"
                 :routePath="routePath"
                 :childComponent="childComponent"
-              />
+              ></License>
             </div>
           </td>
         </tr>

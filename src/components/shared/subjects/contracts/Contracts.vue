@@ -33,7 +33,7 @@
               <Contract
                 :item="item"
                 :routePath="routePath"
-              />
+              ></Contract>
             </div>
           </td>
         </tr>

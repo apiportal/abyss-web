@@ -39,16 +39,16 @@
         <strong>Licenses:</strong>
         <span v-if="item.subscriptions && item.subscriptions.length === 0">0</span>
         <b-link @click="handleToggleLicensesTable" v-else>
-          <span>{{ item.subscriptions.length }}</span>
+          <span>{{ item.subscriptions ? item.subscriptions.length : 0 }}</span>
           <Icon :icon="`${isLicensesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
         </b-link>
       </p>
 
       <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
-        <!-- <Licenses
+        <Licenses
           :rows="item.subscriptions"
           :routePath="routePath"
-        /> -->
+        ></Licenses>
       </div>
     </div>
   </div>
@@ -57,7 +57,6 @@
 <script>
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-// import Licenses from '@/components/shared/subjects/licenses/Licenses';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -71,7 +70,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    // Licenses,
+    Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
   },
   props: {
     item: {
@@ -82,6 +81,10 @@ export default {
       type: String,
       required: false,
       default() { return ''; },
+    },
+    childComponent: {
+      type: String,
+      required: true,
     },
   },
   data() {

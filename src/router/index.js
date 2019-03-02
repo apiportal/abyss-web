@@ -4,7 +4,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
-import Api from '@/components/routes/myApis/api/Api';
+// import Api from '@/components/routes/myApis/api/Api';
 import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 // Dashboard Routes Components
@@ -115,10 +115,10 @@ export default new Router({
                 },
               ],
             },
-            {
-              path: 'api/:id',
-              component: Api,
-            },
+            // {
+            //   path: 'api/:id',
+            //   component: Api,
+            // },
           ],
         },
         {

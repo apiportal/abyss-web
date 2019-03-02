@@ -52,8 +52,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import Contracts from '@/components/shared/subjects/contracts/Contracts';
 import Icon from '@/components/shared/Icon';
+import Contracts from '@/components/shared/subjects/contracts/Contracts';
 
 export default {
   props: {
@@ -66,10 +66,15 @@ export default {
       required: false,
       default() { return ''; },
     },
+    childComponent: {
+      type: String,
+      required: false,
+      default() { return 'Contracts'; },
+    },
   },
   components: {
-    Contracts,
     Icon,
+    Contracts,
   },
   computed: {
     ...mapState({

@@ -10,6 +10,10 @@
           <th># of Subscriptions</th>
         </tr>
       </thead>
+      <TBodyLoading
+        v-if="isLoading && rows.length === 0"
+        :cols="5"
+      />
       <TbodyCollapsible
         v-for="(proxyItem, proxyIndex) in rows" v-bind:key="proxyIndex"
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
@@ -49,7 +53,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 
@@ -66,8 +72,14 @@ export default {
       default() { return ''; },
     },
   },
+  computed: {
+    ...mapState({
+      isLoading: state => state.traffic.isLoading,
+    }),
+  },
   components: {
     TbodyCollapsible,
+    TBodyLoading,
     Icon,
     Proxy,
   },

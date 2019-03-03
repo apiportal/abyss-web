@@ -32,6 +32,8 @@
     </b-navbar>
     <div style="margin: 2rem;">
 
+      <p>Description: {{ item.description }}</p>
+
       <label>API ACCESS TOKENS</label>
       <table class="table verapi-table">
         <thead>

@@ -9,12 +9,12 @@ const state = {
 const getters = {};
 
 const actions = {
-  getPolicies: ({ commit }, userUuid) => {
+  getPolicies: ({ commit }, { refresh = false}) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getPolicies(userUuid).then((response) => {
+    api.getPolicies().then((response) => {
       if (response && response.data) {
         commit('setPolicies', response.data);
       }

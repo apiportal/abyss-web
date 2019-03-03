@@ -91,7 +91,6 @@ export default {
         proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
       return sortArrayOfObjects({
         array: businessApis
-          .filter(item => item.isproxyapi === false)
           .map(item => ({
             ...item,
             apistatename: getApiStateName(item.apistateid),

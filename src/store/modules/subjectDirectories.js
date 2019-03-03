@@ -13,9 +13,9 @@ const getters = {
 };
 
 const actions = {
-  getSubjectDirectories: ({ commit }) => {
+  getSubjectDirectories: ({ commit }, { refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
     api.getSubjectDirectories().then((response) => {

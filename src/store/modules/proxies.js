@@ -9,12 +9,12 @@ const state = {
 const getters = {};
 
 const actions = {
-  getProxies: ({ commit }, userUuid) => {
+  getProxies: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getProxies(userUuid).then((response) => {
+    api.getProxies(uuid).then((response) => {
       if (response && response.data) {
         commit('setProxies', response.data);
       }

@@ -11,7 +11,7 @@
         <router-view></router-view>
       </div>
     </div>
-    <LoadingModal v-if="isLoadingModalVisible" />
+    <LoadingModal v-if="isLoading" />
     <SetCookieModal v-if="isSetCookieModalVisible" />
   </div>
 </template>
@@ -33,14 +33,9 @@ export default {
   },
   computed: {
     ...mapState({
-      requestsCount: state => state.traffic.requestsCount,
-      responsesCount: state => state.traffic.responsesCount,
+      isLoading: state => state.traffic.isLoading,
       user: state => state.user,
     }),
-    isLoadingModalVisible() {
-      const { requestsCount, responsesCount } = this;
-      return requestsCount !== responsesCount;
-    },
     isSetCookieModalVisible() {
       const { isUnauthorized } = this.user;
       return isUnauthorized;

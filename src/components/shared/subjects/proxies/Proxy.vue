@@ -35,15 +35,14 @@
       <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
       <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
       <p><strong>Organization:</strong> {{ item.organizationame }}</p>
-      <p>
-        <strong>Licenses:</strong>
-        <span v-if="item.subscriptions && item.subscriptions.length === 0">0</span>
-        <b-link @click="handleToggleLicensesTable" v-else>
-          <span>{{ item.subscriptions ? item.subscriptions.length : 0 }}</span>
-          <Icon :icon="`${isLicensesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-link>
-      </p>
-
+      <b-button
+        @click="handleToggleLicensesTable"
+        size="sm"
+      >
+        <span>Licenses</span>
+        <b-badge variant="light">{{ item.subscriptions ? item.subscriptions.length : 0 }}</b-badge>
+        <Icon :icon="`${isLicensesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+      </b-button>
       <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
         <Licenses
           :rows="item.subscriptions"

@@ -9,12 +9,12 @@ const state = {
 const getters = {};
 
 const actions = {
-  getApiSubscriptions: ({ commit }, userUuid) => {
+  getApiSubscriptions: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getApiSubscriptions(userUuid).then((response) => {
+    api.getApiSubscriptions(uuid).then((response) => {
       if (response && response.data) {
         commit('setApiSubscriptions', response.data);
       }

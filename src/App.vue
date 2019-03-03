@@ -38,8 +38,6 @@ export default {
     if (userUuid.length > 0) {
       this.$store.commit('user/setUuid', userUuid[0]);
     } else {
-      // eslint-disable-next-line
-      console.log(document.cookie);
       this.$store.commit('user/setUserUnauthorized', true);
     }
   },
@@ -50,7 +48,7 @@ export default {
   },
   methods: {
     checkUser() {
-      this.$store.dispatch('user/getUser');
+      this.$store.dispatch('user/getUser', {});
     },
   },
   mounted() {

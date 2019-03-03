@@ -2,12 +2,22 @@
   <div class="subject-licenses-container">
     <div class="subject-licenses-header">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -15,7 +25,7 @@
             variant="primary"
             block
           >
-            Add
+            <Icon icon="plus" /> Add
           </b-button>
         </div>
       </div>
@@ -117,6 +127,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('policies/getPolicies', {
+        refresh: true,
+      });
     },
   },
 };

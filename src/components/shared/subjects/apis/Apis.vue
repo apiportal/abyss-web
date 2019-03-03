@@ -11,6 +11,10 @@
           <th>Status</th>
         </tr>
       </thead>
+      <TBodyLoading
+        v-if="isLoading && rows.length === 0"
+        :cols="6"
+      />
       <TbodyCollapsible
         v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
@@ -51,8 +55,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Api from '@/components/shared/subjects/apis/Api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -69,9 +75,15 @@ export default {
       default() { return ''; },
     },
   },
+  computed: {
+    ...mapState({
+      isLoading: state => state.traffic.isLoading,
+    }),
+  },
   components: {
     Api,
     TbodyCollapsible,
+    TBodyLoading,
     Icon,
   },
   data() {

@@ -34,14 +34,14 @@
       <p><strong>Title:</strong> {{ item.openapidocument.info.title }}</p>
       <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
       <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
-      <p>
-        <strong>Proxy APIs:</strong>
-        <span v-if="apiProxies.length === 0">{{ apiProxies.length }}</span>
-        <b-link @click="handleToggleApiProxiesTable" v-else>
-          <span>{{ apiProxies.length }}</span>
-          <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-link>
-      </p>
+      <b-button
+        @click="handleToggleApiProxiesTable"
+        size="sm"
+      >
+        <span>Proxy APIs</span>
+        <b-badge variant="light">{{ apiProxies.length }}</b-badge>
+        <Icon :icon="`${isApiProxiesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+      </b-button>
       <div v-if="isApiProxiesTableVisible" style="margin-bottom: 1rem;">
         <Proxies
           :rows="apiProxies"

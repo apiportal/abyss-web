@@ -4,6 +4,10 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
+import SharedByMe from '@/components/routes/myApis/sharedByMe/SharedByMe';
+import SharedWithMe from '@/components/routes/myApis/sharedWithMe/SharedWithMe';
+import MyProxyApis from '@/components/routes/myApis/myProxyApis/MyProxyApis';
+import MySubscriptions from '@/components/routes/myApis/mySubscriptions/MySubscriptions';
 // import Api from '@/components/routes/myApis/api/Api';
 import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
@@ -52,10 +56,10 @@ import EditAdministerPermission from '@/components/routes/administerPermissions/
 import DeleteAdministerPermission from '@/components/routes/administerPermissions/DeleteAdministerPermission';
 // My APPs Routes
 import MyApps from '@/components/routes/myApps/MyApps';
-import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
 import MyAppsLogs from '@/components/routes/myApps/MyAppsLogs';
 import EditMyApps from '@/components/routes/myApps/EditMyApps';
 import AddMyApps from '@/components/routes/myApps/AddMyApps';
+import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
 // My Licenses
 import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
 import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
@@ -117,10 +121,62 @@ export default new Router({
                 },
               ],
             },
-            // {
-            //   path: 'api/:id',
-            //   component: Api,
-            // },
+            {
+              path: 'shared-by-me/:page',
+              component: SharedByMe,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'shared-with-me/:page',
+              component: SharedWithMe,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'my-proxy-apis/:page',
+              component: MyProxyApis,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'my-subscriptions/:page',
+              component: MySubscriptions,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
           ],
         },
         {

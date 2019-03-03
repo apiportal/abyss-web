@@ -2,12 +2,22 @@
   <div class="identity-manager-types-container">
     <div class="identity-manager-types-header silver-bg">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -56,8 +66,12 @@
             </th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading && tableRows.length === 0"
+          :cols="5"
+        />
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
@@ -116,7 +130,7 @@
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="10"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -131,6 +145,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
@@ -139,9 +154,11 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
     }),
@@ -178,11 +195,20 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'identity-manager-types');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
-    this.$store.dispatch('organizations/getOrganizations');
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {
     return {
@@ -192,6 +218,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -213,6 +240,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {
+        refresh: true,
+      });
     },
   },
 };

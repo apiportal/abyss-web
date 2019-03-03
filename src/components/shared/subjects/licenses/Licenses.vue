@@ -30,6 +30,10 @@
           <th># of Policies</th>
         </tr>
       </thead>
+      <TBodyLoading
+        v-if="isLoading && rows.length === 0"
+        :cols="7"
+      />
       <TbodyCollapsible
         v-for="(licenseItem, licenseIndex) in rows" v-bind:key="licenseIndex"
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
@@ -75,7 +79,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import License from '@/components/shared/subjects/licenses/License';
@@ -99,8 +105,14 @@ export default {
       default() { return 'policies'; },
     },
   },
+  computed: {
+    ...mapState({
+      isLoading: state => state.traffic.isLoading,
+    }),
+  },
   components: {
     TbodyCollapsible,
+    TBodyLoading,
     Icon,
     SortBy,
     License,

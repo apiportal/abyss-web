@@ -43,7 +43,7 @@ const actions = {
       return response;
     });
   },
-  getAppContracts: ({ commit }, appIdsArray) => {
+  getAppContracts: ({ commit }, { appIdsArray }) => {
     for (let i = 0; i < appIdsArray.length; i += 1) {
       api.getAppContracts(appIdsArray[i]).then((response) => {
         commit('setAppContracts', { appId: appIdsArray[i], contracts: response.data});

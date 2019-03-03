@@ -9,9 +9,9 @@ const state = {
 const getters = {};
 
 const actions = {
-  getPermissions: ({ commit }) => {
+  getPermissions: ({ commit }, { refresh = false}) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
     api.getPermissions().then((response) => {

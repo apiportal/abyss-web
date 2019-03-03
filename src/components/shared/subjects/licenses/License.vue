@@ -69,14 +69,14 @@
       </div>
       <!-- Policies -->
       <div v-if="childComponent === 'policies'">
-        <p>
-          <strong>Policies:</strong>
-          <span v-if="tableRows.length === 0">{{ tableRows.length }}</span>
-          <b-link @click="handleTogglePoliciesTable" v-else>
-            <span>{{ tableRows.length }}</span>
-            <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-          </b-link>
-        </p>
+        <b-button
+          @click="handleTogglePoliciesTable"
+          size="sm"
+        >
+          <span>Policies</span>
+          <b-badge variant="light">{{ tableRows.length }}</b-badge>
+          <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        </b-button>
         <div v-if="isPoliciesTableVisible" style="margin-bottom: 1rem;">
           <Policies
             :rows="tableRows"
@@ -86,14 +86,14 @@
       </div>
       <!-- APIs -->
       <div v-else-if="childComponent === 'apis'">
-        <p>
-          <strong>APIs:</strong>
-          <span v-if="licenseApis.length === 0">{{ licenseApis.length }}</span>
-          <b-link @click="handleToggleApisTable" v-else>
-            <span>{{ licenseApis.length }}</span>
-            <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-          </b-link>
-        </p>
+        <b-button
+          @click="handleToggleApisTable"
+          size="sm"
+        >
+          <span>APIs</span>
+          <b-badge variant="light">{{ licenseApis.length }}</b-badge>
+          <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        </b-button>
         <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
           <Apis
             :rows="computedLicenseApis"
@@ -103,14 +103,14 @@
       </div>
       <!-- Proxies -->
       <div v-else-if="childComponent === 'proxies'">
-        <p>
-          <strong>Proxies:</strong>
-          <span v-if="licenseApis.length === 0">{{ licenseApis.length }}</span>
-          <b-link @click="handleToggleApisTable" v-else>
-            <span>{{ licenseApis.length }}</span>
-            <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-          </b-link>
-        </p>
+        <b-button
+          @click="handleToggleApisTable"
+          size="sm"
+        >
+          <span>Proxies</span>
+          <b-badge variant="light">{{ licenseApis.length }}</b-badge>
+          <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        </b-button>
         <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
           <Proxies
             :rows="computedLicenseApis"
@@ -120,14 +120,14 @@
       </div>
       <!-- Contracts -->
       <div v-else-if="childComponent === 'contracts'">
-        <p>
-          <strong>Contracts:</strong>
-          <span v-if="licenseContracts.length === 0">{{ licenseContracts.length }}</span>
-          <b-link @click="handleToggleContractsTable" v-else>
-            <span>{{ licenseContracts.length }}</span>
-            <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-          </b-link>
-        </p>
+        <b-button
+          @click="handleToggleContractsTable"
+          size="sm"
+        >
+          <span>Contracts</span>
+          <b-badge variant="light">{{ licenseContracts.length }}</b-badge>
+          <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        </b-button>
         <div v-if="isContractsTableVisible" style="margin-bottom: 1rem;">
           <Contracts
             :rows="computedLicenseContracts"

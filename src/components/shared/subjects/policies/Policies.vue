@@ -11,6 +11,10 @@
           <th>Proxy Response</th>
         </tr>
       </thead>
+      <TBodyLoading
+        v-if="isLoading && rows.length === 0"
+        :cols="6"
+      />
       <TbodyCollapsible
         v-for="(policyItem, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(policyItem.uuid) > -1"
@@ -64,7 +68,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import Policy from '@/components/shared/subjects/policies/Policy';
 
@@ -81,8 +87,14 @@ export default {
       default() { return ''; },
     },
   },
+  computed: {
+    ...mapState({
+      isLoading: state => state.traffic.isLoading,
+    }),
+  },
   components: {
     TbodyCollapsible,
+    TBodyLoading,
     Icon,
     Policy,
   },

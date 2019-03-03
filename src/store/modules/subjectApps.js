@@ -9,9 +9,9 @@ const state = {
 const getters = {};
 
 const actions = {
-  getSubjectApps: ({ commit }, { uuid }) => {
+  getSubjectApps: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
     api.getSubjectApps(uuid).then((response) => {

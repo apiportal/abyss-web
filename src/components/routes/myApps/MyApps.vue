@@ -30,20 +30,20 @@ export default {
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'my-apps');
-    this.$store.dispatch('apps/getApps');
-    this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid, withContracts: true });
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('contractStates/getContractStates');
-    this.$store.dispatch('apiStates/getApiStates');
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
+    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('contractStates/getContractStates', {});
+    this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
   },
   watch: {
     userApps(newVal, oldVal) {
       if (newVal.length !== oldVal.length) {
         const appIdsArray = newVal.map(item => item.uuid);
-        this.$store.dispatch('apps/getAppContracts', appIdsArray);
+        this.$store.dispatch('apps/getAppContracts', { appIdsArray });
       }
     },
   },

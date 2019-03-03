@@ -1,6 +1,6 @@
 <template>
-  <div class="subject-apps-container">
-    <div class="subject-apps-header">
+  <div class="businesses-container">
+    <div class="businesses-header">
       <div class="row">
         <div class="col-md-9">
           <InputWithIcon
@@ -21,23 +21,25 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/my-apps/my-apps/${page}/add-new`"
+            :to="`/app/identity-managers/${page}/add-new`"
+            v-b-tooltip.hover 
+            title="Add"
             variant="primary"
             block
           >
-            Add
+            <Icon icon="plus" /> Add
           </b-button>
         </div>
       </div>
     </div>
-    <div class="subject-apps-content">
-      <Apps
+    <div class="businesses-content">
+      <Proxies
         :rows="paginatedRows"
-        :routePath="`/app/my-apps/my-apps/${page}`"
+        :routePath="`/app/my-apis/my-proxy-apis/${page}`"
       />
       <router-view></router-view>
     </div>
-    <div class="subject-apps-footer">
+    <div class="businesses-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -54,42 +56,60 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Apps from '@/components/shared/subjects/apps/Apps';
+import Proxies from '@/components/shared/subjects/proxies/Proxies';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Apps,
+    Proxies,
     Icon,
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apps: state => state.apps.items,
-      subjectApps: state => state.subjectApps.items,
-      organizations: state => state.organizations.items,
+      businessApis: state => state.businessApis.items,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      businesses: state => state.businesses.items,
+      proxies: state => state.proxies.items,
     }),
-    userApps() {
-      const { apps, subjectApps } = this;
-      const subjectAppsIds = subjectApps.map(item => item.appid);
-      return apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
-    },
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { userApps, organizations } = this;
-      const getOrganizationName = (organizationId) => {
-        const organization = organizations.find(item => item.uuid === organizationId);
-        return organization ? organization.name : organizationId;
+      const { proxies, apiStates, apiVisibilityTypes } = this;
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
       };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+      const getNumberOfProxies = apiUuid =>
+        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
       return sortArrayOfObjects({
-        array: userApps
+        array: proxies
           .map(item => ({
             ...item,
-            organizationname: getOrganizationName(item.organizationid),
-          })),
+            apistatename: getApiStateName(item.apistateid),
+            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            numberofproxies: getNumberOfProxies(item.uuid),
+          }))
+          .filter((item) => {
+            const { filterKey } = this;
+            if (filterKey === '') {
+              return true;
+            }
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.openapidocument.info.title &&
+                item.openapidocument.info.title.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
+          }),
         sortByKey,
         sortByKeyType,
         sortDirection,
@@ -114,9 +134,6 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
-      subscriptions: {
-        lastUpdated: 0,
-      },
     };
   },
   methods: {
@@ -124,37 +141,40 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-apis/businesses/${page}`);
+      this.$router.push(`/app/my-apis/my-proxy-apis/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('subjectApps/getSubjectApps', {
+      this.$store.dispatch('proxies/getProxies', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });
     },
   },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-proxy-apis');
+  },
 };
 </script>
 
 <style lang="scss">
-.subject-apps-container {
+.businesses-container {
   display: flex;
   flex: 1 0 0;
   flex-direction: column;
 
-  .subject-apps-header {
+  .businesses-header {
     border-bottom: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;
   }
 
-  .subject-apps-content {
+  .businesses-content {
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;
   }
 
-  .subject-apps-footer {
+  .businesses-footer {
     border-top: 1px solid silver;
     flex: 50px 0 0;
     padding: 1rem;

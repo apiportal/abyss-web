@@ -33,12 +33,12 @@ export default {
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-licenses');
     this.$store.dispatch('licenses/getLicenses', {});
-    this.$store.dispatch('policies/getPolicies');
-    this.$store.dispatch('policyTypes/getPolicyTypes');
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes');
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('apiStates/getApiStates');
-    this.$store.dispatch('contractStates/getContractStates');
+    this.$store.dispatch('policies/getPolicies', {});
+    this.$store.dispatch('policyTypes/getPolicyTypes', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('contractStates/getContractStates', {});
   },
 };
 </script>

@@ -253,10 +253,10 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('users/getUsers');
-    this.$store.dispatch('groups/getGroups');
-    this.$store.dispatch('apps/getApps');
-    this.$store.dispatch('apis/getApis');
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
+    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('apis/getApis', {});
   },
   data() {
     return {

@@ -3,45 +3,34 @@
     <table class="table verapi-table">
       <thead>
         <tr>
-          <th>App Name</th>
-          <th>Organization</th>
-          <th>URL</th>
-          <th># of Subscriptions</th>
-          <th>Status</th>
+          <th>Permission</th>
+          <th>Action</th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="2"
       />
       <TbodyCollapsible
-        v-for="(item, index) in rows" v-bind:key="index"
-        :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+        v-for="(subscriptionItem, index) in rows" v-bind:key="index"
+        :isCollapsed="collapsedRows.indexOf(subscriptionItem.uuid) > -1"
+        :level="3"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.displayname }}
+          <td @click="() => handleCollapseTableRows(subscriptionItem.uuid)">
+            {{ subscriptionItem.permission }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.organizationname }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.url }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.contracts ? item.contracts.length : '' }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
+          <td @click="() => handleCollapseTableRows(subscriptionItem.uuid)">
+            {{ subscriptionItem.resourceactionname }}
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(subscriptionItem.uuid) > -1">
+          <td colspan="6">
             <div class="collapsible-content">
-              <App
-                :item="item"
+              <Subscription
+                :item="subscriptionItem"
                 :routePath="routePath"
-              ></App>
+              ></Subscription>
             </div>
           </td>
         </tr>
@@ -52,10 +41,10 @@
 
 <script>
 import { mapState } from 'vuex';
-import App from '@/components/shared/subjects/apps/App';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
+import Subscription from '@/components/shared/subjects/subscriptions/Subscription';
 
 export default {
   props: {
@@ -76,10 +65,10 @@ export default {
     }),
   },
   components: {
-    App,
     TbodyCollapsible,
     TBodyLoading,
     Icon,
+    Subscription,
   },
   data() {
     return {
@@ -90,7 +79,7 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows = [itemId];
+        this.collapsedRows.push(itemId);
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

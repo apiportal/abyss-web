@@ -2,12 +2,22 @@
   <div class="identity-managers-container">
     <div class="identity-managers-header silver-bg">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -96,6 +106,10 @@
             </th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading && totalRows.length === 0"
+          :cols="7"
+        />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
@@ -162,6 +176,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
@@ -171,9 +186,11 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
@@ -239,11 +256,11 @@ export default {
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'administer-users');
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('users/getUsers');
-    this.$store.dispatch('groups/getGroups');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
   },
   data() {
     return {
@@ -275,6 +292,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('users/getUsers', {
+        refresh: true,
+      });
     },
   },
 };

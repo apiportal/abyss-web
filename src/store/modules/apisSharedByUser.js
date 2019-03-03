@@ -9,12 +9,12 @@ const state = {
 const getters = {};
 
 const actions = {
-  getApisSharedByUser: ({ commit }, userUuid) => {
+  getApisSharedByUser: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getApisSharedByUser(userUuid).then((response) => {
+    api.getApisSharedByUser(uuid).then((response) => {
       if (response && response.data) {
         commit('setApisSharedByUser', response.data);
       }

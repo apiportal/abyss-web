@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <tr 
-      v-for="(item, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]" 
+      v-for="(item, index) in rows" 
       v-bind:key="index"
       :class="`${index % 2 === 0 ? 'odd' : 'even'}`"
     >
@@ -9,7 +9,7 @@
         v-for="(colItem, colIndex) in cols"
         v-bind:key="colIndex"
       >
-        <span class="table-placeholder-item">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <div class="table-placeholder-item">&nbsp;</div>
       </td>
     </tr>
   </tbody>
@@ -21,6 +21,11 @@ export default {
     cols: {
       type: Number,
       required: true,
+    },
+    rows: {
+      type: Number,
+      required: false,
+      default() { return 20; },
     },
   },
 };

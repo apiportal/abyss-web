@@ -31,15 +31,19 @@
       </b-collapse>
     </b-navbar>
     <div style="margin: 2rem;">
-      {{ item.subjectname }}
-      <p>
-        <strong>Contracts:</strong>
-        <span v-if="item.contracts.length === 0">{{ item.contracts.length }}</span>
-        <b-link @click="handleToggleContractsTable" v-else>
-          <span>{{ item.contracts.length }}</span>
-          <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-link>
-      </p>
+      <div>
+        <p>
+          Name: {{ item.subjectname }}
+        </p>
+      </div>
+      <b-button
+        @click="handleToggleContractsTable"
+        size="sm"
+      >
+        <span>Contracts</span>
+        <b-badge variant="light">{{ item.contracts.length }}</b-badge>
+        <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+      </b-button>
       <div v-if="isContractsTableVisible" style="margin-bottom: 1rem;">
         <Contracts
           :rows="appContracts"

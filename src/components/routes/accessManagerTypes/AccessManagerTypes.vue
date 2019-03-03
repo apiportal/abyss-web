@@ -125,7 +125,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="access-manager-types-footer">
+    <div class="access-manager-types-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"

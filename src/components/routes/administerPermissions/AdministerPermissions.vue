@@ -132,7 +132,7 @@
         </table>
         <router-view></router-view>
       </div>
-      <div class="administer-permissions-footer" v-if="tableRows.length > 0">
+      <div class="administer-permissions-footer" v-if="tableRows.length > itemsPerPage">
         <b-pagination 
           size="md"
           :total-rows="tableRows.length"

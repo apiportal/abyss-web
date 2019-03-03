@@ -233,6 +233,9 @@ export default {
   getPolicies() {
     return axios.get('/abyss/oapi/policies');
   },
+  postPolicies(policies) {
+    return axios.post('/abyss/oapi/policies', policies);
+  },
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
   },

@@ -8,7 +8,6 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :license="newLicense"
-      :visibilityTypes="visibilityTypes"
     />
   </div>
 </template>

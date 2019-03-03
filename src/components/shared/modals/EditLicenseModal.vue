@@ -93,7 +93,7 @@
           >
               Is Active?
           </b-form-checkbox>
-          </b-form-group>
+        </b-form-group>
         <b-form-group
         id="licenseVisibilityGroup"
         label="Visibility*"
@@ -422,15 +422,11 @@ export default {
       required: false,
       default() { return 'edit'; },
     },
-    visibilityTypes: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      visibilityTypes: state => state.apiVisibilityTypes.items,
     }),
     licenseVersionInvalidFeedback() {
       const { version } = this.licenseEditable;

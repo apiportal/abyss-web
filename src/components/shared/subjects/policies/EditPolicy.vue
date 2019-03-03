@@ -1,23 +1,23 @@
 <template>
   <div>
-    <EditLicenseModal
+    <EditPolicyModal
       v-if="
-        areLicensesLoaded && areVisibilityTypesLoaded
+        isPoliciesLoaded && isPolicyTypesLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :license="getLicense(licenseId)"
+      :policy="getPolicy(policyId)"
     />
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
-import EditLicenseModal from '@/components/shared/modals/EditLicenseModal';
+import EditPolicyModal from '@/components/shared/modals/EditPolicyModal';
 
 export default {
   components: {
-    EditLicenseModal,
+    EditPolicyModal,
   },
   props: {
     routePath: {
@@ -28,15 +28,15 @@ export default {
   },
   computed: {
     ...mapState({
-      visibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.licenses.items,
-      areLicensesLoaded: state => state.licenses.lastUpdatedAt,
-      areVisibilityTypesLoaded: state => state.apiVisibilityTypes.lastUpdatedAt,
+      policies: state => state.policies.items,
+      policyTypes: state => state.policyTypes.items,
+      isPoliciesLoaded: state => (state.policies.lastUpdatedAt > 0),
+      isPolicyTypesLoaded: state => (state.policyTypes.lastUpdatedAt > 0),
     }),
   },
   data() {
     return {
-      licenseId: this.$route.params.licenseId,
+      policyId: this.$route.params.policyId,
     };
   },
   methods: {
@@ -46,8 +46,8 @@ export default {
     handleModalUpdate() {
       this.$router.push(this.routePath);
     },
-    getLicense(licenseId) {
-      return this.licenses.find(item => item.uuid === licenseId);
+    getPolicy(policyId) {
+      return this.policies.find(item => item.uuid === policyId);
     },
   },
 };

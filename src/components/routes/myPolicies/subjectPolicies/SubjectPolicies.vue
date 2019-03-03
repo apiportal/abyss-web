@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-2">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/my-policies/my-policies/${page}/add-new`"
             variant="primary"
             block
           >
@@ -37,7 +37,7 @@
       />
       <router-view></router-view>
     </div>
-    <div class="subject-licenses-footer">
+    <div class="subject-licenses-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"

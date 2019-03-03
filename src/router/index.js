@@ -73,6 +73,8 @@ import MyLicensesUnderContracts from '@/components/routes/myLicenses/myLicensesU
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
 import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
+import EditMyPolicy from '@/components/routes/myPolicies/EditMyPolicy';
+import AddMyPolicy from '@/components/routes/myPolicies/AddMyPolicy';
 // Explore
 import Explore from '@/components/routes/explore/Explore';
 // Organizations Routes Components
@@ -392,6 +394,14 @@ export default new Router({
                 {
                   path: 'logs/:id/:logType/:logPage',
                   component: MyPoliciesLogs,
+                },
+                {
+                  path: 'edit-policy/:policyId',
+                  component: EditMyPolicy,
+                },
+                {
+                  path: 'add-new',
+                  component: AddMyPolicy,
                 },
               ],
             },

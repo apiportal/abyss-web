@@ -38,12 +38,12 @@
       ></Licenses>
       <router-view></router-view>
     </div>
-    <div class="subject-licenses-footer">
+    <div class="subject-licenses-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="20"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >

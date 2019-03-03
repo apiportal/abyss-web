@@ -148,7 +148,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="identity-managers-footer">
+    <div class="identity-managers-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"

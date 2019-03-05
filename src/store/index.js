@@ -17,6 +17,20 @@ import subjectTypes from '@/store/modules/subjectTypes';
 import apps from '@/store/modules/apps';
 import apis from '@/store/modules/apis';
 import subjectMemberships from '@/store/modules/subjectMemberships';
+import businessApis from '@/store/modules/businessApis';
+import apiSubscriptions from '@/store/modules/apiSubscriptions';
+import apisSharedWithUser from '@/store/modules/apisSharedWithUser';
+import apisSharedByUser from '@/store/modules/apisSharedByUser';
+import apiStates from '@/store/modules/apiStates';
+import apiVisibilityTypes from '@/store/modules/apiVisibilityTypes';
+import proxies from '@/store/modules/proxies';
+import policies from '@/store/modules/policies';
+import policyTypes from '@/store/modules/policyTypes';
+import subjectApps from '@/store/modules/subjectApps';
+import subjectLicenses from '@/store/modules/subjectLicenses';
+import licenses from '@/store/modules/licenses';
+import currentPage from '@/store/modules/currentPage';
+import contractStates from '@/store/modules/contractStates';
 
 Vue.use(Vuex);
 
@@ -39,6 +53,20 @@ export default new Vuex.Store({
     apps,
     apis,
     subjectMemberships,
+    businessApis,
+    apiSubscriptions,
+    apisSharedWithUser,
+    apisSharedByUser,
+    apiStates,
+    apiVisibilityTypes,
+    proxies,
+    policies,
+    policyTypes,
+    subjectApps,
+    subjectLicenses,
+    licenses,
+    currentPage,
+    contractStates,
   },
   debug: true,
 });

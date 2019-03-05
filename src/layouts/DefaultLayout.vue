@@ -1,17 +1,17 @@
 <template>
   <div id="app" class="app-flex">
-    <div class="app-header-flex">
+    <div class="app-header-flex silver-bg">
       <AppHeader />
     </div>
     <div class="app-body-flex">
       <div class="app-sidenav-flex">
         <AppSidenav />
       </div>
-      <div class="app-content-flex">
+      <div class="app-content-flex" v-if="user.uuid">
         <router-view></router-view>
       </div>
     </div>
-    <LoadingModal v-if="isLoadingModalVisible" />
+    <LoadingModal v-if="isLoading" />
     <SetCookieModal v-if="isSetCookieModalVisible" />
   </div>
 </template>
@@ -33,17 +33,12 @@ export default {
   },
   computed: {
     ...mapState({
-      requestsCount: state => state.traffic.requestsCount,
-      responsesCount: state => state.traffic.responsesCount,
-      hasValidToken: state => state.user.hasValidToken,
+      isLoading: state => state.traffic.isLoading,
+      user: state => state.user,
     }),
-    isLoadingModalVisible() {
-      const { requestsCount, responsesCount } = this;
-      return requestsCount !== responsesCount;
-    },
     isSetCookieModalVisible() {
-      const { hasValidToken } = this;
-      return !hasValidToken;
+      const { isUnauthorized } = this.user;
+      return isUnauthorized;
     },
   },
 };
@@ -60,8 +55,7 @@ export default {
   flex-direction: column;
 
   .app-header-flex {
-    flex: 0 0 60px;
-    border-bottom: 1px solid silver;
+    flex: 0 0 40px;
   }
 
   .app-body-flex {
@@ -70,8 +64,9 @@ export default {
     flex-direction: row;
 
     .app-sidenav-flex {
-      flex: 0 0 200px;
-      border-right: 1px solid silver;
+      flex: 0 0 250px;
+      overflow-y: auto;
+      background-color: #400E40;
     }
 
     .app-content-flex {

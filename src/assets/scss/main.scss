@@ -33,41 +33,31 @@ html {
 .table {
   &.verapi-table {
     margin-bottom: 0;
-    .verapi-table {
-      margin-top: 1rem;
+
+    thead {
+      th {
+        border: 0;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
     }
-    > tbody {
+    tbody {
       border: 0;
-      &:nth-child(even) {
-        > tr:first-child {
-          background-color: #f1f5f9;
+
+      tr {
+        td {
+          border: 0;
+          font-size: 0.875rem;
         }
-      }
-      &:nth-child(odd) {
-        > tr:first-child {
-          background-color: #fff;
+
+        &.odd {
+          & > td {
+            background-color: #f8fafd;
+          }
         }
-      }
-      // > tr:first-child:hover {
-      //     background-color: lighten(#007BFF, 45%);
-      // }
-      // > tr.is-deleted:first-child:hover {
-      //     background-color: lighten(red, 40%);
-      // }
-      > tr {
-        border-left: 1px solid #dee2e6;
-        border-right: 1px solid #dee2e6;
-        // > td {
-          // border: 0;
-          // font-size: 0.85rem;
-        // }
       }
     }
-    // td, th {
-    //   word-break: break-word;
-    // }
     th {
-      // white-space: nowrap;
       border: 0;
       font-size: 0.85rem;
       font-weight: 500;
@@ -117,4 +107,38 @@ dd:empty {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+pre {
+  margin-bottom: 0;
+}
+
+.silver-bg {
+  background-color: #eeeeee;
+}
+
+.table-placeholder-item {
+  width: 100%;
+  height: 20px;
+  border: 1px solid #f8f8f8;
+  border-radius: 1rem;
+  background-image: 
+    repeating-linear-gradient(
+      -45deg,
+      #f8f8f8,
+      #f8f8f8 11px,
+      #eee 10px,
+      #eee 20px /* determines size */
+    );
+  background-size: 28px 28px;
+  animation: move .5s linear infinite;
+}
+
+@keyframes move {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 28px 0;
+  }
 }

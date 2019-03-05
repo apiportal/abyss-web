@@ -9,9 +9,9 @@ const state = {
 const getters = {};
 
 const actions = {
-  getPermissions: ({ commit }) => {
+  getPermissions: ({ commit }, { refresh = false}) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
     api.getPermissions().then((response) => {
@@ -23,6 +23,7 @@ const actions = {
   putPermissions: ({ commit }, permission) => {
     return api.putPermissions(permission).then((response) => {
       commit('updatePermissions', response.data);
+      return response;
     });
   },
   deletePermissions: ({ commit }, permission) => {

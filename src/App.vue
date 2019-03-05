@@ -26,8 +26,7 @@ export default {
       return response;
     }, (error) => {
       // error
-      // console.log(error.response.status === 401);
-      this.$store.commit('user/setTokenStatus', (error.response.status !== 401));
+      this.$store.commit('user/setUserUnauthorized', (error.response.status === 401));
       this.$store.commit('traffic/increaseResponses');
     });
 
@@ -38,6 +37,8 @@ export default {
     }).map(cookie => cookie.split('=')[1]);
     if (userUuid.length > 0) {
       this.$store.commit('user/setUuid', userUuid[0]);
+    } else {
+      this.$store.commit('user/setUserUnauthorized', true);
     }
   },
   computed: {
@@ -47,14 +48,14 @@ export default {
   },
   methods: {
     checkUser() {
-      this.$store.dispatch('user/getUser');
+      this.$store.dispatch('user/getUser', {});
     },
   },
   mounted() {
     const { user } = this;
 
     if (user.uuid) {
-      this.checkUser(user.uuid);
+      this.checkUser();
     }
   },
 };

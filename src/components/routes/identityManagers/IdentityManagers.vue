@@ -1,13 +1,23 @@
 <template>
   <div class="identity-managers-container">
-    <div class="identity-managers-header">
+    <div class="identity-managers-header silver-bg">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -69,8 +79,12 @@
             </th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading && tableRows.length === 0"
+          :cols="5"
+        />
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
@@ -93,37 +107,39 @@
           <tr slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
-                <p>Name: {{ item.directoryname }}</p>
-                <p>Description: {{ item.description }}</p>
-                <p>Active: {{ item.isactive }}</p>
-                <p>Template: {{ item.istemplate }}</p>
-                <p>Deleted: {{ item.isdeleted }}</p>
-                <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                <p>Directory Type: {{ item.directorytypename }}</p>
-                <p>Organization: {{ item.organizationname }}</p>
-                <p>Created: {{ item.created }}</p>
-                <p>Updated: {{ item.updated }}</p>
-                <div>
-                  <b-button
-                    :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
-                    size="sm"
-                    variant="secondary"
-                    v-b-tooltip.hover
-                    title="Edit"
-                  >
-                    <Icon icon="edit" />
-                    <span>Edit</span>
-                  </b-button>
-                  <b-button
-                    :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
-                    size="sm"
-                    variant="danger"
-                    v-b-tooltip.hover
-                    title="Delete"
-                  >
-                    <Icon icon="trash-alt" />
-                    <span>Delete</span>
-                  </b-button>
+                <b-navbar toggleable="lg" type="dark" variant="secondary">
+                  <b-navbar-brand>{{ item.directoryname }}</b-navbar-brand>
+
+                  <b-navbar-toggle target="nav_collapse" />
+
+                  <b-collapse is-nav id="nav_collapse">
+                    <!-- Right aligned nav items -->
+                    <b-navbar-nav class="ml-auto">
+
+                      <b-nav-item-dropdown right>
+                        <!-- Using button-content slot -->
+                        <template slot="button-content">
+                          <Icon icon="cog" />
+                          <em>Operations</em>
+                        </template>
+                        <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                        <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                      </b-nav-item-dropdown>
+                      
+                    </b-navbar-nav>
+                  </b-collapse>
+                </b-navbar>
+                <div style="margin: 2rem;">
+                  <p>Name: {{ item.directoryname }}</p>
+                  <p>Description: {{ item.description }}</p>
+                  <p>Active: {{ item.isactive }}</p>
+                  <p>Template: {{ item.istemplate }}</p>
+                  <p>Deleted: {{ item.isdeleted }}</p>
+                  <p>Priority Order: {{ item.directorypriorityorder }}</p>
+                  <p>Directory Type: {{ item.directorytypename }}</p>
+                  <p>Organization: {{ item.organizationname }}</p>
+                  <p>Created: {{ item.created }}</p>
+                  <p>Updated: {{ item.updated }}</p>
                 </div>
               </div>
             </td>
@@ -132,12 +148,12 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="identity-managers-footer">
+    <div class="identity-managers-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="10"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -152,6 +168,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
@@ -160,9 +177,11 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
@@ -205,11 +224,21 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
-    this.$store.dispatch('organizations/getOrganizations');
+    this.$store.commit('currentPage/setRootPath', 'identity-managers');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {
     return {
@@ -219,6 +248,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -240,6 +270,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('subjectDirectories/getSubjectDirectories', {
+        refresh: true,
+      });
     },
   },
 };
@@ -269,7 +304,7 @@ export default {
 
   .identity-managers-content {
     flex: 1 0 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
   }
 }

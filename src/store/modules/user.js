@@ -3,7 +3,8 @@ import api from '@/api';
 
 const state = {
   uuid: null,
-  hasValidToken: true,
+  hasValidToken: false,
+  isUnauthorized: false,
   lastUpdatedAt: 0,
   props: {},
 };
@@ -31,6 +32,11 @@ const mutations = {
   },
   setUserProps: (state, userProps) => {
     state.props = userProps;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setUserUnauthorized: (state, val) => {
+    state.isUnauthorized = val;
+    state.lastUpdatedAt = (new Date()).getTime();
   },
 };
 

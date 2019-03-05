@@ -3,7 +3,14 @@ import Router from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
-import Api from '@/components/routes/myApis/api/Api';
+import Businesses from '@/components/routes/myApis/businesses/Businesses';
+import SharedByMe from '@/components/routes/myApis/sharedByMe/SharedByMe';
+import SharedWithMe from '@/components/routes/myApis/sharedWithMe/SharedWithMe';
+import MyProxyApis from '@/components/routes/myApis/myProxyApis/MyProxyApis';
+import MySubscriptions from '@/components/routes/myApis/mySubscriptions/MySubscriptions';
+// import Api from '@/components/routes/myApis/api/Api';
+import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
+import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -47,6 +54,29 @@ import AdministerPermissions from '@/components/routes/administerPermissions/Adm
 import AddAdministerPermission from '@/components/routes/administerPermissions/AddAdministerPermission';
 import EditAdministerPermission from '@/components/routes/administerPermissions/EditAdministerPermission';
 import DeleteAdministerPermission from '@/components/routes/administerPermissions/DeleteAdministerPermission';
+// My APPs Routes
+import MyApps from '@/components/routes/myApps/MyApps';
+import MyAppsLogs from '@/components/routes/myApps/MyAppsLogs';
+import EditMyApps from '@/components/routes/myApps/EditMyApps';
+import AddMyApps from '@/components/routes/myApps/AddMyApps';
+import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
+// My Licenses
+import MyLicenses from '@/components/routes/myLicenses/MyLicenses';
+import SubjectLicenses from '@/components/routes/myLicenses/subjectLicenses/SubjectLicenses';
+import MyLicensesLogs from '@/components/routes/myLicenses/MyLicensesLogs';
+import EditMyLicense from '@/components/routes/myLicenses/EditMyLicense';
+import AddMyLicense from '@/components/routes/myLicenses/AddMyLicense';
+import DeleteMyLicense from '@/components/routes/myLicenses/DeleteMyLicense';
+import LicensesAttachedToApis from '@/components/routes/myLicenses/licensesAttachedToApis/LicensesAttachedToApis';
+import MyLicensesUnderContracts from '@/components/routes/myLicenses/myLicensesUnderContracts/MyLicensesUnderContracts';
+// My Policies
+import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
+import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
+import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
+import EditMyPolicy from '@/components/routes/myPolicies/EditMyPolicy';
+import AddMyPolicy from '@/components/routes/myPolicies/AddMyPolicy';
+// Explore
+import Explore from '@/components/routes/explore/Explore';
 // Organizations Routes Components
 import Organizations from '@/components/routes/organizations/Organizations';
 import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
@@ -72,12 +102,82 @@ export default new Router({
           component: Dashboard,
         },
         {
+          path: 'explore',
+          component: Explore,
+        },
+        {
           path: 'my-apis',
           component: MyApis,
           children: [
             {
-              path: 'api/:id',
-              component: Api,
+              path: 'businesses/:page',
+              component: Businesses,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'shared-by-me/:page',
+              component: SharedByMe,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'shared-with-me/:page',
+              component: SharedWithMe,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'my-proxy-apis/:page',
+              component: MyProxyApis,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
+            },
+            {
+              path: 'my-subscriptions/:page',
+              component: MySubscriptions,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyApisLicense,
+                },
+              ],
             },
           ],
         },
@@ -220,6 +320,90 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAdministerPermission,
+            },
+          ],
+        },
+        {
+          path: 'my-apps',
+          component: MyApps,
+          children: [
+            {
+              path: 'my-apps/:page',
+              component: SubjectApps,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyAppsLogs,
+                },
+                {
+                  path: 'edit-app/:appId',
+                  component: EditMyApps,
+                },
+                {
+                  path: 'add-new',
+                  component: AddMyApps,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          path: 'my-licenses',
+          component: MyLicenses,
+          children: [
+            {
+              path: 'my-licenses/:page',
+              component: SubjectLicenses,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyLicensesLogs,
+                },
+                {
+                  path: 'edit-license/:licenseId',
+                  component: EditMyLicense,
+                },
+                {
+                  path: 'add-new',
+                  component: AddMyLicense,
+                },
+                {
+                  path: 'delete-license/:licenseId',
+                  component: DeleteMyLicense,
+                },
+              ],
+            },
+            {
+              path: 'attached-to-apis/:page',
+              component: LicensesAttachedToApis,
+            },
+            {
+              path: 'under-contracts/:page',
+              component: MyLicensesUnderContracts,
+            },
+          ],
+        },
+        {
+          path: 'my-policies',
+          component: MyPolicies,
+          children: [
+            {
+              path: 'my-policies/:page',
+              component: SubjectPolicies,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyPoliciesLogs,
+                },
+                {
+                  path: 'edit-policy/:policyId',
+                  component: EditMyPolicy,
+                },
+                {
+                  path: 'add-new',
+                  component: AddMyPolicy,
+                },
+              ],
             },
           ],
         },

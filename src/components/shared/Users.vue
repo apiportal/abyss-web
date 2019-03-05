@@ -191,9 +191,9 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('groups/getGroups');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('groups/getGroups', {});
   },
   methods: {
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {

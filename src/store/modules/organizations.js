@@ -10,9 +10,9 @@ const state = {
 const getters = {};
 
 const actions = {
-  getOrganizations: ({ commit }) => {
+  getOrganizations: ({ commit }, { refresh = false}) => {
     const { lastUpdatedAt } = state;
-    if (lastUpdatedAt > 0 ) {
+    if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
     api.getOrganizations().then((response) => {

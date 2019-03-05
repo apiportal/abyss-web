@@ -1,13 +1,23 @@
 <template>
   <div class="organizations-container">
-    <div class="organizations-header">
+    <div class="organizations-header silver-bg">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
           />
+        </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </div>
         <div class="col-md-2">
           <b-button
@@ -65,16 +75,6 @@
               />
             </th>
             <th>
-              Users
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="organizationsubjects"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
               Url
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -96,10 +96,13 @@
             </th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading && tableRows.length === 0"
+          :cols="6"
+        />
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === rootOrganization"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -115,9 +118,6 @@
               {{ item.organizationusers }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationsubjects }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.url }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -125,7 +125,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="7">
+            <td colspan="6">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -140,12 +140,12 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="organizations-footer">
+    <div class="organizations-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="10"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -161,6 +161,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
@@ -170,15 +171,16 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
-      subjectOrganizations: state => state.organizations.users,
     }),
     tableRows() {
-      const { organizations, users, subjectOrganizations } = this;
+      const { organizations, users } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -192,12 +194,6 @@ export default {
         const organizationUsers = users.filter(item => item.organizationid === organizationId);
         return organizationUsers;
       };
-      const getOrganizationSubjects = (organizationId) => {
-        const organizationSubjects = subjectOrganizations.filter(item =>
-            // !item.isdeleted &&
-            item.organizationrefid === organizationId);
-        return organizationSubjects;
-      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: organizations.map(item => ({
@@ -205,7 +201,6 @@ export default {
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid).length,
-          organizationsubjects: getOrganizationSubjects(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -228,14 +223,20 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('users/getUsers');
-    this.$store.dispatch('organizations/getSubjectOrganizations');
-  },
-  mounted() {
-    console.log('sss', this.computedMemberships());
+    this.$store.commit('currentPage/setRootPath', 'organizations');
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
   },
   data() {
     return {
@@ -246,24 +247,10 @@ export default {
       filterKey: '',
       rootOrganization: '3c65fafc-8f3a-4243-9c4e-2821aa32d293',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
-    computedMemberships() {
-      const { subjectOrganizations, organizations, users } = this;
-      return subjectOrganizations.map((item) => {
-        const subjectuser = users.find(user => user.uuid === item.subjectid);
-        const subjectorg = organizations.find(org => org.uuid === item.organizationrefid);
-        return {
-          org: subjectorg.name,
-          org1: item.organizationrefid,
-          org2: subjectorg.uuid,
-          user1: item.subjectid,
-          user2: subjectuser.uuid,
-          user: subjectuser.displayname,
-        };
-      });
-    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -282,6 +269,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('organizations/getOrganizations', {
+        refresh: true,
+      });
     },
   },
 };
@@ -311,7 +303,7 @@ export default {
 
   .organizations-content {
     flex: 1 0 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
   }
 }

@@ -1,14 +1,24 @@
 <template>
     <div class="administer-permissions-container">
-      <div class="administer-permissions-header">
+      <div class="administer-permissions-header silver-bg">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-9">
             <InputWithIcon
               :prepend="{ icon: 'filter' }"
               placeholder="Type to filter"
               :onKeyup="handleFilterKeyup"
             />
           </div>
+        <div class="col-md-1">
+          <b-button
+            v-b-tooltip.hover 
+            title="Refresh"
+            block
+            @click="refreshData"
+          >
+            <Icon icon="redo" />
+          </b-button>
+        </div>
           <div class="col-md-2">
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
@@ -79,6 +89,10 @@
               </th>
             </tr>
           </thead>
+        <TBodyLoading
+          v-if="isLoading && tableRows.length === 0"
+          :cols="6"
+        />
           <TbodyCollapsible
             v-for="(item, index) in paginatedRows" v-bind:key="index"
             :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
@@ -100,14 +114,11 @@
                 {{ item.organizationname }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
-                {{ item.createdupdateddeleted }}
-              </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
                 <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
               </td>
             </tr>
             <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-              <td colspan="7">
+              <td colspan="6">
                 <div class="collapsible-content">
                   <AdministerPermission
                     :permission="item"
@@ -116,18 +127,17 @@
                   />
                 </div>
               </td>
-              <td></td>
             </tr>
           </TbodyCollapsible>
         </table>
         <router-view></router-view>
       </div>
-      <div class="administer-permissions-footer" v-if="tableRows.length > 0">
+      <div class="administer-permissions-footer" v-if="tableRows.length > itemsPerPage">
         <b-pagination 
           size="md"
           :total-rows="tableRows.length"
           v-model="page" 
-          :per-page="10"
+          :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
         >
@@ -141,6 +151,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import AdministerPermission from '@/components/routes/administerPermissions/AdministerPermission';
 import Helpers from '@/helpers';
 
@@ -150,10 +161,12 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
     AdministerPermission,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       accessManagers: state => state.accessManagers.items,
       organizations: state => state.organizations.items,
       permissions: state => state.permissions.items,
@@ -257,15 +270,16 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('organizations/getOrganizations');
-    this.$store.dispatch('resources/getResources');
-    this.$store.dispatch('resourceTypes/getResourceTypes');
-    this.$store.dispatch('resourceActions/getResourceActions');
-    this.$store.dispatch('permissions/getPermissions');
-    this.$store.dispatch('accessManagers/getAccessManagers');
-    this.$store.dispatch('subjectTypes/getSubjectTypes');
-    this.$store.dispatch('users/getUsers');
-    this.$store.dispatch('groups/getGroups');
+    this.$store.commit('currentPage/setRootPath', 'administer-permissions');
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('resources/getResources', {});
+    this.$store.dispatch('resourceTypes/getResourceTypes', {});
+    this.$store.dispatch('resourceActions/getResourceActions', {});
+    this.$store.dispatch('permissions/getPermissions', {});
+    this.$store.dispatch('accessManagers/getAccessManagers', {});
+    this.$store.dispatch('subjectTypes/getSubjectTypes', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
   },
   data() {
     return {
@@ -275,7 +289,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
-      itemsPerPage: 10,
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -297,6 +311,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('permissions/getPermissions', {
+        refresh: true,
+      });
     },
   },
 };
@@ -326,7 +345,7 @@ export default {
 
   .administer-permissions-content {
     flex: 1 0 0;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1rem;
   }
 }

@@ -85,8 +85,8 @@ export default {
     return axios.post('/abyss/oapi/subjects/', user);
   },
   // subject search
-  getSubjectSearch(params) {
-    return axios.post('/subject*/_search', params, {
+  getSubjectSearch(params, type) {
+    return axios.post(`/${type}*/_search`, params, {
       withCredentials: false,
     });
   },
@@ -182,6 +182,16 @@ export default {
   getSubject(uuid) {
     return axios.get(`/abyss/oapi/subjects/${uuid}`);
   },
+  putApps(subject) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  postApps(app) {
+    return axios.post('/abyss/oapi/subjects/', app);
+  },
   // subject-memberships all
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
@@ -194,14 +204,83 @@ export default {
       isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
-  // apis
+  // my-apis
   getApis() {
-    return axios.get('/abyss/oapi/apis/');
+    return axios.get('/abyss/oapi/apis');
   },
-  getBusinessApis() {
-    return axios.get('/abyss/oapi/apis/businesses');
+  getApi(uuid) {
+    return axios.get(`/abyss/oapi/apis/${uuid}`);
+  },
+  getBusinessApis(uuid) {
+    // return axios.get('/abyss/oapi/apis/businesses');
+    return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
   },
   getProxyApis() {
     return axios.get('/abyss/oapi/apis/proxies');
+  },
+  getApiSubscriptions(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);
+  },
+  getApisSharedWithUser(uuid) {
+    return axios.get(`/abyss/oapi/apis/sharedwith/subject/${uuid}`);
+  },
+  getApisSharedByUser(uuid) {
+    return axios.get(`/abyss/oapi/apis/sharedby/subject/${uuid}`);
+  },
+  getApiStates() {
+    return axios.get('/abyss/oapi/api-states');
+  },
+  getApiVisibilityTypes() {
+    return axios.get('/abyss/oapi/api-visibility-types');
+  },
+  getProxies(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
+  },
+  getApiLicenses(uuid) {
+    return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
+  },
+  getPolicies() {
+    return axios.get('/abyss/oapi/policies');
+  },
+  postPolicies(policies) {
+    return axios.post('/abyss/oapi/policies', policies);
+  },
+  getPolicyTypes() {
+    return axios.get('/abyss/oapi/policy-types');
+  },
+  getSubjectApps(uuid) {
+    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+  },
+  getAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
+  },
+  getSubjectLicenses(uuid) {
+    return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
+  },
+  // licenses
+  getLicenses() {
+    return axios.get('/abyss/oapi/licenses/');
+  },
+  putLicenses(license) {
+    const { uuid, created, updated, deleted, isdeleted, openApiLicense, ...rest } = license;
+    return axios.put(`/abyss/oapi/licenses/${uuid}`, rest);
+  },
+  deleteLicenses(uuid) {
+    return axios.delete(`/abyss/oapi/licenses/${uuid}`);
+  },
+  postLicenses(license) {
+    return axios.post('/abyss/oapi/licenses/', license);
+  },
+  getContractStates() {
+    return axios.get('/abyss/oapi/contract-states');
+  },
+  getResourceAccessTokens(uuid) {
+    return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
+  },
+  getLicenseContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
+  },
+  getLicenseApis(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
   },
 };

@@ -25,7 +25,20 @@
             <th>Time</th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading"
+          :cols="4"
+          :rows="10"
+        />
+        <tbody v-else-if="!isLoading && totalCount === 0">
+          <tr>
+            <td colspan="4">
+              <p class="text-center">No logs for this subject</p>
+            </td>
+          </tr>
+        </tbody>
         <TbodyCollapsible
+          v-else
           v-for="(item, index) in logs" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item._id) > -1"
         >
@@ -40,7 +53,7 @@
             {{ item._source['@username'] }}
           </td>
           <td @click="() => handleCollapseTableRows(item._id)">
-            {{ item._source['created'] }}
+            {{ item._source['created'] | moment("DD.MM.YYYY HH:mm") }}
           </td>
         </tr>
         <tr slot="footer" class="footer">
@@ -53,7 +66,7 @@
         </TbodyCollapsible>
       </table>
     </template>
-    <template slot="footer">
+    <template slot="footer" v-if="totalCount > 0">
       <div class="w-100" v-if="logs.length > 0">
         <b-pagination 
           size="md"
@@ -70,15 +83,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 
 export default {
   components: {
     Modal,
     Icon,
     TbodyCollapsible,
+    TBodyLoading,
   },
   props: {
     hideHeader: {
@@ -134,6 +150,11 @@ export default {
       required: false,
       default() { return 'Logs'; },
     },
+  },
+  computed: {
+    ...mapState({
+      isLoading: state => state.traffic.isLoading,
+    }),
   },
   data() {
     return {

@@ -27,6 +27,7 @@ export default {
     this.$store.commit('currentPage/setRootPath', 'my-policies');
     this.$store.dispatch('policies/getPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
 };
 </script>

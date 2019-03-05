@@ -12,7 +12,7 @@
       <h5 class="modal-title">Legal Agreement</h5>
     </template>
     <template>
-      <p>{{ item.licensedocument.legal.documentText }}</p>
+      <p v-html="withBrTags" style="text-align: justify"></p>
     </template>
     <template slot="footer">
       <b-button 
@@ -33,6 +33,12 @@ import Modal from '@/components/shared/modals/Modal';
 export default {
   components: {
     Modal,
+  },
+  computed: {
+    withBrTags() {
+      const doc = this.item.licensedocument.legal.documentText;
+      return doc.replace(/(\\r)*\\n/g, '<br>');
+    },
   },
   props: {
     hideHeader: {

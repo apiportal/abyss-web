@@ -75,6 +75,8 @@ import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/Subj
 import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
 import EditMyPolicy from '@/components/routes/myPolicies/EditMyPolicy';
 import AddMyPolicy from '@/components/routes/myPolicies/AddMyPolicy';
+import DeleteMyPolicy from '@/components/routes/myPolicies/DeleteMyPolicy';
+
 // Explore
 import Explore from '@/components/routes/explore/Explore';
 // Organizations Routes Components
@@ -402,6 +404,10 @@ export default new Router({
                 {
                   path: 'add-new',
                   component: AddMyPolicy,
+                },
+                {
+                  path: 'delete-policy/:policyId',
+                  component: DeleteMyPolicy,
                 },
               ],
             },

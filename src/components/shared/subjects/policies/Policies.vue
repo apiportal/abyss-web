@@ -3,12 +3,10 @@
     <table class="table verapi-table">
       <thead>
         <tr>
+          <th>Status</th>
           <th>Policy Name</th>
           <th>Policy Type</th>
-          <th>Business Request</th>
-          <th>Business Response</th>
-          <th>Proxy Request</th>
-          <th>Proxy Response</th>
+          <th>Policy SubType</th>
         </tr>
       </thead>
       <TBodyLoading
@@ -22,34 +20,16 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
           <td @click="() => handleCollapseTableRows(policyItem.uuid)">
+            <Icon :icon="policyItem.isactive ? 'check-circle' : 'times-circle'" :class="policyItem.isactive ? 'text-success' : 'text-danger'" />
+          </td>
+          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
             {{ policyItem.name }}
           </td>
           <td @click="() => handleCollapseTableRows(policyItem.uuid)">
             {{ policyItem.typename }}
           </td>
           <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            <Icon 
-              :icon="policyItem.policyinstance.openApiLifeCycle.onBusinessRequest ? 'check-circle' : 'times-circle'" 
-              :class="policyItem.policyinstance.openApiLifeCycle.onBusinessRequest ? 'text-success' : 'text-danger'"
-            />
-          </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            <Icon 
-              :icon="policyItem.policyinstance.openApiLifeCycle.onBusinessResponse ? 'check-circle' : 'times-circle'" 
-              :class="policyItem.policyinstance.openApiLifeCycle.onBusinessResponse ? 'text-success' : 'text-danger'"
-            />
-          </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            <Icon 
-              :icon="policyItem.policyinstance.openApiLifeCycle.onProxyRequest ? 'check-circle' : 'times-circle'" 
-              :class="policyItem.policyinstance.openApiLifeCycle.onProxyRequest ? 'text-success' : 'text-danger'"
-            />
-          </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            <Icon 
-              :icon="policyItem.policyinstance.openApiLifeCycle.onProxyResponse ? 'check-circle' : 'times-circle'" 
-              :class="policyItem.policyinstance.openApiLifeCycle.onProxyResponse ? 'text-success' : 'text-danger'"
-            />
+            {{ policyItem.policyinstance.info.subType }}
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(policyItem.uuid) > -1">
@@ -57,6 +37,7 @@
             <div class="collapsible-content">
               <Policy
                 :item="policyItem"
+                :organizations="organizations"
                 :routePath="routePath"
               ></Policy>
             </div>
@@ -90,6 +71,7 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      organizations: state => state.organizations.items,
     }),
   },
   components: {

@@ -36,7 +36,7 @@
           <p><strong>Name:</strong> {{ item.name }}</p>
           <p><strong>Id:</strong> {{ item.uuid }}</p>
           <p><strong>Organization:</strong> {{ getOrganizationName(item.organizationid) }}</p>
-          <p><strong>Description:</strong> {{ item.licensedocument.sla.description }}</p>
+          <p><strong>Description:</strong> {{ item.licensedocument.info.description }}</p>
           </div>
           <div>
           <p><strong>Performance:</strong> {{ item.licensedocument.sla.performance }}</p>

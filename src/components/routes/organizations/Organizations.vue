@@ -65,6 +65,16 @@
               />
             </th>
             <th>
+              Users
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="organizationsubjects"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
               Url
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -105,6 +115,9 @@
               {{ item.organizationusers }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationsubjects }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.url }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -112,7 +125,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="6">
+            <td colspan="7">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -162,9 +175,10 @@ export default {
     ...mapState({
       organizations: state => state.organizations.items,
       users: state => state.users.items,
+      subjectOrganizations: state => state.organizations.users,
     }),
     tableRows() {
-      const { organizations, users } = this;
+      const { organizations, users, subjectOrganizations } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -178,6 +192,12 @@ export default {
         const organizationUsers = users.filter(item => item.organizationid === organizationId);
         return organizationUsers;
       };
+      const getOrganizationSubjects = (organizationId) => {
+        const organizationSubjects = subjectOrganizations.filter(item =>
+            // !item.isdeleted &&
+            item.organizationrefid === organizationId);
+        return organizationSubjects;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: organizations.map(item => ({
@@ -185,6 +205,7 @@ export default {
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid).length,
+          organizationsubjects: getOrganizationSubjects(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -211,6 +232,10 @@ export default {
   created() {
     this.$store.dispatch('organizations/getOrganizations');
     this.$store.dispatch('users/getUsers');
+    this.$store.dispatch('organizations/getSubjectOrganizations');
+  },
+  mounted() {
+    console.log('sss', this.computedMemberships());
   },
   data() {
     return {
@@ -224,6 +249,21 @@ export default {
     };
   },
   methods: {
+    computedMemberships() {
+      const { subjectOrganizations, organizations, users } = this;
+      return subjectOrganizations.map((item) => {
+        const subjectuser = users.find(user => user.uuid === item.subjectid);
+        const subjectorg = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          org: subjectorg.name,
+          org1: item.organizationrefid,
+          org2: subjectorg.uuid,
+          user1: item.subjectid,
+          user2: subjectuser.uuid,
+          user: subjectuser.displayname,
+        };
+      });
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

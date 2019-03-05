@@ -68,6 +68,7 @@
         Users <Icon icon="users" />
       </b-button>
     </div>
+    {{organizationSubjects}}
     <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
         :users="organizationUsers"
@@ -221,33 +222,54 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: state => state.groups.items,
+      // groups: state => state.groups.items,
       users: state => state.users.items,
       apps: state => state.apps.items,
       apis: state => state.apis.items,
+      subjectOrganizations: state => state.organizations.users,
     }),
-    organizationUsers() {
+    organizationUsers1() {
       const { users, organization } = this;
       return users.filter(item => item.organizationid === organization.uuid);
     },
-    organizationGroups() {
-      const { groups, organization } = this;
-      return groups.filter(item => item.organizationid === organization.uuid);
-    },
+    // organizationGroups() {
+    //   const { groups, organization } = this;
+    //   return groups.filter(item => item.organizationid === organization.uuid);
+    // },
     organizationApps() {
-      const { apps, organization } = this;
-      return apps.filter(item => item.organizationid === organization.uuid);
+      // const { apps, organization } = this;
+      // return apps.filter(item => item.organizationid === organization.uuid);
+      return 0;
     },
     organizationApis() {
-      const { apis, organization } = this;
-      return apis.filter(item => item.organizationid === organization.uuid);
+      // const { apis, organization } = this;
+      // return apis.filter(item => item.organizationid === organization.uuid);
+      return 0;
+    },
+    organizationSubjects() {
+      const { organization, subjectOrganizations } = this;
+      const organizationSubjects = subjectOrganizations.filter(item =>
+          !item.isdeleted &&
+          item.organizationrefid === organization.uuid);
+      return organizationSubjects;
+    },
+    organizationUsers() {
+      const { users, organizationSubjects } = this;
+      console.log('organizationSubjects: ', organizationSubjects);
+      const organizationUsers = users.filter(user =>
+        organizationSubjects.some(f =>
+          f.subjectid === user.uuid,
+        ),
+      );
+      return organizationUsers;
     },
   },
   mounted() {
     this.$store.dispatch('users/getUsers');
-    this.$store.dispatch('groups/getGroups');
-    this.$store.dispatch('apps/getApps');
-    this.$store.dispatch('apis/getApis');
+    // this.$store.dispatch('groups/getGroups');
+    // this.$store.dispatch('apps/getApps');
+    // this.$store.dispatch('apis/getApis');
+    this.$store.dispatch('organizations/getSubjectOrganizations');
   },
   data() {
     return {

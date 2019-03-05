@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  users: [],
   lastUpdatedAt: 0,
 };
 
@@ -17,6 +18,17 @@ const actions = {
     api.getOrganizations().then((response) => {
       if (response && response.data) {
         commit('setOrganizations', response.data);
+      }
+    });
+  },
+  getSubjectOrganizations: ({ commit }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 ) {
+      return false;
+    }
+    api.getSubjectOrganizations().then((response) => {
+      if (response && response.data) {
+        commit('setSubjectOrganizations', response.data);
       }
     });
   },
@@ -44,6 +56,10 @@ const actions = {
 };
 
 const mutations = {
+  setSubjectOrganizations: (state, subject) => {
+    state.users = subject;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
   setOrganizations: (state, organizations) => {
     state.items = organizations;
     state.lastUpdatedAt = (new Date()).getTime();

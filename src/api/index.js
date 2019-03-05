@@ -48,6 +48,15 @@ export default {
   getOrganizations() {
     return axios.get('/abyss/oapi/organizations');
   },
+  getSubjectOrganizations() {
+    return axios.get('/abyss/oapi/subject-organizations');
+  },
+  getOrganizationsOfUser(uuid) {
+    return axios.get(`/abyss/oapi/subject-organizations/subject/${uuid}`);
+  },
+  getUsersOfOrganizations(uuid) {
+    return axios.get(`/abyss/oapi/subject-organizations/organization/${uuid}`);
+  },
   putOrganizations(organization) {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = organization;
     return axios.put(`/abyss/oapi/organizations/${uuid}`, rest);

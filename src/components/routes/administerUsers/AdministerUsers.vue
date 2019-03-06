@@ -146,6 +146,7 @@
                 <AdministerUser
                   :user="item"
                   :groups="groups"
+                  :organizations="organizations"
                   :page="page"
                 />
               </div>

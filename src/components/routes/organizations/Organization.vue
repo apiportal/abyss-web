@@ -37,6 +37,18 @@
           <dd>{{ organization.name }}</dd>
           <dt>Parent Organization:</dt>
           <dd>{{ organization.organizationname }}</dd>
+          <dt></dt>
+          <dd>
+            <b-button
+              size="sm"
+              variant="info"
+              v-b-tooltip.hover
+              title="Users"
+              @click="listOrganizationUsers"
+            >
+              Users <Icon icon="users" />
+            </b-button>
+          </dd>
         </dl>
         <dl class="col">
           <dt>Url:</dt>
@@ -64,19 +76,7 @@
         </dl>
       </div>
 
-      <div>
-        <b-button
-          size="sm"
-          variant="info"
-          v-b-tooltip.hover
-          title="Users"
-          @click="listOrganizationUsers"
-        >
-          Users <Icon icon="users" />
-        </b-button>
-      </div>
-
-      <div v-if="isShowOrganizationUsers && organizationUsers.length">
+      <div class="mb-3" v-if="isShowOrganizationUsers && organizationUsers.length">
         <Users
           :users="organizationUsers"
           path="organizations"
@@ -95,16 +95,6 @@
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 sortByKey="name"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Parent Organization
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="organizationname"
                 sortByKeyType="string"
               />
             </th>
@@ -128,54 +118,26 @@
                 sortByKeyType="number"
               />
             </th>
-            <th>
-              Url
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="url"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Description
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="description"
-                sortByKeyType="string"
-              />
-            </th>
           </tr>
         </thead>
         <TbodyCollapsible
           v-for="(item, index) in organizations" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+        v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationusers }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.url }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.description }}
+              --{{ item.organizationusers }}
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="6">
+            <td colspan="3">
               <div class="collapsible-content">
                 <Organization
                   :organizations="organizations"
@@ -193,6 +155,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
@@ -230,33 +193,54 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: state => state.groups.items,
+      // groups: state => state.groups.items,
       users: state => state.users.items,
       apps: state => state.apps.items,
       apis: state => state.apis.items,
+      subjectOrganizations: state => state.organizations.users,
     }),
-    organizationUsers() {
+    organizationUsers1() {
       const { users, organization } = this;
       return users.filter(item => item.organizationid === organization.uuid);
     },
-    organizationGroups() {
-      const { groups, organization } = this;
-      return groups.filter(item => item.organizationid === organization.uuid);
-    },
+    // organizationGroups() {
+    //   const { groups, organization } = this;
+    //   return groups.filter(item => item.organizationid === organization.uuid);
+    // },
     organizationApps() {
-      const { apps, organization } = this;
-      return apps.filter(item => item.organizationid === organization.uuid);
+      // const { apps, organization } = this;
+      // return apps.filter(item => item.organizationid === organization.uuid);
+      return 0;
     },
     organizationApis() {
-      const { apis, organization } = this;
-      return apis.filter(item => item.organizationid === organization.uuid);
+      // const { apis, organization } = this;
+      // return apis.filter(item => item.organizationid === organization.uuid);
+      return 0;
+    },
+    organizationSubjects() {
+      const { organization, subjectOrganizations } = this;
+      const organizationSubjects = subjectOrganizations.filter(item =>
+          // !item.isdeleted &&
+          item.organizationrefid === organization.uuid);
+      return organizationSubjects;
+    },
+    organizationUsers() {
+      const { users, organizationSubjects } = this;
+      const organizationUsers = users.filter(user =>
+        organizationSubjects.some(f =>
+          f.subjectid === user.uuid,
+        ),
+      );
+      return organizationUsers;
     },
   },
-  mounted() {
+  created() {
     this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('groups/getGroups', {});
-    this.$store.dispatch('apps/getApps', {});
-    this.$store.dispatch('apis/getApis', {});
+    // this.$store.dispatch('groups/getGroups', {});
+    // this.$store.dispatch('apps/getApps', {});
+    // this.$store.dispatch('apis/getApis', {});
+    // this.getUsersOfOrganizations();
+    this.$store.dispatch('organizations/getSubjectOrganizations', {});
   },
   data() {
     return {
@@ -264,10 +248,18 @@ export default {
       sortByKeyType: 'string',
       sortDirection: 'desc',
       collapsedRows: [],
+      // organizationSubjects: [],
       isShowOrganizationUsers: false,
     };
   },
   methods: {
+    getUsersOfOrganizations() {
+      api.getUsersOfOrganizations(this.organization.uuid).then((response) => {
+        if (!this.organizationSubjects.length) {
+          this.organizationSubjects = response.data;
+        }
+      });
+    },
     listOrganizationUsers() {
       this.isShowOrganizationUsers = !this.isShowOrganizationUsers;
     },

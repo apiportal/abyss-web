@@ -45,16 +45,6 @@
               />
             </th>
             <th>
-              Parent Organization
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="organizationname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
               Sub Organizations
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -74,42 +64,20 @@
                 sortByKeyType="number"
               />
             </th>
-            <th>
-              Url
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="url"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Description
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="description"
-                sortByKeyType="string"
-              />
-            </th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="6"
+          :cols="3"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          v-if="item.organizationid === rootOrganization"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
@@ -117,15 +85,9 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.url }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.description }}
-            </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="6">
+            <td colspan="3">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -178,9 +140,10 @@ export default {
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
+      subjectOrganizations: state => state.organizations.users,
     }),
     tableRows() {
-      const { organizations, users } = this;
+      const { organizations, subjectOrganizations } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -191,8 +154,10 @@ export default {
         return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
-        const organizationUsers = users.filter(item => item.organizationid === organizationId);
-        return organizationUsers;
+        const organizationSubjects = subjectOrganizations.filter(item =>
+            // !item.isdeleted &&
+            item.organizationrefid === organizationId);
+        return organizationSubjects;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
@@ -237,6 +202,7 @@ export default {
     this.$store.commit('currentPage/setRootPath', 'organizations');
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('organizations/getSubjectOrganizations', {});
   },
   data() {
     return {
@@ -251,6 +217,21 @@ export default {
     };
   },
   methods: {
+    computedMemberships() {
+      const { subjectOrganizations, organizations, users } = this;
+      return subjectOrganizations.map((item) => {
+        const subjectuser = users.find(user => user.uuid === item.subjectid);
+        const subjectorg = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          org: subjectorg.name,
+          org1: item.organizationrefid,
+          org2: subjectorg.uuid,
+          user1: item.subjectid,
+          user2: subjectuser.uuid,
+          user: subjectuser.displayname,
+        };
+      });
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

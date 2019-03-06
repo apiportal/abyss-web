@@ -26,26 +26,30 @@
           <span class="route-icon"><Icon icon="globe" /></span> Explore
         </b-link>
 
-        <p style="color: #C5B7C6; margin-left: 1rem; font-size: .75rem; margin-top: 1rem;">Admin</p>
+        <p style="color: #C5B7C6; margin-left: 1rem; font-size: .75rem; margin-top: 1rem; font-weight: bold">ADMIN</p>
 
+
+        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="user" /></span> Users
+        </b-link> 
+
+        <b-link to="/app/administer-groups/1" :class="`${currentPage.rootPath === 'administer-groups' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="users" /></span> Groups
+        </b-link> 
+        
         <b-link to="/app/organizations/1" :class="`${currentPage.rootPath === 'organizations' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="sitemap" /></span> Organizations
         </b-link>
+        <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`">
+          <span class="route-icon"><Icon icon="user-cog" /></span> Permissions
+        </b-link> 
 
         <b-link to="/app/identity-managers/1" :class="`${currentPage.rootPath === 'identity-managers' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="users" /></span> Identity Managers
         </b-link> 
 
         <b-link to="/app/identity-manager-types/1" :class="`${currentPage.rootPath === 'identity-manager-types' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="id-card" /></span> Identity Manager Types
-        </b-link> 
-
-        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="user" /></span> Administer Users
-        </b-link> 
-
-        <b-link to="/app/administer-groups/1" :class="`${currentPage.rootPath === 'administer-groups' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="users" /></span> Administer Groups
+          <span class="route-icon" style="visibility: hidden"><Icon icon="id-card" /></span> Identity Manager Types
         </b-link> 
 
         <b-link to="/app/access-managers/1" :class="`${currentPage.rootPath === 'access-managers' ? 'selected' : ''}`">
@@ -53,12 +57,9 @@
         </b-link> 
 
         <b-link to="/app/access-manager-types/1" :class="`${currentPage.rootPath === 'access-manager-types' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="id-card" /></span> Access Manager Types
+          <span class="route-icon" style="visibility: hidden"><Icon icon="id-card" /></span> Access Manager Types
         </b-link> 
 
-        <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="user-cog" /></span> Administer Permissions
-        </b-link> 
       </li>
     </ul>
   </div>

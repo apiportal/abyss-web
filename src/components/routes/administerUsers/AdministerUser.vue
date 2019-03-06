@@ -33,9 +33,12 @@
     </b-navbar>
     <div style="margin: 2rem;">
       <div class="row">
-        <dl class="px-3">
+        <dl class="col px-3">
           <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
+          <dt>uuid:</dt>
+          <dd><code>{{ user.uuid }}</code></dd>
         </dl>
+
         <dl class="col">
           <dt>First Name:</dt>
           <dd>{{ user.firstname }}</dd>
@@ -46,23 +49,21 @@
           <dt>Display Name:</dt>
           <dd>{{ user.displayname }}</dd>
         </dl>
+
         <dl class="col">
-          <dt>Organization:</dt>
+          <dt>Main Organization:</dt>
           <dd>{{ user.organizationname }}</dd>
-          <dt>Directory:</dt>
-          <dd>{{ user.directoryname }}</dd>
-          <dt>Description:</dt>
-          <dd>{{ user.description }}</dd>
-          <dt>Groups:</dt>
-          <dd v-if="computedMemberships.length > 0">
-            Groups: 
+          <dt>Organizations:</dt>
+          <dd>
             <span 
-              v-for="(membership, index) in computedMemberships"
+              v-for="(organization, index) in computedUserOrganizations"
               v-bind:key="index"
             >
-              {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
+              {{ organization.subjectorganizationname }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
             </span>
           </dd>
+          <dt>Directory:</dt>
+          <dd>{{ user.directoryname }}</dd>
         </dl>
 
         <dl class="col">
@@ -70,8 +71,18 @@
           <dd>{{ user.email }}</dd>
           <dt>Secondary Email:</dt>
           <dd>{{ user.secondaryemail }}</dd>
-          <dt>uuid:</dt>
-          <dd><code>{{ user.uuid }}</code></dd>
+          <dt>Groups:</dt>
+          <dd>
+            <span 
+              v-for="(membership, index) in computedMemberships"
+              v-bind:key="index"
+            >
+              {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
+            </span>
+          </dd>
+          <dt>Description:</dt>
+          <dd>{{ user.description }}</dd>
+          
         </dl>
         
         <dl class="col-1">
@@ -120,6 +131,11 @@ export default {
       required: false,
       default() { return []; },
     },
+    organizations: {
+      Type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   computed: {
     computedMemberships() {
@@ -132,14 +148,28 @@ export default {
         };
       });
     },
+    computedUserOrganizations() {
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const subjectorganization = organizations.find(
+          org => org.uuid === item.organizationrefid);
+        return {
+          organizationrefid: item.organizationrefid,
+          subjectorganizationname: subjectorganization ?
+          subjectorganization.name : item.organizationrefid,
+        };
+      });
+    },
   },
   data() {
     return {
       memberships: [],
+      userOrganizations: [],
     };
   },
   mounted() {
     this.getSubjectMemberships();
+    this.getOrganizationsOfUser();
   },
   methods: {
     getSubjectMemberships() {
@@ -148,6 +178,13 @@ export default {
           this.memberships = response.data;
         }
         this.isMembershipsLoaded = true;
+      });
+    },
+    getOrganizationsOfUser() {
+      api.getOrganizationsOfUser(this.user.uuid).then((response) => {
+        if (response && response.data) {
+          this.userOrganizations = response.data;
+        }
       });
     },
   },

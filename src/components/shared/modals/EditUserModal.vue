@@ -21,9 +21,17 @@
         <div style="padding: 1rem;">
           <div class="form-group">
             <label>Display Name:</label>
-            <div class="h5">{{user.displayname}}</div>
+            <div class="font-weight-bold">{{user.displayname}}</div>
           </div>
-          <b-form-group 
+          <div class="form-group">
+            <label>Main Organization:</label>
+            <div class="font-weight-bold">{{mainOrganization}}</div>
+          </div>
+          <div class="form-group">
+            <label>Directory:</label>
+            <div class="font-weight-bold">{{userDirectory}}</div>
+          </div>
+          <!-- <b-form-group 
             id="userOrganizationIdGroup"
             label="Organization*:"
             label-for="userOrganizationIdInput"
@@ -45,8 +53,8 @@
               ]"
               :state="organizationIdState"
             />
-          </b-form-group>
-          <b-form-group 
+          </b-form-group> -->
+          <!-- <b-form-group 
             id="userDirectoryIdGroup"
             label="Directory*:"
             label-for="userDirectoryIdInput"
@@ -68,8 +76,20 @@
               ]"
               :state="subjectDirectoryIdState"
             />
-          </b-form-group>
-          <div>
+          </b-form-group> -->
+          <div class="form-group">
+            <Chips
+              :chips="computedUserOrganizations"
+              :autocompleteOptions="this.organizations.map((item) => ({
+                text: item.name,
+                value: item.uuid,
+              }))"
+              :onDeleteChip="handleDeleteMembership"
+              :onAddChip="handleAddMembership"
+              label="User Organizations"
+            />
+          </div>
+          <div class="form-group">
             <Chips
               :chips="computedMemberships"
               :autocompleteOptions="this.groups.map((item) => ({
@@ -81,7 +101,6 @@
               label="User Groups"
             />
           </div>
-
         </div>
         <footer class="modal-footer">
           <b-button
@@ -182,6 +201,11 @@ export default {
       required: false,
       default() { return []; },
     },
+    userOrganizations: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     title: {
       type: String,
       required: false,
@@ -192,28 +216,40 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
-    organizationIdState() {
+    mainOrganization() {
       const { organizationid } = this.userEditable;
-      return organizationid !== null;
+      const { organizations } = this;
+      const organization = organizations.find(item => item.uuid === organizationid);
+      return organization ? organization.name : organizationid;
     },
-    organizationIdInvalidFeedback() {
-      const { organizationid } = this.userEditable;
-      if (organizationid === null) {
-        return 'Please select organization';
-      }
-      return '';
-    },
-    subjectDirectoryIdState() {
+    userDirectory() {
       const { subjectdirectoryid } = this.userEditable;
-      return subjectdirectoryid !== null;
+      const { subjectDirectories } = this;
+      const subjectdirectory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
+      return subjectdirectory ? subjectdirectory.directoryname : subjectdirectoryid;
     },
-    subjectDirectoryIdInvalidFeedback() {
-      const { subjectdirectoryid } = this.userEditable;
-      if (subjectdirectoryid === null) {
-        return 'Please select directory';
-      }
-      return '';
-    },
+    // organizationIdState() {
+    //   const { organizationid } = this.userEditable;
+    //   return organizationid !== null;
+    // },
+    // organizationIdInvalidFeedback() {
+    //   const { organizationid } = this.userEditable;
+    //   if (organizationid === null) {
+    //     return 'Please select organization';
+    //   }
+    //   return '';
+    // },
+    // subjectDirectoryIdState() {
+    //   const { subjectdirectoryid } = this.userEditable;
+    //   return subjectdirectoryid !== null;
+    // },
+    // subjectDirectoryIdInvalidFeedback() {
+    //   const { subjectdirectoryid } = this.userEditable;
+    //   if (subjectdirectoryid === null) {
+    //     return 'Please select directory';
+    //   }
+    //   return '';
+    // },
     computedMemberships() {
       const { groupsEditable } = this;
       return groupsEditable
@@ -224,9 +260,19 @@ export default {
         text: group.subjectname,
       }));
     },
+    computedUserOrganizations() {
+      const { organizationsEditable } = this;
+      return organizationsEditable
+      .filter(organization => organization.isUserOrganization)
+      .sort((a, b) => b.sortTime - a.sortTime)
+      .map(organization => ({
+        value: organization.uuid,
+        text: organization.name,
+      }));
+    },
   },
   data() {
-    const { user, groups, memberships } = this;
+    const { user, groups, memberships, organizations, userOrganizations } = this;
     return {
       userEditable: JSON.parse(JSON.stringify(user)),
       groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
@@ -239,62 +285,97 @@ export default {
           sortTime,
         };
       }),
+      organizationsEditable: [...JSON.parse(JSON.stringify(organizations))].map((organization) => {
+        const isUserOrganization =
+          Boolean(userOrganizations.find(userOrg =>
+            userOrg.organizationrefid === organization.uuid));
+        const sortTime = (new Date()).getTime();
+        return {
+          ...organization,
+          isUserOrganization,
+          sortTime,
+        };
+      }),
     };
   },
   methods: {
     ...mapActions('users', ['putUsers', 'postUsers']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { userEditable, putUsers, postUsers, onUpdate, role } = this;
-      const { description, url, effectiveenddate, secondaryemail, email, picture } = userEditable;
-      let userToUpdate = {
-        ...userEditable,
-        description: (description === null ? '' : description),
-        url: (url === null ? '' : url),
-        picture: (picture === null ? '' : picture),
-        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : email),
-      };
+      /*
+        const { userEditable, putUsers, postUsers, onUpdate, role } = this;
+        const { description, url, effectiveenddate, secondaryemail, email, picture } = userEditable;
+        let userToUpdate = {
+          ...userEditable,
+          description: (description === null ? '' : description),
+          url: (url === null ? '' : url),
+          picture: (picture === null ? '' : picture),
+          effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+          secondaryemail: (secondaryemail === null ? email : email),
+        };
 
-      if (role === 'edit') {
-        putUsers(userToUpdate).then((response) => {
-          if (response && response.data) {
-            onUpdate();
-          }
-        });
-      } else if (role === 'add') {
-        const { currentUser } = this;
-        const { uuid, subjecttypeid } = currentUser.props;
-        const crudsubjectid = uuid;
-        userToUpdate = [{
-          ...userToUpdate,
-          crudsubjectid,
-          subjecttypeid,
-        }];
-        postUsers(userToUpdate).then((response) => {
-          if (response && response.data) {
-            onUpdate();
-          }
-        });
-      }
+        if (role === 'edit') {
+          putUsers(userToUpdate).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        } else if (role === 'add') {
+          const { currentUser } = this;
+          const { uuid, subjecttypeid } = currentUser.props;
+          const crudsubjectid = uuid;
+          userToUpdate = [{
+            ...userToUpdate,
+            crudsubjectid,
+            subjecttypeid,
+          }];
+          postUsers(userToUpdate).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        }
+      */
+    },
+    handleDeleteUserOrganization({ uuid }) {
+      const { organizationsEditable } = this;
+      this.organizationsEditable = organizationsEditable.map((item) => {
+        const isUserOrganization = item.uuid === uuid ? false : item.isUserOrganization;
+        return {
+          ...item,
+          isUserOrganization,
+        };
+      });
+    },
+    handleAddUserOrganization({ uuid }) {
+      const { organizationsEditable } = this;
+      this.organizationsEditable = organizationsEditable.map((item) => {
+        const isUserOrganization = item.uuid === uuid ? true : item.isUserOrganization;
+        const sortTime = (new Date()).getTime();
+        return {
+          ...item,
+          isUserOrganization,
+          sortTime,
+        };
+      });
     },
     handleDeleteMembership({ uuid }) {
       const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? false : group.isMembership;
+      this.groupsEditable = groupsEditable.map((item) => {
+        const isMembership = item.uuid === uuid ? false : item.isMembership;
         return {
-          ...group,
+          ...item,
           isMembership,
         };
       });
     },
     handleAddMembership({ uuid }) {
       const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? true : group.isMembership;
+      this.groupsEditable = groupsEditable.map((item) => {
+        const isMembership = item.uuid === uuid ? true : item.isMembership;
         const sortTime = (new Date()).getTime();
         return {
-          ...group,
+          ...item,
           isMembership,
           sortTime,
         };

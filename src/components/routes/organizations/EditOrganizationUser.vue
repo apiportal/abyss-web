@@ -6,7 +6,8 @@
         isSubjectDirectoriesLoaded &&
         isOrganizationsLoaded &&
         isGroupsLoaded &&
-        isMembershipsLoaded
+        isMembershipsLoaded &&
+        isUserOrganizationsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -16,6 +17,7 @@
       :organizations="organizations"
       :groups="groups"
       :memberships="memberships"
+      :userOrganizations="userOrganizations"
       title="Organization"
     />
   </div>
@@ -57,17 +59,28 @@ export default {
         this.isMembershipsLoaded = true;
       });
     },
+    getOrganizationsOfUser() {
+      api.getOrganizationsOfUser(this.userId).then((response) => {
+        if (response && response.data) {
+          this.userOrganizations = response.data;
+        }
+        this.isUserOrganizationsLoaded = true;
+      });
+    },
   },
   data() {
     return {
       userId: this.$route.params.id,
       page: this.$route.params.page,
       memberships: [],
+      userOrganizations: [],
       isMembershipsLoaded: false,
+      isUserOrganizationsLoaded: false,
     };
   },
   mounted() {
     this.getSubjectMemberships();
+    this.getOrganizationsOfUser();
   },
 };
 </script>

@@ -33,6 +33,7 @@
               <Contract
                 :item="item"
                 :routePath="routePath"
+                :state="item.contractstatename"
               ></Contract>
             </div>
           </td>

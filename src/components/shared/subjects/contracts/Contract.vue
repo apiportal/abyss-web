@@ -32,7 +32,32 @@
     </b-navbar>
     <div style="margin: 2rem;">
 
-      <p>Description: {{ item.description }}</p>
+      <div class="row">
+        <div class="col">
+          <dt>Name:</dt>
+          <dd>{{ item.name }}</dd>
+          <dt>Id:</dt>
+          <dd><code>{{ item.uuid }}</code></dd>
+          <dt>Description:</dt>
+          <dd>{{ item.description }}</dd>
+        </div>
+        <div class="col">
+          <dt>Environment:</dt>
+          <dd>{{ item.environment }}</dd>
+          <dt>Status:</dt>
+          <dd>{{ item.status }}</dd>
+          <dt>State:</dt>
+          <dd>{{ state }}</dd>
+        </div>
+        <div class="col">
+          <dt>Created:</dt>
+          <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt>Updated:</dt>
+          <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="item.deleted">Deleted:</dt>
+          <dd v-if="item.deleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+        </div>
+      </div>
 
       <label>API ACCESS TOKENS</label>
       <table class="table verapi-table">
@@ -57,7 +82,7 @@
               />
             </td>
             <td>
-              {{ accessToken.expiredate }}
+              {{ accessToken.expiredate | moment("DD.MM.YYYY HH:mm") }}
             </td>
             <td>
               {{ accessToken.isactive }}
@@ -90,6 +115,11 @@ export default {
       required: true,
     },
     routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
+    },
+    state: {
       type: String,
       required: false,
       default() { return ''; },

@@ -24,7 +24,6 @@
                   sortByKeyType="string"
             />
           </th>
-          <th>Visibility</th>
           <th>State</th>
           <th>Created Date</th>
           <!-- <th v-if="childComponent === 'policies'"># of Policies</th>
@@ -51,9 +50,6 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            {{ licenseItem.licensedocument.info.visibility }}
-          </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" style="text-transform: capitalize">
             {{ licenseItem.licensedocument.legal.documentState }}
           </td>
@@ -71,7 +67,7 @@
           </td> -->
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="6">
+          <td colspan="5">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"

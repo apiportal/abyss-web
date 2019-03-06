@@ -37,6 +37,7 @@
           <p><strong>Id:</strong> {{ item.uuid }}</p>
           <p><strong>Organization:</strong> {{ getOrganizationName(item.organizationid) }}</p>
           <p><strong>Description:</strong> {{ item.licensedocument.info.description }}</p>
+          <p><strong>Visibility:</strong> {{ item.licensedocument.info.visibility }}</p>
           </div>
           <div>
           <p><strong>Performance:</strong> {{ item.licensedocument.sla.performance }}</p>

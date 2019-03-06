@@ -14,29 +14,32 @@
         :cols="6"
       />
       <TbodyCollapsible
-        v-for="(policyItem, index) in rows" v-bind:key="index"
-        :isCollapsed="collapsedRows.indexOf(policyItem.uuid) > -1"
+        v-for="(item, index) in rows" v-bind:key="index"
+        :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :level="3"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            <Icon :icon="policyItem.isactive ? 'check-circle' : 'times-circle'" :class="policyItem.isactive ? 'text-success' : 'text-danger'" />
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            {{ policyItem.name }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.name }}
           </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            {{ policyItem.typename }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.typename }}
           </td>
-          <td @click="() => handleCollapseTableRows(policyItem.uuid)">
-            {{ policyItem.policyinstance.info.subType }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item
+            .policyinstance
+            .info
+            .subType }}
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(policyItem.uuid) > -1">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="6">
             <div class="collapsible-content">
               <Policy
-                :item="policyItem"
+                :item="item"
                 :organizations="organizations"
                 :routePath="routePath"
               ></Policy>

@@ -52,6 +52,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Policies from '@/components/shared/subjects/policies/Policies';

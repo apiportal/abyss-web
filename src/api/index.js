@@ -230,8 +230,16 @@ export default {
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
+  // policies
   getPolicies() {
     return axios.get('/abyss/oapi/policies');
+  },
+  putPolicies(policy) {
+    const { uuid, created, updated, deleted, isdeleted, ...rest } = policy;
+    return axios.put(`/abyss/oapi/policies/${uuid}`, rest);
+  },
+  deletePolicies(uuid) {
+    return axios.delete(`/abyss/oapi/policies/${uuid}`);
   },
   postPolicies(policies) {
     return axios.post('/abyss/oapi/policies', policies);

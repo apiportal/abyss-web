@@ -81,7 +81,7 @@ export default {
         array: subjectLicenses
           .filter((item) => {
             const { filterKey } = this;
-            if (item.subjectid === currentUser.uuid) {
+            if (item.subjectid === currentUser.uuid && !item.isdeleted) {
               if (filterKey === '') {
                 return true;
               }

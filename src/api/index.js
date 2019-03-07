@@ -183,6 +183,9 @@ export default {
   postApps(app) {
     return axios.post('/abyss/oapi/subjects/', app);
   },
+  deleteApps(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
+  },
   // subject-memberships all
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');

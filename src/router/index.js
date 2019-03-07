@@ -58,6 +58,7 @@ import DeleteAdministerPermission from '@/components/routes/administerPermission
 import MyApps from '@/components/routes/myApps/MyApps';
 import MyAppsLogs from '@/components/routes/myApps/MyAppsLogs';
 import EditMyApps from '@/components/routes/myApps/EditMyApps';
+import DeleteMyApps from '@/components/routes/myApps/DeleteMyApps';
 import AddMyApps from '@/components/routes/myApps/AddMyApps';
 import SubjectApps from '@/components/routes/myApps/subjectApps/SubjectApps';
 // My Licenses
@@ -344,6 +345,10 @@ export default new Router({
                 {
                   path: 'add-new',
                   component: AddMyApps,
+                },
+                {
+                  path: 'delete/:appId',
+                  component: DeleteMyApps,
                 },
               ],
             },

@@ -24,10 +24,11 @@
                   sortByKeyType="string"
             />
           </th>
-          <th>Visibility</th>
           <th>State</th>
           <th>Created Date</th>
-          <th># of Policies</th>
+          <!-- <th v-if="childComponent === 'policies'"># of Policies</th>
+          <th v-if="childComponent === 'proxies'"># of Proxies</th>
+          <th v-if="childComponent === 'contracts'"># of Contracts</th> -->
         </tr>
       </thead>
       <TBodyLoading
@@ -49,21 +50,24 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            {{ licenseItem.licensedocument.info.visibility }}
-          </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" style="text-transform: capitalize">
             {{ licenseItem.licensedocument.legal.documentState }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.created | moment("DD.MM.YYYY HH:mm") }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+          <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'proxies'">
+            {{ licenseApis.length }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'contracts'">
+            {{ licenseContracts.length }}
+          </td> -->
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="7">
+          <td colspan="5">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"

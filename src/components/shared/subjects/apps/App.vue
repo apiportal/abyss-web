@@ -25,16 +25,41 @@
               <em>Operations</em>
             </template>
             <b-dropdown-item :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit App</b-dropdown-item>
-            <!-- <b-dropdown-item :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item> -->
+            <b-dropdown-item :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete App</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
     <div style="margin: 2rem;">
-      <div>
-        <p>
-          Name: {{ item.subjectname }}
-        </p>
+      <div class="row">
+        <div class="col">
+          <dt>Name:</dt>
+          <dd>{{ item.subjectname }}</dd>
+          <dt>Id:</dt>
+          <dd><code>{{ item.uuid }}</code></dd>
+          <dt>Url:</dt>
+          <dd>{{ item.url }}</dd>
+          <dt>Email:</dt>
+          <dd>{{ item.email }}</dd>
+        </div>
+        <div class="col">
+          <dt>Organization:</dt>
+          <dd>{{ getOrganizationName(item.organizationid) }}</dd>
+          <dt>Directory:</dt>
+          <dd>{{ getSubjectDirectoryName(item.subjectdirectoryid) }}</dd>
+          <dt>Effective Start Date:</dt>
+          <dd>{{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt>Effective End Date:</dt>
+          <dd>{{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        </div>
+        <div class="col">
+          <dt>Created:</dt>
+          <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt>Updated:</dt>
+          <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="item.isdeleted">Deleted:</dt>
+          <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+        </div>
       </div>
       <b-button
         @click="handleToggleContractsTable"
@@ -82,6 +107,8 @@ export default {
   computed: {
     ...mapState({
       contractStates: state => state.contractStates.items,
+      organizations: state => state.organizations.items,
+      subjectDirectories: state => state.subjectDirectories.items,
     }),
     appContracts() {
       const { item, contractStates } = this;
@@ -105,6 +132,16 @@ export default {
   methods: {
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
+    },
+    getOrganizationName(organizationId) {
+      const { organizations } = this;
+      const organization = organizations.find(i => i.uuid === organizationId) || {};
+      return organization.name || organizationId;
+    },
+    getSubjectDirectoryName(subjectDirectoryId) {
+      const { subjectDirectories } = this;
+      const directory = subjectDirectories.find(item => item.uuid === subjectDirectoryId) || {};
+      return directory.directoryname || subjectDirectoryId;
     },
   },
 };

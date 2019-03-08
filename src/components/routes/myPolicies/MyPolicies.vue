@@ -3,7 +3,7 @@
     <div class="my-licenses-header silver-bg">
       <b-nav tabs>
         <b-nav-item active>
-          My Policies <b-badge variant="light">{{ policies.length }}</b-badge>
+          My Policies <b-badge variant="light">{{ policies.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -27,6 +27,7 @@ export default {
     this.$store.commit('currentPage/setRootPath', 'my-policies');
     this.$store.dispatch('policies/getPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
 };
 </script>

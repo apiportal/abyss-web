@@ -25,7 +25,7 @@
         variant="primary"
         @click="onConfirm"
       >
-        Save
+        {{ confirm }}
       </b-button>
     </template>
   </Modal>
@@ -84,6 +84,11 @@ export default {
     text: {
       type: String,
       required: false,
+    },
+    confirm: {
+      type: String,
+      required: false,
+      default() { return 'Delete'; },
     },
   },
 };

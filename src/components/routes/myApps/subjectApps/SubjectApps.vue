@@ -86,6 +86,23 @@ export default {
       };
       return sortArrayOfObjects({
         array: userApps
+          .filter((item) => {
+            const { filterKey } = this;
+            if (!item.isdeleted) {
+              if (filterKey === '') {
+                return true;
+              }
+              const filterKeyLowerCase = filterKey.toLowerCase();
+              return (
+                (
+                  item.displayname &&
+                  item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+                )
+              );
+            }
+            return '';
+          },
+            )
           .map(item => ({
             ...item,
             organizationname: getOrganizationName(item.organizationid),

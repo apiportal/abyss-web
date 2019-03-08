@@ -64,6 +64,8 @@
           </dd>
           <dt>Directory:</dt>
           <dd>{{ user.directoryname }}</dd>
+          <dt>Url:</dt>
+          <dd>{{ user.url }}</dd>
         </dl>
 
         <dl class="col">
@@ -96,11 +98,11 @@
         
         <dl class="col">
           <dt>Created:</dt>
-          <dd>{{ user.created }}</dd>
-          <dt>Updated:</dt>
-          <dd>{{ user.updated }}</dd>
-          <dt>Deleted:</dt>
-          <dd>{{ user.deleted }}</dd>
+          <dd>{{ user.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="!user.isdeleted">Updated:</dt>
+          <dd v-if="!user.isdeleted">{{ user.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="user.isdeleted">Deleted:</dt>
+          <dd v-if="user.isdeleted">{{ user.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
         </dl>
       </div>
     </div>

@@ -15,12 +15,21 @@ const actions = {
       return false;
     }
     api.getAccessManagerTypes().then((response) => {
-      commit('setAccessManagerTypes', response.data);
+      if (response && response.data) {
+        commit('setAccessManagerTypes', response.data);
+      }
     });
   },
   putAccessManagerTypes: ({ commit }, accessManagerType) => {
-    api.putAccessManagerTypes(accessManagerType).then((response) => {
+    return api.putAccessManagerTypes(accessManagerType).then((response) => {
       commit('updateAccessManagerTypes', response.data);
+      return response;
+    });
+  },
+  deleteAccessManagerTypes: ({ commit }, accessManagerType) => {
+    return api.deleteAccessManagerTypes(accessManagerType.uuid).then((response) => {
+      commit('setAccessManagerTypeDeleted', accessManagerType.uuid);
+      return response;
     });
   },
   postAccessManagerTypes: ({ commit }, accessManagerType) => {
@@ -53,6 +62,17 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setAccessManagerTypeDeleted: (state, accessManagerTypeUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === accessManagerTypeUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
   },
   addAccessManagerTypes: (state, newAccessManagerType) => {
     state.items = [

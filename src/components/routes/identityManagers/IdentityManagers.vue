@@ -119,6 +119,15 @@
                       <b-nav-item-dropdown right>
                         <!-- Using button-content slot -->
                         <template slot="button-content">
+                          <Icon icon="list-ol" />
+                          <em>Logs</em>
+                        </template>
+                        <b-dropdown-item :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
+                      </b-nav-item-dropdown>
+
+                      <b-nav-item-dropdown right>
+                        <!-- Using button-content slot -->
+                        <template slot="button-content">
                           <Icon icon="cog" />
                           <em>Operations</em>
                         </template>
@@ -129,17 +138,37 @@
                     </b-navbar-nav>
                   </b-collapse>
                 </b-navbar>
-                <div style="margin: 2rem;">
-                  <p>Name: {{ item.directoryname }}</p>
-                  <p>Description: {{ item.description }}</p>
-                  <p>Active: {{ item.isactive }}</p>
-                  <p>Template: {{ item.istemplate }}</p>
-                  <p>Deleted: {{ item.isdeleted }}</p>
-                  <p>Priority Order: {{ item.directorypriorityorder }}</p>
-                  <p>Directory Type: {{ item.directorytypename }}</p>
-                  <p>Organization: {{ item.organizationname }}</p>
-                  <p>Created: {{ item.created }}</p>
-                  <p>Updated: {{ item.updated }}</p>
+                <div style="margin: 2rem">
+                  <div class="row">
+                    <dl class="col">
+                      <dt>Name:</dt>
+                      <dd>{{ item.directoryname }}</dd>
+                      <dt>Description:</dt>
+                      <dd>{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd>{{ item.organizationname }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Priority Order:</dt>
+                      <dd>{{ item.directorypriorityorder }}</dd>
+                      <dt>Directory Type:</dt>
+                      <dd>{{ item.directorytypename }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Active:</dt>
+                      <dd>{{ item.isactive }}</dd>
+                      <dt>Template:</dt>
+                      <dd>{{ item.istemplate }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Created:</dt>
+                      <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="!item.isdeleted">Updated:</dt>
+                      <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="item.isdeleted">Deleted:</dt>
+                      <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </td>

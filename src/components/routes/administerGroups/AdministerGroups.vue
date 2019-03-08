@@ -34,7 +34,7 @@
       <table class="table verapi-table">
         <thead>
           <tr>
-            <th>
+            <th class="status">
               Status
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -51,16 +51,6 @@
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 sortByKey="displayname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Group Name
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="subjectname"
                 sortByKeyType="string"
               />
             </th>
@@ -88,14 +78,14 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && totalRows.length === 0"
-          :cols="5"
+          :cols="4"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
@@ -105,9 +95,6 @@
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.subjectname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.userscount }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -115,7 +102,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="7">
+            <td colspan="4">
               <div class="collapsible-content">
                 <!-- <AdministerGroup
                   :group="item"

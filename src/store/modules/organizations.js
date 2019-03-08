@@ -33,8 +33,15 @@ const actions = {
     });
   },
   putOrganizations: ({ commit }, organization) => {
-    api.putOrganizations(organization).then((response) => {
+    return api.putOrganizations(organization).then((response) => {
       commit('updateOrganizations', response.data);
+      return response;
+    });
+  },
+  deleteOrganizations: ({ commit }, organization) => {
+    return api.deleteOrganizations(organization.uuid).then((response) => {
+      commit('setOrganizationDeleted', organization.uuid);
+      return response;
     });
   },
   postOrganizations: ({ commit }, organization) => {
@@ -71,6 +78,17 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setOrganizationDeleted: (state, organizationUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === organizationUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
   },
   addOrganizations: (state, newOrganization) => {
     state.items = [

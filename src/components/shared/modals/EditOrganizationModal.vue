@@ -60,7 +60,7 @@
               Organization:
               <span class="text-danger">*</span>
             </label>
-            <b-form-select
+            <!-- <b-form-select
               id="organizationOrganizationIdInput"
               v-model="organizationEditable.organizationid" 
               :state="organizationIdState"
@@ -70,6 +70,23 @@
                   value: organization.uuid,
                   text: organization.name,
                 }))
+              ]"
+              required
+            /> -->
+            <b-form-select
+              id="organizationOrganizationIdInput"
+              v-model="organizationEditable.organizationid" 
+              :state="organizationIdState"
+              :options="[
+                { value: null, text: 'Please Select'},
+                ...organizations.reduce((a, o) => {
+                  !o.isdeleted && a.push({
+                    value: o.uuid,
+                    text: o.name
+                  });
+                  return a;
+                }, []),
+                // selectOptions(...organizations, 'name')
               ]"
               required
             />
@@ -206,6 +223,15 @@ export default {
   created() { },
   methods: {
     ...mapActions('organizations', ['putOrganizations', 'postOrganizations']),
+    // selectOptions(items, name) {
+    //   items.reduce((a, o) => {
+    //     !o.isdeleted && a.push({
+    //       value: o.uuid,
+    //       text: o[name],
+    //     });
+    //     return a;
+    //   }, []);
+    // },
     validateJson(obj) {
       try {
         return JSON.parse(obj);

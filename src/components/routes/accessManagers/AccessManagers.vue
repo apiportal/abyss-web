@@ -34,6 +34,16 @@
       <table class="table verapi-table">
         <thead>
           <tr>
+            <th class="status">
+              Status
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="isactive"
+                sortByKeyType="boolean"
+              />
+            </th>
             <th>
               Name
               <SortBy
@@ -54,45 +64,32 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Organization
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="organizationname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th class="abyss-table-td-70">
-              Status
-            </th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="4"
+          :cols="3"
         />
         <TbodyCollapsible
           v-for="(item, index) in tableRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon 
+                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+                :class="item.isactive ? 'text-success' : 'text-danger'"
+              />
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.accessmanagername }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.accessmanagertypename }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
-            </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="4">
+            <td colspan="3">
               <div class="collapsible-content">
                 <b-navbar toggleable="lg" type="dark" variant="secondary">
                   <b-navbar-brand>{{ item.accessmanagername }}</b-navbar-brand>
@@ -102,6 +99,15 @@
                   <b-collapse is-nav id="nav_collapse">
                     <!-- Right aligned nav items -->
                     <b-navbar-nav class="ml-auto">
+
+                      <b-nav-item-dropdown right>
+                        <!-- Using button-content slot -->
+                        <template slot="button-content">
+                          <Icon icon="list-ol" />
+                          <em>Logs</em>
+                        </template>
+                        <b-dropdown-item :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
+                      </b-nav-item-dropdown>
 
                       <b-nav-item-dropdown right>
                         <!-- Using button-content slot -->
@@ -116,14 +122,29 @@
                     </b-navbar-nav>
                   </b-collapse>
                 </b-navbar>
-                <div style="margin: 2rem;">
-                  <p>Access Manager Name: {{ item.accessmanagername }}</p>
-                  <p>Access Manager Type: {{ item.accessmanagertypename }}</p>
-                  <p>Organization: {{ item.organizationname }}</p>
-                  <p>Description: {{ item.description }}</p>
-                  <p>Created: {{ item.created }}</p>
-                  <p>Updated: {{ item.updated }}</p>
-                  <p>Deleted: {{ item.deleted }}</p>
+                <div style="margin: 2rem">
+                  <div class="row">
+                    <dl class="col">
+                      <dt>Name:</dt>
+                      <dd>{{ item.accessmanagername }}</dd>
+                      <dt>Type:</dt>
+                      <dd>{{ item.accessmanagertypename }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Description:</dt>
+                      <dd>{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd>{{ item.organizationname }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Created:</dt>
+                      <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="!item.isdeleted">Updated:</dt>
+                      <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="item.isdeleted">Deleted:</dt>
+                      <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </td>

@@ -305,18 +305,35 @@ export default {
     };
   },
   methods: {
-    ...mapActions('subjectDirectories', ['putSubjectDirectories']),
+    ...mapActions('subjectDirectories', ['putSubjectDirectories', 'postSubjectDirectories']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { putSubjectDirectories, subjectDirectoryEditable, onUpdate } = this;
-      putSubjectDirectories({
-        ...subjectDirectoryEditable,
-        directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
-      }).then((response) => {
-        if (response && response.data) {
-          onUpdate();
-        }
-      });
+      const { putSubjectDirectories, postSubjectDirectories,
+        subjectDirectoryEditable, onUpdate, role } = this;
+      if (role === 'edit') {
+        putSubjectDirectories({
+          ...subjectDirectoryEditable,
+          directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
+        }).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        const subjectDirectoryToAdd = [{
+          ...subjectDirectoryEditable,
+          crudsubjectid,
+          directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
+        }];
+        postSubjectDirectories(subjectDirectoryToAdd).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
     },
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;

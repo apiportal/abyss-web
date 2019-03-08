@@ -269,15 +269,32 @@ export default {
     };
   },
   methods: {
-    ...mapActions('accessManagers', ['putAccessManagers']),
+    ...mapActions('accessManagers', ['putAccessManagers', 'postAccessManagers']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { putAccessManagers, accessManagerEditable, onUpdate } = this;
-      putAccessManagers({
-        ...accessManagerEditable,
-      }).then(() => {
-        onUpdate();
-      });
+      const { putAccessManagers, postAccessManagers, accessManagerEditable, onUpdate, role } = this;
+      if (role === 'edit') {
+        putAccessManagers({
+          ...accessManagerEditable,
+        }).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        const accessManagerToAdd = [{
+          ...accessManagerEditable,
+          crudsubjectid,
+        }];
+        postAccessManagers(accessManagerToAdd).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
     },
     toggleConfigureAccessManager() {
       this.isConfigureAccessManagerVisible = !this.isConfigureAccessManagerVisible;

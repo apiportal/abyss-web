@@ -6,11 +6,7 @@ const state = {
   lastUpdatedAt: 0,
 };
 
-const getters = {
-  // setAccessManagers: (state) => {
-  //   return state.accessManagers;
-  // },
-};
+const getters = {};
 
 const actions = {
   getAccessManagers: ({ commit }, { refresh = false }) => {
@@ -19,12 +15,39 @@ const actions = {
       return false;
     }
     api.getAccessManagers().then((response) => {
-      commit('setAccessManagers', response.data);
+      if (response && response.data) {
+        commit('setAccessManagers', response.data);
+      }
     });
   },
   putAccessManagers: ({ commit }, accessManager) => {
-    api.putAccessManagers(accessManager).then((response) => {
+    return api.putAccessManagers(accessManager).then((response) => {
       commit('updateAccessManagers', response.data);
+      return response;
+    });
+  },
+  deleteAccessManagers: ({ commit }, accessManager) => {
+    return api.deleteAccessManagers(accessManager.uuid).then((response) => {
+      commit('setAccessManagerDeleted', accessManager.uuid);
+      return response;
+    });
+  },
+  postAccessManagers: ({ commit }, accessManager) => {
+    return api.postAccessManagers(accessManager).then((response) => {
+      let error = false;
+
+      response.data.map((status) => {
+        if (status.error.code !==0) {
+          error = true;
+          alert(status.error.usermessage);
+        } else {
+          commit('addNewAccessManager', status.response);
+        }
+      });
+      if (error) {
+        return false;
+      }
+      return response;
     });
   },
 };
@@ -41,6 +64,23 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setAccessManagerDeleted: (state, accessManagerUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === accessManagerUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
+  },
+  addNewAccessManager: (state, newAccessManager) => {
+    state.items = [
+      ...state.items,
+      newAccessManager,
+    ];
   },
 };
 

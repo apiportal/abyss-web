@@ -1,25 +1,22 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="secondary">
+    <!-- <b-navbar toggleable="lg" type="dark" variant="secondary">
       <b-navbar-brand>{{ organization.name }}</b-navbar-brand>
-
+    
       <b-navbar-toggle target="nav_collapse" />
-
+    
       <b-collapse is-nav id="nav_collapse">
-        <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-
+    
           <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
             <template slot="button-content">
               <Icon icon="list-ol" />
               <em>Logs</em>
             </template>
-            <b-dropdown-item :to="`/app/organizations/${page}/logs/${organization.uuid}/subject/1`">All</b-dropdown-item>
+            <b-dropdown-item :to="`/app/organizations/${page}/logs/${organization.uuid}/organization/1`">All</b-dropdown-item>
           </b-nav-item-dropdown>
-
+    
           <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
             <template slot="button-content">
               <Icon icon="cog" />
               <em>Operations</em>
@@ -29,26 +26,14 @@
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
-    </b-navbar>
-    <div style="margin: 2rem;">
+    </b-navbar> -->
+    <article>
       <div class="row">
         <dl class="col">
           <dt>Name:</dt>
           <dd>{{ organization.name }}</dd>
           <dt>Parent Organization:</dt>
           <dd>{{ organization.organizationname }}</dd>
-          <dt></dt>
-          <dd>
-            <b-button
-              size="sm"
-              variant="info"
-              v-b-tooltip.hover
-              title="Users"
-              @click="listOrganizationUsers"
-            >
-              Users <Icon icon="users" />
-            </b-button>
-          </dd>
         </dl>
         <dl class="col">
           <dt>Url:</dt>
@@ -68,14 +53,33 @@
         </dl>
         <dl class="col-3">
           <dt>Created:</dt>
-          <dd>{{ organization.created }}</dd>
-          <dt>Updated:</dt>
-          <dd>{{ organization.updated }}</dd>
-          <dt>Deleted:</dt>
-          <dd>{{ organization.deleted }}</dd>
+          <dd>{{ organization.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="!organization.isdeleted">Updated:</dt>
+          <dd v-if="!organization.isdeleted">{{ organization.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="organization.isdeleted">Deleted:</dt>
+          <dd v-if="organization.isdeleted">{{ organization.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
         </dl>
       </div>
-
+      <b-button
+        size="lg"
+        variant="link"
+        v-b-tooltip.hover
+        title="Users"
+        @click="listOrganizationUsers"
+        class="px-0 h2"
+      >
+        <Icon icon="users" /> Users
+      </b-button>
+      <b-button
+        size="lg"
+        variant="link"
+        v-b-tooltip.hover
+        title="Sub Organizations"
+        @click="showSubOrganizations"
+        class="px-0 h2"
+      >
+        <Icon icon="list-ol" /> Sub Organizations
+      </b-button>
       <div class="mb-3" v-if="isShowOrganizationUsers && organizationUsers.length">
         <Users
           :users="organizationUsers"
@@ -85,7 +89,7 @@
         />
       </div>
 
-      <table class="table verapi-table" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization">
+      <table class="table abyss-table abyss-table-cards" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
         <thead>
           <tr>
             <th>
@@ -123,7 +127,8 @@
         <TbodyCollapsible
           v-for="(item, index) in organizations" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-        v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
+          v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
+          :level="1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -149,7 +154,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
-    </div>
+    </article>
   </div>
 </template>
 
@@ -250,6 +255,7 @@ export default {
       collapsedRows: [],
       // organizationSubjects: [],
       isShowOrganizationUsers: false,
+      isShowSubOrganizations: false,
     };
   },
   methods: {
@@ -262,6 +268,9 @@ export default {
     },
     listOrganizationUsers() {
       this.isShowOrganizationUsers = !this.isShowOrganizationUsers;
+    },
+    showSubOrganizations() {
+      this.isShowSubOrganizations = !this.isShowSubOrganizations;
     },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;

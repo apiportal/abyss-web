@@ -1,6 +1,6 @@
 <template>
-  <div class="organizations-container">
-    <div class="organizations-header silver-bg">
+  <div class="page-container page-organizations">
+    <div class="page-header">
       <div class="row">
         <div class="col-md-9">
           <InputWithIcon
@@ -30,8 +30,8 @@
         </div>
       </div>
     </div>
-    <div class="organizations-content">
-      <table class="table verapi-table">
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>
@@ -64,16 +64,28 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              Owner
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
+            <th> </th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="3"
+          :cols="5"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           v-if="item.organizationid === rootOrganization"
+          :level="0"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -85,9 +97,29 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
             </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
+            </td>
+            <td class="actions">
+              <!-- <b-dropdown id="ddown-header" text="Actions"" right> -->
+              <b-dropdown variant="link" size="lg" no-caret right>
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Organization</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Organization</b-dropdown-item>
+
+                <b-dropdown-divider />
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
+
+              </b-dropdown>
+            </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="3">
+            <td colspan="5">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -102,7 +134,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="organizations-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -159,6 +191,17 @@ export default {
             item.organizationrefid === organizationId);
         return organizationSubjects;
       };
+      const getOwner = (organizationId) => {
+        const { users } = this;
+        const ownerSubject = getOrganizationUsers(organizationId).find(item => item.isowner);
+        if (ownerSubject) {
+          const owner = users.find(item => item.uuid === ownerSubject.subjectid);
+          if (owner) {
+            return owner.displayname;
+          }
+        }
+        return '-';
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: organizations.map(item => ({
@@ -166,6 +209,7 @@ export default {
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid).length,
+          organizationowner: getOwner(item.uuid),
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -176,10 +220,11 @@ export default {
             (
               item.name &&
               item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
+            )
+            ||
             (
-              item.description &&
-              item.description.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.organizationowner &&
+              item.organizationowner.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -198,7 +243,7 @@ export default {
       });
     },
   },
-  created() {
+  mounted() {
     this.$store.commit('currentPage/setRootPath', 'organizations');
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});

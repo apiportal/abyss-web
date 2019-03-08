@@ -87,6 +87,18 @@
             >
             </b-form-input>
           </b-form-group>
+
+          <b-form-group id="userEnabledGroup">
+            <b-form-checkbox
+              id="userEnabledChecks"
+              v-model="userEditable.isactivated"
+              :value="true"
+              :unchecked-value="false"
+            >
+              Enabled
+            </b-form-checkbox>
+          </b-form-group>
+
           <b-form-group
             v-if="isPasswordInputVisible"
             id="userPasswordGroup"
@@ -146,12 +158,15 @@
             id="urlGroup"
             label="URL:"
             label-for="urlInput"
+            :invalid-feedback="urlInvalidFeedback"
+            :state="urlState"
           >
             <b-form-input
               id="urlInput"
               type="text"
               v-model="userEditable.url"
               placeholder="URL"
+              :state="urlState"
             >
             </b-form-input>
           </b-form-group>
@@ -395,6 +410,19 @@ export default {
       }
       return '';
     },
+    urlState() {
+      const { url } = this.userEditable;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+      return re.test(String(url));
+    },
+    urlInvalidFeedback() {
+      const { url } = this.userEditable;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+      if (re.test(String(url))) {
+        return 'Please enter a valid url';
+      }
+      return '';
+    },
   },
   data() {
     const { user, role } = this;
@@ -409,12 +437,19 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { userEditable, putUsers, postUsers, onUpdate, role } = this;
-      const { description, url, effectiveenddate, secondaryemail, email, picture } = userEditable;
+      const { description, url, effectiveenddate, secondaryemail, email, picture, distinguishedname,
+        uniqueid, phonebusiness, phoneextension, phonehome, phonemobile } = userEditable;
       let userToUpdate = {
         ...userEditable,
         description: (description === null ? '' : description),
         url: (url === null ? '' : url),
         picture: (picture === null ? '' : picture),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
         secondaryemail: (secondaryemail === null ? email : email),
       };

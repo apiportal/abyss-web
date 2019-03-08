@@ -34,7 +34,7 @@
       <table class="table verapi-table">
         <thead>
           <tr>
-            <th>
+            <th class="status">
               Status
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -45,42 +45,12 @@
               />
             </th>
             <th>
-              First Name
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="firstname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Last Name
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="lastname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
               Display Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 sortByKey="displayname"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              User Name
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="subjectname"
                 sortByKeyType="string"
               />
             </th>
@@ -108,30 +78,21 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && totalRows.length === 0"
-          :cols="7"
+          :cols="4"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.firstname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.lastname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.displayname }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.subjectname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.email }}
@@ -141,7 +102,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-            <td colspan="7">
+            <td colspan="4">
               <div class="collapsible-content">
                 <AdministerUser
                   :user="item"

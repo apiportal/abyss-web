@@ -100,6 +100,15 @@
                       <b-nav-item-dropdown right>
                         <!-- Using button-content slot -->
                         <template slot="button-content">
+                          <Icon icon="list-ol" />
+                          <em>Logs</em>
+                        </template>
+                        <b-dropdown-item :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
+                      </b-nav-item-dropdown>
+
+                      <b-nav-item-dropdown right>
+                        <!-- Using button-content slot -->
+                        <template slot="button-content">
                           <Icon icon="cog" />
                           <em>Operations</em>
                         </template>
@@ -110,13 +119,25 @@
                     </b-navbar-nav>
                   </b-collapse>
                 </b-navbar>
-                <div style="margin: 2rem;">
-                  <p>Name: {{ item.typename }}</p>
-                  <p>Description: {{ item.description }}</p>
-                  <p>Organization: {{ item.organizationname }}</p>
-                  <p>Created: {{ item.created }}</p>
-                  <p>Updated: {{ item.updated }}</p>
-                  <p>Deleted: {{ item.deleted }}</p>
+                <div style="margin: 2rem">
+                  <div class="row">
+                    <dl class="col">
+                      <dt>Name:</dt>
+                      <dd>{{ item.typename }}</dd>
+                      <dt>Description:</dt>
+                      <dd>{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd>{{ item.organizationname }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Created:</dt>
+                      <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="!item.isdeleted">Updated:</dt>
+                      <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="item.isdeleted">Deleted:</dt>
+                      <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </td>

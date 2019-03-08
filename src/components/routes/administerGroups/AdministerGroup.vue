@@ -72,22 +72,14 @@
         
         <dl class="col">
           <dt>Created:</dt>
-          <dd>{{ group.created }}</dd>
-          <dt>Updated:</dt>
-          <dd>{{ group.updated }}</dd>
-          <dt>Deleted:</dt>
-          <dd>{{ group.deleted }}</dd>
+          <dd>{{ group.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="!group.isdeleted">Updated:</dt>
+          <dd v-if="!group.isdeleted">{{ group.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt v-if="group.isdeleted">Deleted:</dt>
+          <dd v-if="group.isdeleted">{{ group.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
         </dl>
       </div>
 
-      <dl class="col">
-        <dt>Created:</dt>
-        <dd>{{ group.created }}</dd>
-        <dt>Updated:</dt>
-        <dd>{{ group.updated }}</dd>
-        <dt>Deleted:</dt>
-        <dd>{{ group.deleted }}</dd>
-      </dl>
     </div>
     <div v-if="isShowGroupUsers && group.users.length">
       <Users

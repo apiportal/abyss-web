@@ -17,11 +17,13 @@ import Dashboard from '@/components/routes/dashboard/Dashboard';
 import Home from '@/components/routes/home/Home';
 // Identity Managers Routes Components
 import IdentityManagers from '@/components/routes/identityManagers/IdentityManagers';
+import IdentityManagersLogs from '@/components/routes/identityManagers/IdentityManagersLogs';
 import AddIdentityManager from '@/components/routes/identityManagers/AddIdentityManager';
 import EditIdentityManager from '@/components/routes/identityManagers/EditIdentityManager';
 import DeleteIdentityManager from '@/components/routes/identityManagers/DeleteIdentityManager';
 // Identity Manager Types Routes Components
 import IdentityManagerTypes from '@/components/routes/identityManagerTypes/IdentityManagerTypes';
+import IdentityManagerTypesLogs from '@/components/routes/identityManagerTypes/IdentityManagerTypesLogs';
 import AddIdentityManagerType from '@/components/routes/identityManagerTypes/AddIdentityManagerType';
 import EditIdentityManagerType from '@/components/routes/identityManagerTypes/EditIdentityManagerType';
 import DeleteIdentityManagerType from '@/components/routes/identityManagerTypes/DeleteIdentityManagerType';
@@ -41,16 +43,19 @@ import DeleteAdministerGroup from '@/components/routes/administerGroups/DeleteAd
 import EditAdministerGroupUser from '@/components/routes/administerGroups/EditAdministerGroupUser';
 // Access Managers Routes Components
 import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
+import AccessManagersLogs from '@/components/routes/accessManagers/AccessManagersLogs';
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
+import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
 import AddAccessManagerType from '@/components/routes/accessManagerTypes/AddAccessManagerType';
 import EditAccessManagerType from '@/components/routes/accessManagerTypes/EditAccessManagerType';
 import DeleteAccessManagerType from '@/components/routes/accessManagerTypes/DeleteAccessManagerType';
 // Administer Permissions Routes Components
 import AdministerPermissions from '@/components/routes/administerPermissions/AdministerPermissions';
+import AdministerPermissionsLogs from '@/components/routes/administerPermissions/AdministerPermissionsLogs';
 import AddAdministerPermission from '@/components/routes/administerPermissions/AddAdministerPermission';
 import EditAdministerPermission from '@/components/routes/administerPermissions/EditAdministerPermission';
 import DeleteAdministerPermission from '@/components/routes/administerPermissions/DeleteAdministerPermission';
@@ -186,6 +191,10 @@ export default new Router({
           component: IdentityManagers,
           children: [
             {
+              path: 'logs/:id/:logType/:logPage',
+              component: IdentityManagersLogs,
+            },
+            {
               path: 'add-new',
               component: AddIdentityManager,
             },
@@ -203,6 +212,10 @@ export default new Router({
           path: 'identity-manager-types/:page',
           component: IdentityManagerTypes,
           children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: IdentityManagerTypesLogs,
+            },
             {
               path: 'add-new',
               component: AddIdentityManagerType,
@@ -274,6 +287,10 @@ export default new Router({
           component: AccessManagers,
           children: [
             {
+              path: 'logs/:id/:logType/:logPage',
+              component: AccessManagersLogs,
+            },
+            {
               path: 'add-new',
               component: AddAccessManager,
             },
@@ -292,6 +309,10 @@ export default new Router({
           component: AccessManagerTypes,
           children: [
             {
+              path: 'logs/:id/:logType/:logPage',
+              component: AccessManagerTypesLogs,
+            },
+            {
               path: 'add-new',
               component: AddAccessManagerType,
             },
@@ -309,6 +330,10 @@ export default new Router({
           path: 'administer-permissions/:page',
           component: AdministerPermissions,
           children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: AdministerPermissionsLogs,
+            },
             {
               path: 'add-new',
               component: AddAdministerPermission,

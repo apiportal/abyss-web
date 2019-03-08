@@ -1,5 +1,5 @@
 <template>
-  <table class="table verapi-table">
+  <table class="table abyss-table">
     <thead>
       <tr>
         <th>

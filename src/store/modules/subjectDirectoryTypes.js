@@ -22,9 +22,13 @@ const actions = {
   },
   putSubjectDirectoryTypes: ({ commit }, subjectDirectoryType) => {
     return api.putSubjectDirectoryTypes(subjectDirectoryType).then((response) => {
-      if (response && response.data) {
-        commit('updateSubjectDirectoryTypes', response.data);
-      }
+      commit('updateSubjectDirectoryTypes', response.data);
+      return response;
+    });
+  },
+  deleteSubjectDirectoryTypes: ({ commit }, subjectDirectoryType) => {
+    return api.deleteSubjectDirectoryTypes(subjectDirectoryType.uuid).then((response) => {
+      commit('setSubjectDirectoryTypeDeleted', subjectDirectoryType.uuid);
       return response;
     });
   },
@@ -35,7 +39,7 @@ const actions = {
         if (status.error.code !==0) {
           error = true;
         } else {
-          commit('addSubjectDirectoryTypes', status.response);
+          commit('addSubjectDirectoryType', status.response);
         }
       });
       if (error) {
@@ -59,7 +63,18 @@ const mutations = {
     });
     state.lastUpdatedAt = (new Date()).getTime();
   },
-  addSubjectDirectoryTypes: (state, newSubjectDirectoryType) => {
+  setSubjectDirectoryTypeDeleted: (state, subjectDirectoryTypeUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === subjectDirectoryTypeUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
+  },
+  addSubjectDirectoryType: (state, newSubjectDirectoryType) => {
     state.items = [
       ...state.items,
       newSubjectDirectoryType,

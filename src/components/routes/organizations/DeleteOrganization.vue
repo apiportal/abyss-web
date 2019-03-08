@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,15 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('organizations', ['deleteOrganizations']),
     handleModalClose() {
       this.$router.push(`/app/organizations/${this.page}`);
     },
     handleModalConfirm() {
-      this.$router.push(`/app/organizations/${this.page}`);
+      const { deleteOrganizations, organization } = this;
+      deleteOrganizations({ ...organization }).then(() => {
+        this.$router.push(`/app/organizations/${this.page}`);
+      });
     },
   },
   computed: {

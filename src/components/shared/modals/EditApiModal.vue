@@ -18,7 +18,7 @@
     <template>
       <ApiDesigner
         :api="api"
-        :height="600"
+        :height="700"
         title='Edit API'
       />
     </template>

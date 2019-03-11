@@ -56,6 +56,7 @@ export default {
    .abyss-tool-content-container {
     flex: 1 0 0;
     overflow-y: scroll;
+    padding: 1rem;
   }
 }
 </style>

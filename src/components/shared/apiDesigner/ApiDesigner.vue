@@ -77,11 +77,16 @@ export default {
       type: String,
       required: false,
     },
-    view: {
+    initialView: {
       type: String,
       required: false,
       default() { return 'hybrid'; },
     },
+  },
+  data() {
+    return {
+      view: this.initialView,
+    };
   },
   methods: {
     setView(view) {

@@ -102,7 +102,7 @@ export default {
 <style lang="scss">
 .modal-xl {
   @media (min-width: 992px) {
-    max-width: 1400px;
+    max-width: 1600px;
   }
 }
 </style>

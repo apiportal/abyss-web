@@ -1,10 +1,17 @@
 <template>
   <div>
-    {{ pathKeys }}
+    <div v-for="(pathKey, index) in pathKeys" v-bind:key="index">
+      <PathItem
+        :pathItem="paths[pathKey]"
+        :pathKey="pathKey"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import PathItem from '@/components/shared/apiDesigner/abyssTool/PathItem';
+
 export default {
   props: {
     paths: {
@@ -17,6 +24,9 @@ export default {
     pathKeys() {
       return Object.keys(this.paths);
     },
+  },
+  components: {
+    PathItem,
   },
 };
 </script>

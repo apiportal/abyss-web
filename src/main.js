@@ -46,6 +46,11 @@ import {
   faUser,
   faUserCog,
   faRedo,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -99,6 +104,11 @@ library.add(
   faUser,
   faUserCog,
   faRedo,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

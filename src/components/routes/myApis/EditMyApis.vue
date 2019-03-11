@@ -1,15 +1,15 @@
 <template>
-  <EditApp
-    :routePath="`/app/my-apps/my-apps/${page}`"
+  <EditApi
+    :routePath="`/app/my-apis/businesses/${page}`"
   />
 </template>
 
 <script>
-import EditApp from '@/components/shared/subjects/apps/EditApp';
+import EditApi from '@/components/shared/subjects/apis/EditApi';
 
 export default {
   components: {
-    EditApp,
+    EditApi,
   },
   data() {
     return {

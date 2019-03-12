@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import AuthLayout from '@/layouts/AuthLayout';
+// Authorization Components
+import Login from '@/components/routes/auth/login';
+import SignUp from '@/components/routes/auth/signup';
+import ForgotPassword from '@/components/routes/auth/forgotPassword';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
@@ -95,6 +100,24 @@ export default new Router({
     {
       path: '/',
       component: Home,
+    },
+    {
+      path: '/auth',
+      component: AuthLayout,
+      children: [
+        {
+          path: 'login',
+          component: Login,
+        },
+        {
+          path: 'signup',
+          component: SignUp,
+        },
+        {
+          path: 'forgot-password',
+          component: ForgotPassword,
+        },
+      ],
     },
     {
       path: '/app',

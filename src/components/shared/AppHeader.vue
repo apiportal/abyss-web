@@ -41,14 +41,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-header {
-  .logo {
-    height: 40px;
-    margin-left: 1rem;
-  }
-  .navbar-brand {
-    background: #400E40;
-    width: 250px;
-  }
-}
+// .app-header {
+//   .logo {
+//     height: 40px;
+//     margin-left: 1rem;
+//   }
+//   .navbar-brand {
+//     background: #400E40;
+//     width: 250px;
+//   }
+// }
 </style>

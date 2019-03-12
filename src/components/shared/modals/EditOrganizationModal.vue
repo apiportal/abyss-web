@@ -60,7 +60,7 @@
               Organization:
               <span class="text-danger">*</span>
             </label>
-            <!-- <b-form-select
+            <b-form-select
               id="organizationOrganizationIdInput"
               v-model="organizationEditable.organizationid" 
               :state="organizationIdState"
@@ -69,24 +69,8 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 }))
-              ]"
-              required
-            /> -->
-            <b-form-select
-              id="organizationOrganizationIdInput"
-              v-model="organizationEditable.organizationid" 
-              :state="organizationIdState"
-              :options="[
-                { value: null, text: 'Please Select'},
-                ...organizations.reduce((a, o) => {
-                  !o.isdeleted && a.push({
-                    value: o.uuid,
-                    text: o.name
-                  });
-                  return a;
-                }, []),
-                // selectOptions(...organizations, 'name')
               ]"
               required
             />
@@ -223,15 +207,6 @@ export default {
   created() { },
   methods: {
     ...mapActions('organizations', ['putOrganizations', 'postOrganizations']),
-    // selectOptions(items, name) {
-    //   items.reduce((a, o) => {
-    //     !o.isdeleted && a.push({
-    //       value: o.uuid,
-    //       text: o[name],
-    //     });
-    //     return a;
-    //   }, []);
-    // },
     validateJson(obj) {
       try {
         return JSON.parse(obj);
@@ -246,10 +221,13 @@ export default {
         organizationEditable,
         onUpdate,
         role } = this;
+      const { picture } = organizationEditable;
+      let organizationToUpdate = {
+        ...organizationEditable,
+        picture: (picture === null ? '' : picture),
+      };
       if (role === 'edit') {
-        putOrganizations({
-          ...organizationEditable,
-        }).then((response) => {
+        putOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
@@ -258,11 +236,11 @@ export default {
         const { currentUser } = this;
         const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
-        const organizationToAdd = [{
-          ...organizationEditable,
+        organizationToUpdate = [{
+          ...organizationToUpdate,
           crudsubjectid,
         }];
-        postOrganizations(organizationToAdd).then((response) => {
+        postOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }

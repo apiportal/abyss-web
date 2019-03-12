@@ -1,74 +1,87 @@
 <template>
-  <div class="access-manager-types-container">
-    <div class="access-manager-types-header silver-bg">
+  <div class="page-container page-access-manager-types">
+    
+    <div class="page-header">
+      <b-nav tabs>
+        <b-nav-item :active="true">
+          Access Manager Types <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="filter-table"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/access-manager-types/${page}/add-new`"
             variant="primary"
+            class="btn-add"
             block
           >
-            <span>Add</span>
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="access-manager-types-content">
-      <table class="table verapi-table">
+
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>
-              Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Name"
                 sortByKey="typename"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Description
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Description"
                 sortByKey="description"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Organization
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Organization"
                 sortByKey="organizationname"
                 sortByKeyType="string"
               />
             </th>
+            <th></th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="3"
+          :cols="4"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -84,42 +97,28 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
+            </td>
           </tr>
           <tr slot="footer" class="footer">
             <td colspan="4">
               <div class="collapsible-content">
-                <b-navbar toggleable="lg" type="dark" variant="secondary">
-                  <b-navbar-brand>{{ item.typename }}</b-navbar-brand>
-
-                  <b-navbar-toggle target="nav_collapse" />
-
-                  <b-collapse is-nav id="nav_collapse">
-                    <!-- Right aligned nav items -->
-                    <b-navbar-nav class="ml-auto">
-
-                      <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
-                        <template slot="button-content">
-                          <Icon icon="list-ol" />
-                          <em>Logs</em>
-                        </template>
-                        <b-dropdown-item :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                      <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
-                        <template slot="button-content">
-                          <Icon icon="cog" />
-                          <em>Operations</em>
-                        </template>
-                        <b-dropdown-item :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                        <b-dropdown-item :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                    </b-navbar-nav>
-                  </b-collapse>
-                </b-navbar>
-                <div style="margin: 2rem">
+                <div class="abyss-table-content">
                   <div class="row">
                     <dl class="col">
                       <dt>Name:</dt>
@@ -146,7 +145,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="access-manager-types-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -270,33 +269,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.access-manager-types-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .access-manager-types-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .access-manager-types-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .access-manager-types-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

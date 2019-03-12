@@ -79,6 +79,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 }))
               ]"
               required
@@ -101,6 +102,7 @@
                     ...accessManagerTypes.map(accessManagerType => ({
                       value: accessManagerType.uuid,
                       text: accessManagerType.typename,
+                      disabled: accessManagerType.isdeleted,
                     }))
                   ]"
                   @change="(val) => handleAccessManagerTypeChange(val)"

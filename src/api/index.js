@@ -67,6 +67,18 @@ export default {
   deleteOrganizations(uuid) {
     return axios.delete(`/abyss/oapi/organizations/${uuid}`);
   },
+
+  putSubjectOrganizations(subjectorganization) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectorganization;
+    return axios.put(`/abyss/oapi/subject-organizations/${uuid}`, rest);
+  },
+  postSubjectOrganizations(subjectorganization) {
+    return axios.post('/abyss/oapi/subject-organizations/', subjectorganization);
+  },
+  deleteSubjectOrganizations(uuid) {
+    return axios.delete(`/abyss/oapi/subject-organizations/${uuid}`);
+  },
+
   // users
   getUsers() {
     return axios.get('/abyss/oapi/subjects/users/');

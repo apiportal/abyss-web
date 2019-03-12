@@ -1,104 +1,117 @@
 <template>
-    <div class="administer-permissions-container">
-      <div class="administer-permissions-header silver-bg">
+    <div class="page-container page-permissions">
+
+      <div class="page-header">
+        <b-nav tabs>
+          <b-nav-item :active="true">
+            Permissions <b-badge pill>{{ permissions.length }}</b-badge>
+          </b-nav-item>
+        </b-nav>
         <div class="row">
-          <div class="col-md-9">
+          <div class="col">
             <InputWithIcon
               :prepend="{ icon: 'filter' }"
               placeholder="Type to filter"
               :onKeyup="handleFilterKeyup"
+              class="filter-table"
             />
           </div>
-        <div class="col-md-1">
-          <b-button
-            v-b-tooltip.hover 
-            title="Refresh"
-            block
-            @click="refreshData"
-          >
-            <Icon icon="redo" />
-          </b-button>
-        </div>
-          <div class="col-md-2">
+          <div class="col-auto">
+            <b-button
+              v-b-tooltip.hover 
+              title="Refresh"
+              variant="link"
+              class="btn-refresh"
+              block
+              @click="refreshData"
+            >
+              <Icon icon="redo" />
+            </b-button>
+          </div>
+          <div class="col-auto">
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
               variant="primary"
+              class="btn-add"
               block
             >
-              Add
+              <span>Add New</span>
+              <Icon icon="plus" />
             </b-button>
           </div>
         </div>
       </div>
-      <div class="administer-permissions-content">
-        <table class="table verapi-table">            
+
+      <div class="page-content">
+        <table class="table abyss-table abyss-table-cards">            
           <thead>
             <tr>
               <th class="status">
-                Status
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Status"
                   sortByKey="isactive"
                   sortByKeyType="boolean"
                 />
               </th>
               <th>
-                Permission Name
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Permission Name"
                   sortByKey="permission"
                   sortByKeyType="string"
                 />
               </th>
               <th>
-              Resource Type
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Resource Type"
                   sortByKey="resourcetypename"
                   sortByKeyType="string"
                 />
               </th>
               <th>
-                Resource Action
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Resource Action"
                   sortByKey="resourceactionname"
                   sortByKeyType="string"
                 />
               </th>
               <th>
-                Access Manager
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Access Manager"
                   sortByKey="accessmanagername"
                   sortByKeyType="string"
                 />
               </th>
               <th>
-                Organization
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
+                  text="Organization"
                   sortByKey="organizationname"
                   sortByKeyType="string"
                 />
               </th>
+              <th></th>
             </tr>
           </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="6"
+          :cols="7"
         />
           <TbodyCollapsible
             v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -114,10 +127,10 @@
               <td @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.permission }}
               </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
+              <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.resourcetypename }}
               </td>
-              <td @click="() => handleCollapseTableRows(item.uuid)">
+              <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.resourceactionname }}
               </td>
               <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -126,9 +139,26 @@
               <td @click="() => handleCollapseTableRows(item.uuid)">
                 {{ item.organizationname }}
               </td>
+              <td class="actions">
+                <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                  <template slot="button-content">
+                    <Icon icon="ellipsis-h" />
+                  </template>
+
+                  <b-dropdown-item :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                  <b-dropdown-item :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                  <b-dropdown-header>LOGS</b-dropdown-header>
+
+                  <b-dropdown-item :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+
+                  <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+                </b-dropdown>
+              </td>
             </tr>
             <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-              <td colspan="6">
+              <td colspan="7">
                 <div class="collapsible-content">
                   <AdministerPermission
                     :permission="item"
@@ -142,7 +172,7 @@
         </table>
         <router-view></router-view>
       </div>
-      <div class="administer-permissions-footer" v-if="tableRows.length > itemsPerPage">
+      <div class="page-footer" v-if="tableRows.length > itemsPerPage">
         <b-pagination 
           size="md"
           :total-rows="tableRows.length"
@@ -290,6 +320,7 @@ export default {
     this.$store.dispatch('subjectTypes/getSubjectTypes', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
+    this.$store.dispatch('apps/getApps', {});
   },
   data() {
     return {
@@ -330,33 +361,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.administer-permissions-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .administer-permissions-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .administer-permissions-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .administer-permissions-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

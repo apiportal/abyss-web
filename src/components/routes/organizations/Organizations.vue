@@ -1,80 +1,92 @@
 <template>
   <div class="page-container page-organizations">
+
     <div class="page-header">
+      <b-nav tabs>
+        <b-nav-item :active="true">
+          Organizations <b-badge pill>{{ organizations.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="filter-table"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/organizations/${page}/add-new`"
             variant="primary"
+            class="btn-add"
             block
           >
-            <span>Add</span>
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
+
     <div class="page-content">
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>
-              Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Name"
                 sortByKey="name"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Sub Organizations
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
+            <th class="text-nowrap">
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Sub Organizations"
                 sortByKey="suborganizations"
                 sortByKeyType="number"
               />
             </th>
             <th>
-              Users
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Users"
                 sortByKey="organizationusers"
                 sortByKeyType="number"
               />
             </th>
-            <th>
-              Owner
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="organizationowner"
-                sortByKeyType="string"
-              />
-            </th>
-            <th> </th>
+            <th></th>
           </tr>
         </thead>
         <TBodyLoading
@@ -92,28 +104,28 @@
               {{ item.name }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.suborganizations }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationusers }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationowner }}
             </td>
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.suborganizations }}
+            </td>
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationusers }}
+            </td>
             <td class="actions">
-              <!-- <b-dropdown id="ddown-header" text="Actions"" right> -->
-              <b-dropdown variant="link" size="lg" no-caret right>
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Organization</b-dropdown-item>
-                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Organization</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
-                <b-dropdown-divider />
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
                 <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
@@ -171,8 +183,8 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
+      subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
-      subjectOrganizations: state => state.organizations.users,
     }),
     tableRows() {
       const { organizations, subjectOrganizations } = this;
@@ -243,11 +255,11 @@ export default {
       });
     },
   },
-  mounted() {
+  created() {
     this.$store.commit('currentPage/setRootPath', 'organizations');
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('organizations/getSubjectOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
   },
   data() {
     return {
@@ -291,7 +303,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
@@ -304,33 +317,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.organizations-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .organizations-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .organizations-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .organizations-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

@@ -1,127 +1,115 @@
 <template>
-  <div>
-    <!-- <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ organization.name }}</b-navbar-brand>
-    
-      <b-navbar-toggle target="nav_collapse" />
-    
-      <b-collapse is-nav id="nav_collapse">
-        <b-navbar-nav class="ml-auto">
-    
-          <b-nav-item-dropdown right>
-            <template slot="button-content">
-              <Icon icon="list-ol" />
-              <em>Logs</em>
-            </template>
-            <b-dropdown-item :to="`/app/organizations/${page}/logs/${organization.uuid}/organization/1`">All</b-dropdown-item>
-          </b-nav-item-dropdown>
-    
-          <b-nav-item-dropdown right>
-            <template slot="button-content">
-              <Icon icon="cog" />
-              <em>Operations</em>
-            </template>
-            <b-dropdown-item :to="`/app/organizations/${page}/edit/${organization.uuid}`"><Icon icon="edit" /> Edit Organization</b-dropdown-item>
-            <b-dropdown-item :to="`/app/organizations/${page}/delete/${organization.uuid}`"><Icon icon="trash-alt" /> Delete Organization</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar> -->
-    <article>
-      <div class="row">
-        <dl class="col">
-          <dt>Name:</dt>
-          <dd>{{ organization.name }}</dd>
-          <dt>Parent Organization:</dt>
-          <dd>{{ organization.organizationname }}</dd>
-        </dl>
-        <dl class="col">
-          <dt>Url:</dt>
-          <dd>{{ organization.url }}</dd>
-          <dt>Description:</dt>
-          <dd>{{ organization.description }}</dd>
-          <dt>uuid:</dt>
-          <dd><code>{{ organization.uuid }}</code></dd>
-        </dl>
-        <dl class="col-1">
-          <dt>Users:</dt>
-          <dd>{{ organizationUsers.length }}</dd>
-          <dt>APPs:</dt>
-          <dd>{{ organizationApps.length }}</dd>
-          <dt>APIs:</dt>
-          <dd>{{ organizationApis.length }}</dd>
-        </dl>
-        <dl class="col-3">
-          <dt>Created:</dt>
-          <dd>{{ organization.created | moment("DD.MM.YYYY HH:mm") }}</dd>
-          <dt v-if="!organization.isdeleted">Updated:</dt>
-          <dd v-if="!organization.isdeleted">{{ organization.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
-          <dt v-if="organization.isdeleted">Deleted:</dt>
-          <dd v-if="organization.isdeleted">{{ organization.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
-        </dl>
-      </div>
+  <div class="abyss-table-content">
+    <div class="row">
+      <dl class="col">
+        <dt>Name:</dt>
+        <dd>{{ organization.name }}</dd>
+        <dt>Parent Organization:</dt>
+        <dd>{{ organization.organizationname }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Url:</dt>
+        <dd>{{ organization.url }}</dd>
+        <dt>Description:</dt>
+        <dd>{{ organization.description }}</dd>
+      </dl>
+      <dl class="col-1">
+        <dt>Users:</dt>
+        <dd>{{ organizationUsers.length }}</dd>
+        <dt>APPs:</dt>
+        <dd>{{ organizationApps.length }}</dd>
+        <dt>APIs:</dt>
+        <dd>{{ organizationApis.length }}</dd>
+      </dl>
+      <dl class="col-3">
+        <dt>Created:</dt>
+        <dd>{{ organization.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="!organization.isdeleted">Updated:</dt>
+        <dd v-if="!organization.isdeleted">{{ organization.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="organization.isdeleted">Deleted:</dt>
+        <dd v-if="organization.isdeleted">{{ organization.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
+    </div>
+    <div class="row px-3 abyss-table-buttons">
       <b-button
-        size="lg"
+        size="md"
         variant="link"
         v-b-tooltip.hover
         title="Users"
         @click="listOrganizationUsers"
-        class="px-0 h2"
+        :class="{'active': isShowOrganizationUsers}"
+        v-if="organizationUsers.length"
       >
         <Icon icon="users" /> Users
+        <b-badge pill>{{ organizationUsers.length }}</b-badge>
       </b-button>
       <b-button
-        size="lg"
+        size="md"
         variant="link"
         v-b-tooltip.hover
         title="Sub Organizations"
         @click="showSubOrganizations"
-        class="px-0 h2"
+        :class="{'active': isShowSubOrganizations}"
+        v-if="organization.suborganizations > 0"
       >
         <Icon icon="list-ol" /> Sub Organizations
+        <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
-      <div class="mb-3" v-if="isShowOrganizationUsers && organizationUsers.length">
-        <Users
-          :users="organizationUsers"
-          path="organizations"
-          title="Organization"
-          :page="page"
-        />
-      </div>
-
-      <table class="table abyss-table abyss-table-cards" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
+    </div>
+    <div class="abyss-table-content" v-if="isShowOrganizationUsers && organizationUsers.length">
+      <Users
+        :users="organizationUsers"
+        path="organizations"
+        title="Organization"
+        :page="page"
+      />
+    </div>
+  
+    <div class="abyss-table-content" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>
-              Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Name"
                 sortByKey="name"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Sub Organizations
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
+            <th class="text-nowrap">
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Sub Organizations"
                 sortByKey="suborganizations"
                 sortByKeyType="number"
               />
             </th>
             <th>
-              Users
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Users"
                 sortByKey="organizationusers"
                 sortByKeyType="number"
               />
             </th>
+            <th></th>
           </tr>
         </thead>
         <TbodyCollapsible
@@ -135,14 +123,34 @@
               {{ item.name }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
+            </td>
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              --{{ item.organizationusers }}
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationusers }}
+            </td>
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+      
+                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+      
+                <b-dropdown-header>LOGS</b-dropdown-header>
+      
+                <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
+      
+                <b-dropdown-header><code>{{ organization.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="3">
+            <td colspan="5">
               <div class="collapsible-content">
                 <Organization
                   :organizations="organizations"
@@ -154,7 +162,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
-    </article>
+    </div>
   </div>
 </template>
 
@@ -202,7 +210,7 @@ export default {
       users: state => state.users.items,
       apps: state => state.apps.items,
       apis: state => state.apis.items,
-      subjectOrganizations: state => state.organizations.users,
+      subjectOrganizations: state => state.subjectOrganizations.items,
     }),
     organizationUsers1() {
       const { users, organization } = this;
@@ -245,7 +253,7 @@ export default {
     // this.$store.dispatch('apps/getApps', {});
     // this.$store.dispatch('apis/getApis', {});
     // this.getUsersOfOrganizations();
-    this.$store.dispatch('organizations/getSubjectOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
   },
   data() {
     return {
@@ -268,9 +276,15 @@ export default {
     },
     listOrganizationUsers() {
       this.isShowOrganizationUsers = !this.isShowOrganizationUsers;
+      if (this.isShowOrganizationUsers) {
+        this.isShowSubOrganizations = false;
+      }
     },
     showSubOrganizations() {
       this.isShowSubOrganizations = !this.isShowSubOrganizations;
+      if (this.isShowSubOrganizations) {
+        this.isShowOrganizationUsers = false;
+      }
     },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;

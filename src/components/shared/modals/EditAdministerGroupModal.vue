@@ -101,6 +101,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 })),
               ]"
               :state="organizationIdState"
@@ -124,6 +125,7 @@
                 ...subjectDirectories.map(subjectDirectory => ({
                   value: subjectDirectory.uuid,
                   text: subjectDirectory.directoryname,
+                  disabled: subjectDirectory.isdeleted,
                 })),
               ]"
               :state="subjectDirectoryIdState"
@@ -425,8 +427,9 @@ export default {
       evt.preventDefault();
       const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
       const { description, url, effectiveenddate, displayname,
-        subjectname, picture, distinguishedname,
-        uniqueid, phonebusiness, phoneextension, phonehome, phonemobile } = groupEditable;
+        subjectname, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = groupEditable;
       let groupToUpdate = {
         ...groupEditable,
         firstname: displayname,
@@ -442,6 +445,9 @@ export default {
         phoneextension: (phoneextension === null ? '' : phoneextension),
         phonehome: (phonehome === null ? '' : phonehome),
         phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
 

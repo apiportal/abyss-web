@@ -24,7 +24,8 @@ export default {
     isCollapsed(newval) {
       if (newval) {
         setTimeout(function() { // eslint-disable-line
-          this.$el.querySelectorAll('.collapsible-content')[0].style.width = `${this.$el.clientWidth - 2}px`;
+          // this.$el.querySelectorAll('.collapsible-content')[0].style.width =
+          // `${this.$el.clientWidth - 2}px`;
           this.$el.querySelectorAll('.collapsible-content')[0].style.display = 'block';
         }.bind(this), 100);
       }
@@ -55,7 +56,7 @@ export default {
     }
 
     .collapsible-content {
-      width: 0;
+      // width: 0;
       display: none;
       overflow-y: auto; 
       padding: 0;

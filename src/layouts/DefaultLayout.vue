@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="app-flex">
-    <div class="app-header-flex silver-bg">
+    <div class="app-header-flex">
       <AppHeader />
     </div>
     <div class="app-body-flex">
@@ -43,38 +43,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.app-flex {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-
-  .app-header-flex {
-    flex: 0 0 40px;
-  }
-
-  .app-body-flex {
-    flex: 1 0 0;
-    display: flex;
-    flex-direction: row;
-
-    .app-sidenav-flex {
-      flex: 0 0 250px;
-      overflow-y: auto;
-      background-color: #400E40;
-    }
-
-    .app-content-flex {
-      flex: 1 0 0;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-}
-
-</style>

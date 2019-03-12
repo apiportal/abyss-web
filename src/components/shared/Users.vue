@@ -1,43 +1,43 @@
 <template>
-  <table class="table abyss-table">
+  <table class="table abyss-table abyss-table-cards">
     <thead>
       <tr>
         <th>
-          Status
           <SortBy
             :selectedSortByKey="sortByKey"
             :selectedSortDirection="sortDirection"
             :onClick="handleSortByClick"
+            text="Status"
             sortByKey="isactivated"
             sortByKeyType="boolean"
           />
         </th>
         <th>
-          Display Name
           <SortBy
             :selectedSortByKey="sortByKey"
             :selectedSortDirection="sortDirection"
             :onClick="handleSortByClick"
+            text="Display Name"
             sortByKey="displayname"
             sortByKeyType="string"
           />
         </th>
         <th>
-          User Name
           <SortBy
             :selectedSortByKey="sortByKey"
             :selectedSortDirection="sortDirection"
             :onClick="handleSortByClick"
+            text="User Name"
             sortByKey="subjectname"
             sortByKeyType="string"
           />
         </th>
         <th>
-          E-mail
           <SortBy
             :selectedSortByKey="sortByKey"
             :selectedSortDirection="sortDirection"
             :onClick="handleSortByClick"
+            text="E-mail"
             sortByKey="email"
             sortByKeyType="string"
           />
@@ -50,7 +50,7 @@
       :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
     >
       <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-        <td @click="() => handleCollapseTableRows(item.uuid)">
+        <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
           <Icon 
             :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
             :class="item.isactivated ? 'text-success' : 'text-danger'"
@@ -65,17 +65,23 @@
         <td @click="() => handleCollapseTableRows(item.uuid)">
           {{ item.email }}
         </td>
-        <td class="py-2 text-right">
-          <b-button
-            :to="`/app/${path}/${page}/edit-user/${item.uuid}`"
-            size="sm"
-            variant="secondary"
-            v-b-tooltip.hover
-            title="Edit"
-          >
-            <Icon icon="edit" />
-            <span>Edit User</span>
-          </b-button>
+        <td class="actions">
+          <b-dropdown variant="link" size="lg" no-caret right>
+            <template slot="button-content">
+              <Icon icon="ellipsis-h" />
+            </template>
+
+            <b-dropdown-item :to="`/app/${path}/${page}/edit-user/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+
+            <!-- <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Organization</b-dropdown-item>
+            <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Organization</b-dropdown-item>
+
+            <b-dropdown-divider />
+            <b-dropdown-header>LOGS</b-dropdown-header>
+
+            <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item> -->
+
+          </b-dropdown>
         </td>
       </tr>
       <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
@@ -205,7 +211,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

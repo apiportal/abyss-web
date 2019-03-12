@@ -46,6 +46,7 @@ import {
   faUser,
   faUserCog,
   faRedo,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -98,6 +99,7 @@ library.add(
   faUser,
   faUserCog,
   faRedo,
+  faExclamationTriangle,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);
@@ -105,6 +107,12 @@ Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 Vue.use(VueMoment, {
   moment,
+});
+Vue.filter('booleanToText', (value) => {
+  if (value) {
+    return 'Yes';
+  }
+  return 'No';
 });
 /* eslint-disable no-new */
 new Vue({

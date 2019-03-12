@@ -1,97 +1,123 @@
 <template>
-  <div class="identity-managers-container">
-    <div class="identity-managers-header silver-bg">
+  <div class="page-container page-identity-managers">
+
+    <div class="page-header">
+      <b-nav tabs>
+        <b-nav-item :active="true">
+          Identity Managers <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="filter-table"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
+            class="btn-add"
             block
           >
-            Add
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="identity-managers-content">
-      <table class="table verapi-table">
+
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th>
-              Name
+            <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Status"
+                sortByKey="isactive"
+                sortByKeyType="boolean"
+              />
+            </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Name"
                 sortByKey="directoryname"
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Priority Order
+            <th class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Priority Order"
                 sortByKey="directorypriorityorder"
                 sortByKeyType="number"
               />
             </th>
             <th>
-              Directory Type
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Directory Type"
                 sortByKey="directorytypename"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Organization
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Organization"
                 sortByKey="organizationname"
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Status
-            </th>
+            <th></th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="5"
+          :cols="6"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon 
+                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+                :class="item.isactive ? 'text-success' : 'text-danger'"
+              />
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directoryname }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directorypriorityorder }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -100,45 +126,28 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="5">
+            <td colspan="6">
               <div class="collapsible-content">
-                <b-navbar toggleable="lg" type="dark" variant="secondary">
-                  <b-navbar-brand>{{ item.directoryname }}</b-navbar-brand>
-
-                  <b-navbar-toggle target="nav_collapse" />
-
-                  <b-collapse is-nav id="nav_collapse">
-                    <!-- Right aligned nav items -->
-                    <b-navbar-nav class="ml-auto">
-
-                      <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
-                        <template slot="button-content">
-                          <Icon icon="list-ol" />
-                          <em>Logs</em>
-                        </template>
-                        <b-dropdown-item :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
-                      </b-nav-item-dropdown>
-
-                      <b-nav-item-dropdown right>
-                        <!-- Using button-content slot -->
-                        <template slot="button-content">
-                          <Icon icon="cog" />
-                          <em>Operations</em>
-                        </template>
-                        <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                        <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
-                      </b-nav-item-dropdown>
-                      
-                    </b-navbar-nav>
-                  </b-collapse>
-                </b-navbar>
-                <div style="margin: 2rem">
+                <div class="abyss-table-content">
                   <div class="row">
                     <dl class="col">
                       <dt>Name:</dt>
@@ -156,9 +165,9 @@
                     </dl>
                     <dl class="col">
                       <dt>Active:</dt>
-                      <dd>{{ item.isactive }}</dd>
+                      <dd>{{ item.isactive | booleanToText }}</dd>
                       <dt>Template:</dt>
-                      <dd>{{ item.istemplate }}</dd>
+                      <dd>{{ item.istemplate | booleanToText }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Created:</dt>
@@ -177,7 +186,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="identity-managers-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -308,33 +317,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.identity-managers-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .identity-managers-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .identity-managers-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .identity-managers-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

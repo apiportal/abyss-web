@@ -1,90 +1,103 @@
 <template>
-  <div class="identity-managers-container">
-    <div class="identity-managers-header silver-bg">
+  <div class="page-container page-groups">
+
+    <div class="page-header">
+      <b-nav tabs>
+        <b-nav-item :active="true">
+          Groups <b-badge pill>{{ groups.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="filter-table"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
+            class="btn-add"
             block
           >
-            Add
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="identity-managers-content">
-      <table class="table verapi-table">
+
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th class="status">
-              Status
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Status"
                 sortByKey="isactivated"
                 sortByKeyType="boolean"
               />
             </th>
             <th>
-              Display Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Display Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Users
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="userscount"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
-              Organization
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
+                text="Organization"
                 sortByKey="organizationname"
                 sortByKeyType="string"
               />
             </th>
+            <th class="number">
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Users"
+                sortByKey="userscount"
+                sortByKeyType="number"
+              />
+            </th>
+            <th></th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && totalRows.length === 0"
-          :cols="4"
+          :cols="5"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
@@ -95,14 +108,31 @@
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationname }}
+            </td>
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.userscount }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item :to="`/app/administer-groups/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="4">
+            <td colspan="5">
               <div class="collapsible-content">
                 <!-- <AdministerGroup
                   :group="item"
@@ -121,7 +151,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="identity-managers-footer" v-if="totalRows.length > itemsPerPage">
+    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="totalRows.length"
@@ -284,33 +314,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.identity-managers-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .identity-managers-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .identity-managers-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .identity-managers-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

@@ -106,6 +106,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 }))
               ]"
               required
@@ -128,6 +129,7 @@
                     ...subjectDirectoryTypes.map(subjectDirectoryType => ({
                       value: subjectDirectoryType.uuid,
                       text: subjectDirectoryType.typename,
+                      disabled: subjectDirectoryType.isdeleted,
                     }))
                   ]"
                   @change="(val) => handleDirectoryTypeChange(val)"

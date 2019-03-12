@@ -26,7 +26,7 @@
           <span class="route-icon"><Icon icon="globe" /></span> Explore
         </b-link>
 
-        <p style="color: #C5B7C6; margin-left: 1rem; font-size: .75rem; margin-top: 1rem; font-weight: bold">ADMIN</p>
+        <p>ADMIN</p>
 
 
         <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
@@ -85,35 +85,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul.sidenav-links {
-  list-style-type: none;
-  padding: 0;
+// ul.sidenav-links {
+//   list-style-type: none;
+//   padding: 0;
 
-  li {
-    a {
-      display: block;
-      position: relative;
-      padding-left: 2.5rem;
-      padding-top: .5rem;
-      padding-bottom: .5rem;
-      color: #C5B7C6;
-      text-decoration: none;
+//   li {
+//     a {
+//       display: block;
+//       position: relative;
+//       padding-left: 2.5rem;
+//       padding-top: .5rem;
+//       padding-bottom: .5rem;
+//       color: #C5B7C6;
+//       text-decoration: none;
 
-      &:hover {
-        background-color: #350D36;
-      }
+//       &:hover {
+//         background-color: #350D36;
+//       }
 
-      &.selected {
-        background-color: #1164A3;
-        color: white;
-      }
+//       &.selected {
+//         background-color: #1164A3;
+//         color: white;
+//       }
 
-      .route-icon {
-        position: absolute;
-        top: .5em;
-        left: 1rem;
-      }
-    }
-  }
-}
+//       .route-icon {
+//         position: absolute;
+//         top: .5em;
+//         left: 1rem;
+//       }
+//     }
+//   }
+// }
 </style>

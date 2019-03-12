@@ -188,6 +188,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 })),
               ]"
               :state="organizationIdState"
@@ -211,6 +212,7 @@
                 ...subjectDirectories.map(subjectDirectory => ({
                   value: subjectDirectory.uuid,
                   text: subjectDirectory.directoryname,
+                  disabled: subjectDirectory.isdeleted,
                 })),
               ]"
               :state="subjectDirectoryIdState"
@@ -436,9 +438,12 @@ export default {
     ...mapActions('users', ['putUsers', 'postUsers']),
     handleSubmit(evt) {
       evt.preventDefault();
+
       const { userEditable, putUsers, postUsers, onUpdate, role } = this;
-      const { description, url, effectiveenddate, secondaryemail, email, picture, distinguishedname,
-        uniqueid, phonebusiness, phoneextension, phonehome, phonemobile } = userEditable;
+      const { description, url, effectiveenddate, secondaryemail,
+        email, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = userEditable;
       let userToUpdate = {
         ...userEditable,
         description: (description === null ? '' : description),
@@ -450,6 +455,9 @@ export default {
         phoneextension: (phoneextension === null ? '' : phoneextension),
         phonehome: (phonehome === null ? '' : phonehome),
         phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
         secondaryemail: (secondaryemail === null ? email : email),
       };

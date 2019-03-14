@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -174,6 +174,10 @@ export default {
       default() { return 'lg'; },
     },
     onClose: {
+      type: Function,
+      required: true,
+    },
+    onUpdate: {
       type: Function,
       required: true,
     },
@@ -232,9 +236,29 @@ export default {
     };
   },
   methods: {
-    handleSubmit(event) {
-      event.preventDefault();
-      console.log('submitted'); // eslint-disable-line
+    ...mapActions('policies', ['putPolicies', 'postPolicies']),
+    handleSubmit(evt) {
+      evt.preventDefault();
+      const { policyEditable, putPolicies, postPolicies, onUpdate, role } = this;
+      if (role === 'edit') {
+        putPolicies(policyEditable).then(() => {
+          onUpdate();
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        const policyToUpdate = [{
+          ...policyEditable,
+          crudsubjectid,
+        }];
+        postPolicies(policyToUpdate)
+          .then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+      }
     },
     toggleConfigurePolicy() {
       this.isConfigurePolicyVisible = !this.isConfigurePolicyVisible;

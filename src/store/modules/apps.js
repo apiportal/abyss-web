@@ -32,7 +32,7 @@ const actions = {
       response.data.map((status) => {
         if (status.error.code !==0) {
           error = true;
-          alert(status.error.usermessage);
+          console.log(status.error.usermessage);
         } else {
           commit('addNewApp', status.response);
         }
@@ -40,6 +40,12 @@ const actions = {
       if (error) {
         return false;
       }
+      return response;
+    });
+  },
+  deleteApps: ({ commit }, app) => {
+    return api.deleteApps(app.uuid).then((response) => {
+      commit('setAppDeleted', app.uuid);
       return response;
     });
   },
@@ -83,6 +89,17 @@ const mutations = {
       }
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setAppDeleted: (state, appUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === appUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
   },
 };
 

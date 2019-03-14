@@ -35,6 +35,7 @@
       <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
       <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
       <b-button
+        v-if="routePath !== `/app/my-apps/my-apps/${page}`"
         @click="handleToggleApiProxiesTable"
         size="sm"
       >
@@ -78,6 +79,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentPage: state => state.currentPage,
       proxies: state => state.proxies.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,

@@ -10,6 +10,7 @@ import MyProxyApis from '@/components/routes/myApis/myProxyApis/MyProxyApis';
 import MySubscriptions from '@/components/routes/myApis/mySubscriptions/MySubscriptions';
 // import Api from '@/components/routes/myApis/api/Api';
 import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
+import EditMyApis from '@/components/routes/myApis/EditMyApis';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
@@ -124,6 +125,10 @@ export default new Router({
                 {
                   path: 'logs/:id/:logType/:logPage',
                   component: MyApisLogs,
+                },
+                {
+                  path: 'edit-api/:apiId',
+                  component: EditMyApis,
                 },
                 {
                   path: 'edit-license/:licenseId',

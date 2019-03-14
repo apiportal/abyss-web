@@ -48,6 +48,15 @@ import {
   faUserCog,
   faRedo,
   faExclamationTriangle,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -102,6 +111,15 @@ library.add(
   faUserCog,
   faRedo,
   faExclamationTriangle,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
+  faChevronRight,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

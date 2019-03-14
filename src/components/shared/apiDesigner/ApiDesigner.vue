@@ -37,14 +37,15 @@
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
-          :api="api"
+          :api="apiEditable"
+          :onChange="handleChange"
         />
       </div>
       <div
         :class="`api-designer-editor-container ${ (view === 'editor' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <Editor
-          :value="api.openapidocument"
+          :value="apiEditable.openapidocument"
         />
       </div>
     </div>
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+import Helpers from '@/helpers';
 import AbyssTool from '@/components/shared/apiDesigner/abyssTool/AbyssTool';
 import Editor from '@/components/shared/Editor';
 import Icon from '@/components/shared/Icon';
@@ -86,11 +88,19 @@ export default {
   data() {
     return {
       view: this.initialView,
+      apiEditable: JSON.parse(JSON.stringify(this.api)),
     };
   },
   methods: {
     setView(view) {
       this.view = view;
+    },
+    handleChange(propAddress, newPropValue) {
+      const { apiEditable } = this;
+      const { objectDeepUpdate } = Helpers;
+      let apiClone = JSON.parse(JSON.stringify(apiEditable)); // eslint-disable-line
+      objectDeepUpdate(propAddress, newPropValue, apiClone);
+      this.apiEditable = { ...apiClone };
     },
   },
 };

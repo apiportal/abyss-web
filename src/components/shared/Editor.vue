@@ -24,6 +24,11 @@ export default {
       default() { return 'eclipse'; },
     },
   },
+  watch: {
+    value(newValue) {
+      this.editor.setValue(JSON.stringify(newValue, null, '\t'));
+    },
+  },
   data() {
     return {
       isMounted: false,
@@ -39,7 +44,6 @@ export default {
     this.editor.setTheme(`ace/theme/${theme}`);
     this.editor.getSession().setTabSize(2);
     this.editor.setValue(JSON.stringify(value, null, '\t'));
-    // this.editor.setValue(JSON.stringify(value));
     // editor is ready
     this.isMounted = true;
   },

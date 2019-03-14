@@ -8,13 +8,16 @@
     <div class="operation-details" v-if="isOperationDetailsVisible">
       <OpenApiObjectForm
         type="Operation Object"
+        :formData="operation"
+        :pathArray="['openapidocument', 'paths', pathKey, operationKey]"
+        :onChange="onChange"
       />
     </div>
   </div>
 </template>
 
 <script>
-import OpenApiObjectForm from '@/components/shared/openApiObjectForm/OpenApiObjectForm';
+import OpenApiObjectForm from '@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm';
 
 export default {
   props: {
@@ -32,6 +35,10 @@ export default {
       type: String,
       required: false,
       default() { return ''; },
+    },
+    onChange: {
+      type: Function,
+      required: true,
     },
   },
   components: {

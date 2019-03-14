@@ -16,13 +16,14 @@
     <div class="abyss-tool-content-container">
       <Paths
         :paths="api.openapidocument.paths"
+        :onChange="onChange"
       />
     </div>
   </div>
 </template>
 
 <script>
-import Paths from '@/components/shared/apiDesigner/abyssTool/Paths';
+import Paths from '@/components/shared/apiDesigner/abyssTool/paths/Paths';
 
 export default {
   props: {
@@ -30,6 +31,10 @@ export default {
       type: Object,
       required: false,
       default() { return {}; },
+    },
+    onChange: {
+      type: Function,
+      required: true,
     },
   },
   components: {

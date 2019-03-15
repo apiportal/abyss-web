@@ -2,9 +2,15 @@
   <div class="page-container page-access-managers">
 
     <div class="page-header">
-      <b-nav tabs>
+      <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
           Access Managers <b-badge pill>{{ accessManagers.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/access-manager-types/1"
+        >
+          Access Manager Types <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -13,7 +19,7 @@
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
-            class="filter-table"
+            class="page-filter"
           />
         </div>
         <div class="col-auto">
@@ -21,7 +27,7 @@
             v-b-tooltip.hover 
             title="Refresh"
             variant="link"
-            class="btn-refresh"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
@@ -32,7 +38,7 @@
           <b-button
             :to="`/app/access-managers/${page}/add-new`"
             variant="primary"
-            class="btn-add"
+            class="page-btn-add"
             block
           >
             <span>Add New</span>
@@ -76,12 +82,22 @@
                 sortByKeyType="string"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Organization"
+                sortByKey="organizationname"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="4"
+          :cols="5"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -99,6 +115,9 @@
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.accessmanagertypename }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationname }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -119,7 +138,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="4">
+            <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">
                   <div class="row">
@@ -152,7 +171,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"

@@ -1,7 +1,7 @@
 <template>
   <div class="abyss-tool-container">
     <div class="abyss-tool-header-container">
-      <b-nav tabs>
+      <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true" style="margin-left: .5rem;">
           Paths
         </b-nav-item>

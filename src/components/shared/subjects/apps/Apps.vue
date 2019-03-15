@@ -1,23 +1,24 @@
 <template>
-  <div class="verapi-table-container">
-    <table class="table verapi-table">
+  <div class="abyss-table-content">
+    <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th>Status</th>
+          <th class="status">Status</th>
           <th>App Name</th>
           <th># of Subscriptions</th>
+          <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="4"
       />
       <TbodyCollapsible
         v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -26,9 +27,26 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.contracts ? item.contracts.length : '' }}
           </td>
+          <td class="actions">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <template slot="button-content">
+                <Icon icon="ellipsis-h" />
+              </template>
+
+              <b-dropdown-item :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+              <b-dropdown-header>LOGS</b-dropdown-header>
+
+              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+
+              <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+            </b-dropdown>
+          </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="3">
+          <td colspan="4">
             <div class="collapsible-content">
               <App
                 :item="item"

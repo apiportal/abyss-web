@@ -30,7 +30,7 @@
         <dd v-if="organization.isdeleted">{{ organization.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
-    <div class="row px-3 abyss-table-buttons">
+    <div class="row abyss-table-buttons">
       <b-button
         size="md"
         variant="link"
@@ -56,7 +56,7 @@
         <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
     </div>
-    <div class="abyss-table-content" v-if="isShowOrganizationUsers && organizationUsers.length">
+    <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
         :users="organizationUsers"
         path="organizations"

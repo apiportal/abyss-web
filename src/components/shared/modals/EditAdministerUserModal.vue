@@ -83,6 +83,7 @@
               v-model="userEditable.subjectname"
               placeholder="User Name"
               :state="userNameState"
+              :formatter="setValidSubjectName"
               required
             >
             </b-form-input>
@@ -436,6 +437,9 @@ export default {
   },
   methods: {
     ...mapActions('users', ['putUsers', 'postUsers']),
+    setValidSubjectName(value) {
+      return value.replace(/ /g, '').toLowerCase();
+    },
     handleSubmit(evt) {
       evt.preventDefault();
 

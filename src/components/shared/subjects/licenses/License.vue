@@ -1,141 +1,126 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ item.name }}</b-navbar-brand>
-
-      <b-navbar-toggle target="nav_collapse" />
-
-      <b-collapse is-nav id="nav_collapse">
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="list-ol" />
-              <em>Logs</em>
-            </template>
-            <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/license/1`">All</b-dropdown-item>
-          </b-nav-item-dropdown>
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="cog" />
-              <em>Operations</em>
-            </template>
-            <b-dropdown-item :to="`${routePath}/edit-license/${item.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
-            <b-dropdown-item @keyup.8="handleDeleteModal" @click="handleDeleteModal"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div style="margin: 2rem;">
-      <div class="flex-container">
-        <div>
-          <p><strong>Name:</strong> {{ item.name }}</p>
-          <p><strong>Id:</strong> {{ item.uuid }}</p>
-          <p><strong>Organization:</strong> {{ getOrganizationName(item.organizationid) }}</p>
-          <p><strong>Description:</strong> {{ item.licensedocument.info.description }}</p>
-          <p><strong>Visibility:</strong> {{ item.licensedocument.info.visibility }}</p>
-          </div>
-          <div>
-          <p><strong>Performance:</strong> {{ item.licensedocument.sla.performance }}</p>
-          <p><strong>Availability:</strong> {{ item.licensedocument.sla.availability }}</p>
-          <p><strong>Support Hours:</strong> {{ item.licensedocument.sla.supportHours }}</p>
-          <p><strong>BlackOutHours PerYear:</strong> {{ item.licensedocument.sla.blackOutHoursPerYear }}</p>
-          <p><strong>Link:</strong> {{ item.licensedocument.legal.link }}</p>
-          <b-link
-            @click="toggleInformModal"  
-            class="fas fa-search"
-          >
-            Show Legal Agreement 🔍
-          </b-link>
-          <TextAreaModal
-            v-if="isInformModalVisible"  
-            size="lg"
-            :item="item"
-            :onClose="toggleInformModal"
-            :onConfirm="toggleInformModal"
-          >
-          </TextAreaModal>
-          </div>
-          <div>
-          <p><strong>Created at:</strong> {{ item.created | moment("DD.MM.YYYY HH:mm") }}</p>
-          <p><strong>Updated at:</strong> {{ item.updated | moment("DD.MM.YYYY HH:mm") }}</p>
-          <p v-if="item.isdeleted"><strong>Deleted at:</strong> {{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</p>
-          <p><strong>Effective Start Date:</strong></p>
-          <p><strong>Effective End Date:</strong></p>
-        </div>
-      </div>
-      <!-- Policies -->
-      <div v-if="childComponent === 'policies'">
-        <b-button
-          @click="handleTogglePoliciesTable"
-          size="sm"
+  <div class="abyss-table-content">
+    <div class="row">
+      <dl class="col">
+        <dt>Name:</dt>
+        <dd>{{ item.name }}</dd>
+        <dt>Description:</dt>
+        <dd>{{ item.licensedocument.info.description }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Organization:</dt>
+        <dd>{{ getOrganizationName(item.organizationid) }}</dd>
+        <dt>Visibility:</dt>
+        <dd>{{ item.licensedocument.info.visibility }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Performance:</dt>
+        <dd>{{ item.licensedocument.sla.performance }}</dd>
+        <dt>Availability:</dt>
+        <dd>{{ item.licensedocument.sla.availability }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Support Hours:</dt>
+        <dd>{{ item.licensedocument.sla.supportHours }}</dd>
+        <dt>BlackOutHours PerYear:</dt>
+        <dd>{{ item.licensedocument.sla.blackOutHoursPerYear }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Link:</dt>
+        <dd>{{ item.licensedocument.legal.link }}</dd>
+        <b-link
+          @click="toggleInformModal"  
         >
-          <span>Policies</span>
-          <b-badge variant="light">{{ tableRows.length }}</b-badge>
-          <Icon :icon="`${isPoliciesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-button>
-        <div v-if="isPoliciesTableVisible" style="margin-bottom: 1rem;">
-          <Policies
-            :rows="tableRows"
-            :routePath="routePath"
-          ></Policies>
-        </div>
-      </div>
-      <!-- APIs -->
-      <div v-else-if="childComponent === 'apis'">
-        <b-button
-          @click="handleToggleApisTable"
-          size="sm"
-        >
-          <span>APIs</span>
-          <b-badge variant="light">{{ licenseApis.length }}</b-badge>
-          <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-button>
-        <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
-          <Apis
-            :rows="computedLicenseApis"
-            :routePath="routePath"
-          ></Apis>
-        </div>
-      </div>
-      <!-- Proxies -->
-      <div v-else-if="childComponent === 'proxies'">
-        <b-button
-          @click="handleToggleApisTable"
-          size="sm"
-        >
-          <span>Proxies</span>
-          <b-badge variant="light">{{ licenseApis.length }}</b-badge>
-          <Icon :icon="`${isApisTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-button>
-        <div v-if="isApisTableVisible" style="margin-bottom: 1rem;">
-          <Proxies
-            :rows="computedLicenseApis"
-            :routePath="routePath"
-          ></Proxies>
-        </div>
-      </div>
-      <!-- Contracts -->
-      <div v-else-if="childComponent === 'contracts'">
-        <b-button
-          @click="handleToggleContractsTable"
-          size="sm"
-        >
-          <span>Contracts</span>
-          <b-badge variant="light">{{ licenseContracts.length }}</b-badge>
-          <Icon :icon="`${isContractsTableVisible ? 'arrow-down' : 'arrow-right'}`" />
-        </b-button>
-        <div v-if="isContractsTableVisible" style="margin-bottom: 1rem;">
-          <Contracts
-            :rows="computedLicenseContracts"
-            :routePath="routePath"
-          ></Contracts>
-        </div>
-      </div>
+          Show Legal Agreement
+        </b-link>
+      </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="!item.isdeleted">Updated:</dt>
+        <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="item.isdeleted">Deleted:</dt>
+        <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
+    </div>
+    <TextAreaModal
+      v-if="isInformModalVisible"  
+      size="lg"
+      :item="item"
+      :onClose="toggleInformModal"
+      :onConfirm="toggleInformModal"
+    >
+    </TextAreaModal>
+    <div class="row abyss-table-buttons" v-if="childComponent === 'policies'">
+      <b-button
+        @click="handleTogglePoliciesTable"
+        size="md"
+        variant="link"
+        :class="{'active': isPoliciesTableVisible}"
+      >
+        <span>Policies</span>
+        <b-badge pill>{{ tableRows.length }}</b-badge>
+      </b-button>
+    </div>
+    <div class="abyss-table-content" v-if="isPoliciesTableVisible">
+      <Policies
+        :rows="tableRows"
+        :routePath="routePath"
+      ></Policies>
+    </div>
+    <!-- APIs -->
+    <div class="row abyss-table-buttons" v-else-if="childComponent === 'apis'">
+      <b-button
+        @click="handleToggleApisTable"
+        size="md"
+        variant="link"
+        :class="{'active': isApisTableVisible}"
+      >
+        <span>APIs</span>
+        <b-badge pill>{{ licenseApis.length }}</b-badge>
+      </b-button>
+    </div>
+    <div class="abyss-table-content" v-if="isApisTableVisible">
+      <Apis
+        :rows="computedLicenseApis"
+        :routePath="routePath"
+      ></Apis>
+    </div>
+    <!-- Proxies -->
+    <div class="row abyss-table-buttons" v-else-if="childComponent === 'proxies'">
+      <b-button
+        @click="handleToggleApisTable"
+        size="md"
+        variant="link"
+        :class="{'active': isApisTableVisible}"
+      >
+        <span>Proxies</span>
+        <b-badge pill>{{ licenseApis.length }}</b-badge>
+      </b-button>
+    </div>
+    <div class="abyss-table-content" v-if="isApisTableVisible">
+      <Proxies
+        :rows="computedLicenseApis"
+        :routePath="routePath"
+      ></Proxies>
+    </div>
+    <!-- Contracts -->
+    <div class="row abyss-table-buttons" v-else-if="childComponent === 'contracts'">
+      <b-button
+        @click="handleToggleContractsTable"
+        size="md"
+        variant="link"
+        :class="{'active': isContractsTableVisible}"
+      >
+        <span>Contracts</span>
+        <b-badge pill>{{ licenseContracts.length }}</b-badge>
+      </b-button>
+    </div>
+    <div class="abyss-table-content" v-if="isContractsTableVisible">
+      <Contracts
+        :rows="computedLicenseContracts"
+        :routePath="routePath"
+      ></Contracts>
     </div>
   </div>
 </template>
@@ -252,7 +237,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
@@ -266,10 +252,10 @@ export default {
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
     },
-    handleDeleteModal() {
-      const { item, routePath } = this;
-      this.$router.push(`${routePath}/delete-license/${item.uuid}`);
-    },
+    // handleDeleteModal() {
+    //   const { item, routePath } = this;
+    //   this.$router.push(`${routePath}/delete-license/${item.uuid}`);
+    // },
   },
   mounted() {
     if (this.childComponent === 'contracts') {
@@ -288,11 +274,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  border: 1px;
-}
-</style>

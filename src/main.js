@@ -57,6 +57,7 @@ import {
   faChevronUp,
   faChevronLeft,
   faChevronRight,
+  faChartBar,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -120,6 +121,7 @@ library.add(
   faChevronUp,
   faChevronLeft,
   faChevronRight,
+  faChartBar,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

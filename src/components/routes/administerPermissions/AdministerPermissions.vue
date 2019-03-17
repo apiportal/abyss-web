@@ -2,7 +2,7 @@
     <div class="page-container page-permissions">
 
       <div class="page-header">
-        <b-nav tabs>
+        <b-nav class="page-tabs" tabs>
           <b-nav-item :active="true">
             Permissions <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
@@ -13,7 +13,7 @@
               :prepend="{ icon: 'filter' }"
               placeholder="Type to filter"
               :onKeyup="handleFilterKeyup"
-              class="filter-table"
+              class="page-filter"
             />
           </div>
           <div class="col-auto">
@@ -21,7 +21,7 @@
               v-b-tooltip.hover 
               title="Refresh"
               variant="link"
-              class="btn-refresh"
+              class="page-btn-refresh"
               block
               @click="refreshData"
             >
@@ -32,7 +32,7 @@
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
               variant="primary"
-              class="btn-add"
+              class="page-btn-add"
               block
             >
               <span>Add New</span>
@@ -172,7 +172,7 @@
         </table>
         <router-view></router-view>
       </div>
-      <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+      <div class="page-footer">
         <b-pagination 
           size="md"
           :total-rows="tableRows.length"

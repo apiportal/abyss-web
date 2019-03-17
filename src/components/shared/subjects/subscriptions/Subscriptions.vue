@@ -1,6 +1,6 @@
 <template>
-  <div class="verapi-table-container">
-    <table class="table verapi-table">
+  <div class="abyss-table-content">
+    <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
           <th>Permission</th>
@@ -16,7 +16,7 @@
         :isCollapsed="collapsedRows.indexOf(subscriptionItem.uuid) > -1"
         :level="3"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${subscriptionItem.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(subscriptionItem.uuid)">
             {{ subscriptionItem.permission }}
           </td>
@@ -79,7 +79,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

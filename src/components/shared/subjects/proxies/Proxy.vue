@@ -1,54 +1,39 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ item.openapidocument.info.title }}</b-navbar-brand>
-
-      <b-navbar-toggle target="nav_collapse" />
-
-      <b-collapse is-nav id="nav_collapse">
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="list-ol" />
-              <em>Logs</em>
-            </template>
-            <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
-          </b-nav-item-dropdown>
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="cog" />
-              <em>Operations</em>
-            </template>
-            <!-- <b-dropdown-item :to="`${routePath}/edit-license/${item.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item> -->
-            <!-- <b-dropdown-item :to="`/app/my-licenses/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item> -->
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div style="margin: 2rem;">
-      <p><strong>Title:</strong> {{ item.openapidocument.info.title }}</p>
-      <p><strong>Version:</strong> {{ item.openapidocument.info.version }}</p>
-      <p><strong>Description:</strong> {{ item.openapidocument.info.description }}</p>
-      <p><strong>Organization:</strong> {{ item.organizationame }}</p>
+  <div class="abyss-table-content">
+    <div class="row">
+      <dl class="col">
+        <dt>Title:</dt>
+        <dd>{{ item.openapidocument.info.title }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Version:</dt>
+        <dd>{{ item.openapidocument.info.version }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Description:</dt>
+        <dd>{{ item.openapidocument.info.description }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Organization:</dt>
+        <dd>{{ item.organizationame }}</dd>
+      </dl>
+    </div>
+    <div class="row abyss-table-buttons">
       <b-button
         @click="handleToggleLicensesTable"
-        size="sm"
+        size="md"
+        variant="link"
+        :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
-        <b-badge variant="light">{{ item.subscriptions ? item.subscriptions.length : 0 }}</b-badge>
-        <Icon :icon="`${isLicensesTableVisible ? 'arrow-down' : 'arrow-right'}`" />
+        <b-badge pill>{{ item.subscriptions ? item.subscriptions.length : 0 }}</b-badge>
       </b-button>
-      <div v-if="isLicensesTableVisible" style="margin-bottom: 1rem;">
-        <Licenses
-          :rows="item.subscriptions"
-          :routePath="routePath"
-        ></Licenses>
-      </div>
+    </div>
+    <div v-if="isLicensesTableVisible">
+      <Licenses
+        :rows="item.subscriptions"
+        :routePath="routePath"
+      ></Licenses>
     </div>
   </div>
 </template>
@@ -97,7 +82,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

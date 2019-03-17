@@ -2,7 +2,13 @@
   <div class="page-container page-access-manager-types">
     
     <div class="page-header">
-      <b-nav tabs>
+      <b-nav class="page-tabs" tabs>
+        <b-nav-item
+          :active="false"
+          to="/app/access-managers/1"
+        >
+          Access Managers <b-badge pill>{{ accessManagers.length }}</b-badge>
+        </b-nav-item>
         <b-nav-item :active="true">
           Access Manager Types <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
@@ -13,7 +19,7 @@
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
-            class="filter-table"
+            class="page-filter"
           />
         </div>
         <div class="col-auto">
@@ -21,7 +27,7 @@
             v-b-tooltip.hover 
             title="Refresh"
             variant="link"
-            class="btn-refresh"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
@@ -32,7 +38,7 @@
           <b-button
             :to="`/app/access-manager-types/${page}/add-new`"
             variant="primary"
-            class="btn-add"
+            class="page-btn-add"
             block
           >
             <span>Add New</span>
@@ -145,7 +151,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -180,6 +186,7 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       accessManagerTypes: state => state.accessManagerTypes.items,
+      accessManagers: state => state.accessManagers.items,
       organizations: state => state.organizations.items,
     }),
     tableRows() {
@@ -228,6 +235,7 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'access-manager-types');
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
+    this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {

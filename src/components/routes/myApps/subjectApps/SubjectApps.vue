@@ -1,43 +1,48 @@
 <template>
-  <div class="subject-apps-container">
-    <div class="subject-apps-header">
+  <div class="page-container page-my-apps">
+    <div class="page-header">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="page-filter"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/my-apps/my-apps/${page}/add-new`"
             variant="primary"
+            class="page-btn-add"
             block
           >
-            Add
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="subject-apps-content">
+    <div class="page-content">
       <Apps
         :rows="paginatedRows"
         :routePath="`/app/my-apps/my-apps/${page}`"
       />
       <router-view></router-view>
     </div>
-    <div class="subject-apps-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -152,33 +157,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.subject-apps-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .subject-apps-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .subject-apps-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-
-  .subject-apps-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-}
-</style>

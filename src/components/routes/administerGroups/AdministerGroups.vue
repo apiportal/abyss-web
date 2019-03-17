@@ -2,7 +2,7 @@
   <div class="page-container page-groups">
 
     <div class="page-header">
-      <b-nav tabs>
+      <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
           Groups <b-badge pill>{{ groups.length }}</b-badge>
         </b-nav-item>
@@ -13,7 +13,7 @@
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
-            class="filter-table"
+            class="page-filter"
           />
         </div>
         <div class="col-auto">
@@ -21,7 +21,7 @@
             v-b-tooltip.hover 
             title="Refresh"
             variant="link"
-            class="btn-refresh"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
@@ -32,7 +32,7 @@
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
-            class="btn-add"
+            class="page-btn-add"
             block
           >
             <span>Add New</span>
@@ -66,16 +66,6 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Organization"
-                sortByKey="organizationname"
-                sortByKeyType="string"
-              />
-            </th>
             <th class="number">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -84,6 +74,16 @@
                 text="Users"
                 sortByKey="userscount"
                 sortByKeyType="number"
+              />
+            </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Organization"
+                sortByKey="organizationname"
+                sortByKeyType="string"
               />
             </th>
             <th></th>
@@ -107,11 +107,11 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.displayname }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
-            </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.userscount }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationname }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -151,7 +151,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="totalRows.length"

@@ -1,27 +1,36 @@
 <template>
-  <div class="verapi-table-container">
-    <table class="table verapi-table">
+  <div class="abyss-table-content">
+    <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th>Status</th>
-          <th>
-            License Name
+          <th class="status">
             <SortBy
-                  :selectedSortByKey="sortByKey"
-                  :selectedSortDirection="sortDirection"
-                  :onClick="handleSortByClick"
-                  sortByKey="name"
-                  sortByKeyType="string"
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Status"
+              sortByKey="isactive"
+              sortByKeyType="boolean"
             />
           </th>
           <th>
-            Version
             <SortBy
-                  :selectedSortByKey="sortByKey"
-                  :selectedSortDirection="sortDirection"
-                  :onClick="handleSortByClick"
-                  sortByKey="version"
-                  sortByKeyType="string"
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="License Name"
+              sortByKey="name"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Version"
+              sortByKey="version"
+              sortByKeyType="string"
             />
           </th>
           <th>State</th>
@@ -29,11 +38,12 @@
           <!-- <th v-if="childComponent === 'policies'"># of Policies</th>
           <th v-if="childComponent === 'proxies'"># of Proxies</th>
           <th v-if="childComponent === 'contracts'"># of Contracts</th> -->
+          <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="7"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(licenseItem, licenseIndex) in rows" v-bind:key="licenseIndex"
@@ -41,8 +51,10 @@
         :level="2"
       >
         <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            <Icon :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'" :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
+          <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            <Icon
+              :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"
+              :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.name }}
@@ -65,9 +77,26 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'contracts'">
             {{ licenseContracts.length }}
           </td> -->
+          <td class="actions">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!licenseItem.isdeleted">
+              <template slot="button-content">
+                <Icon icon="ellipsis-h" />
+              </template>
+
+              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+              <b-dropdown-header>LOGS</b-dropdown-header>
+
+              <b-dropdown-item :to="`${routePath}/logs/${licenseItem.uuid}/license/1`">All</b-dropdown-item>
+
+              <b-dropdown-header><code>{{ licenseItem.uuid }}</code></b-dropdown-header>
+
+            </b-dropdown>
+          </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"
@@ -138,7 +167,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

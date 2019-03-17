@@ -2,7 +2,13 @@
   <div class="page-container page-identity-manager-types">
 
     <div class="page-header">
-      <b-nav tabs>
+      <b-nav class="page-tabs" tabs>
+        <b-nav-item
+          :active="false"
+          to="/app/identity-managers/1"
+        >
+          Identity Managers <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+        </b-nav-item>
         <b-nav-item :active="true">
           Identity Manager Types <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
         </b-nav-item>
@@ -13,7 +19,7 @@
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
-            class="filter-table"
+            class="page-filter"
           />
         </div>
         <div class="col-auto">
@@ -21,7 +27,7 @@
             v-b-tooltip.hover 
             title="Refresh"
             variant="link"
-            class="btn-refresh"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
@@ -32,7 +38,7 @@
           <b-button
             :to="`/app/identity-manager-types/${page}/add-new`"
             variant="primary"
-            class="btn-add"
+            class="page-btn-add"
             block
           >
             <span>Add New</span>
@@ -145,7 +151,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -180,6 +186,7 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
+      subjectDirectories: state => state.subjectDirectories.items,
       organizations: state => state.organizations.items,
     }),
     tableRows() {
@@ -228,6 +235,7 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'identity-manager-types');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
     this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {

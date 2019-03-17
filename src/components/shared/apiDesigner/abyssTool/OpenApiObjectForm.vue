@@ -1,23 +1,19 @@
 <template>
   <div>
     <div 
-      v-for="(item, index) in Object.keys(currentObjectInterface)" 
+      v-for="(item, index) in currentObjectInterfaceKeys" 
       v-bind:key="index" 
-      style="margin-bottom: 1rem;"
+      :class="(index < (currentObjectInterfaceKeys.length - 1) ? 'mb-3' : '')"
     >
-      <div v-if="interfaces[currentObjectInterface[item].type]" style="border: 1px solid silver; border-radius: .3rem;">
-        <div class="open-api-object-title" @click="() => handleToggleCollapse(item)">
-          <span style="float: right;">
-            <Icon :icon="(collapsedRows.indexOf(item) > -1 ? 'chevron-down' : 'chevron-right')" />
-          </span>
-          {{ item }}
-        </div>
-        <div v-if="(collapsedRows.indexOf(item) > -1)" style="padding: 1rem; border-top: 1px solid silver;">
-          <OpenApiObjectForm
+      <div v-if="interfaces[currentObjectInterface[item].type]">
+        <div>
+          <OpenApiObject
+            :item="item"
             :type="currentObjectInterface[item].type"
             :formData="formData[item] || {}"
             :pathArray="[...pathArray, item]"
             :onChange="onChange"
+            :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
           />
         </div>
       </div>
@@ -63,7 +59,6 @@
           </b-form-group>
         </div>
         <div v-else>
-          {{ item }}
           {{ currentObjectInterface[item] }}
         </div>
       </div>
@@ -100,6 +95,12 @@ export default {
   components: {
     Icon,
     DynamicFormInputString,
+    OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
+  },
+  computed: {
+    currentObjectInterfaceKeys() {
+      return Object.keys(this.currentObjectInterface);
+    },
   },
   data() {
     return {
@@ -123,7 +124,4 @@ export default {
 </script>
 
 <style lang="scss">
-.open-api-object-title {
-  padding: .5rem;
-}
 </style>

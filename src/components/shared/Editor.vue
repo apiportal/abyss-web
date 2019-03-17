@@ -23,16 +23,27 @@ export default {
       required: false,
       default() { return 'eclipse'; },
     },
+    onChange: {
+      type: Function,
+      required: true,
+    },
+    updated: {
+      type: Number,
+      required: false,
+      default() { return 0; },
+    },
   },
   watch: {
-    value(newValue) {
-      this.editor.setValue(JSON.stringify(newValue, null, '\t'));
+    updated() {
+      this.updatedByProp = true;
+      this.editor.setValue(JSON.stringify(this.value, null, '\t'));
     },
   },
   data() {
     return {
       isMounted: false,
       editor: null,
+      updatedByProp: false,
     };
   },
   mounted() {
@@ -46,6 +57,15 @@ export default {
     this.editor.setValue(JSON.stringify(value, null, '\t'));
     // editor is ready
     this.isMounted = true;
+
+    this.editor.on('change', () => {
+      if (this.updatedByProp) {
+        this.updatedByProp = false;
+        return false;
+      }
+      this.onChange(this.editor.getValue());
+      return false;
+    });
   },
   beforeDestroy() {
     this.editor.destroy();

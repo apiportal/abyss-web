@@ -46,6 +46,8 @@
       >
         <Editor
           :value="apiEditable.openapidocument"
+          :onChange="handleEditorChange"
+          :updated="editorUpdated"
         />
       </div>
     </div>
@@ -89,6 +91,7 @@ export default {
     return {
       view: this.initialView,
       apiEditable: JSON.parse(JSON.stringify(this.api)),
+      editorUpdated: (new Date()).getTime(),
     };
   },
   methods: {
@@ -101,6 +104,15 @@ export default {
       let apiClone = JSON.parse(JSON.stringify(apiEditable)); // eslint-disable-line
       objectDeepUpdate(propAddress, newPropValue, apiClone);
       this.apiEditable = { ...apiClone };
+      this.editorUpdated = (new Date()).getTime();
+    },
+    handleEditorChange(newValue) {
+      this.apiEditable = {
+        ...this.apiEditable,
+        openapidocument: {
+          ...JSON.parse(newValue),
+        },
+      };
     },
   },
 };

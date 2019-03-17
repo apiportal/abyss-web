@@ -167,7 +167,7 @@
     "default": {
       "type": "Response Object"
     },
-    "{HTTP status code}": {
+    "{template}": {
       "type": "Response Object",
       "regex": "(.*?)"
     }

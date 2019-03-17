@@ -22,6 +22,36 @@
           />
         </div>
       </div>
+      <div v-else-if="isMap">
+        <div
+          v-for="(key, index) in formDataKeys"
+          v-bind:key="index"
+          :class="(index < (formDataKeys.length - 1) ? 'mb-3' : '')"
+        >
+          <OpenApiObject
+            :item="key"
+            :type="type"
+            :formData="formData[key]"
+            :pathArray="[...pathArray, key]"
+            :onChange="onChange"
+          />
+        </div>
+      </div>
+      <div v-else-if="isArray">
+        <div
+          v-for="(formItemData, index) in formData"
+          v-bind:key="index"
+          :class="(index < (formData.length - 1) ? 'mb-3' : '')"
+        >
+          <OpenApiObject
+            :item="index"
+            :type="type"
+            :formData="formItemData"
+            :pathArray="[...pathArray, index]"
+            :onChange="onChange"
+          />
+        </div>
+      </div>
       <div v-else>
         <OpenApiObjectForm
           :type="type"
@@ -43,7 +73,7 @@ export default {
   name: 'OpenApiObject',
   props: {
     item: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     type: {
@@ -64,6 +94,16 @@ export default {
       required: true,
     },
     isMapWithRegex: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    isMap: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    isArray: {
       type: Boolean,
       required: false,
       default() { return false; },

@@ -116,7 +116,7 @@
     }
   },
   "Security Requirement Object": {
-    "{name}": {
+    "{template}": {
       "type": "string",
       "Array": true
     }

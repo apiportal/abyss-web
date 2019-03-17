@@ -7,6 +7,7 @@
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
         <div>
+          <!-- {{ currentObjectInterface[item] }} -->
           <OpenApiObject
             :item="item"
             :type="currentObjectInterface[item].type"
@@ -14,27 +15,30 @@
             :pathArray="[...pathArray, item]"
             :onChange="onChange"
             :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
+            :isMap="currentObjectInterface[item].Map || false"
+            :isArray="currentObjectInterface[item].Array || false"
           />
         </div>
       </div>
       <div v-else>
         <div v-if="currentObjectInterface[item].type === 'string'">
           <div v-if="currentObjectInterface[item].Array">
-            {{ currentObjectInterface[item] }}
+            <DynamicFormChips
+              :label="item"
+              :propAddress="[...pathArray, item]"
+              :onChange="onChange"
+              :value="formData[item]"
+              :addItemText="`Add ${item} item`"
+            />
           </div>
           <div v-else>
             <div v-if="currentObjectInterface[item].Markdown">
-              <b-form-group
-                :label="item"
-              >
-                <b-form-textarea
-                  :placeholder="item"
-                  :rows="3"
-                  :max-rows="6"
-                  :value="formData[item]"
-                >
-                </b-form-textarea>
-              </b-form-group>
+              <DynamicFormTextarea
+                :description="item"
+                :propAddress="[...pathArray, item]"
+                :onChange="onChange"
+                :value="formData[item]"
+              />
             </div>
             <div v-else>
               <DynamicFormInputString
@@ -70,6 +74,8 @@
 import Interfaces from '@/assets/openAPI3.0.json';
 import Icon from '@/components/shared/Icon';
 import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormInputString';
+import DynamicFormTextarea from '@/components/shared/dynamicForm/DynamicFormTextarea';
+import DynamicFormChips from '@/components/shared/dynamicForm/DynamicFormChips';
 
 export default {
   name: 'OpenApiObjectForm',
@@ -95,6 +101,8 @@ export default {
   components: {
     Icon,
     DynamicFormInputString,
+    DynamicFormTextarea,
+    DynamicFormChips,
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },
   computed: {

@@ -8,6 +8,54 @@
     </div>
     <!-- End Title -->
 
+     <!-- Form Group -->
+    <div class="js-form-message form-group">
+      <b-form-group>
+        <label class="form-label">
+          First Name
+        </label>
+        <b-form-input
+          v-model="form.firstname"
+          type="text"
+          placeholder="First Name"
+          required
+        ></b-form-input>
+      </b-form-group>
+    </div>
+    <!-- End Form Group -->
+    
+     <!-- Form Group -->
+    <div class="js-form-message form-group">
+      <b-form-group>
+        <label class="form-label">
+          Last Name
+        </label>
+        <b-form-input
+          v-model="form.lastname"
+          type="text"
+          placeholder="Last Name"
+          required
+        ></b-form-input>
+      </b-form-group>
+    </div>
+    <!-- End Form Group -->
+
+     <!-- Form Group -->
+    <div class="js-form-message form-group">
+      <b-form-group>
+        <label class="form-label">
+          Username
+        </label>
+        <b-form-input
+          v-model="form.username"
+          type="text"
+          placeholder="Username"
+          required
+        ></b-form-input>
+      </b-form-group>
+    </div>
+    <!-- End Form Group -->
+
     <!-- Form Group -->
     <div class="js-form-message form-group">
       <b-form-group>
@@ -51,7 +99,7 @@
           </span>
         </label>
         <b-form-input
-          v-model="form.passwordConfirm"
+          v-model="form.password2"
           type="password"
           placeholder="********"
           required
@@ -63,9 +111,9 @@
     <!-- Checkbox -->
     <div class="js-form-message mb-5">
       <b-form-checkbox
-        v-model="form.agree"
-        :value="true"
-        :unchecked-value="false"
+        v-model="form.isAgreedToTerms"
+        :value="'on'"
+        :unchecked-value="'off'"
         class="text-muted"
       >
         <small>
@@ -121,16 +169,20 @@ export default {
     return {
       isInformModalVisible: false,
       form: {
+        firstname: '',
+        lastname: '',
+        username: '',
         email: '',
         password: '',
-        passwordConfirm: '',
-        agree: false,
+        password2: '',
+        isAgreedToTerms: 'off',
       },
     };
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
+      console.log(evt); // eslint-disable-line no-console
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;

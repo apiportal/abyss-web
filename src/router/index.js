@@ -6,6 +6,9 @@ import AuthLayout from '@/layouts/AuthLayout';
 import Login from '@/components/routes/auth/login';
 import SignUp from '@/components/routes/auth/signup';
 import ForgotPassword from '@/components/routes/auth/forgotPassword';
+// My Profile Components
+import MyProfile from '@/components/routes/myProfile/MyProfile';
+import MySettings from '@/components/routes/myProfile/MySettings';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
@@ -129,6 +132,14 @@ export default new Router({
       path: '/app',
       component: DefaultLayout,
       children: [
+        {
+          path: 'my-profile',
+          component: MyProfile,
+        },
+        {
+          path: 'my-settings',
+          component: MySettings,
+        },
         {
           path: 'dashboard',
           component: Dashboard,

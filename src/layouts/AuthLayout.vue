@@ -10,7 +10,7 @@
         </div>
         <div class="container">
           <div class="row no-gutters">
-            <div class="col-md-8 col-lg-7 col-xl-6 offset-md-2 offset-lg-2 offset-xl-3 space-3 space-lg-0">
+            <div class="col-lg-7 col-xl-6 offset-lg-2 offset-xl-3 space-3 space-lg-0">
               <router-view></router-view>
             </div>
           </div>
@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
   .d-flex {
     display: flex !important
   }
@@ -179,15 +179,6 @@ export default {
     }
     .offset-xl-3 {
       margin-left: 25%
-    }
-  }
-  @media (min-width:768px) {
-    .col-md-8 {
-      flex: 0 0 66.666667%;
-      max-width: 66.666667%
-    }
-    .offset-md-2 {
-      margin-left: 16.666667%
     }
   }
   @media (min-width:992px) {

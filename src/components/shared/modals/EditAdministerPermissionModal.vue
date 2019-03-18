@@ -70,6 +70,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 })),
               ]"
               :state="organizationIdState"
@@ -91,8 +92,9 @@
                 text: 'Please select',
               },
               ...accessManagers.map(accessManager => ({
-              value: accessManager.uuid,
-              text: accessManager.accessmanagername,
+                value: accessManager.uuid,
+                text: accessManager.accessmanagername,
+                disabled: accessManager.isdeleted,
               })),
               ]"
               :state="accessManagerIdState"
@@ -137,8 +139,9 @@
               ...resources
               .filter(resource => resource.resourcetypeid === resourceTypeIdEditable)
               .map(resource => ({
-              value: resource.uuid,
-              text: resource.resourcename,
+                value: resource.uuid,
+                text: resource.resourcename,
+                disabled: resource.isdeleted,
               })),
               ]"
           />
@@ -181,7 +184,7 @@
                 :value="option.uuid"
               >
                 {{ option.displayname }}
-            </option>
+              </option>
             </optgroup>
             <optgroup label="USERS">
               <option
@@ -190,7 +193,16 @@
                 :value="option.uuid"
               >
                 {{ option.displayname }}
-            </option>
+              </option>
+            </optgroup>
+            <optgroup label="APPS">
+              <option
+                v-for="(option, index) in users"
+                v-bind:key="index"
+                :value="option.uuid"
+              >
+                {{ option.displayname }}
+              </option>
             </optgroup>
           </b-form-select>
           </b-form-group>
@@ -204,27 +216,39 @@
               Enabled
           </b-form-checkbox>
           </b-form-group>
-          <b-form-group
-            id="permissionEffectiveFrom"
-            label="Effective From:"
+          <b-form-group 
+            id="effectiveStartDateGroup"
+            label="Effective Start Date:"
+            label-for="effectiveStartDateInput"
+            :invalid-feedback="effectiveStartDateInvalidFeedback"
+            :state="effectiveStartDateState"
           >
-          <b-form-input
-            id="permissionEffectiveFromInput"
-            v-model="permissionEditable.effectivestartdate"
-            type="text"
-          >
-          </b-form-input>
+            <b-form-input
+              id="effectiveStartDateInput"
+              type="date"
+              v-model="effectiveStartDate"
+              placeholder="Effective Start Date"
+              :state="effectiveStartDateState"
+              required
+            >
+            </b-form-input>
           </b-form-group>
-          <b-form-group
-            id="permissionEffectiveTo"
-            label="Effective To:"
+          <b-form-group 
+            id="effectiveEndDateGroup"
+            label="Effective End Date:"
+            label-for="effectiveEndDateInput"
+            :invalid-feedback="effectiveEndDateInvalidFeedback"
+            :state="effectiveEndDateState"
           >
-          <b-form-input
-            id="permissionEffectiveToInput"
-            v-model="permissionEditable.effectiveenddate"
-            type="text"
-          >
-          </b-form-input>
+            <b-form-input
+              id="effectiveEndDateInput"
+              type="date"
+              v-model="effectiveEndDate"
+              placeholder="Effective End Date"
+              :state="effectiveEndDateState"
+              required
+            >
+            </b-form-input>
           </b-form-group>
         </div>
         <footer class="modal-footer">
@@ -344,6 +368,11 @@ export default {
       required: false,
       default() { return []; },
     },
+    apps: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     resourceTypeId: {
       type: String,
       required: false,
@@ -353,6 +382,46 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
+    effectiveStartDate: {
+      get() {
+        return this.permissionEditable.effectivestartdate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.permissionEditable.effectivestartdate = date.toISOString();
+      },
+    },
+    effectiveEndDate: {
+      get() {
+        return this.permissionEditable.effectiveenddate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.permissionEditable.effectiveenddate = date.toISOString();
+      },
+    },
+    effectiveStartDateState() {
+      const { effectivestartdate } = this.permissionEditable;
+      return effectivestartdate.length > 0;
+    },
+    effectiveStartDateInvalidFeedback() {
+      const { effectivestartdate } = this.permissionEditable;
+      if (effectivestartdate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    effectiveEndDateState() {
+      const { effectiveenddate } = this.permissionEditable;
+      return effectiveenddate.length > 0;
+    },
+    effectiveEndDateInvalidFeedback() {
+      const { effectiveenddate } = this.permissionEditable;
+      if (effectiveenddate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
     permissionNameState() {
       const { permission } = this.permissionEditable;
       return permission.length > 0;
@@ -414,9 +483,9 @@ export default {
     return {
       permissionEditable: {
         ...permissionEditable,
-        effectivestartdate: new Date(permissionEditable.effectivestartdate),
-        effectiveenddate: permissionEditable.effectiveenddate === null ?
-          '' : new Date(permissionEditable.effectiveenddate),
+        // effectivestartdate: new Date(permissionEditable.effectivestartdate),
+        // effectiveenddate: permissionEditable.effectiveenddate === null ?
+        //   '' : new Date(permissionEditable.effectiveenddate),
       },
       isConfigureAdministerPermissionVisible: false,
       resourceTypeIdEditable: this.resourceTypeId,

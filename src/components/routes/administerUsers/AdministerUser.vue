@@ -1,97 +1,69 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ user.firstname }}</b-navbar-brand>
-
-      <b-navbar-toggle target="nav_collapse" />
-
-      <b-collapse is-nav id="nav_collapse">
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="list-ol" />
-              <em>Logs</em>
-            </template>
-            <b-dropdown-item :to="`/app/administer-users/${page}/logs/${user.uuid}/subject/1`">All</b-dropdown-item>
-          </b-nav-item-dropdown>
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="cog" />
-              <em>Operations</em>
-            </template>
-            <b-dropdown-item :to="`/app/administer-users/${page}/edit/${user.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
-            <b-dropdown-item :to="`/app/administer-users/${page}/edit-groups/${user.uuid}`"><Icon icon="edit" /> Edit User Groups</b-dropdown-item>
-            <b-dropdown-item :to="`/app/administer-users/${page}/delete/${user.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div style="margin: 2rem;">
-      <div class="row">
-        <dl class="px-3">
-          <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
-        </dl>
-        <dl class="col">
-          <dt>First Name:</dt>
-          <dd>{{ user.firstname }}</dd>
-          <dt>Last Name:</dt>
-          <dd>{{ user.lastname }}</dd>
-          <dt>User Name:</dt>
-          <dd>{{ user.subjectname }}</dd>
-          <dt>Display Name:</dt>
-          <dd>{{ user.displayname }}</dd>
-        </dl>
-        <dl class="col">
-          <dt>Organization:</dt>
-          <dd>{{ user.organizationname }}</dd>
-          <dt>Directory:</dt>
-          <dd>{{ user.directoryname }}</dd>
-          <dt>Description:</dt>
-          <dd>{{ user.description }}</dd>
-          <dt>Groups:</dt>
-          <dd v-if="computedMemberships.length > 0">
-            Groups: 
-            <span 
-              v-for="(membership, index) in computedMemberships"
-              v-bind:key="index"
-            >
-              {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
-            </span>
-          </dd>
-        </dl>
-
-        <dl class="col">
-          <dt>Email:</dt>
-          <dd>{{ user.email }}</dd>
-          <dt>Secondary Email:</dt>
-          <dd>{{ user.secondaryemail }}</dd>
-          <dt>uuid:</dt>
-          <dd><code>{{ user.uuid }}</code></dd>
-        </dl>
-        
-        <dl class="col-1">
-          <dt>Active:</dt>
-          <dd>{{ user.isactivated }}</dd>
-          <dt>Deleted:</dt>
-          <dd>{{ user.isdeleted }}</dd>
-          <dt>Locked:</dt>
-          <dd>{{ user.islocked }}</dd>
-        </dl>
-        
-        <dl class="col">
-          <dt>Created:</dt>
-          <dd>{{ user.created }}</dd>
-          <dt>Updated:</dt>
-          <dd>{{ user.updated }}</dd>
-          <dt>Deleted:</dt>
-          <dd>{{ user.deleted }}</dd>
-        </dl>
-      </div>
+  <div class="abyss-table-content">
+    <div class="row">
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
+      </dl>
+  
+      <dl class="col">
+        <dt>First Name:</dt>
+        <dd>{{ user.firstname }}</dd>
+        <dt>Last Name:</dt>
+        <dd>{{ user.lastname }}</dd>
+        <dt>User Name:</dt>
+        <dd>{{ user.subjectname }}</dd>
+        <dt>Display Name:</dt>
+        <dd>{{ user.displayname }}</dd>
+      </dl>
+  
+      <dl class="col">
+        <dt>Main Organization:</dt>
+        <dd>{{ user.organizationname }}</dd>
+        <dt>Organizations:</dt>
+        <dd>
+          <span 
+            v-for="(organization, index) in computedUserOrganizations"
+            v-bind:key="index"
+          >
+            {{ organization.subjectorganizationname }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
+          </span>
+        </dd>
+        <dt>Directory:</dt>
+        <dd>{{ user.directoryname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ user.url }}</dd>
+      </dl>
+  
+      <dl class="col">
+        <dt>Email:</dt>
+        <dd>{{ user.email }}</dd>
+        <dt>Secondary Email:</dt>
+        <dd>{{ user.secondaryemail }}</dd>
+        <dt>Groups:</dt>
+        <dd>
+          <span 
+            v-for="(membership, index) in computedMemberships"
+            v-bind:key="index"
+          >
+            {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
+          </span>
+        </dd>
+        <dt>Description:</dt>
+        <dd>{{ user.description }}</dd>
+      </dl>
+      
+      <dl class="col">
+        <dt>Active:</dt>
+        <dd>{{ user.isactivated | booleanToText }}</dd>
+        <dt>Locked:</dt>
+        <dd>{{ user.islocked | booleanToText }}</dd>
+        <dt>Created:</dt>
+        <dd>{{ user.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="!user.isdeleted">Updated:</dt>
+        <dd v-if="!user.isdeleted">{{ user.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="user.isdeleted">Deleted:</dt>
+        <dd v-if="user.isdeleted">{{ user.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
     </div>
   </div>
 </template>
@@ -120,6 +92,11 @@ export default {
       required: false,
       default() { return []; },
     },
+    organizations: {
+      Type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   computed: {
     computedMemberships() {
@@ -132,14 +109,28 @@ export default {
         };
       });
     },
+    computedUserOrganizations() {
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const subjectorganization = organizations.find(
+          org => org.uuid === item.organizationrefid);
+        return {
+          organizationrefid: item.organizationrefid,
+          subjectorganizationname: subjectorganization ?
+          subjectorganization.name : item.organizationrefid,
+        };
+      });
+    },
   },
   data() {
     return {
       memberships: [],
+      userOrganizations: [],
     };
   },
   mounted() {
     this.getSubjectMemberships();
+    this.getOrganizationsOfUser();
   },
   methods: {
     getSubjectMemberships() {
@@ -148,6 +139,13 @@ export default {
           this.memberships = response.data;
         }
         this.isMembershipsLoaded = true;
+      });
+    },
+    getOrganizationsOfUser() {
+      api.getOrganizationsOfUser(this.user.uuid).then((response) => {
+        if (response && response.data) {
+          this.userOrganizations = response.data;
+        }
       });
     },
   },

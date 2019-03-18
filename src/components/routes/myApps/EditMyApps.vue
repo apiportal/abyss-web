@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <EditApp
-      :routePath="`/app/my-apps/my-apps/${page}`"
-    />
-  </div>
+  <EditApp
+    :routePath="`/app/my-apps/my-apps/${page}`"
+  />
 </template>
 
 <script>

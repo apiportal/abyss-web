@@ -21,7 +21,7 @@ const actions = {
     });
   },
   putGroups: ({ commit }, group) => {
-    api.putGroups(group).then((response) => {
+    return api.putGroups(group).then((response) => {
       commit('updateGroups', response.data);
       return response;
     });
@@ -39,7 +39,7 @@ const actions = {
       response.data.map((status) => {
         if (status.error.code !==0) {
           error = true;
-          alert(status.error.groupmessage);
+          alert(status.error.usermessage);
         } else {
           commit('addNewGroup', status.response);
         }

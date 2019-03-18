@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@/assets/scss/style.scss';
 import '@/assets/scss/main.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -46,6 +47,17 @@ import {
   faUser,
   faUserCog,
   faRedo,
+  faExclamationTriangle,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
+  faChevronRight,
+  faChartBar,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -99,6 +111,17 @@ library.add(
   faUser,
   faUserCog,
   faRedo,
+  faExclamationTriangle,
+  faCode,
+  faMagic,
+  faColumns,
+  faUndo,
+  faSave,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
+  faChevronRight,
+  faChartBar,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);
@@ -106,6 +129,12 @@ Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 Vue.use(VueMoment, {
   moment,
+});
+Vue.filter('booleanToText', (value) => {
+  if (value) {
+    return 'Yes';
+  }
+  return 'No';
 });
 /* eslint-disable no-new */
 new Vue({

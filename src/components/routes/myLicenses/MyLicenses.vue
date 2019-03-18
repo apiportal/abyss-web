@@ -1,19 +1,19 @@
 <template>
-  <div class="my-licenses-container">
-    <div class="my-licenses-header silver-bg">
-      <b-nav tabs>
+  <div class="page-container page-my-licenses">
+    <div class="page-header-nested">
+      <b-nav class="page-tabs" tabs>
         <b-nav-item :active="currentPage.firstChildPath === 'my-licenses'" to="/app/my-licenses/my-licenses/1">
-          My All Licenses <b-badge variant="light">{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
+          My All Licenses <b-badge pill>{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
-          My Licenses Attached to APIs <b-badge variant="light">0</b-badge>
+          My Licenses Attached to APIs <b-badge pill>0</b-badge>
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'under-contracts'" to="/app/my-licenses/under-contracts/1">
-          My Licenses Under Contracts <b-badge variant="light">0</b-badge>
+          My Licenses Under Contracts <b-badge pill>0</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
-    <div class="my-licenses-content">
+    <div class="page-content-nested">
       <router-view></router-view>
     </div>
   </div> 
@@ -42,21 +42,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.my-licenses-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .my-licenses-header {
-    flex: 50px 0 0;
-    padding: 1rem 1rem 0 1rem;
-  }
-
-  .my-licenses-content {
-    flex: 1 0 0;
-    display: flex;
-  }
-}
-</style>

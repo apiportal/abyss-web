@@ -6,15 +6,23 @@
 
       <b-navbar-brand to="/app/dashboard"><img src="/static/abyss_dark.png" class="logo" /></b-navbar-brand>
 
+      <b-form inline class="switch-organization">
+        <b-form-select v-model="currentOrganization"
+          :options="myOrganizations" />
+      </b-form>
+
       <b-collapse is-nav id="nav_collapse" v-if="user.uuid">
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
 
-          <b-nav-item-dropdown right>
+          <b-nav-item-dropdown right class="navbar-user">
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <span>{{ user.props.displayname }}</span>
+              <div class="d-flex align-items-center">
+                <span>{{ user.props.displayname }}</span>
+                <span class="bg-cover bg-secondary rounded-circle avatar"></span>
+              </div>
             </template>
             <b-dropdown-item >Dummy Link</b-dropdown-item>
             <b-dropdown-item >Dummy Link</b-dropdown-item>
@@ -37,18 +45,20 @@ export default {
       user: state => state.user,
     }),
   },
+  data() {
+    return {
+      currentOrganization: 1,
+      myOrganizations: [
+        {
+          value: 1,
+          text: 'My Organization',
+        },
+        {
+          value: 2,
+          text: 'My Second Organization',
+        },
+      ],
+    };
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-.app-header {
-  .logo {
-    height: 40px;
-    margin-left: 1rem;
-  }
-  .navbar-brand {
-    background: #400E40;
-    width: 250px;
-  }
-}
-</style>

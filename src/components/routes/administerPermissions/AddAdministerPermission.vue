@@ -10,7 +10,8 @@
         areResourceActionsLoaded &&
         areSubjectTypesLoaded &&
         areUsersLoaded &&
-        areGroupsLoaded
+        areGroupsLoaded &&
+        areAppsLoaded
       "
       role="add"
       :onClose="handleModalClose"
@@ -22,6 +23,7 @@
       :resources="resources"
       :users="users"
       :groups="groups"
+      :apps="apps"
       :permission="newPermission"
       :resourceTypeId="null"
     />
@@ -44,6 +46,7 @@ export default {
       resourceActions: state => state.resourceActions.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
+      apps: state => state.apps.items,
       areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
       areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
       arePermissionsLoaded: state => state.permissions.lastUpdatedAt,
@@ -53,6 +56,7 @@ export default {
       areSubjectTypesLoaded: state => state.subjectTypes.lastUpdatedAt,
       areUsersLoaded: state => state.users.lastUpdatedAt,
       areGroupsLoaded: state => state.groups.lastUpdatedAt,
+      areAppsLoaded: state => state.apps.lastUpdatedAt,
     }),
   },
   methods: {

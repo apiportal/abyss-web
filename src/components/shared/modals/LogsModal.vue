@@ -16,7 +16,7 @@
       </h5>
     </template>
     <template>
-      <table class="table verapi-table">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>Method</th>
@@ -42,7 +42,7 @@
           v-for="(item, index) in logs" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item._id) > -1"
         >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'}`">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item._id)">
             {{ item._source['@httpmethod'] }}
           </td>
@@ -167,7 +167,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }

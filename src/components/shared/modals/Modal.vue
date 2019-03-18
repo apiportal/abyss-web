@@ -6,6 +6,8 @@
     :no-close-on-backdrop="noCloseOnBackdrop"
     :no-close-on-esc="noCloseOnEsc"
     :hide-header-close="hideHeaderClose"
+    :modal-class="modalClass"
+    :dialog-class="dialogClass"
     :body-class="bodyClass"
     :header-class="headerClass"
     :footer-class="footerClass"
@@ -29,6 +31,16 @@
 <script>
 export default {
   props: {
+    modalClass: {
+      type: [Array, String],
+      required: false,
+      default() { return ''; },
+    },
+    dialogClass: {
+      type: [Array, String],
+      required: false,
+      default() { return ''; },
+    },
     bodyClass: {
       type: [Array, String],
       required: false,
@@ -86,3 +98,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.modal-xl {
+  @media (min-width: 992px) {
+    max-width: 1600px;
+  }
+}
+</style>

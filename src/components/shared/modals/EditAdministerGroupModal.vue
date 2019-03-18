@@ -74,7 +74,7 @@
           >
             <b-form-input
               id="urlInput"
-              type="url"
+              type="text"
               v-model="groupEditable.url"
               placeholder="URL"
               :state="urlState"
@@ -101,6 +101,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 })),
               ]"
               :state="organizationIdState"
@@ -124,6 +125,7 @@
                 ...subjectDirectories.map(subjectDirectory => ({
                   value: subjectDirectory.uuid,
                   text: subjectDirectory.directoryname,
+                  disabled: subjectDirectory.isdeleted,
                 })),
               ]"
               :state="subjectDirectoryIdState"
@@ -333,7 +335,8 @@ export default {
     },
     urlState() {
       const { url } = this.groupEditable;
-      const re = /https?:\/\/[^\s]+/;
+      // const re = /https?:\/\/[^\s]+/;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
       return re.test(String(url));
       // return url.length > 0
       //   && document.getElementById('urlInput').validity.valid
@@ -342,7 +345,8 @@ export default {
     urlInvalidFeedback() {
       const { url } = this.groupEditable;
       // if (url.length === 0) {
-      const re = /https?:\/\/[^\s]+/;
+      // const re = /https?:\/\/[^\s]+/;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
       if (!url || url.length === 0) {
         return 'Please enter url';
       // } else if (document.getElementById('urlInput')) {
@@ -415,7 +419,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('groups', ['putGroups']),
+    ...mapActions('groups', ['putGroups', 'postGroups']),
     setValidSubjectName(value) {
       return value.replace(/ /g, '').toLowerCase();
     },
@@ -423,7 +427,9 @@ export default {
       evt.preventDefault();
       const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
       const { description, url, effectiveenddate, displayname,
-        subjectname, picture } = groupEditable;
+        subjectname, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = groupEditable;
       let groupToUpdate = {
         ...groupEditable,
         firstname: displayname,
@@ -433,6 +439,15 @@ export default {
         description: (description === null ? '' : description),
         url: (url === null ? '' : url),
         picture: (picture === null ? '' : picture),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
 
@@ -443,8 +458,8 @@ export default {
           }
         });
       } else if (role === 'add') {
-        const { currentGroup } = this;
-        const { uuid, subjecttypeid } = currentGroup.props;
+        const { currentUser } = this;
+        const { uuid, subjecttypeid } = currentUser.props;
         const crudsubjectid = uuid;
         groupToUpdate = [{
           ...groupToUpdate,

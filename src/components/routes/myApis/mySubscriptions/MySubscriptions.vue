@@ -1,45 +1,50 @@
 <template>
-  <div class="businesses-container">
-    <div class="businesses-header">
+  <div class="page-container page-my-apis">
+    <div class="page-header">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="page-filter"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             v-b-tooltip.hover 
             title="Add"
             variant="primary"
+            class="page-btn-add"
             block
           >
-            <Icon icon="plus" /> Add
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="businesses-content">
+    <div class="page-content">
       <Subscriptions
         :rows="paginatedRows"
         :routePath="`/app/my-apis/my-subscriptions/${page}`"
       />
       <router-view></router-view>
     </div>
-    <div class="businesses-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -144,33 +149,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.businesses-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .businesses-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .businesses-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-
-  .businesses-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-}
-</style>

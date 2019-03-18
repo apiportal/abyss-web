@@ -1,42 +1,44 @@
 <template>
-  <div>
-    <b-navbar toggleable="lg" type="dark" variant="secondary">
-      <b-navbar-brand>{{ permission.permission }}</b-navbar-brand>
-
-      <b-navbar-toggle target="nav_collapse" />
-
-      <b-collapse is-nav id="nav_collapse">
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-
-          <b-nav-item-dropdown right>
-            <!-- Using button-content slot -->
-            <template slot="button-content">
-              <Icon icon="cog" />
-              <em>Operations</em>
-            </template>
-            <b-dropdown-item :to="`/app/administer-permissions/${page}/edit/${permission.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-            <b-dropdown-item :to="`/app/administer-permissions/${page}/delete/${permission.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
-          </b-nav-item-dropdown>
-
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-    <div style="margin: 2rem;">
-      <p>Permission Name: {{ permission.permission }}</p>
-      <p>Description: {{ permission.description }}</p>
-      <p>Resource: {{ permission.resourcename}}</p>
-      <p>Resource Type: {{ permission.resourcetypename }}</p>
-      <p>Subject: {{ subject.displayname }}</p>
-      <p>Subject Type: {{ subjectType.typename }}</p>
-      <p>Resource Action: {{ permission.resourceactionname }}</p>
-      <p>Access Manager: {{ permission.accessmanagername }}</p>
-      <p>Organization: {{ permission.organizationname }}</p>
-      <p>Effective Start Date: {{ permission.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</p>
-      <p>Effective End Date: {{ permission.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</p>
-      <p>Created: {{ permission.created | moment("DD.MM.YYYY HH:mm") }}</p>
-      <p>Updated: {{ permission.updated | moment("DD.MM.YYYY HH:mm") }}</p>
-      <p v-if="permission.isdeleted">Deleted: {{ permission.deleted | moment("DD.MM.YYYY HH:mm") }}</p>
+  <div class="abyss-table-content">
+    <div class="row">
+      <dl class="col-4">
+        <dt>Name:</dt>
+        <dd>{{ permission.permission }}</dd>
+        <dt>Description:</dt>
+        <dd>{{ permission.description }}</dd>
+        <dt>Access Manager:</dt>
+        <dd>{{ permission.accessmanagername }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Subject:</dt>
+        <dd>{{ subject.displayname }}</dd>
+        <dt>Subject Type:</dt>
+        <dd>{{ subjectType.typename }}</dd>
+        <dt>Organization:</dt>
+        <dd>{{ permission.organizationname }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Resource:</dt>
+        <dd>{{ permission.resourcename }}</dd>
+        <dt>Resource Type:</dt>
+        <dd>{{ permission.resourcetypename }}</dd>
+        <dt>Resource Action:</dt>
+        <dd>{{ permission.resourceactionname }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Effective Start Date:</dt>
+        <dd>{{ permission.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Effective End Date:</dt>
+        <dd>{{ permission.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ permission.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="!permission.isdeleted">Updated:</dt>
+        <dd v-if="!permission.isdeleted">{{ permission.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="permission.isdeleted">Deleted:</dt>
+        <dd v-if="permission.isdeleted">{{ permission.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
     </div>
   </div>
 </template>

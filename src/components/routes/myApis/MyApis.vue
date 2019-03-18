@@ -1,40 +1,40 @@
 <template>
-  <div class="my-apis-container">
-    <div class="my-apis-header silver-bg">
-      <b-nav tabs>
+  <div class="page-container page-my-apis">
+    <div class="page-header-nested">
+      <b-nav class="page-tabs" tabs>
         <b-nav-item
           :active="currentPage.firstChildPath === 'businesses'"
           to="/app/my-apis/businesses/1"
         >
-          My Business APIs <b-badge variant="light">{{ myBusinessApis.length }}</b-badge>
+          My Business APIs <b-badge pill>{{ myBusinessApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-proxy-apis'"
           to="/app/my-apis/my-proxy-apis/1"
         >
-          My Proxy APIs <b-badge variant="light">{{ proxies.length }}</b-badge>
+          My Proxy APIs <b-badge pill>{{ proxies.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          My Subscriptions <b-badge variant="light">{{ apiSubscriptions.length }}</b-badge>
+          My Subscriptions <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"
           to="/app/my-apis/shared-by-me/1"
         >
-          APIs Shared By Me <b-badge variant="light">{{ apisSharedByUser.length }}</b-badge>
+          APIs Shared By Me <b-badge pill>{{ apisSharedByUser.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-with-me'"
           to="/app/my-apis/shared-with-me/1"
         >
-          APIs Shared With Me <b-badge variant="light">{{ apisSharedWithUser.length }}</b-badge>
+          APIs Shared With Me <b-badge pill>{{ apisSharedWithUser.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
-    <div class="my-apis-content">
+    <div class="page-content-nested">
       <router-view></router-view>
     </div>
   </div> 
@@ -78,21 +78,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.my-apis-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .my-apis-header {
-    flex: 50px 0 0;
-    padding: 1rem 1rem 0 1rem;
-  }
-
-  .my-apis-content {
-    flex: 1 0 0;
-    display: flex;
-  }
-}
-</style>

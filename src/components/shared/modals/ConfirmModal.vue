@@ -9,7 +9,10 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 class="modal-title">
+        <span class="text-danger h3 mr-2"><Icon icon="exclamation-triangle" /> </span>
+        {{ title }}
+      </h5>
     </template>
     <template>
       <div>{{ text }}</div>
@@ -33,10 +36,12 @@
 
 <script>
 import Modal from '@/components/shared/modals/Modal';
+import Icon from '@/components/shared/Icon';
 
 export default {
   components: {
     Modal,
+    Icon,
   },
   props: {
     hideHeader: {

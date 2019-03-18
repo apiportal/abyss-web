@@ -8,7 +8,10 @@
         areResourcesLoaded &&
         areResourceTypesLoaded &&
         areResourceActionsLoaded &&
-        areSubjectTypesLoaded
+        areSubjectTypesLoaded &&
+        areUsersLoaded &&
+        areGroupsLoaded &&
+        areAppsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -20,6 +23,7 @@
       :resources="resources"
       :users="users"
       :groups="groups"
+      :apps="apps"
       :permission="getPermission(permissionId)"
       :resourceTypeId="getResourceTypeIdByPermision(getPermission(permissionId))"
     />
@@ -43,6 +47,7 @@ export default {
       resourceActions: state => state.resourceActions.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
+      apps: state => state.apps.items,
       permissions: state => state.permissions.items,
       areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
       areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
@@ -51,6 +56,9 @@ export default {
       areResourceTypesLoaded: state => state.resourceTypes.lastUpdatedAt,
       areResourceActionsLoaded: state => state.resourceActions.lastUpdatedAt,
       areSubjectTypesLoaded: state => state.subjectTypes.lastUpdatedAt,
+      areUsersLoaded: state => state.users.lastUpdatedAt,
+      areGroupsLoaded: state => state.groups.lastUpdatedAt,
+      areAppsLoaded: state => state.apps.lastUpdatedAt,
     }),
   },
   methods: {

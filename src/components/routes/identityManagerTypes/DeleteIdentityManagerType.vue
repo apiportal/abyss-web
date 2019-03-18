@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,15 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('subjectDirectoryTypes', ['deleteSubjectDirectoryTypes']),
     handleModalClose() {
       this.$router.push(`/app/identity-manager-types/${this.page}`);
     },
     handleModalConfirm() {
-      this.$router.push(`/app/identity-manager-types/${this.page}`);
+      const { deleteSubjectDirectoryTypes, subjectDirectoryType } = this;
+      deleteSubjectDirectoryTypes({ ...subjectDirectoryType }).then(() => {
+        this.$router.push(`/app/identity-manager-types/${this.page}`);
+      });
     },
   },
   computed: {

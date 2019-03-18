@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,18 @@ export default {
     ConfirmModal,
   },
   methods: {
+    ...mapActions('accessManagers', ['deleteAccessManagers']),
     handleDeleteAccessManagerModalClose() {
       this.$router.push(`/app/access-managers/${this.page}`);
     },
     handleDeleteAccessManagerModalConfirm() {
       this.$router.push(`/app/access-managers/${this.page}`);
+    },
+    handleModalConfirm() {
+      const { deleteAccessManagers, accessManager } = this;
+      deleteAccessManagers({ ...accessManager }).then(() => {
+        this.$router.push(`/app/access-managers/${this.page}`);
+      });
     },
   },
   computed: {

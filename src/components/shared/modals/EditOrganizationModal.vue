@@ -69,6 +69,7 @@
                 ...organizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
+                  disabled: organization.isdeleted,
                 }))
               ]"
               required
@@ -220,10 +221,13 @@ export default {
         organizationEditable,
         onUpdate,
         role } = this;
+      const { picture } = organizationEditable;
+      let organizationToUpdate = {
+        ...organizationEditable,
+        picture: (picture === null ? '' : picture),
+      };
       if (role === 'edit') {
-        putOrganizations({
-          ...organizationEditable,
-        }).then((response) => {
+        putOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
@@ -232,11 +236,11 @@ export default {
         const { currentUser } = this;
         const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
-        const organizationToAdd = [{
-          ...organizationEditable,
+        organizationToUpdate = [{
+          ...organizationToUpdate,
           crudsubjectid,
         }];
-        postOrganizations(organizationToAdd).then((response) => {
+        postOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }

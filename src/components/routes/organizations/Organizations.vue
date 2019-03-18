@@ -1,131 +1,137 @@
 <template>
-  <div class="organizations-container">
-    <div class="organizations-header silver-bg">
+  <div class="page-container page-organizations">
+
+    <div class="page-header">
+      <b-nav class="page-tabs" tabs>
+        <b-nav-item :active="true">
+          Organizations <b-badge pill>{{ organizations.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-9">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="page-filter"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button
             v-b-tooltip.hover 
             title="Refresh"
+            variant="link"
+            class="page-btn-refresh"
             block
             @click="refreshData"
           >
             <Icon icon="redo" />
           </b-button>
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
           <b-button
             :to="`/app/organizations/${page}/add-new`"
             variant="primary"
+            class="page-btn-add"
             block
           >
-            <span>Add</span>
+            <span>Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="organizations-content">
-      <table class="table verapi-table">
+
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
             <th>
-              Name
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Name"
                 sortByKey="name"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Parent Organization
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="organizationname"
+                text="Owner"
+                sortByKey="organizationowner"
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              Sub Organizations
+            <th class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Sub Organizations"
                 sortByKey="suborganizations"
                 sortByKeyType="number"
               />
             </th>
             <th>
-              Users
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Users"
                 sortByKey="organizationusers"
                 sortByKeyType="number"
               />
             </th>
-            <th>
-              Url
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="url"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              Description
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                sortByKey="description"
-                sortByKeyType="string"
-              />
-            </th>
+            <th></th>
           </tr>
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="6"
+          :cols="5"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          v-if="item.organizationid === rootOrganization"
+          :level="0"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
+              {{ item.organizationowner }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.url }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.description }}
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="6">
+            <td colspan="5">
               <div class="collapsible-content">
                 <Organization
                   :organizations="tableRows"
@@ -140,7 +146,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="organizations-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -177,10 +183,11 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
+      subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
     }),
     tableRows() {
-      const { organizations, users } = this;
+      const { organizations, subjectOrganizations } = this;
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -191,8 +198,21 @@ export default {
         return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
-        const organizationUsers = users.filter(item => item.organizationid === organizationId);
-        return organizationUsers;
+        const organizationSubjects = subjectOrganizations.filter(item =>
+            // !item.isdeleted &&
+            item.organizationrefid === organizationId);
+        return organizationSubjects;
+      };
+      const getOwner = (organizationId) => {
+        const { users } = this;
+        const ownerSubject = getOrganizationUsers(organizationId).find(item => item.isowner);
+        if (ownerSubject) {
+          const owner = users.find(item => item.uuid === ownerSubject.subjectid);
+          if (owner) {
+            return owner.displayname;
+          }
+        }
+        return '-';
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
@@ -201,6 +221,7 @@ export default {
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid).length,
+          organizationowner: getOwner(item.uuid),
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -211,10 +232,11 @@ export default {
             (
               item.name &&
               item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
+            )
+            ||
             (
-              item.description &&
-              item.description.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.organizationowner &&
+              item.organizationowner.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -237,6 +259,7 @@ export default {
     this.$store.commit('currentPage/setRootPath', 'organizations');
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
   },
   data() {
     return {
@@ -251,6 +274,21 @@ export default {
     };
   },
   methods: {
+    computedMemberships() {
+      const { subjectOrganizations, organizations, users } = this;
+      return subjectOrganizations.map((item) => {
+        const subjectuser = users.find(user => user.uuid === item.subjectid);
+        const subjectorg = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          org: subjectorg.name,
+          org1: item.organizationrefid,
+          org2: subjectorg.uuid,
+          user1: item.subjectid,
+          user2: subjectuser.uuid,
+          user: subjectuser.displayname,
+        };
+      });
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -265,7 +303,8 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
@@ -278,33 +317,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.organizations-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .organizations-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .organizations-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .organizations-content {
-    flex: 1 0 0;
-    overflow-y: scroll;
-    padding: 1rem;
-  }
-}
-</style>

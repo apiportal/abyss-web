@@ -25,10 +25,10 @@
             id="addPopover"
             @click="toggleAddPopover"
           >
-            <Icon icon="plus" /> Add Item
+            <Icon icon="plus" /> {{ addItemText }}
           </b-button>
           <b-popover target="addPopover" :show.sync="isAddPopoverVisible">
-            <template slot="title">Add Item</template>
+            <template slot="title">{{ addItemText }}</template>
             <div>
               <div style="min-width: 400px;">
               </div>
@@ -80,6 +80,11 @@ export default {
     label: {
       type: String,
       required: false,
+    },
+    addItemText: {
+      type: String,
+      required: false,
+      default() { return 'Add Item'; },
     },
   },
   computed: {

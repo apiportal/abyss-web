@@ -1,13 +1,13 @@
 <template>
-  <div class="my-apps-container">
-    <div class="my-apps-header silver-bg">
-      <b-nav tabs>
+  <div class="page-container page-my-apps">
+    <div class="page-header-nested">
+      <b-nav class="page-tabs" tabs>
         <b-nav-item active>
-          My APPs <b-badge variant="light">{{ userApps.length }}</b-badge>
+          My APPs <b-badge pill>{{ userApps.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
-    <div class="my-apps-content">
+    <div class="page-content-nested">
       <router-view></router-view>
     </div>
   </div>
@@ -53,21 +53,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.my-apps-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .my-apps-header {
-    flex: 50px 0 0;
-    padding: 1rem 1rem 0 1rem;
-  }
-
-  .my-apps-content {
-    flex: 1 0 0;
-    display: flex;
-  }
-}
-</style>

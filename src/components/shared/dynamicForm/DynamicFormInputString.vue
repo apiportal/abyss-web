@@ -67,6 +67,13 @@ export default {
       return true;
     },
   },
+  watch: {
+    value(newValue) {
+      if (newValue) {
+        this.inputValue = newValue;
+      }
+    },
+  },
   data() {
     const { example, value } = this;
 

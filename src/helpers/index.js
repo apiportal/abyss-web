@@ -25,6 +25,9 @@ const paginateArray = ({ array, itemsPerPage, page }) => {
 
 const objectDeepUpdate = (propPath, value, object) => {
   if (propPath.length > 1) {
+    if (object[propPath[0]] === undefined) {
+      object[propPath[0]] = {}; // eslint-disable-line
+    }
     return objectDeepUpdate(propPath.slice(1), value, object[propPath[0]]);
   }
   object[propPath[0]] = value; // eslint-disable-line

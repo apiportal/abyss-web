@@ -26,8 +26,18 @@
         </b-button-group>
 
         <b-button-group size="sm" class="mr-1">
-          <b-button v-b-tooltip.hover title="Undo"><Icon icon="undo" /></b-button>
-          <b-button v-b-tooltip.hover title="Redo"><Icon icon="redo" /></b-button>
+          <b-button
+            @click="handleUndo"
+            :disabled="apiStateIndex === 0"
+          >
+            <Icon icon="undo" />
+          </b-button>
+          <b-button
+            @click="handleRedo"
+            :disabled="apiStateIndex === (apiStates.length - 1)"
+          >
+            <Icon icon="redo" />
+          </b-button>
         </b-button-group>
       </b-button-toolbar>
     </div>
@@ -37,7 +47,7 @@
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
-          :api="apiEditable"
+          :api="apiStates[apiStateIndex]"
           :onChange="handleChange"
         />
       </div>
@@ -45,9 +55,9 @@
         :class="`api-designer-editor-container ${ (view === 'editor' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <Editor
-          :value="apiEditable.openapidocument"
+          :value="apiStates[apiStateIndex].openapidocument"
           :onChange="handleEditorChange"
-          :updated="editorUpdated"
+          :debounce="1000"
         />
       </div>
     </div>
@@ -90,8 +100,8 @@ export default {
   data() {
     return {
       view: this.initialView,
-      apiEditable: JSON.parse(JSON.stringify(this.api)),
-      editorUpdated: (new Date()).getTime(),
+      apiStates: [(JSON.parse(JSON.stringify(this.api)))],
+      apiStateIndex: 0,
     };
   },
   methods: {
@@ -99,20 +109,33 @@ export default {
       this.view = view;
     },
     handleChange(propAddress, newPropValue) {
-      const { apiEditable } = this;
+      const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
-      let apiClone = JSON.parse(JSON.stringify(apiEditable)); // eslint-disable-line
-      objectDeepUpdate(propAddress, newPropValue, apiClone);
-      this.apiEditable = { ...apiClone };
-      this.editorUpdated = (new Date()).getTime();
+      let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
+      objectDeepUpdate(propAddress, newPropValue, newApiState);
+      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
+      this.apiStateIndex += 1;
     },
     handleEditorChange(newValue) {
-      this.apiEditable = {
-        ...this.apiEditable,
+      const { apiStates, apiStateIndex } = this;
+      const newApiState = {
+        ...apiStates[apiStateIndex],
         openapidocument: {
           ...JSON.parse(newValue),
         },
       };
+      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
+      this.apiStateIndex += 1;
+    },
+    handleUndo() {
+      if (this.apiStateIndex > 0) {
+        this.apiStateIndex -= 1;
+      }
+    },
+    handleRedo() {
+      if (this.apiStateIndex < (this.apiStates.length - 1)) {
+        this.apiStateIndex += 1;
+      }
     },
   },
 };

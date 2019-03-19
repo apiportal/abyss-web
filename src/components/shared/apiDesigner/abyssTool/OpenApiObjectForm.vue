@@ -7,7 +7,6 @@
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
         <div>
-          <!-- {{ currentObjectInterface[item] }} -->
           <OpenApiObject
             :item="item"
             :type="currentObjectInterface[item].type"
@@ -28,7 +27,7 @@
               :propAddress="[...pathArray, item]"
               :onChange="onChange"
               :value="formData[item]"
-              :addItemText="`Add ${item} item`"
+              addItemText="New Item"
             />
           </div>
           <div v-else>
@@ -38,6 +37,7 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :debounce="1000"
               />
             </div>
             <div v-else>
@@ -46,6 +46,7 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :debounce="1000"
               />
             </div>
           </div>

@@ -10,7 +10,7 @@
           <span class="route-icon"><Icon icon="globe" /></span> Explore APIs
         </b-link>
 
-        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`">
+        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics
         </b-link>
 

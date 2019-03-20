@@ -19,7 +19,7 @@
       <ApiDesigner
         :api="api"
         :height="700"
-        title='Edit API'
+        :title="api.openapidocument.info.title"
       />
     </template>
     <template slot="footer">

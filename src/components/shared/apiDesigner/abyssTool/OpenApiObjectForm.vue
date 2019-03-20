@@ -52,16 +52,12 @@
           </div>
         </div>
         <div v-else-if="currentObjectInterface[item].type === 'boolean'">
-          <b-form-group>
-            <b-form-checkbox-group>
-              <b-form-checkbox 
-                :value="true"
-                :unchecked-value="false"
-              >
-                {{ item }}
-              </b-form-checkbox>
-            </b-form-checkbox-group>
-          </b-form-group>
+          <DynamicFormCheckbox
+            :description="item"
+            :propAddress="[...pathArray, item]"
+            :onChange="onChange"
+            :value="formData[item]"
+          />
         </div>
         <div v-else>
           {{ currentObjectInterface[item] }}
@@ -76,6 +72,7 @@ import Interfaces from '@/assets/openAPI3.0.json';
 import Icon from '@/components/shared/Icon';
 import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormInputString';
 import DynamicFormTextarea from '@/components/shared/dynamicForm/DynamicFormTextarea';
+import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
 import DynamicFormChips from '@/components/shared/dynamicForm/DynamicFormChips';
 
 export default {
@@ -103,6 +100,7 @@ export default {
     Icon,
     DynamicFormInputString,
     DynamicFormTextarea,
+    DynamicFormCheckbox,
     DynamicFormChips,
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },

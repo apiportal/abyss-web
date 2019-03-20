@@ -139,6 +139,7 @@ export default {
 
   .open-api-object-title {
     padding: .5rem;
+    cursor: pointer;
   }
 }
 

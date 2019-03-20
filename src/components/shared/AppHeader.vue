@@ -24,8 +24,14 @@
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>
             </template>
-            <b-dropdown-item >Dummy Link</b-dropdown-item>
-            <b-dropdown-item >Dummy Link</b-dropdown-item>
+            <b-dropdown-item to="/app/my-profile/">
+              <Icon icon="user" />
+              My Profile
+            </b-dropdown-item>
+            <b-dropdown-item to="/app/my-settings/">
+              <Icon icon="cog" />
+              Settings
+            </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
@@ -37,9 +43,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import Icon from '@/components/shared/Icon';
 
 export default {
   name: 'app-header',
+  components: {
+    Icon,
+  },
   computed: {
     ...mapState({
       user: state => state.user,

@@ -12,12 +12,12 @@
     <div class="js-form-message form-group">
       <b-form-group>
         <label class="form-label">
-          Email address
+          Username
         </label>
         <b-form-input
-          v-model="form.email"
-          type="email"
-          placeholder="Email address"
+          v-model="form.username"
+          type="text"
+          placeholder="Username"
           required
           class="form-control"
         ></b-form-input>
@@ -62,11 +62,13 @@
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   data() {
     return {
       form: {
-        email: '',
+        username: '',
         password: '',
       },
     };
@@ -74,6 +76,13 @@ export default {
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
+      api.postSignIn(this.form)
+        .then((res) => {
+          console.log(res); // eslint-disable-line no-console
+        })
+        .catch((error) => {
+          console.log(error); // eslint-disable-line no-console
+        });
     },
   },
 };

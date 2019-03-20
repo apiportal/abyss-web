@@ -16,6 +16,9 @@ export default {
   postLogin(user) {
     return axios.post('/abyss/login-auth', user);
   },
+  postSignIn(params) {
+    return axios.post('/abyss/oapi/abyss-session', params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');

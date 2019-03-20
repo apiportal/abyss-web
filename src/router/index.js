@@ -7,8 +7,9 @@ import Login from '@/components/routes/auth/login';
 import SignUp from '@/components/routes/auth/signup';
 import ForgotPassword from '@/components/routes/auth/forgotPassword';
 // My Profile Components
-import MyProfile from '@/components/routes/myProfile/MyProfile';
-import MySettings from '@/components/routes/myProfile/MySettings';
+import MyProfile from '@/components/routes/mySettings/MyProfile';
+import MySettings from '@/components/routes/mySettings/MySettings';
+import ChangePassword from '@/components/routes/mySettings/ChangePassword';
 // My-APIs Routes Components
 import MyApis from '@/components/routes/myApis/MyApis';
 import Businesses from '@/components/routes/myApis/businesses/Businesses';
@@ -139,6 +140,10 @@ export default new Router({
         {
           path: 'my-settings',
           component: MySettings,
+        },
+        {
+          path: 'change-password',
+          component: ChangePassword,
         },
         {
           path: 'dashboard',

@@ -17,7 +17,7 @@
               <small>An immidiate email about new Abyss login notification</small>
               </div>
           </li>
-          <li class="list-group-item">
+          <li class="list-group-item" @click="onChangePassClick" style="cursor: pointer;">
             <div class="md-v-line"></div><Icon icon="lock" class="mr-5"/>Change Password
           </li>
           </ul>
@@ -39,6 +39,15 @@
               <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
               Show dark sidebar
               <small>Sidebar dark toggle button</small>
+              </div>
+          </li>
+          <li class="list-group-item">
+            <div class="md-v-line"></div>
+            <input type="checkbox" class="mr-5">
+              <div class="d-flex flex-row" style="margin-top: -30px; margin-left: 4rem;">
+              Delegate a user
+              <button type="button" class="btn btn-secondary btn-sm mx-2">Select User</button>
+              <button type="button" class="btn btn-secondary btn-sm mx-2">Select Date</button>
               </div>
           </li>
           </ul>
@@ -79,15 +88,6 @@
             <input type="checkbox" class="mr-5">
               <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
               Allow developers to promote API version without approval
-              </div>
-          </li>
-          <li class="list-group-item">
-            <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-row" style="margin-top: -30px; margin-left: 4rem;">
-              Delegate a user
-              <button type="button" class="btn btn-secondary btn-sm mx-2">Select User</button>
-              <button type="button" class="btn btn-secondary btn-sm mx-2">Select Date</button>
               </div>
           </li>
           </ul>
@@ -146,6 +146,11 @@ export default {
     return {
       checked: false,
     };
+  },
+  methods: {
+    onChangePassClick() {
+      this.$router.push('/app/change-password');
+    },
   },
 };
 </script>

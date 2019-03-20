@@ -2,26 +2,31 @@
 <template>
 <div>
   <nav class="navbar d-flex justify-content-between mb-5" style="background-color: #036; color: rgba(255, 255, 255, 0.8);">
-    <dl class="m-0">
-    <dd class="m-0">{{ user.props.displayname }}</dd>
-    <dt class="m-0"><small>{{ user.props.email }}</small></dt>
-    <dt class="m-0">
-      <button type="button" class="btn btn-primary btn-sm">Upload New Picture</button>
-      <button type="button" class="btn btn-secondary btn-sm">Delete</button>
-    </dt>
-    </dl>
-    <h4>User Profile</h4>
+    <div class="d-flex">
+      <span class="bg-cover bg-secondary rounded-circle avatar"></span>
+      <dl class="m-0">
+      <dd class="m-0">{{ user.props.displayname }}</dd>
+      <dt class="m-0"><small>{{ user.props.email }}</small></dt>
+      <dt class="m-0">
+        <label for="image-upload" class="btn btn-primary btn-sm mt-2">Upload New Picture</label>
+        <input type="file" id="image-upload" @change="onFileSelected"/>
+        <button type="button" class="btn btn-secondary btn-sm">Delete</button>
+      </dt>
+      </dl>
+    </div>
+    <h6>User Profile</h6>
   </nav>
+    <!-- {{ user.props }} -->
   <b-form
+    @submit="handleSubmit"
   >
   <div class="d-flex align-items-center flex-column">
-    <!-- {{ user.props }} -->
     <div class="row w-75">
       <div class="col">
         <b-form-group
             id="firstNameGroup"
-            label="First Name*:"
           >
+          <label for="firstNameInput">First Name <code>*</code></label>
           <b-form-input
             id="firstNameInput"
             type="text"
@@ -33,8 +38,8 @@
           </b-form-group>
           <b-form-group
             id="displayNameGroup"
-            label="Display Name*:"
           >
+          <label for="displayNameInput">Display Name <code>*</code></label>
           <b-form-input
             id="displayNameInput"
             type="text"
@@ -46,7 +51,7 @@
           </b-form-group>
           <b-form-group
             id="titleGroup"
-            label="Title:"
+            label="Title"
           >
           <b-form-input
             id="titleInput"
@@ -58,7 +63,7 @@
           </b-form-group>
           <b-form-group
             id="companyGroup"
-            label="Company:"
+            label="Company"
           >
           <b-form-input
             id="companyInput"
@@ -70,7 +75,7 @@
           </b-form-group>
           <b-form-group
             id="phoneNumberGroup"
-            label="Phone Number:"
+            label="Phone Number"
           >
           <b-form-input
             id="phoneNumberInput"
@@ -84,8 +89,8 @@
       <div class="col">
         <b-form-group
             id="lastNameGroup"
-            label="Last Name*:"
           >
+          <label for="lastNameInput">Last Name <code>*</code></label>
           <b-form-input
             id="lastNameInput"
             type="text"
@@ -97,8 +102,8 @@
           </b-form-group>
           <b-form-group
             id="emailAddressGroup"
-            label="Email Address*:"
           >
+          <label for="emailAddressInput">Email Address <code>*</code></label>
           <b-form-input
             id="emailAddressInput"
             type="text"
@@ -110,7 +115,7 @@
           </b-form-group>
           <b-form-group
             id="departmentGroup"
-            label="Department:"
+            label="Department"
           >
           <b-form-input
             id="departmentInput"
@@ -122,7 +127,7 @@
           </b-form-group>
           <b-form-group
             id="websiteGroup"
-            label="Website:"
+            label="Website"
           >
           <b-form-input
             id="websiteInput"
@@ -138,17 +143,17 @@
     <div class="row w-75">
       <div class="col">
         <InputWithIcon
-            :prepend="{ icon: 'facebook', prefix: 'fab'}"
+            :prepend="{ icon: 'facebook-square', prefix: 'fab'}"
             placeholder="Facebook"
             class="my-1"
         />
         <InputWithIcon
-            :prepend="{ icon: 'twitter', prefix: 'fab' }"
+            :prepend="{ icon: 'twitter-square', prefix: 'fab' }"
             placeholder="Twitter"
             class="my-1"
         />
         <InputWithIcon
-            :prepend="{ icon: 'github', prefix: 'fab' }"
+            :prepend="{ icon: 'github-square', prefix: 'fab' }"
             placeholder="Github"
             class="my-1"
         />
@@ -169,7 +174,7 @@
     <div class="row w-75 ml-3 mt-4">
       <b-form-group 
         id="descriptionGroup"
-        label="Description:"
+        label="Description"
         label-for="descriptionTextarea"
       >
         <b-form-textarea
@@ -209,10 +214,37 @@ export default {
   components: {
     InputWithIcon,
   },
+  data() {
+    // const { user } = this;
+    return {
+      // userEditable: JSON.parse(JSON.stringify(user)),
+    };
+  },
   computed: {
     ...mapState({
       user: state => state.user,
     }),
   },
+  methods: {
+    handleSubmit(e) {
+      e.preventDefault();
+      console.log(e); // eslint-disable-line no-console
+    },
+    onFileSelected(event) {
+      console.log(event.target.files[0]); // eslint-disable-line no-console
+    },
+  },
 };
 </script>
+<style>
+  .avatar {
+    width: 90px;
+    height: 90px;
+    margin-left: .5rem;
+    margin-right: .7rem;
+    margin-top: .2rem;
+  }
+  input[type="file"] {
+      display: none;
+  }
+</style>

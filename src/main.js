@@ -7,10 +7,10 @@ import '@/assets/scss/main.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   fab,
-  faFacebook,
-  faTwitter,
+  faFacebookSquare,
+  faTwitterSquare,
   faInstagram,
-  faGithub,
+  faGithubSquare,
   faLinkedin,
 } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -135,9 +135,9 @@ library.add(
   faChevronRight,
   faChartBar,
   faLock,
-  faFacebook,
-  faTwitter,
-  faGithub,
+  faFacebookSquare,
+  faTwitterSquare,
+  faGithubSquare,
   faInstagram,
   faLinkedin,
 );

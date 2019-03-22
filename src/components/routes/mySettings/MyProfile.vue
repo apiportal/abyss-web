@@ -16,7 +16,7 @@
     </div>
     <h6>User Profile</h6>
   </nav>
-    <!-- {{ user.props }} -->
+    <!-- {{ userEditable.props }} -->
   <b-form
     @submit="handleSubmit"
   >
@@ -30,7 +30,7 @@
           <b-form-input
             id="firstNameInput"
             type="text"
-            v-model="user.props.firstname"
+            v-model="userEditable.props.firstname"
             placeholder="First Name"
             required
           >
@@ -43,7 +43,7 @@
           <b-form-input
             id="displayNameInput"
             type="text"
-            v-model="user.props.displayname"
+            v-model="userEditable.props.displayname"
             placeholder="Display Name"
             required
           >
@@ -56,7 +56,7 @@
           <b-form-input
             id="titleInput"
             type="text"
-            v-model="user.props.jobtitle"
+            v-model="userEditable.props.jobtitle"
             placeholder="Title"
           >
           </b-form-input>
@@ -68,7 +68,7 @@
           <b-form-input
             id="companyInput"
             type="text"
-            v-model="user.props.company"
+            v-model="userEditable.props.company"
             placeholder="Company"
           >
           </b-form-input>
@@ -80,7 +80,7 @@
           <b-form-input
             id="phoneNumberInput"
             type="text"
-            v-model="user.props.phonemobile"
+            v-model="userEditable.props.phonemobile"
             placeholder="Phone Number"
           >
           </b-form-input>
@@ -94,7 +94,7 @@
           <b-form-input
             id="lastNameInput"
             type="text"
-            v-model="user.props.lastname"
+            v-model="userEditable.props.lastname"
             placeholder="Last Name"
             required
           >
@@ -107,7 +107,7 @@
           <b-form-input
             id="emailAddressInput"
             type="text"
-            v-model="user.props.email"
+            v-model="userEditable.props.email"
             placeholder="Email Address"
             required
           >
@@ -120,7 +120,7 @@
           <b-form-input
             id="departmentInput"
             type="text"
-            v-model="user.props.department"
+            v-model="userEditable.props.department"
             placeholder="Department"
           >
           </b-form-input>
@@ -132,7 +132,7 @@
           <b-form-input
             id="websiteInput"
             type="text"
-            v-model="user.props.url"
+            v-model="userEditable.props.url"
             placeholder="Website"
           >
           </b-form-input>
@@ -179,6 +179,7 @@
       >
         <b-form-textarea
           id="descriptionTextarea"
+          v-model="userEditable.props.description"
           placeholder="Description"
           :rows="3"
           :cols="100"
@@ -206,7 +207,7 @@
 </div>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 
 export default {
@@ -224,11 +225,39 @@ export default {
     ...mapState({
       user: state => state.user,
     }),
+    userEditable() {
+      return JSON.parse(JSON.stringify(this.user));
+    },
   },
   methods: {
+    ...mapActions('users', ['putUsers']),
     handleSubmit(e) {
       e.preventDefault();
-      console.log(e); // eslint-disable-line no-console
+      const { description, url, effectiveenddate, secondaryemail,
+        email, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = this.userEditable.props;
+      this.putUsers({
+        ...this.userEditable.props,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        picture: (picture === null ? '' : picture),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? email : email),
+      }).then((response) => {
+        if (response && response.data) {
+          this.$store.commit('user/setUserProps', response.data[0]);
+        }
+      });
     },
     onFileSelected(event) {
       console.log(event.target.files[0]); // eslint-disable-line no-console

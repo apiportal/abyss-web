@@ -38,6 +38,10 @@ const mutations = {
     state.isUnauthorized = val;
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  setSessionId: (state, sessionId) => {
+    state.sessionid = sessionId;
+    state.lastUpdatedAt = (new Date()).getTime();
+  }
 };
 
 export default {

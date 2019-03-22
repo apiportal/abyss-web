@@ -63,6 +63,7 @@
 
 <script>
 import api from '@/api';
+import { mapState } from 'vuex';
 
 export default {
   data() {
@@ -73,17 +74,47 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      users: state => state.users.items,
+    }),
+  },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
       api.postSignIn(this.form)
         .then((res) => {
           console.log(res); // eslint-disable-line no-console
+          const getUserUuid = (currentUserName) => {
+            const userUuid = this.users.find(u => u.subjectname === currentUserName) || {};
+            return userUuid.uuid;
+          };
+          document.cookie = `abyss.session=${res.data.sessionid}; abyss.principal.uuid=${getUserUuid(res.data.username)}`;
+          console.log(document.cookie);  // eslint-disable-line no-console
+          // console.log(getUserUuid(res.data.username)); // eslint-disable-line no-console
         })
+        .then(() => {
+          this.$router.push('/app/dashboard');
+        })
+        // .then(() => {
+        //   // check user cookie
+        //   const userUuid = document.cookie.split('; ').filter((cookie) => {
+        //     const [name] = cookie.split('=');
+        //     return name === 'abyss.principal.uuid';
+        //   }).map(cookie => cookie.split('=')[1]);
+        //   if (userUuid.length > 0) {
+        //     this.$store.commit('user/setUuid', userUuid[0]);
+        //   } else {
+        //     this.$store.commit('user/setUserUnauthorized', true);
+        //   }
+        // })
         .catch((error) => {
           console.log(error); // eslint-disable-line no-console
         });
     },
+  },
+  created() {
+    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

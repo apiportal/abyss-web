@@ -51,6 +51,13 @@
             :onChange="onChange"
           />
         </div>
+        <div :style="`margin-top: ${formData.length === 0 ? 0 : 1}rem;`">
+          <b-button
+            @click="() => addArrayItem(pathArray, formData)"
+          >
+            New "{{item}}" item
+          </b-button>
+        </div>
       </div>
       <div v-else>
         <OpenApiObjectForm
@@ -127,6 +134,9 @@ export default {
   methods: {
     handleToggleCollapse() {
       this.isCollapsed = !this.isCollapsed;
+    },
+    addArrayItem(pathArray, currentItems) {
+      this.onChange(pathArray, [...currentItems, {}]);
     },
   },
 };

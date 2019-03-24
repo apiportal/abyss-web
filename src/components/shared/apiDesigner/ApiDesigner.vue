@@ -141,7 +141,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .api-designer-container {
   .api-designer-actions-bar {
     border-bottom: 1px solid #e9ecef; 

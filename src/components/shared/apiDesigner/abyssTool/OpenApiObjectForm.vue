@@ -10,7 +10,10 @@
           <OpenApiObject
             :item="item"
             :type="currentObjectInterface[item].type"
-            :formData="formData[item] || {}"
+            :formData="(
+              formData[item] ||
+              (currentObjectInterface[item].Array ? [] : {})
+            )"
             :pathArray="[...pathArray, item]"
             :onChange="onChange"
             :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"

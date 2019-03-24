@@ -47,6 +47,7 @@
                   </b-input-group>
                 </form>
               </div>
+              <hr />
               <div>
                 <b-button
                   v-for="(chip, index) in computedOptions" 

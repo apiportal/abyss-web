@@ -3,7 +3,8 @@
 <div>
   <nav class="navbar d-flex justify-content-between mb-5" style="background-color: #036; color: rgba(255, 255, 255, 0.8);">
     <div class="d-flex">
-      <span class="bg-cover bg-secondary rounded-circle avatar"></span>
+      <img v-if="user.props.picture" :src="user.props.picture" class="bg-cover bg-secondary rounded-circle avatar"/>
+      <span v-else class="bg-cover bg-secondary rounded-circle avatar"></span>
       <dl class="m-0">
       <dd class="m-0">{{ user.props.displayname }}</dd>
       <dt class="m-0"><small>{{ user.props.email }}</small></dt>

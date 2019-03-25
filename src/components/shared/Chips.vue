@@ -30,8 +30,24 @@
           <b-popover target="addPopover" :show.sync="isAddPopoverVisible">
             <template slot="title">{{ addItemText }}</template>
             <div>
-              <div style="min-width: 400px;">
+              <div>
+                <form @submit="handleSubmit">
+                  <b-input-group>
+                    <input
+                      v-model="freeText"
+                      type="text"
+                      class="form-control"
+                      placeholder="Type here"
+                    />
+                    <b-input-group-append slot="append">
+                      <b-button type="submit">
+                        <Icon icon="plus" />
+                      </b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                </form>
               </div>
+              <hr />
               <div>
                 <b-button
                   v-for="(chip, index) in computedOptions" 
@@ -97,6 +113,7 @@ export default {
   data() {
     return {
       isAddPopoverVisible: false,
+      freeText: '',
     };
   },
   methods: {
@@ -107,16 +124,22 @@ export default {
       this.onAddChip(chip);
       this.toggleAddPopover();
     },
+    handleSubmit(evt) {
+      evt.preventDefault();
+      this.addChip({
+        chip: {
+          text: this.freeText,
+          value: this.freeText,
+        },
+      });
+      this.freeText = '';
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .chips-container {
-  // border: 1px solid #ced4da;
-  // border-radius: .25em;
-  // padding: 1em;
-
   .chips-ul {
     list-style-type: none;
     padding: 0;

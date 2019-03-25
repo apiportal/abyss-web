@@ -1,14 +1,14 @@
 <template>
   <div>
     <div
-      class="tag-header"
+      class="path-header"
       @click="handleToggleCollapse"
     >
       <h5>
         <span style="float: right;">
           <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
         </span>
-        <span>{{ tag }}</span>
+        <span>{{ path }}</span>
       </h5>
     </div>
     <div
@@ -35,7 +35,7 @@ import Icon from '@/components/shared/Icon';
 
 export default {
   props: {
-    tag: {
+    path: {
       type: String,
       required: true,
     },
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tag-header {
+.path-header {
   cursor: pointer;
   border-bottom: 1px solid silver;
   margin-bottom: .5rem;

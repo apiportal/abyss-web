@@ -27,16 +27,19 @@ export default {
       type: Function,
       required: true,
     },
-    updated: {
+    debounce: {
       type: Number,
       required: false,
-      default() { return 0; },
     },
   },
   watch: {
-    updated() {
-      this.updatedByProp = true;
-      this.editor.setValue(JSON.stringify(this.value, null, '\t'));
+    value(newValue) {
+      const now = (new Date()).getTime();
+      const { updated } = this;
+      if (now - updated > 100) { // prevent ping-pong changes
+        this.editor.setValue(JSON.stringify(newValue, null, '\t'));
+        this.editor.clearSelection();
+      }
     },
   },
   data() {
@@ -44,6 +47,8 @@ export default {
       isMounted: false,
       editor: null,
       updatedByProp: false,
+      updated: 0,
+      timer: null,
     };
   },
   mounted() {
@@ -55,16 +60,25 @@ export default {
     this.editor.setTheme(`ace/theme/${theme}`);
     this.editor.getSession().setTabSize(2);
     this.editor.setValue(JSON.stringify(value, null, '\t'));
+    this.editor.clearSelection();
     // editor is ready
     this.isMounted = true;
 
     this.editor.on('change', () => {
-      if (this.updatedByProp) {
-        this.updatedByProp = false;
-        return false;
+      if (this.editor.curOp && this.editor.curOp.command.name) {
+        if (this.debounce) {
+          if (this.timer) {
+            clearTimeout(this.timer);
+          }
+          this.timer = setTimeout(function() { // eslint-disable-line
+            this.onChange(this.editor.getValue());
+            this.updated = (new Date()).getTime();
+          }.bind(this), this.debounce);
+        } else {
+          this.onChange(this.editor.getValue());
+          this.updated = (new Date()).getTime();
+        }
       }
-      this.onChange(this.editor.getValue());
-      return false;
     });
   },
   beforeDestroy() {

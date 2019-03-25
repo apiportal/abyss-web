@@ -6,15 +6,14 @@
       {{ description }}
       <span v-if="required" class="text-danger">*</span>
     </label>
-    <b-form-input
-      type="text"
-      v-model="inputValue"
+    <b-form-select
+      v-model="inputValue" 
+      :options="options"
       :state="state"
-      :placeholder="example"
       :required="required"
       :disabled="readonly"
-      @keyup.native="handleKeyup"
-    ></b-form-input>
+      @change="handleChange"
+    />
   </b-form-group>
 </template>
 
@@ -55,9 +54,10 @@ export default {
     value: {
       required: false,
     },
-    debounce: {
-      type: Number,
+    options: {
+      type: Array,
       required: false,
+      default() { return []; },
     },
   },
   computed: {
@@ -65,7 +65,7 @@ export default {
       const { inputValue, required } = this;
 
       if (required) {
-        return inputValue.length > 0;
+        return Boolean(inputValue);
       }
 
       return true;
@@ -83,24 +83,12 @@ export default {
 
     return {
       inputValue: value || example,
-      isEditing: false,
-      timer: null,
     };
   },
   methods: {
-    handleKeyup() {
-      const { inputValue, propAddress, onChange, debounce } = this;
-
-      if (debounce) {
-        if (this.timer) {
-          clearTimeout(this.timer);
-        }
-        this.timer = setTimeout(() => {
-          onChange(propAddress, inputValue);
-        }, debounce);
-      } else {
-        onChange(propAddress, inputValue);
-      }
+    handleChange(val) {
+      const { propAddress, onChange } = this;
+      onChange(propAddress, val);
     },
   },
 };

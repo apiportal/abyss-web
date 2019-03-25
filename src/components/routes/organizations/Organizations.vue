@@ -56,16 +56,6 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
-                sortByKeyType="string"
-              />
-            </th>
             <th class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -86,6 +76,16 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
@@ -103,14 +103,14 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
-            </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">

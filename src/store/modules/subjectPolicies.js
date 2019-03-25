@@ -9,22 +9,22 @@ const state = {
 const getters = {};
 
 const actions = {
-  getSubjectLicenses: ({ commit }, { uuid, refresh = false }) => {
+  getSubjectPolicies: ({ commit }, { uuid, refresh = false  }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getSubjectLicenses(uuid).then((response) => {
+    api.getSubjectPolicies(uuid).then((response) => {
       if (response && response.data) {
-        commit('setSubjectLicenses', response.data);
+        commit('setSubjectPolicies', response.data);
       }
     });
   },
 };
 
 const mutations = {
-  setSubjectLicenses: (state, licenses) => {
-    state.items = licenses;
+  setSubjectPolicies: (state, subjectPolicies) => {
+    state.items = subjectPolicies;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

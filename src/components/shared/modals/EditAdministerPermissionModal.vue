@@ -11,7 +11,7 @@
   >
       <template slot="header">
       <h5 class="modal-title">
-        {{ role === 'edit' ? 'Edit Administer Permission' : 'Add New Administer Permission' }}
+        {{ role === 'edit' ? 'Edit Permission' : 'Add New Permission' }}
       </h5>
     </template>
     <template>

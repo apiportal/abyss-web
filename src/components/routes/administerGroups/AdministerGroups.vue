@@ -273,7 +273,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
-    this.$store.dispatch('subjectMemberships/getSubjectMemberships', {});
+    this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
   },
   data() {
     return {

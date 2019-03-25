@@ -71,7 +71,7 @@ export default {
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('policies/getPolicies', {});
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes');
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});

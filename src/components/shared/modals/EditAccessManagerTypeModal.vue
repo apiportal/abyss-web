@@ -75,6 +75,16 @@
               required
             />
           </b-form-group>
+          <b-form-group id="accessManagerTypeEnabledGroup">
+            <b-form-checkbox
+              id="accessManagerTypeEnabledChecks"
+              v-model="accessManagerTypeEditable.isactive"
+              :value="true"
+              :unchecked-value="false"
+            >
+              Enabled
+            </b-form-checkbox>
+          </b-form-group>
           <b-form-group 
             id="accessManagerTypeTemplateGroup"
           >

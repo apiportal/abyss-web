@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        {{ role === 'edit' ? 'Edit Administer Group' : 'Add New Administer Group' }}
+        {{ role === 'edit' ? 'Edit Group' : 'Add New Group' }}
       </h5>
     </template>
     <template>
@@ -459,12 +459,11 @@ export default {
         });
       } else if (role === 'add') {
         const { currentUser } = this;
-        const { uuid, subjecttypeid } = currentUser.props;
+        const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
         groupToUpdate = [{
           ...groupToUpdate,
           crudsubjectid,
-          subjecttypeid,
         }];
         postGroups(groupToUpdate).then((response) => {
           if (response && response.data) {

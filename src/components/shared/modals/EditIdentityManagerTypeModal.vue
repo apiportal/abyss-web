@@ -75,6 +75,16 @@
               required
             />
           </b-form-group>
+          <b-form-group id="directoryTypeEnabledGroup">
+            <b-form-checkbox
+              id="directoryTypeEnabledChecks"
+              v-model="subjectDirectoryTypeEditable.isactive"
+              :value="true"
+              :unchecked-value="false"
+            >
+              Enabled
+            </b-form-checkbox>
+          </b-form-group>
           <b-form-group 
             id="directoryTypeTemplateGroup"
           >

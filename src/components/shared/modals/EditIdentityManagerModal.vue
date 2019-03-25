@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -253,6 +253,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     directoryNameState() {
       const { directoryname } = this.subjectDirectoryEditable;
 

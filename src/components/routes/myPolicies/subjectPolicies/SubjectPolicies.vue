@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       currentUser: state => state.user,
     }),
@@ -88,27 +88,27 @@ export default {
         array: policies
         .filter((item) => {
           const { filterKey } = this;
-          if (item.subjectid === currentUser.uuid && !item.isdeleted) {
-            if (filterKey === '') {
-              return true;
-            }
-            const filterKeyLowerCase = filterKey.toLowerCase();
-            return (
-              (
-                item.name &&
-                item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.typename &&
-                item.typename.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.policyinstance.info.subType &&
-                item.policyinstance.info.subType.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              )
-            );
+          // if (item.subjectid === currentUser.uuid && !item.isdeleted) {
+          if (filterKey === '') {
+            return true;
           }
-          return '';
+          const filterKeyLowerCase = filterKey.toLowerCase();
+          return (
+            (
+              item.name &&
+              item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.typename &&
+              item.typename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.policyinstance.info.subType &&
+              item.policyinstance.info.subType.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            )
+          );
+          // }
+          // return '';
         },
           )
           .map(item => ({
@@ -161,7 +161,7 @@ export default {
       }
     },
     refreshData() {
-      this.$store.dispatch('policies/getPolicies', {
+      this.$store.dispatch('subjectPolicies/getSubjectPolicies', {
         refresh: true,
       });
     },

@@ -14,7 +14,8 @@
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
-    <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`">
+    <!-- <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`"> -->
+    <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">
       <b-button
         @click="handleToggleApiProxiesTable"
         size="md"

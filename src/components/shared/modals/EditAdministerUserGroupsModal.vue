@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit Administer User Groups
+        Edit User Groups
       </h5>
     </template>
     <template>
@@ -31,6 +31,7 @@
               label="User Groups"
             />
           </div>
+
         </div>
         <footer class="modal-footer">
           <b-button
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import Chips from '@/components/shared/Chips';
@@ -117,6 +119,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     computedMemberships() {
       const { groupsEditable } = this;
       return groupsEditable
@@ -132,35 +137,79 @@ export default {
     const { groups, memberships } = this;
     return {
       groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
-        const isMembership =
-          Boolean(memberships.find(membership => membership.subjectgroupid === group.uuid));
+        const membership = memberships.find(m => m.subjectgroupid === group.uuid);
+        const isMembership = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
           ...group,
           isMembership,
+          membership,
           sortTime,
         };
       }),
+      // userMemberships: [...JSON.parse(JSON.stringify(memberships))],
+      groupsToAdd: [],
+      groupsToDelete: [],
     };
   },
   methods: {
+    ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
+      const { groupsEditable, postSubjectMemberships, deleteSubjectMemberships } = this;
       evt.preventDefault();
+      this.groupsToDelete = groupsEditable
+      .filter(group => group.membership && !group.isMembership)
+      .map(group => (group.membership));
+      this.groupsToAdd = groupsEditable
+      .filter(group => !group.membership && group.isMembership)
+      .map(group => ({
+        // organizationid: this.currentUser.props.organizationid,
+        organizationid: group.organizationid,
+        crudsubjectid: this.currentUser.props.uuid,
+        subjectid: this.user.uuid,
+        subjectgroupid: group.uuid,
+      }));
+      if (this.groupsToDelete.length) {
+        // console.log('groupsToDelete', this.groupsToDelete);
+        for (let i = 0; i < this.groupsToDelete.length; i += 1) {
+        // for (let item of this.groupsToDelete) {
+          // deleteSubjectMemberships(item).then((response) => {
+          // console.log('this.groupsToDelete[i]', this.groupsToDelete[i]);
+          deleteSubjectMemberships([this.groupsToDelete[i]]).then((response) => {
+            if (response && response.data) {
+              // onUpdate();
+            }
+          });
+        }
+      }
+      if (this.groupsToAdd.length) {
+        // console.log('groupsToAdd', this.groupsToAdd);
+        for (let i = 0; i < this.groupsToAdd.length; i += 1) {
+        // for (let item of this.groupsToAdd) {
+          // postSubjectMemberships(item).then((response) => {
+          // console.log('this.groupsToAdd[i]', this.groupsToAdd[i]);
+          postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
+            if (response && response.data) {
+              // onUpdate();
+            }
+          });
+        }
+      }
     },
-    handleDeleteMembership({ uuid }) {
+    handleDeleteMembership(index, chip) {
       const { groupsEditable } = this;
       this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? false : group.isMembership;
+        const isMembership = group.uuid === chip.value ? false : group.isMembership;
         return {
           ...group,
           isMembership,
         };
       });
     },
-    handleAddMembership({ uuid }) {
+    handleAddMembership(chip) {
       const { groupsEditable } = this;
       this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? true : group.isMembership;
+        const isMembership = group.uuid === chip.value ? true : group.isMembership;
         const sortTime = (new Date()).getTime();
         return {
           ...group,

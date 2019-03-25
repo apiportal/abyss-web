@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="License Name"
+              text="Name"
               sortByKey="name"
               sortByKeyType="string"
             />
@@ -33,20 +33,28 @@
               sortByKeyType="string"
             />
           </th>
-          <th>State</th>
-          <th>Created Date</th>
-          <!-- <th v-if="childComponent === 'policies'"># of Policies</th>
-          <th v-if="childComponent === 'proxies'"># of Proxies</th>
-          <th v-if="childComponent === 'contracts'"># of Contracts</th> -->
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
+          <!-- <th v-if="childComponent === 'policies'">Policies</th>
+          <th v-if="childComponent === 'proxies'">Proxies</th>
+          <th v-if="childComponent === 'contracts'">Contracts</th> -->
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="5"
       />
       <TbodyCollapsible
-        v-for="(licenseItem, licenseIndex) in rows" v-bind:key="licenseIndex"
+        v-for="(licenseItem, licenseIndex) in sortedRows" v-bind:key="licenseIndex"
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
@@ -62,11 +70,8 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" style="text-transform: capitalize">
-            {{ licenseItem.licensedocument.legal.documentState }}
-          </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            {{ licenseItem.created | moment("DD.MM.YYYY HH:mm") }}
+            {{ licenseItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
@@ -96,7 +101,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
-          <td colspan="6">
+          <td colspan="5">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"
@@ -118,6 +123,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import License from '@/components/shared/subjects/licenses/License';
+import Helpers from '@/helpers';
 
 export default {
   name: 'Licenses',
@@ -142,6 +148,19 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
+    sortedRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
   },
   components: {
     TbodyCollapsible,

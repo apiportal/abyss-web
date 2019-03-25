@@ -1,13 +1,17 @@
 <template>
   <div>
+    <b-form inline class="switch-organization">
+      <b-form-select v-model="currentOrganization"
+        :options="myOrganizations" />
+    </b-form>
     <ul class="sidenav-links">
       <li>
         <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`">
-          <span><span class="route-icon"><Icon icon="tachometer-alt" /></span> Dashboard</span>
+          <span><span class="route-icon"><Icon icon="home" /></span> Home</span>
         </b-link>
 
         <b-link to="/app/explore" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`">
-          <span class="route-icon"><Icon icon="globe" /></span> Explore APIs
+          <span class="route-icon"><Icon icon="globe" /></span> Marketplace
         </b-link>
 
         <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`">
@@ -36,13 +40,13 @@
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My Policies
         </b-link> 
 
-        <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
+        <!-- <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My SLAs
         </b-link> 
-
+        
         <b-link to="/app/my-policies/my-aggreements/1" class="pl--4" :class="`${currentPage.rootPath === 'my-aggreements' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My Legal Agreements
-        </b-link> 
+        </b-link>  -->
 
         <p>ADMIN</p>
 
@@ -97,7 +101,19 @@ export default {
     }),
   },
   data() {
-    return {};
+    return {
+      currentOrganization: 1,
+      myOrganizations: [
+        {
+          value: 1,
+          text: 'My Organization',
+        },
+        {
+          value: 2,
+          text: 'My Second Organization',
+        },
+      ],
+    };
   },
 };
 </script>

@@ -52,6 +52,16 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
+            <th class="status">
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Status"
+                sortByKey="isactive"
+                sortByKeyType="boolean"
+              />
+            </th>
             <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -87,13 +97,19 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="4"
+          :cols="5"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon 
+                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+                :class="item.isactive ? 'text-success' : 'text-danger'"
+              />
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.typename }}
             </td>
@@ -122,7 +138,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer">
-            <td colspan="4">
+            <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">
                   <div class="row">

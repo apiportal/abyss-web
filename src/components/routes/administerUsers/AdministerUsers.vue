@@ -34,6 +34,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -61,7 +62,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Users"
+                text="Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
               />
@@ -96,6 +97,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          id="IdUsersItem"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -114,18 +116,18 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :id="`IdUsersButtonEditUser_${item.uuid}`" :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
-                <b-dropdown-item :id="`IdUsersButtonEditUserGroups_${item.uuid}`" :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
-                <b-dropdown-item :id="`IdUsersButtonDeleteUser_${item.uuid}`" :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
+                <b-dropdown-item id="IdBtnEdit" :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+                <b-dropdown-item id="IdBtnEditGroups" :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+                <b-dropdown-item id="IdBtnDelete" :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :id="`IdIdentityManagersButtonLogAll_${item.uuid}`" :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

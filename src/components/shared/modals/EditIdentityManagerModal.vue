@@ -139,6 +139,7 @@
             </div>
             <div class="col-2">
               <b-button
+                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -164,12 +165,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >

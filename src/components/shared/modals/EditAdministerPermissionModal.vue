@@ -252,18 +252,20 @@
           </b-form-group>
         </div>
         <footer class="modal-footer">
-        <b-button
-          variant="secondary"
-          @click="onClose"
+          <b-button
+            id="IdBtnCancel"
+            variant="secondary"
+            @click="onClose"
           >
-          Cancel
+            Cancel
           </b-button>
           <b-button
-          variant="success"
-          type="submit"
+            id="IdBtnSave"
+            variant="success"
+            type="submit"
           >
-          Save
-          </b-button>
+            Save
+        </b-button>
         </footer>
       </b-form>
     </template>

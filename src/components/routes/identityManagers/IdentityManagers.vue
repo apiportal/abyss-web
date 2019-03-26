@@ -40,6 +40,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -67,7 +68,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Identity Managers"
+                text="Name"
                 sortByKey="directoryname"
                 sortByKeyType="string"
               />
@@ -112,7 +113,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          :id="`IdIdentityManagersItem_${item.uuid}`"
+          id="IdIdentityManagersItem"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -134,17 +135,17 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :id="`IdIdentityManagersButtonEdit_${item.uuid}`" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :id="`IdIdentityManagersButtonDelete_${item.uuid}`" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item id="IdBtnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item id="IdBtnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :id="`IdIdentityManagersButtonLogsAll_${item.uuid}`" :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
+                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

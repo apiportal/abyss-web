@@ -78,6 +78,16 @@
         >
         </b-pagination>
       </div>
+      <div class="float-right">
+        <b-button
+          id="IdBtnClose"
+          variant="secondary"
+          class="closeButton"
+          @click="onClose"
+        >
+          Close
+        </b-button>
+      </div>
     </template>
   </Modal>
 </template>

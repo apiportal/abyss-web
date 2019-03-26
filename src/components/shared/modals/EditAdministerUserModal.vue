@@ -235,12 +235,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >

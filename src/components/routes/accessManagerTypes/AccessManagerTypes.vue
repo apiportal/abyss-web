@@ -7,10 +7,10 @@
           :active="false"
           to="/app/access-managers/1"
         >
-          Access Managers <b-badge pill>{{ accessManagers.length }}</b-badge>
+          <span class="link-text">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          Access Manager Types <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span class="link-text">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -41,7 +41,7 @@
             class="page-btn-add"
             block
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -52,7 +52,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th class="status">
+            <th id="IdAccessManagerTypesTheadStatus" class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -62,17 +62,17 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th>
+            <th id="IdAccessManagerTypesTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Access Manager Types"
                 sortByKey="typename"
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdAccessManagerTypesTheadDescription">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -82,7 +82,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdAccessManagerTypesTheadOrganization">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -102,6 +102,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          :id="`IdAccessManagerTypesItem_${item.uuid}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -125,12 +126,12 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagerTypesButtonEdit_${item.uuid}`" :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagerTypesButtonDelete_${item.uuid}`" :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagerTypesButtonLogAll_${item.uuid}`" :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

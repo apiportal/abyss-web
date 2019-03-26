@@ -4,7 +4,7 @@
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
           <b-nav-item :active="true">
-            Permissions <b-badge pill>{{ permissions.length }}</b-badge>
+            <span class="link-text">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
         </b-nav>
         <div class="row">
@@ -35,7 +35,7 @@
               class="page-btn-add"
               block
             >
-              <span>Add New</span>
+              <span class="btn-text">Add New</span>
               <Icon icon="plus" />
             </b-button>
           </div>
@@ -46,7 +46,7 @@
         <table class="table abyss-table abyss-table-cards">            
           <thead>
             <tr>
-              <th class="status">
+              <th id="IdPermissionsTheadStatus" class="status">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -56,17 +56,17 @@
                   sortByKeyType="boolean"
                 />
               </th>
-              <th>
+              <th id="IdPermissionsTheadPermissionName">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  text="Permission Name"
+                  text="Permissions"
                   sortByKey="permission"
                   sortByKeyType="string"
                 />
               </th>
-              <th>
+              <th id="IdPermissionsTheadResourceType">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -76,7 +76,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th>
+              <th id="IdPermissionsTheadResourceAction">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -86,7 +86,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th>
+              <th id="IdPermissionsTheadAccessManager">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -96,7 +96,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th>
+              <th id="IdPermissionsTheadOrganization">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -116,6 +116,7 @@
           <TbodyCollapsible
             v-for="(item, index) in paginatedRows" v-bind:key="index"
             :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+            :id="`IdPermissionsItem_${item.uuid}`"
           >
             <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
               <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -145,12 +146,12 @@
                     <Icon icon="ellipsis-h" />
                   </template>
 
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                  <b-dropdown-item :id="`IdPermissionsButtonEdit_${item.uuid}`" :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                  <b-dropdown-item :id="`IdPermissionsButtonDelete_${item.uuid}`" :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                   <b-dropdown-header>LOGS</b-dropdown-header>
 
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+                  <b-dropdown-item :id="`IdPermissionsButtonLogAll_${item.uuid}`" :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
 
                   <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

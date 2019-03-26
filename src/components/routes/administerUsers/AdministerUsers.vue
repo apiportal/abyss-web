@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          Users <b-badge pill>{{ users.length }}</b-badge>
+          <span class="link-text">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -35,7 +35,7 @@
             class="page-btn-add"
             block
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -46,7 +46,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th class="status">
+            <th id="IdUsersTheadStatus" class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -56,17 +56,17 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th>
+            <th id="IdUsersTheadDisplayStatus">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Display Name"
+                text="Users"
                 sortByKey="displayname"
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdUsersTheadEmail">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -76,7 +76,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdUsersTheadOrganization">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -119,13 +119,13 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
-                <b-dropdown-item :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
-                <b-dropdown-item :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
+                <b-dropdown-item :id="`IdUsersButtonEditUser_${item.uuid}`" :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+                <b-dropdown-item :id="`IdUsersButtonEditUserGroups_${item.uuid}`" :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+                <b-dropdown-item :id="`IdUsersButtonDeleteUser_${item.uuid}`" :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+                <b-dropdown-item :id="`IdIdentityManagersButtonLogAll_${item.uuid}`" :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

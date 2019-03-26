@@ -67,7 +67,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Identity Manager Types"
                 sortByKey="typename"
                 sortByKeyType="string"
               />

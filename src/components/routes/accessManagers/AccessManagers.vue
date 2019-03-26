@@ -4,13 +4,13 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          Access Managers <b-badge pill>{{ accessManagers.length }}</b-badge>
+          <span class="link-text">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="false"
           to="/app/access-manager-types/1"
         >
-          Access Manager Types <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span class="link-text">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -41,7 +41,7 @@
             class="page-btn-add"
             block
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -52,7 +52,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th class="status">
+            <th id="IdAccessManagersTheadStatus" class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -62,17 +62,17 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th>
+            <th id="IdAccessManagersTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Access Managers"
                 sortByKey="accessmanagername"
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdAccessManagersTheadAccessManagerType">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -82,7 +82,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdAccessManagersTheadOrganization">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -102,6 +102,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          :id="`IdAccessManagersItem_${item.uuid}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -120,17 +121,17 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown id="IdAccessManagersDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagersButtonEdit_${item.uuid}`" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagersButtonDelete_${item.uuid}`" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
+                <b-dropdown-item :id="`IdAccessManagersButtonLogsAll_${item.uuid}`" :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

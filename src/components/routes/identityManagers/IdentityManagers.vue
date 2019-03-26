@@ -4,13 +4,13 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          Identity Managers <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+          <span class="link-text">Identity Managers</span>  <b-badge pill>{{ subjectDirectories.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="false"
           to="/app/identity-manager-types/1"
         >
-          Identity Manager Types <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
+          <span class="link-text">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -41,7 +41,7 @@
             class="page-btn-add"
             block
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -52,7 +52,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th class="status">
+            <th id="IdIdentityManagersTheadStatus" class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -62,17 +62,17 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th>
+            <th id="IdIdentityManagersTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Identity Managers"
                 sortByKey="directoryname"
                 sortByKeyType="string"
               />
             </th>
-            <th class="text-nowrap">
+            <th id="IdIdentityManagersTheadPriorityOrder" class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -82,7 +82,7 @@
                 sortByKeyType="number"
               />
             </th>
-            <th>
+            <th id="IdIdentityManagersTheadDirectoryType">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -92,7 +92,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
+            <th id="IdIdentityManagersTheadOrganization">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -112,6 +112,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          :id="`IdIdentityManagersItem_${item.uuid}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -138,12 +139,12 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item :id="`IdIdentityManagersButtonEdit_${item.uuid}`" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :id="`IdIdentityManagersButtonDelete_${item.uuid}`" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
+                <b-dropdown-item :id="`IdIdentityManagersButtonLogsAll_${item.uuid}`" :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -157,11 +158,11 @@
                   <div class="row">
                     <dl class="col">
                       <dt>Name:</dt>
-                      <dd>{{ item.directoryname }}</dd>
+                      <dd title="Name">{{ item.directoryname }}</dd>
                       <dt>Description:</dt>
-                      <dd>{{ item.description }}</dd>
+                      <dd title="Description">{{ item.description }}</dd>
                       <dt>Organization:</dt>
-                      <dd>{{ item.organizationname }}</dd>
+                      <dd title="Organization">{{ item.organizationname }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Priority Order:</dt>

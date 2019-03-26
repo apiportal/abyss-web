@@ -8,6 +8,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    id="editAccessManagerModal"
   >
     <template slot="header">
       <h5 class="modal-title">
@@ -112,6 +113,7 @@
             </div>
             <div class="col-2">
               <b-button
+                id="IDAccessManagerConfigureButton"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -137,12 +139,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="editAccessManagerModalButtonCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="editAccessManagerModalButtonSave"
             variant="success"
             type="submit"
           >

@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environmwnt"
+              text="Environment"
               sortByKey="islive"
               sortByKeyType="boolean"
             />

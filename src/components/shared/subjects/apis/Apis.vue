@@ -3,27 +3,27 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th>
+          <th id="IdMyApisTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Api Name"
+              text="Name"
               sortByKey="openapidocument.info.title"
               sortByKeyType="string"
             />
           </th>
-          <th>
+          <th id="IdMyApisTheadEnvironment">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environmwnt"
+              text="Environment"
               sortByKey="islive"
               sortByKeyType="boolean"
             />
           </th>
-          <th>
+          <th id="IdMyApisTheadVersion">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -33,7 +33,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th>
+          <th id="IdMyApisTheadState">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -43,7 +43,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th>
+          <th id="IdMyApisTheadVisibility">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -53,7 +53,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th>
+          <th id="IdMyApisTheadProxies">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"

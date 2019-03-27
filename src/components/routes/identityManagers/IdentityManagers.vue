@@ -54,7 +54,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th id="IdIdentityManagersTheadStatus" class="status">
+            <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -64,7 +64,7 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th id="IdIdentityManagersTheadName">
+            <th id="IdTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -74,7 +74,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th id="IdIdentityManagersTheadPriorityOrder" class="text-nowrap">
+            <th class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -84,7 +84,7 @@
                 sortByKeyType="number"
               />
             </th>
-            <th id="IdIdentityManagersTheadDirectoryType">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -94,7 +94,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th id="IdIdentityManagersTheadOrganization">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"

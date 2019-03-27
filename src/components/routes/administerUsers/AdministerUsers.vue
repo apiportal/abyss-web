@@ -48,7 +48,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th id="IdUsersTheadStatus" class="status">
+            <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -58,7 +58,7 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th id="IdUsersTheadDisplayStatus">
+            <th id="IdTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -68,7 +68,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th id="IdUsersTheadEmail">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -78,7 +78,7 @@
                 sortByKeyType="string"
               />
             </th>
-            <th id="IdUsersTheadOrganization">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"

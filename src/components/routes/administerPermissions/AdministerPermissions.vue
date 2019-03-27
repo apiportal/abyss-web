@@ -48,7 +48,7 @@
         <table class="table abyss-table abyss-table-cards">            
           <thead>
             <tr>
-              <th id="IdPermissionsTheadStatus" class="status">
+              <th class="status">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -58,7 +58,7 @@
                   sortByKeyType="boolean"
                 />
               </th>
-              <th id="IdPermissionsTheadPermissionName">
+              <th id="IdTheadName">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -68,7 +68,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th id="IdPermissionsTheadResourceType">
+              <th>
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -78,7 +78,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th id="IdPermissionsTheadResourceAction">
+              <th>
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -88,7 +88,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th id="IdPermissionsTheadAccessManager">
+              <th>
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -98,7 +98,7 @@
                   sortByKeyType="string"
                 />
               </th>
-              <th id="IdPermissionsTheadOrganization">
+              <th>
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"

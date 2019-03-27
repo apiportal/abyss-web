@@ -3,7 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th id="IdMyApisTheadName">
+          <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -13,7 +13,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadEnvironment">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -23,7 +23,7 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th id="IdMyApisTheadVersion">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -33,7 +33,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadState">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -43,7 +43,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadVisibility">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -53,7 +53,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadProxies">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"

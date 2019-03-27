@@ -54,12 +54,12 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      proxies: state => state.proxies.items,
+      apis: state => state.apis.items,
       apiStates: state => state.apiStates.items,
       users: state => state.users.items,
     }),
     cardItems() {
-      const { proxies, apiStates, users } = this;
+      const { apis, apiStates, users } = this;
       const getApiStateName = (apistateid) => {
         const apiState = apiStates.find(item => item.uuid === apistateid) || {};
         return apiState.name || apistateid;
@@ -68,7 +68,7 @@ export default {
         const user = users.find(item => item.uuid === subjectId) || {};
         return user.displayname || subjectId;
       };
-      return proxies
+      return apis
         .filter((item) => {
           if (item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14') {
             return item;
@@ -88,7 +88,7 @@ export default {
   //   },
   // },
   mounted() {
-    this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('apis/getApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('users/getUsers', {});
   },
@@ -96,7 +96,7 @@ export default {
     subStr(i) {
       if (i && i.length > 70) {
         return `${i.substr(0, 70)} [...]`;
-      } else if (i.length <= 70) {
+      } else if (i && i.length <= 70) {
         return i;
       }
       return '';

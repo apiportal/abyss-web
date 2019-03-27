@@ -11,7 +11,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdLogTitle" class="modal-title">
         {{ title }}
       </h5>
     </template>

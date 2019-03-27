@@ -3,7 +3,7 @@
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item active>
-          My Policies <b-badge pill>{{ policies.length }}</b-badge>
+          <span id="IdLinkMyPolicies" class="link-text">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>

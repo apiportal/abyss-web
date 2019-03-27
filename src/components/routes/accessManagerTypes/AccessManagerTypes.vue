@@ -7,10 +7,10 @@
           :active="false"
           to="/app/access-managers/1"
         >
-          <span class="link-text">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
+          <span id="IdLinkAccessManagers" class="link-text">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          <span class="link-text">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span id="IdLinkAccessManagerTypes"  class="link-text">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -30,6 +30,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -68,7 +69,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Access Manager Type Name"
                 sortByKey="typename"
                 sortByKeyType="string"
               />

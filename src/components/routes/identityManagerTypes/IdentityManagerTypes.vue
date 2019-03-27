@@ -7,10 +7,10 @@
           :active="false"
           to="/app/identity-managers/1"
         >
-          Identity Managers <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+          <span id="IdLinkIdentityManagers" class="link-text">Identity Managers</span> <b-badge pill>{{ subjectDirectories.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          Identity Manager Types <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
+          <span id="IdLinkIdentityManagerTypes" class="link-text">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -30,6 +30,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -68,7 +69,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Identity Manager Type Name"
                 sortByKey="typename"
                 sortByKeyType="string"
               />

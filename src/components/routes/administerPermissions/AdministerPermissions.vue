@@ -4,7 +4,7 @@
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
           <b-nav-item :active="true">
-            <span class="link-text">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
+            <span id="IdLinkPermissions" class="link-text">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
         </b-nav>
         <div class="row">
@@ -24,6 +24,7 @@
               class="page-btn-refresh"
               block
               @click="refreshData"
+              id="IdBtnRefresh"
             >
               <Icon icon="redo" />
             </b-button>
@@ -62,7 +63,7 @@
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
                   :onClick="handleSortByClick"
-                  text="Name"
+                  text="Permission Name"
                   sortByKey="permission"
                   sortByKeyType="string"
                 />

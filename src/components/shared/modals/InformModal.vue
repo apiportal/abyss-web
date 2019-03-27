@@ -9,7 +9,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 id="IdModalTitle" class="modal-title">{{ title }}</h5>
     </template>
     <template>
       <div>{{ text }}</div>
@@ -20,6 +20,7 @@
         variant="primary" 
         size="sm" 
         @click="onConfirm"
+        id="IdBtnConfirm"
       >
         OK
       </b-button>

@@ -11,7 +11,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Api' : 'Add New Api' }}
       </h5>
     </template>
@@ -26,12 +26,14 @@
       <b-button
         variant="link"
         @click="onClose"
+        id="IdBtnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onUpdate"
+        id="IdBtnSave"
       >
         <Icon icon="save" /> Save
       </b-button>

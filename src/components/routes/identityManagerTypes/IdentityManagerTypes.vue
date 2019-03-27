@@ -106,7 +106,7 @@
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           id="IdIdentityManagerTypesItem"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactive ? 'check-circle' : 'times-circle'" 

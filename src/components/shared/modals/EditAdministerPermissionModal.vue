@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
       <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Permission' : 'Add New Permission' }}
       </h5>
     </template>

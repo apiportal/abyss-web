@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Group' : 'Add New Group' }}
       </h5>
     </template>

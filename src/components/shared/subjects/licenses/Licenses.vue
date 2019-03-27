@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Name"
+              text="License Name"
               sortByKey="name"
               sortByKeyType="string"
             />
@@ -58,7 +58,7 @@
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
             <Icon
               :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"

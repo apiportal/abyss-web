@@ -8,7 +8,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Name"
+              text="Api Name"
               sortByKey="openapidocument.info.title"
               sortByKeyType="string"
             />
@@ -74,12 +74,12 @@
         v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ environment(item) }}</td>
+            {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}

@@ -63,7 +63,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Users Name"
+                text="User Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
               />
@@ -100,7 +100,7 @@
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           id="IdUsersItem"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'" 

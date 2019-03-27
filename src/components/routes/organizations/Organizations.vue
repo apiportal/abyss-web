@@ -102,7 +102,7 @@
           :level="0"
           id="IdOrganizationsItem"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>

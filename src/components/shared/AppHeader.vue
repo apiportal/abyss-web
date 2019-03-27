@@ -14,7 +14,7 @@
           <b-nav-item-dropdown right class="navbar-user">
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <div class="d-flex align-items-center">
+              <div id="IdNavbarUser" class="d-flex align-items-center">
                 <span>{{ user.props.displayname }}</span>
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>

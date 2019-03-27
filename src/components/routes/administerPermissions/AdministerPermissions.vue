@@ -160,7 +160,7 @@
                 </b-dropdown>
               </td>
             </tr>
-            <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+            <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
               <td colspan="7">
                 <div class="collapsible-content">
                   <AdministerPermission
@@ -183,6 +183,7 @@
           :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
+          id="IdPagination"
         >
         </b-pagination>
       </div>

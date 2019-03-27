@@ -140,7 +140,7 @@
               </b-dropdown>
             </td>
           </tr>
-          <tr slot="footer" class="footer">
+          <tr id="IdTableFooter" slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">

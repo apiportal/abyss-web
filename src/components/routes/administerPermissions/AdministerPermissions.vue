@@ -4,7 +4,7 @@
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
           <b-nav-item :active="true">
-            Permissions <b-badge pill>{{ permissions.length }}</b-badge>
+            <span id="IdLinkPermissions" class="link-text">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
         </b-nav>
         <div class="row">
@@ -24,6 +24,7 @@
               class="page-btn-refresh"
               block
               @click="refreshData"
+              id="IdBtnRefresh"
             >
               <Icon icon="redo" />
             </b-button>
@@ -34,8 +35,9 @@
               variant="primary"
               class="page-btn-add"
               block
+              id="IdBtnAddNew"
             >
-              <span>Add New</span>
+              <span class="btn-text">Add New</span>
               <Icon icon="plus" />
             </b-button>
           </div>
@@ -56,7 +58,7 @@
                   sortByKeyType="boolean"
                 />
               </th>
-              <th>
+              <th id="IdTheadName">
                 <SortBy
                   :selectedSortByKey="sortByKey"
                   :selectedSortDirection="sortDirection"
@@ -116,8 +118,9 @@
           <TbodyCollapsible
             v-for="(item, index) in paginatedRows" v-bind:key="index"
             :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+            id="IdPermissionsItem"
           >
-            <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
               <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
                 <Icon 
                   :icon="item.isactive ? 'check-circle' : 'times-circle'" 
@@ -140,24 +143,24 @@
                 {{ item.organizationname }}
               </td>
               <td class="actions">
-                <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+                <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                   <template slot="button-content">
                     <Icon icon="ellipsis-h" />
                   </template>
 
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                  <b-dropdown-item id="IdBtnEdit" :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                  <b-dropdown-item id="IdBtnDelete" :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                   <b-dropdown-header>LOGS</b-dropdown-header>
 
-                  <b-dropdown-item :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+                  <b-dropdown-item id="IdBtnLogsAll" :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
 
                   <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
                 </b-dropdown>
               </td>
             </tr>
-            <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+            <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
               <td colspan="7">
                 <div class="collapsible-content">
                   <AdministerPermission
@@ -180,6 +183,7 @@
           :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
+          id="IdPagination"
         >
         </b-pagination>
       </div>

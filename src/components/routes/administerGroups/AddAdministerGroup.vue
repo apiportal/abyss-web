@@ -63,6 +63,7 @@ export default {
         picture: '',
         effectiveenddate: endDate.toISOString(),
         effectivestartdate: now.toISOString(),
+        subjecttypeid: 'c5ef2da7-b55e-4dec-8be3-96bf30255781',
       },
       page: this.$route.params.page,
     };

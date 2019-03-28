@@ -6,11 +6,6 @@
 
       <b-navbar-brand to="/app/dashboard"><img src="/static/abyss_dark.png" class="logo" /></b-navbar-brand>
 
-      <b-form inline class="switch-organization">
-        <b-form-select v-model="currentOrganization"
-          :options="myOrganizations" />
-      </b-form>
-
       <b-collapse is-nav id="nav_collapse" v-if="user.uuid">
 
         <!-- Right aligned nav items -->
@@ -19,7 +14,7 @@
           <b-nav-item-dropdown right class="navbar-user">
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <div class="d-flex align-items-center">
+              <div id="IdNavbarUser" class="d-flex align-items-center">
                 <span>{{ user.props.displayname }}</span>
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>
@@ -46,19 +41,7 @@ export default {
     }),
   },
   data() {
-    return {
-      currentOrganization: 1,
-      myOrganizations: [
-        {
-          value: 1,
-          text: 'My Organization',
-        },
-        {
-          value: 2,
-          text: 'My Second Organization',
-        },
-      ],
-    };
+    return {};
   },
 };
 </script>

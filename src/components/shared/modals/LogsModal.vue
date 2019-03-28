@@ -11,7 +11,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ title }}
       </h5>
     </template>
@@ -77,6 +77,16 @@
           @change="onPageChange"
         >
         </b-pagination>
+      </div>
+      <div class="float-right">
+        <b-button
+          id="IdBtnClose"
+          variant="secondary"
+          class="closeButton"
+          @click="onClose"
+        >
+          Close
+        </b-button>
       </div>
     </template>
   </Modal>

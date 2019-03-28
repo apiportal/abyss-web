@@ -2,7 +2,8 @@
   <b-link 
     @click="() => onClick({ sortByKey, sortByKeyType, sortDirection: selectedSortDirection })"
   >
-    {{text}} <Icon :icon="`${ selectedSortDirection === 'desc' ? 'caret-up' : 'caret-down'}`"
+    <span class="link-text">{{text}}</span>
+    <Icon :icon="`${ selectedSortDirection === 'desc' ? 'caret-up' : 'caret-down'}`"
     :class="`${ sortByKey === selectedSortByKey ? 'active' : 'inactive'}`" />
   </b-link>
 </template>

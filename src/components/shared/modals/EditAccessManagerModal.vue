@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    id="editAccessManagerModal"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Access Manager' : 'Add New Access Manager' }}
       </h5>
     </template>
@@ -112,6 +113,7 @@
             </div>
             <div class="col-2">
               <b-button
+                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -137,12 +139,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >
@@ -155,7 +159,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -226,6 +230,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     accessManagerNameState() {
       const { accessmanagername } = this.accessManagerEditable;
 

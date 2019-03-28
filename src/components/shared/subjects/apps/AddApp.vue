@@ -76,7 +76,7 @@ export default {
         secondaryemail: this.currentUser.props.email,
         subjectdirectoryid: null,
         subjectname: '',
-        subjecttypeid: 'ca80dd37',
+        subjecttypeid: 'ca80dd37-7484-46d3-b4a1-a8af93b2d3c6',
         url: '',
       };
     },

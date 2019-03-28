@@ -39,8 +39,10 @@
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organizationUsers.length"
+        :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" /> Users
+        <Icon icon="users" /> 
+        <span class="btn-text">Users</span>
         <b-badge pill>{{ organizationUsers.length }}</b-badge>
       </b-button>
       <b-button
@@ -51,8 +53,10 @@
         @click="showSubOrganizations"
         :class="{'active': isShowSubOrganizations}"
         v-if="organization.suborganizations > 0"
+        :id="`IDOrganizationSubOrganizationsButton_${organization.uuid}`"
       >
-        <Icon icon="list-ol" /> Sub Organizations
+        <Icon icon="list-ol" />
+        <span class="btn-text">Sub Organizations</span>
         <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
     </div>
@@ -79,16 +83,6 @@
                 sortByKeyType="string"
               />
             </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
-                sortByKeyType="string"
-              />
-            </th>
             <th class="text-nowrap">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -109,6 +103,16 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
@@ -122,14 +126,14 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
-            </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">

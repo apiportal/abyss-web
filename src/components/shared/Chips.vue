@@ -14,7 +14,7 @@
           <b-link
             v-b-tooltip.hover 
             title="Delete"
-            @click="() => onDeleteChip(index)"
+            @click="() => onDeleteChip(index, chip)"
           >
             <Icon icon="times" />
           </b-link>

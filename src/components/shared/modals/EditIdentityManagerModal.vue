@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Identity Manager' : 'Add New Identity Manager' }}
       </h5>
     </template>
@@ -139,6 +139,7 @@
             </div>
             <div class="col-2">
               <b-button
+                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -166,12 +167,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            id="IdBtnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            id="IdBtnSave"
           >
             Save
           </b-button>
@@ -182,7 +185,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -253,6 +256,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     directoryNameState() {
       const { directoryname } = this.subjectDirectoryEditable;
 

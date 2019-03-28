@@ -18,6 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -28,6 +29,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -75,11 +77,39 @@ export default {
       apps: state => state.apps.items,
       subjectApps: state => state.subjectApps.items,
       organizations: state => state.organizations.items,
+      subjectResources: state => state.subjectResources.items,
+      subjectPermissions: state => state.subjectPermissions.items,
     }),
     userApps() {
-      const { apps, subjectApps } = this;
-      const subjectAppsIds = subjectApps.map(item => item.appid);
-      return apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
+      const subjectAppsIds = this.subjectApps.map(item => item.appid);
+      // return this.apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
+      const getSubjectApp = (appId) => {
+        const subjectapp = this.subjectApps.find(item => item.appid === appId);
+        return subjectapp;
+      };
+      const getSubjectPermissions = (resource) => {
+        const subjectpermissions = this.subjectPermissions.find(
+          item => item.resourceid === resource.uuid);
+        return subjectpermissions;
+      };
+      const getSubjectResource = (app) => {
+        const subjectresource = this.subjectResources.find(item => item.resourcerefid === app.uuid);
+        if (subjectresource) {
+          subjectresource.permission = getSubjectPermissions(subjectresource);
+        }
+        return subjectresource;
+      };
+      return this.apps
+        .filter(item => (
+          subjectAppsIds.indexOf(item.uuid) > -1),
+        )
+        .map(item => ({
+          ...item,
+          subjectapp: getSubjectApp(item.uuid),
+          resource: getSubjectResource(item),
+          // permission: getSubjectPermissions(item),
+        }),
+      );
     },
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
@@ -89,27 +119,34 @@ export default {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
+      const getContractsCount = (item) => {
+        if (item.contracts) {
+          return item.contracts.length;
+        }
+        return 0;
+      };
       return sortArrayOfObjects({
         array: userApps
           .filter((item) => {
             const { filterKey } = this;
-            if (!item.isdeleted) {
-              if (filterKey === '') {
-                return true;
-              }
-              const filterKeyLowerCase = filterKey.toLowerCase();
-              return (
-                (
-                  item.displayname &&
-                  item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-                )
-              );
+            // if (!item.isdeleted) {
+            if (filterKey === '') {
+              return true;
             }
-            return '';
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.displayname &&
+                item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
+            // }
+            // return '';
           },
             )
           .map(item => ({
             ...item,
+            contractsCount: getContractsCount(item),
             organizationname: getOrganizationName(item.organizationid),
           })),
         sortByKey,

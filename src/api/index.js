@@ -84,8 +84,8 @@ export default {
     return axios.get('/abyss/oapi/subjects/users/');
   },
   putUsers(user) {
-    const { uuid, created, deleted, updated, totallogincount,
-      failedlogincount, invalidpasswordattemptcount, isactivated,
+    const { uuid, created, deleted, isdeleted, updated, totallogincount,
+      failedlogincount, invalidpasswordattemptcount,
       ispasswordchangerequired, lastauthenticatedat, lastfailedloginat,
       lastloginat, lastpasswordchangeat, passwordexpiresat, ...rest } = user;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
@@ -144,7 +144,7 @@ export default {
     const { uuid, created, deleted, isdeleted, updated,
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
-      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = group;
+      lastauthenticatedat, lastfailedloginat, ...rest } = group;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   deleteGroups(uuid) {
@@ -157,9 +157,52 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  getAllSubjectMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships');
+  },
+  putSubjectMemberships(subjectmemberships) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectmemberships;
+    return axios.put(`/abyss/oapi/subject-memberships/${uuid}`, rest);
+  },
+  postSubjectMemberships(subjectmemberships) {
+    return axios.post('/abyss/oapi/subject-memberships/', subjectmemberships);
+  },
+  deleteSubjectMemberships(uuid) {
+    return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
+  },
+  // getSubjectApps
+  // getSubjectApps(uuid) {
+  //   return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+  // },
+  putSubjectApps(subjectapp) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
+    return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
+  },
+  postSubjectApps(subjectapp) {
+    return axios.post('/abyss/oapi/subject-apps/', subjectapp);
+  },
+  deleteSubjectApps(uuid) {
+    return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
+  },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');
+  },
+  putResources(resource) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = resource;
+    return axios.put(`/abyss/oapi/resources/${uuid}`, rest);
+  },
+  postResources(resource) {
+    return axios.post('/abyss/oapi/resources/', resource);
+  },
+  deleteResources(uuid) {
+    return axios.delete(`/abyss/oapi/resources/${uuid}`);
+  },
+  getResource(uuid) {
+    return axios.get(`/abyss/oapi/resources/reference/${uuid}`);
+  },
+  getSubjectResources(uuid) {
+    return axios.get(`/abyss/oapi/resources/subject/${uuid}`);
   },
   // resource-types
   getResourceTypes() {
@@ -183,6 +226,9 @@ export default {
   postPermissions(permission) {
     return axios.post('/abyss/oapi/subject-permissions/', permission);
   },
+  getSubjectPermissions(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
+  },
   // subject-types
   getSubjectTypes() {
     return axios.get('/abyss/oapi/subject-types');
@@ -198,7 +244,7 @@ export default {
     const { uuid, created, deleted, isdeleted, updated,
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
-      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+      lastauthenticatedat, lastfailedloginat, ...rest } = subject;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   postApps(app) {
@@ -207,16 +253,12 @@ export default {
   deleteApps(uuid) {
     return axios.delete(`/abyss/oapi/subjects/${uuid}`);
   },
-  // subject-memberships all
-  getAllSubjectMemberships() {
-    return axios.get('/abyss/oapi/subject-memberships');
-  },
   // update subjects
   putSubjects(subject) {
     const { uuid, created, deleted, isdeleted, updated,
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
-      isactivated, lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+      lastauthenticatedat, lastfailedloginat, ...rest } = subject;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   // my-apis
@@ -255,6 +297,9 @@ export default {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
   // policies
+  getSubjectPolicies(uuid) {
+    return axios.get(`/abyss/oapi/policies/subject/${uuid}`);
+  },
   getPolicies() {
     return axios.get('/abyss/oapi/policies');
   },

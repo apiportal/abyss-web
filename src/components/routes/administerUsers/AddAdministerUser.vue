@@ -59,6 +59,7 @@ export default {
         picture: '',
         effectiveenddate: now,
         effectivestartdate: now,
+        subjecttypeid: '21371a15-04f8-445e-a899-006ee11c0e09',
       },
       page: this.$route.params.page,
     };

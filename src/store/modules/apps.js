@@ -56,6 +56,13 @@ const actions = {
       });
     }
   },
+  // getAppResources: ({ commit }, { appIdsArray }) => {
+  //   for (let i = 0; i < appIdsArray.length; i += 1) {
+  //     api.getResource(appIdsArray[i]).then((response) => {
+  //       commit('setAppResources', { appId: appIdsArray[i], resource: response.data});
+  //     });
+  //   }
+  // },
 };
 
 const mutations = {
@@ -90,6 +97,19 @@ const mutations = {
     });
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  // setAppResources: (state, { appId, resources }) => {
+  //   state.items = state.items.map(item => {
+  //     if (item.uuid === appId) {
+  //       return {
+  //         ...item,
+  //         resources,
+  //       };
+  //     } else {
+  //       return item;
+  //     }
+  //   });
+  //   state.lastUpdatedAt = (new Date()).getTime();
+  // },
   setAppDeleted: (state, appUuid) => {
     state.items = state.items.map((item) => {
       if (item.uuid === appUuid) {

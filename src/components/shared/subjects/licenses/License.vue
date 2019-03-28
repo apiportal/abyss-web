@@ -98,7 +98,7 @@
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
     </div>
-    <div class="abyss-table-content" v-if="isApisTableVisible">
+    <div class="abyss-table-content" v-if="isApisTableVisible && licenseApis.length">
       <Proxies
         :rows="computedLicenseApis"
         :routePath="routePath"
@@ -116,7 +116,7 @@
         <b-badge pill>{{ licenseContracts.length }}</b-badge>
       </b-button>
     </div>
-    <div class="abyss-table-content" v-if="isContractsTableVisible">
+    <div v-if="isContractsTableVisible && licenseContracts.length">
       <Contracts
         :rows="computedLicenseContracts"
         :routePath="routePath"
@@ -262,13 +262,17 @@ export default {
       api
       .getLicenseContracts(this.item.uuid)
       .then((response) => {
-        this.licenseContracts = response.data;
+        if (response) {
+          this.licenseContracts = response.data;
+        }
       });
     } else if (this.childComponent === 'proxies') {
       api
       .getLicenseApis(this.item.uuid)
       .then((response) => {
-        this.licenseApis = response.data;
+        if (response) {
+          this.licenseApis = response.data;
+        }
       });
     }
   },

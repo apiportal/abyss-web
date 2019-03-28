@@ -1,6 +1,7 @@
 <template>
+  <div>
   <!-- Form -->
-  <b-form @submit="handleSubmit">
+  <b-form @submit="handleSubmit" v-if="!this.redirect">
     <!-- Title -->
     <div class="mb-7">
       <h1 class="h3 text-primary font-weight-normal mb-0">Welcome to <span class="font-weight-semi-bold">Abyss</span></h1>
@@ -112,8 +113,8 @@
     <div class="js-form-message mb-5">
       <b-form-checkbox
         v-model="form.isAgreedToTerms"
-        :value="'on'"
-        :unchecked-value="'off'"
+        :value="true"
+        :unchecked-value="false"
         class="text-muted"
       >
         <small>
@@ -156,10 +157,30 @@
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
+  <div v-if="this.redirect">
+    <b-alert show variant="primary">
+      <h4 class="alert-heading">Success !</h4>
+      <p>
+      {{ this.res.usermessage }}
+      </p>
+      <p v-if="(this.res.recommendation === this.res.usermessage)">
+        {{ this.res.details }}
+      </p>
+      <p v-else>
+        {{ this.res.details }}
+      </p>
+      <hr />
+      <p class="mb-0">
+        {{ this.res.recommendation }}
+      </p>
+    </b-alert>
+  </div>
+  </div>
 </template>
 
 <script>
 import InformModal from '@/components/shared/modals/InformModal';
+import api from '@/api';
 
 export default {
   components: {
@@ -175,14 +196,34 @@ export default {
         email: '',
         password: '',
         password2: '',
-        isAgreedToTerms: 'off',
+        isAgreedToTerms: false,
+      },
+      redirect: false,
+      res: {
+        usermessage: '',
+        details: '',
+        recommendation: '',
       },
     };
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      console.log(evt); // eslint-disable-line no-console
+      api.postSignUp(this.form)
+        .then((response) => {
+          this.redirect = true;
+          this.res.usermessage = response.data.usermessage;
+          if (response.data.details === response.data.recommendation) {
+            this.res.recommendation = response.data.recommendation;
+          } else {
+            this.res.details = response.data.details;
+            this.res.recommendation = response.data.recommendation;
+          }
+          setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
+        })
+        .catch((error) => {
+          console.log(error); // eslint-disable-line
+        });
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;

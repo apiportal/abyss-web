@@ -22,6 +22,9 @@ export default {
   deleteSession(sessionId) {
     return axios.delete(`/abyss/oapi/abyss-session/${sessionId}`);
   },
+  postSignUp(params) {
+    return axios.post('/abyss/oapi/signup', params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');

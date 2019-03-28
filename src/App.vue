@@ -28,6 +28,10 @@ export default {
       // error
       this.$store.commit('user/setUserUnauthorized', (error.response.status === 401));
       this.$store.commit('traffic/increaseResponses');
+
+      if (error.response.status === 401) {
+        this.$router.push('/auth/login');
+      }
     });
 
     // check user cookie
@@ -37,6 +41,7 @@ export default {
     }).map(cookie => cookie.split('=')[1]);
     if (userUuid.length > 0) {
       this.$store.commit('user/setUuid', userUuid[0]);
+      this.$store.dispatch('user/getUser', { principalid: userUuid[0] });
     } else {
       this.$store.commit('user/setUserUnauthorized', true);
     }
@@ -45,18 +50,6 @@ export default {
     ...mapState({
       user: state => state.user,
     }),
-  },
-  methods: {
-    checkUser() {
-      this.$store.dispatch('user/getUser', {});
-    },
-  },
-  mounted() {
-    const { user } = this;
-
-    if (user.uuid) {
-      this.checkUser();
-    }
   },
 };
 </script>

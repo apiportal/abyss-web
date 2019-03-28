@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="auth-container">
     <AuthHeader />
     <main>
       <div class="d-flex align-items-center position-relative height-lg-100vh">
@@ -42,7 +42,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.auth-container{
   .d-flex {
     display: flex !important
   }
@@ -270,4 +271,5 @@ export default {
   .space-bottom-3 {
     padding-bottom: 8rem !important
   }
+}
 </style>

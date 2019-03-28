@@ -31,7 +31,7 @@
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
-            <b-link class="link-muted text-capitalize font-weight-normal" to="forgot-password">Forgot Password?</b-link>
+            <b-link class="link-muted text-capitalize font-weight-normal" to="forgot-password" tabindex="5">Forgot Password?</b-link>
           </span>
         </label>
         <b-form-input
@@ -83,38 +83,17 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       api.postSignIn(this.form)
-        .then((res) => {
-          console.log(res); // eslint-disable-line no-console
-          const getUserUuid = (currentUserName) => {
-            const userUuid = this.users.find(u => u.subjectname === currentUserName) || {};
-            return userUuid.uuid;
-          };
-          document.cookie = `abyss.session=${res.data.sessionid}; abyss.principal.uuid=${getUserUuid(res.data.username)}`;
-          console.log(document.cookie);  // eslint-disable-line no-console
-          // console.log(getUserUuid(res.data.username)); // eslint-disable-line no-console
+        .then((response) => {
+          const { principalid, sessionid } = response.data;
+          document.cookie = `abyss.session=${sessionid}; path=/;`;
+          document.cookie = `abyss.principal.uuid=${principalid}; path=/;`;
+          this.$store.dispatch('user/getUser', { principalid, sessionid });
+          setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
         })
-        .then(() => {
-          this.$router.push('/app/dashboard');
-        })
-        // .then(() => {
-        //   // check user cookie
-        //   const userUuid = document.cookie.split('; ').filter((cookie) => {
-        //     const [name] = cookie.split('=');
-        //     return name === 'abyss.principal.uuid';
-        //   }).map(cookie => cookie.split('=')[1]);
-        //   if (userUuid.length > 0) {
-        //     this.$store.commit('user/setUuid', userUuid[0]);
-        //   } else {
-        //     this.$store.commit('user/setUserUnauthorized', true);
-        //   }
-        // })
         .catch((error) => {
-          console.log(error); // eslint-disable-line no-console
+          console.log(error); // eslint-disable-line
         });
     },
-  },
-  created() {
-    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

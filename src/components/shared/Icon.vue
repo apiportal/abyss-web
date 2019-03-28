@@ -1,5 +1,5 @@
 <template>
-  <font-awesome-icon :icon="['fa', icon]" :spin="spin" />
+  <font-awesome-icon :icon="[prefix, icon]" :spin="spin" />
 </template>
 
 <script>
@@ -9,6 +9,11 @@ export default {
       type: String,
       required: true,
       default() { return ''; },
+    },
+    prefix: {
+      type: String,
+      required: false,
+      default() { return 'fa'; },
     },
     spin: {
       type: Boolean,

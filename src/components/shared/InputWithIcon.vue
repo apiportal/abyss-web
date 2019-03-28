@@ -1,7 +1,7 @@
 <template>
   <b-input-group :size="size">
     <b-input-group-text slot="prepend" v-if="!prepend.empty">
-      <Icon :icon="prepend.icon" />
+      <Icon :icon="prepend.icon" :prefix="prepend.prefix" />
     </b-input-group-text>
     <input
       v-model="value"

@@ -98,7 +98,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === rootOrganization"
+          v-if="item.organizationid === rootOrganization" // TODO: @ilkiz bunu javascriptte arrayi filtreleyek yapar misin?
           :level="0"
           id="IdOrganizationsItem"
         >

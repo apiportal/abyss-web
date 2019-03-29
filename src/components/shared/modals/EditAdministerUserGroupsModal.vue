@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         Edit User Groups
       </h5>
     </template>
@@ -37,12 +37,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            id="IdBtnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            id="IdBtnSave"
           >
             Save
           </b-button>

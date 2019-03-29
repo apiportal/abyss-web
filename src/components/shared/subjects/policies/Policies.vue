@@ -13,12 +13,12 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th>
+          <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Name"
+              text="Policy Name"
               sortByKey="name"
               sortByKeyType="string"
             />
@@ -55,7 +55,7 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :level="3"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
@@ -86,7 +86,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="5">
             <div class="collapsible-content">
               <Policy

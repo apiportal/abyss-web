@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Identity Manager' : 'Add New Identity Manager' }}
       </h5>
     </template>
@@ -139,6 +139,7 @@
             </div>
             <div class="col-2">
               <b-button
+                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -166,12 +167,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            id="IdBtnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            id="IdBtnSave"
           >
             Save
           </b-button>

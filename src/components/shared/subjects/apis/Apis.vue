@@ -3,17 +3,17 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th id="IdMyApisTheadName">
+          <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Name"
+              text="Api Name"
               sortByKey="openapidocument.info.title"
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadEnvironment">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -23,7 +23,7 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th id="IdMyApisTheadVersion">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -33,7 +33,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadState">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -43,7 +43,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadVisibility">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -53,7 +53,7 @@
               sortByKeyType="string"
             />
           </th>
-          <th id="IdMyApisTheadProxies">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -74,12 +74,12 @@
         v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ environment(item) }}</td>
+            {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
@@ -110,7 +110,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="7">
             <div class="collapsible-content">
               <Api

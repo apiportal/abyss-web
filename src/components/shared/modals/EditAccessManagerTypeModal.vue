@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Access Manager Type' : 'Add New Access Manager Type' }}
       </h5>
     </template>
@@ -105,12 +105,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >

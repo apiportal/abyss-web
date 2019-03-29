@@ -11,7 +11,7 @@
     id="editAccessManagerModal"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Access Manager' : 'Add New Access Manager' }}
       </h5>
     </template>
@@ -113,7 +113,7 @@
             </div>
             <div class="col-2">
               <b-button
-                id="IDAccessManagerConfigureButton"
+                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
@@ -139,14 +139,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            id="editAccessManagerModalButtonCancel"
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            id="editAccessManagerModalButtonSave"
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >

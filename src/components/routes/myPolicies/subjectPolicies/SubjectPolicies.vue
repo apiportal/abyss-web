@@ -18,6 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -28,6 +29,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />

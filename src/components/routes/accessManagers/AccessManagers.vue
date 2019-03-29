@@ -126,7 +126,7 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :id="`IdAccessManagersButtonEdit_${item.uuid}`" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item id="IdAccessManagersButtonEdit" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
                 <b-dropdown-item :id="`IdAccessManagersButtonDelete_${item.uuid}`" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>

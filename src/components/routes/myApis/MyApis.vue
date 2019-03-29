@@ -18,7 +18,7 @@
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          My Subscriptions <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
+          My Contracted APIs <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"

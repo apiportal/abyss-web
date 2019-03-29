@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditUser
-      :routePath="`/app/organizations/${page}`"
+    <DeletePolicy
+      :routePath="`/app/my-licenses/my-licenses/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditUser from '@/components/shared/subjects/users/EditUser';
+import DeletePolicy from '@/components/shared/subjects/policies/DeletePolicy';
 
 export default {
   components: {
-    EditUser,
+    DeletePolicy,
   },
   data() {
     return {

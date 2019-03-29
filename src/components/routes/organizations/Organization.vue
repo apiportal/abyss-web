@@ -60,10 +60,8 @@
     </div>
     <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
-        :users="organizationUsers"
-        path="organizations"
-        title="Organization"
-        :page="page"
+        :rows="organizationUsers"
+        :routePath="`/app/organizations/${page}`"
       />
     </div>
   
@@ -107,7 +105,7 @@
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 text="Owner"
-                sortByKey="organizationowner"
+                sortByKey="organizationowner.displayname"
                 sortByKeyType="string"
               />
             </th>
@@ -131,7 +129,7 @@
               {{ item.organizationusers }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
+              {{ item.organizationowner.displayname }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -140,6 +138,8 @@
                 </template>
       
                 <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Edit Organization Users</b-dropdown-item>
+                
                 <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
       
                 <b-dropdown-header>LOGS</b-dropdown-header>
@@ -174,7 +174,7 @@ import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/Users';
+import Users from '@/components/shared/subjects/users/Users';
 
 export default {
   name: 'Organization',

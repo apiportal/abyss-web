@@ -88,8 +88,9 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license-policies/${licenseItem.uuid}`"><Icon icon="edit" /> Add/Edit Policies</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

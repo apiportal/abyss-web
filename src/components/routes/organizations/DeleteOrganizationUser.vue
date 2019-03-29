@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditUser
+    <DeleteUser
       :routePath="`/app/organizations/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditUser from '@/components/shared/subjects/users/EditUser';
+import DeleteUser from '@/components/shared/subjects/users/DeleteUser';
 
 export default {
   components: {
-    EditUser,
+    DeleteUser,
   },
   data() {
     return {

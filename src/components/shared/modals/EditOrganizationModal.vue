@@ -57,7 +57,7 @@
             id="organizationOrganizationIdGroup"
           >
             <label>
-              Organization:
+              Parent Organization:
               <span class="text-danger">*</span>
             </label>
             <b-form-select

@@ -74,8 +74,8 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-policy/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-policy/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-policy/${item.uuid}`"><Icon icon="edit" /> Edit Policy</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete-policy/${item.uuid}`"><Icon icon="trash-alt" /> Delete Policy</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditUser
-      :routePath="`/app/organizations/${page}`"
+    <EditPolicy
+      :routePath="`/app/my-licenses/my-licenses/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditUser from '@/components/shared/subjects/users/EditUser';
+import EditPolicy from '@/components/shared/subjects/policies/EditPolicy';
 
 export default {
   components: {
-    EditUser,
+    EditPolicy,
   },
   data() {
     return {

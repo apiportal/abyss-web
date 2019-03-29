@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user-groups"
+    bodyClass="edit-administer-user-policies"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit User Groups of {{user.displayname}}
+        Edit User Groups of {{license.name}}
       </h5>
     </template>
     <template>
@@ -20,11 +20,17 @@
       >
         <div style="padding: 1rem;">
           <div>
+            {{computedLicensePolicies}}
+            <hr>
+            {{xxx}}
+            <hr>
+            {{license.licensedocument.termsOfService.policyKey}}
             <Chips
-              :chips="computedMemberships"
-              :autocompleteOptions="this.groups.map((item) => ({
-                text: item.displayname,
+              :chips="computedLicensePolicies"
+              :autocompleteOptions="this.policies.map((item) => ({
+                text: item.name,
                 value: item.uuid,
+                isdeleted: item.isdeleted,
               }))"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
@@ -103,11 +109,11 @@ export default {
       type: Function,
       required: true,
     },
-    user: {
+    license: {
       type: Object,
       required: false,
     },
-    groups: {
+    policies: {
       type: Array,
       required: false,
       default() { return []; },
@@ -122,46 +128,70 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
-    computedMemberships() {
-      const { groupsEditable } = this;
-      return groupsEditable
+    computedLicensePolicies() {
+      const { policiesEditable } = this;
+      return policiesEditable
       .filter(group => group.isMembership)
       .sort((a, b) => b.sortTime - a.sortTime)
       .map(group => ({
         value: group.uuid,
-        text: group.displayname,
+        text: group.name,
         isdeleted: group.isdeleted,
+        isMembership: group.isMembership,
+      }));
+    },
+    xxx() {
+      this.computedLicensePolicies.map(group => (group.uuid));
+    },
+    zzzz() {
+      const { license, policies, policyTypes } = this;
+      const licensePolicyIds = license.licensedocument.termsOfService.policyKey;
+      const getTypeName = (typeId) => {
+        const type = policyTypes.find(policyType => policyType.uuid === typeId);
+        return type ? type.name : typeId;
+      };
+      return policies
+      .filter(policy => licensePolicyIds.indexOf(policy.uuid) > -1)
+      .map(policy => ({
+        ...policy,
+        typename: getTypeName(policy.typeid),
       }));
     },
   },
   data() {
-    const { groups, memberships } = this;
+    const { license, policies } = this;
+    const licensePolicyIds = license.licensedocument.termsOfService.policyKey;
     return {
-      groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
-        const membership = memberships.find(m => m.subjectgroupid === group.uuid);
-        const isMembership = Boolean(membership);
+      policiesEditable: [...JSON.parse(JSON.stringify(policies))]
+      .map((group) => {
+        console.log(licensePolicyIds.indexOf(group.uuid) > -1);
+        // const membership = policies.find(policy => licensePolicyIds.indexOf(policy.uuid) > -1);
+        const isMembership = Boolean(licensePolicyIds.indexOf(group.uuid) > -1);
+        // console.log(membership.some(f =>
+        //     f.subjectid === el.uuid,
+        //   ),);
+        // console.log(isMembership, licensePolicyIds, membership);
         const sortTime = (new Date()).getTime();
         return {
           ...group,
           isMembership,
-          membership,
+          // membership,
           sortTime,
         };
       }),
-      // userMemberships: [...JSON.parse(JSON.stringify(memberships))],
-      groupsToAdd: [],
-      groupsToDelete: [],
+      policiesToAdd: [],
+      policiesToDelete: [],
     };
   },
   methods: {
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
-      const { groupsEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
+      const { policiesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
       evt.preventDefault();
-      this.groupsToDelete = groupsEditable
+      this.policiesToDelete = policiesEditable
       .filter(group => group.membership && !group.isMembership)
       .map(group => (group.membership));
-      this.groupsToAdd = groupsEditable
+      this.policiesToAdd = policiesEditable
       .filter(group => !group.membership && group.isMembership)
       .map(group => ({
         // organizationid: this.currentUser.props.organizationid,
@@ -171,20 +201,20 @@ export default {
         subjectgroupid: group.uuid,
         subjectdirectoryid: group.subjectdirectoryid,
       }));
-      if (this.groupsToDelete.length) {
-        // console.log('groupsToDelete', this.groupsToDelete);
-        for (let i = 0; i < this.groupsToDelete.length; i += 1) {
-          deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
+      if (this.policiesToDelete.length) {
+        // console.log('policiesToDelete', this.policiesToDelete);
+        for (let i = 0; i < this.policiesToDelete.length; i += 1) {
+          deleteSubjectMemberships(this.policiesToDelete[i]).then((response) => {
             if (response && response.data) {
               onUpdate();
             }
           });
         }
       }
-      if (this.groupsToAdd.length) {
-        // console.log('groupsToAdd', this.groupsToAdd);
-        for (let i = 0; i < this.groupsToAdd.length; i += 1) {
-          postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
+      if (this.policiesToAdd.length) {
+        // console.log('policiesToAdd', this.policiesToAdd);
+        for (let i = 0; i < this.policiesToAdd.length; i += 1) {
+          postSubjectMemberships([this.policiesToAdd[i]]).then((response) => {
             if (response && response.data) {
               onUpdate();
             }
@@ -193,8 +223,8 @@ export default {
       }
     },
     handleDeleteMembership(index, chip) {
-      const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
+      const { policiesEditable } = this;
+      this.policiesEditable = policiesEditable.map((group) => {
         const isMembership = group.uuid === chip.value ? false : group.isMembership;
         return {
           ...group,
@@ -203,8 +233,8 @@ export default {
       });
     },
     handleAddMembership(chip) {
-      const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
+      const { policiesEditable } = this;
+      this.policiesEditable = policiesEditable.map((group) => {
         const isMembership = group.uuid === chip.value ? true : group.isMembership;
         const sortTime = (new Date()).getTime();
         return {
@@ -220,7 +250,7 @@ export default {
 
 <style lang="scss">
 .modal-body {
-  &.edit-administer-user-groups {
+  &.edit-administer-user-policies {
     padding: 0;
   }
 }

@@ -160,7 +160,7 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
       apiStates: state => state.apiStates.items,

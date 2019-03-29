@@ -154,6 +154,9 @@ export default {
     return axios.post('/abyss/oapi/subjects/', group);
   },
   // subject-memberships
+  getGroupMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },

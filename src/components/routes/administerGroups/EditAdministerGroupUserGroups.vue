@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditUser
-      :routePath="`/app/organizations/${page}`"
+    <EditUserGroups
+      :routePath="`/app/administer-groups/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditUser from '@/components/shared/subjects/users/EditUser';
+import EditUserGroups from '@/components/shared/subjects/users/EditUserGroups';
 
 export default {
   components: {
-    EditUser,
+    EditUserGroups,
   },
   data() {
     return {

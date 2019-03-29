@@ -120,6 +120,9 @@
                 </template>
 
                 <b-dropdown-item :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+
+                <b-dropdown-item :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Group Users</b-dropdown-item>
+
                 <b-dropdown-item :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>

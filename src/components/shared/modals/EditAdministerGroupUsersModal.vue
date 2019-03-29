@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit User Groups of {{user.displayname}}
+        Edit Group Users of {{group.displayname}}
       </h5>
     </template>
     <template>
@@ -22,13 +22,13 @@
           <div>
             <Chips
               :chips="computedMemberships"
-              :autocompleteOptions="this.groups.map((item) => ({
+              :autocompleteOptions="this.groupUsersEditable.map((item) => ({
                 text: item.displayname,
                 value: item.uuid,
               }))"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
-              label="User Groups"
+              label="Group Users"
             />
           </div>
 
@@ -103,11 +103,11 @@ export default {
       type: Function,
       required: true,
     },
-    user: {
+    group: {
       type: Object,
       required: false,
     },
-    groups: {
+    users: {
       type: Array,
       required: false,
       default() { return []; },
@@ -123,68 +123,69 @@ export default {
       currentUser: state => state.user,
     }),
     computedMemberships() {
-      const { groupsEditable } = this;
-      return groupsEditable
-      .filter(group => group.isMembership)
+      const { groupUsersEditable } = this;
+      return groupUsersEditable
+      .filter(user => user.isMembership)
       .sort((a, b) => b.sortTime - a.sortTime)
-      .map(group => ({
-        value: group.uuid,
-        text: group.displayname,
-        isdeleted: group.isdeleted,
+      .map(user => ({
+        value: user.uuid,
+        text: user.displayname,
+        isdeleted: user.isdeleted,
       }));
     },
   },
   data() {
-    const { groups, memberships } = this;
+    const { users, memberships } = this;
     return {
-      groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
-        const membership = memberships.find(m => m.subjectgroupid === group.uuid);
+      groupUsersEditable: [...JSON.parse(JSON.stringify(users))].map((user) => {
+        const membership = memberships.find(m => m.subjectid === user.uuid);
         const isMembership = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
-          ...group,
+          ...user,
           isMembership,
           membership,
           sortTime,
         };
       }),
       // userMemberships: [...JSON.parse(JSON.stringify(memberships))],
-      groupsToAdd: [],
-      groupsToDelete: [],
+      usersToAdd: [],
+      usersToDelete: [],
     };
   },
   methods: {
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
-      const { groupsEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
+      const { group, groupUsersEditable, postSubjectMemberships,
+        deleteSubjectMemberships, onUpdate } = this;
       evt.preventDefault();
-      this.groupsToDelete = groupsEditable
-      .filter(group => group.membership && !group.isMembership)
-      .map(group => (group.membership));
-      this.groupsToAdd = groupsEditable
-      .filter(group => !group.membership && group.isMembership)
-      .map(group => ({
+      this.usersToDelete = groupUsersEditable
+      .filter(user => user.membership && !user.isMembership)
+      .map(user => (user.membership));
+      this.usersToAdd = groupUsersEditable
+      .filter(user => !user.membership && user.isMembership)
+      .map(user => ({
         // organizationid: this.currentUser.props.organizationid,
         organizationid: group.organizationid,
         crudsubjectid: this.currentUser.props.uuid,
-        subjectid: this.user.uuid,
+        subjectid: user.uuid,
         subjectgroupid: group.uuid,
         subjectdirectoryid: group.subjectdirectoryid,
       }));
-      if (this.groupsToDelete.length) {
-        // console.log('groupsToDelete', this.groupsToDelete);
-        for (let i = 0; i < this.groupsToDelete.length; i += 1) {
-          deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
+      if (this.usersToDelete.length) {
+        // console.log('usersToDelete', this.usersToDelete);
+        for (let i = 0; i < this.usersToDelete.length; i += 1) {
+          deleteSubjectMemberships(this.usersToDelete[i]).then((response) => {
             if (response && response.data) {
               onUpdate();
             }
           });
         }
       }
-      if (this.groupsToAdd.length) {
-        // console.log('groupsToAdd', this.groupsToAdd);
-        for (let i = 0; i < this.groupsToAdd.length; i += 1) {
-          postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
+      if (this.usersToAdd.length) {
+        // console.log('usersToAdd', this.usersToAdd);
+        for (let i = 0; i < this.usersToAdd.length; i += 1) {
+          postSubjectMemberships([this.usersToAdd[i]]).then((response) => {
             if (response && response.data) {
               onUpdate();
             }
@@ -193,8 +194,8 @@ export default {
       }
     },
     handleDeleteMembership(index, chip) {
-      const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
+      const { groupUsersEditable } = this;
+      this.groupUsersEditable = groupUsersEditable.map((group) => {
         const isMembership = group.uuid === chip.value ? false : group.isMembership;
         return {
           ...group,
@@ -203,8 +204,8 @@ export default {
       });
     },
     handleAddMembership(chip) {
-      const { groupsEditable } = this;
-      this.groupsEditable = groupsEditable.map((group) => {
+      const { groupUsersEditable } = this;
+      this.groupUsersEditable = groupUsersEditable.map((group) => {
         const isMembership = group.uuid === chip.value ? true : group.isMembership;
         const sortTime = (new Date()).getTime();
         return {

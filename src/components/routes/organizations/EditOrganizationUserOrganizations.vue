@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditUser
+    <EditUserOrganizations
       :routePath="`/app/organizations/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditUser from '@/components/shared/subjects/users/EditUser';
+import EditUserOrganizations from '@/components/shared/subjects/users/EditUserOrganizations';
 
 export default {
   components: {
-    EditUser,
+    EditUserOrganizations,
   },
   data() {
     return {

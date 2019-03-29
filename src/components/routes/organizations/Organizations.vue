@@ -82,7 +82,7 @@
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 text="Owner"
-                sortByKey="organizationowner"
+                sortByKey="organizationowner.displayname"
                 sortByKeyType="string"
               />
             </th>
@@ -110,7 +110,7 @@
               {{ item.organizationusers }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
+              {{ item.organizationowner.displayname }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -119,6 +119,9 @@
                 </template>
 
                 <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                
+                <b-dropdown-item :to="`/app/organizations/${page}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Organization Users</b-dropdown-item>
+
                 <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
@@ -209,10 +212,10 @@ export default {
         if (ownerSubject) {
           const owner = users.find(item => item.uuid === ownerSubject.subjectid);
           if (owner) {
-            return owner.displayname;
+            return owner;
           }
         }
-        return '-';
+        return {};
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
@@ -235,8 +238,8 @@ export default {
             )
             ||
             (
-              item.organizationowner &&
-              item.organizationowner.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.organizationowner.displayname &&
+              item.organizationowner.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),

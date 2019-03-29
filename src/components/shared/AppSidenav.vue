@@ -51,7 +51,7 @@
         <p>ADMIN</p>
 
 
-        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
+        <b-link to="/app/administer-users/users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="user" /></span> Users
         </b-link> 
 

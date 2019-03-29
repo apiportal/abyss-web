@@ -57,6 +57,12 @@
       color: white;
     }
   }
+  .modal-header .close {
+    padding: .75rem 1rem 1.25rem 1rem;
+    font-size: 2.4rem;
+    line-height: 1rem;
+    font-weight: 400;
+  }
 // scrollbar
   ::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -525,6 +531,44 @@
   }
   pre {
     margin-bottom: 0;
+  }
+  .btn {
+    &.is-deleted {
+      opacity: 0.45;
+      position: relative;
+      &:before  {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-right: 10px solid transparent;
+        border-left: 10px solid red;
+        border-bottom: 10px solid transparent;
+        height: 0;
+        width: 0;
+        z-index: 1;
+      }
+    }
+  }
+  .modal-body {
+    + .popover {
+      max-width: 600px;
+    }
+  }
+  .btn-icon {
+    // border-radius: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    span {
+      // border-right: 1px solid rgba(white, 0.2);
+      padding: 0 .5rem;
+    }
+    svg {
+      margin: 0 .5rem;
+    }
   }
 // form
   option[disabled] {

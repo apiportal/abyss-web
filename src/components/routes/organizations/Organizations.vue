@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          Organizations <b-badge pill>{{ organizations.length }}</b-badge>
+          <span id="IdLinkOrganizations" class="link-text">Organizations</span> <b-badge pill>{{ organizations.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -24,6 +24,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -34,8 +35,9 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -46,23 +48,13 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th>
+            <th id="IdTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Organization Name"
                 sortByKey="name"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
                 sortByKeyType="string"
               />
             </th>
@@ -86,6 +78,16 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
@@ -96,15 +98,13 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === rootOrganization"
+          v-if="item.organizationid === rootOrganization" // TODO: @ilkiz bunu javascriptte arrayi filtreleyek yapar misin?
           :level="0"
+          id="IdOrganizationsItem"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
@@ -112,25 +112,28 @@
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
             </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
+            </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item id="IdBtnEdit" :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item id="IdBtnDelete" :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
+                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr slot="footer" class="footer">
+          <tr id="IdTableFooter" slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
                 <Organization

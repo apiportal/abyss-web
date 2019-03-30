@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Identity Manager Type' : 'Add New Identity Manager Type' }}
       </h5>
     </template>
@@ -75,6 +75,16 @@
               required
             />
           </b-form-group>
+          <b-form-group id="directoryTypeEnabledGroup">
+            <b-form-checkbox
+              id="directoryTypeEnabledChecks"
+              v-model="subjectDirectoryTypeEditable.isactive"
+              :value="true"
+              :unchecked-value="false"
+            >
+              Enabled
+            </b-form-checkbox>
+          </b-form-group>
           <b-form-group 
             id="directoryTypeTemplateGroup"
           >
@@ -97,12 +107,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            id="IdBtnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            id="IdBtnSave"
           >
             Save
           </b-button>

@@ -32,6 +32,9 @@ import licenses from '@/store/modules/licenses';
 import currentPage from '@/store/modules/currentPage';
 import contractStates from '@/store/modules/contractStates';
 import subjectOrganizations from '@/store/modules/subjectOrganizations';
+import subjectResources from '@/store/modules/subjectResources';
+import subjectPermissions from '@/store/modules/subjectPermissions';
+import subjectPolicies from '@/store/modules/subjectPolicies';
 
 Vue.use(Vuex);
 
@@ -69,6 +72,9 @@ export default new Vuex.Store({
     currentPage,
     contractStates,
     subjectOrganizations,
+    subjectResources,
+    subjectPermissions,
+    subjectPolicies,
   },
   debug: true,
 });

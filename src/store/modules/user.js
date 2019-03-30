@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   uuid: null,
+  sessionid: null,
   hasValidToken: false,
   isUnauthorized: false,
   lastUpdatedAt: 0,
@@ -12,10 +13,20 @@ const state = {
 const getters = {};
 
 const actions = {
-  getUser: ({ commit }) => {
-    api.getUser(state.uuid).then((response) => {
+  getUser: ({ commit }, { principalid, sessionid }) => {
+
+    if (principalid) {
+      commit('setUuid', principalid);
+    }
+
+    if (sessionid) {
+      commit('setSessionId', sessionid);
+    }
+
+    api.getUser(principalid || state.uuid).then((response) => {
       if (response && response.data) {
         commit('setUserProps', response.data[0]);
+        commit('setUserUnauthorized', false);
       }
     });
   },
@@ -38,6 +49,10 @@ const mutations = {
     state.isUnauthorized = val;
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  setSessionId: (state, sessionId) => {
+    state.sessionid = sessionId;
+    state.lastUpdatedAt = (new Date()).getTime();
+  }
 };
 
 export default {

@@ -6,6 +6,15 @@ import '@/assets/scss/style.scss';
 import '@/assets/scss/main.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  fab,
+  faFacebookSquare,
+  faTwitterSquare,
+  faInstagram,
+  faGithubSquare,
+  faLinkedin,
+} from '@fortawesome/free-brands-svg-icons';
+import {
+  fas,
   faSpinner,
   faTachometerAlt,
   faSitemap,
@@ -58,6 +67,8 @@ import {
   faChevronLeft,
   faChevronRight,
   faChartBar,
+  faHome,
+  faLock,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueMoment from 'vue-moment';
@@ -70,6 +81,8 @@ import router from './router';
 import store from './store';
 
 library.add(
+  fas,
+  fab,
   faTachometerAlt,
   faSpinner,
   faSitemap,
@@ -122,6 +135,13 @@ library.add(
   faChevronLeft,
   faChevronRight,
   faChartBar,
+  faHome,
+  faLock,
+  faFacebookSquare,
+  faTwitterSquare,
+  faGithubSquare,
+  faInstagram,
+  faLinkedin,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(Vuex);

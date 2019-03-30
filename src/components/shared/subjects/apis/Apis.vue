@@ -3,12 +3,66 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th class="status">Status</th>
-          <th>Api Name</th>
-          <th>Version</th>
-          <th>State</th>
-          <th>Visibility</th>
-          <th># of Proxies</th>
+          <th id="IdTheadName">
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Api Name"
+              sortByKey="openapidocument.info.title"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Environment"
+              sortByKey="islive"
+              sortByKeyType="boolean"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Version"
+              sortByKey="version"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="State"
+              sortByKey="apistatename"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Visibility"
+              sortByKey="apivisibilityname"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Proxies"
+              sortByKey="numberofproxies"
+              sortByKeyType="number"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
@@ -17,15 +71,15 @@
         :cols="7"
       />
       <TbodyCollapsible
-        v-for="(item, index) in rows" v-bind:key="index"
+        v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-          <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon :icon="item.islive ? 'check-circle' : 'times-circle'" :class="item.islive ? 'text-success' : 'text-danger'" />
-          </td>
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.openapidocument.info.title }}
+          </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
@@ -56,7 +110,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="7">
             <div class="collapsible-content">
               <Api
@@ -77,6 +131,8 @@ import Api from '@/components/shared/subjects/apis/Api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
+import SortBy from '@/components/shared/SortBy';
+import Helpers from '@/helpers';
 
 export default {
   name: 'Apis',
@@ -96,19 +152,44 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
+    sortedRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
   },
   components: {
     Api,
     TbodyCollapsible,
     TBodyLoading,
     Icon,
+    SortBy,
   },
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'openapidocument.info.title',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
+    environment(item) {
+      return item.islive ? 'Live' : 'Sandbox';
+    },
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

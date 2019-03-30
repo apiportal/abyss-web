@@ -18,6 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -28,6 +29,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -73,50 +75,43 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      subjectLicenses: state => state.licenses.items,
+      subjectLicenses: state => state.subjectLicenses.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortByKey, sortByKeyType, sortDirection, subjectLicenses } = this;
       const { sortArrayOfObjects } = Helpers;
-      const {
-        subjectLicenses,
-        currentUser,
-        } = this;
       return sortArrayOfObjects({
         array: subjectLicenses
           .filter((item) => {
             const { filterKey } = this;
-            if (item.subjectid === currentUser.uuid && !item.isdeleted) {
-              if (filterKey === '') {
-                return true;
-              }
-              const filterKeyLowerCase = filterKey.toLowerCase();
-              return (
-                (
-                  item.name &&
-                  item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
-                ) ||
-                (
-                  item.version &&
-                  item.version.toLowerCase().indexOf(filterKeyLowerCase) > -1
-                ) ||
-                (
-                  item.licensedocument.info.visibility &&
-                  item.licensedocument.info.visibility
-                  .toLowerCase().indexOf(filterKeyLowerCase) > -1
-                ) ||
-                (
-                  item.licensedocument.legal.documentState &&
-                  item.licensedocument.legal.documentState
-                  .toLowerCase().indexOf(filterKeyLowerCase) > -1
-                ) ||
-                (
-                  item.created &&
-                  item.created.toLowerCase().indexOf(filterKeyLowerCase) > -1
-                )
-              );
+            if (filterKey === '') {
+              return true;
             }
-            return '';
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.name &&
+                item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.version &&
+                item.version.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.licensedocument.info.visibility &&
+                item.licensedocument.info.visibility
+                .toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.licensedocument.legal.documentState &&
+                item.licensedocument.legal.documentState
+                .toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.created &&
+                item.created.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
           },
             )
           .map(item => ({
@@ -168,7 +163,7 @@ export default {
       }
     },
     refreshData() {
-      this.$store.dispatch('licenses/getLicenses', { refresh: true });
+      this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid, refresh: true });
     },
   },
   created() {

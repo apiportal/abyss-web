@@ -10,8 +10,8 @@
     :onClose="onClose"
   >
       <template slot="header">
-      <h5 class="modal-title">
-        {{ role === 'edit' ? 'Edit Administer Permission' : 'Add New Administer Permission' }}
+      <h5 id="IdModalTitle" class="modal-title">
+        {{ role === 'edit' ? 'Edit Permission' : 'Add New Permission' }}
       </h5>
     </template>
     <template>
@@ -252,18 +252,20 @@
           </b-form-group>
         </div>
         <footer class="modal-footer">
-        <b-button
-          variant="secondary"
-          @click="onClose"
+          <b-button
+            id="IdBtnCancel"
+            variant="secondary"
+            @click="onClose"
           >
-          Cancel
+            Cancel
           </b-button>
           <b-button
-          variant="success"
-          type="submit"
+            id="IdBtnSave"
+            variant="success"
+            type="submit"
           >
-          Save
-          </b-button>
+            Save
+        </b-button>
         </footer>
       </b-form>
     </template>

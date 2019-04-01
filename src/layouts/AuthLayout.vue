@@ -8,7 +8,7 @@
             <AuthSide />
           </div>
         </div>
-        <div class="container height-lg-100vh" style="overflow-y: auto;">
+        <div class="container height-lg-100vh" style="overflow-y: auto;" id="no-scroll">
           <div class="row no-gutters">
             <div class="col-lg-7 col-xl-6 offset-lg-2 offset-xl-3 space-3 space-lg-0">
               <router-view></router-view>
@@ -43,7 +43,13 @@ export default {
 </script>
 
 <style lang="scss">
+#no-scroll::-webkit-scrollbar-thumb {
+    display: none
+}
 .auth-container{
+  .scrollbar {
+    display: none
+  }
   .d-flex {
     display: flex !important
   }

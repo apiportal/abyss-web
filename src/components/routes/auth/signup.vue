@@ -1,6 +1,7 @@
 <template>
+  <div>
   <!-- Form -->
-  <b-form @submit="handleSubmit">
+  <b-form @submit="handleSubmit" v-if="!this.redirect">
     <!-- Title -->
     <div class="mb-7">
       <h1 class="h3 text-primary font-weight-normal mb-0">Welcome to <span class="font-weight-semi-bold">Abyss</span></h1>
@@ -109,18 +110,18 @@
     <!-- End Form Group -->
 
     <!-- Checkbox -->
-    <div class="js-form-message mb-5">
+    <div class="js-form-message mb-5 d-flex flex-row">
       <b-form-checkbox
         v-model="form.isAgreedToTerms"
-        :value="'on'"
-        :unchecked-value="'off'"
+        :value="true"
+        :unchecked-value="false"
         class="text-muted"
       >
-        <small>
-          I agree to the
-          <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
-        </small>
       </b-form-checkbox>
+      <small class="mt-1">
+        I agree to the
+        <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
+      </small>
       <InformModal
           v-if="isInformModalVisible"  
           size="md"
@@ -136,7 +137,7 @@
             Our company registration number is Kadİköy V.D., 924 051 8054.\n\n
             The term 'you' refers to the user or viewer of ABYSS API PORTAL."
           :onClose="toggleInformModal"
-          :onConfirm="toggleInformModal"
+          :onConfirm="handleConfirm"
         >
         </InformModal>
     </div>
@@ -150,16 +151,37 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" v-if="form.isAgreedToTerms">Get Started</b-button>
+        <b-button class="btn btn-secondary transition-3d-hover" variant="secondary" v-else>Get Started</b-button>
       </div>
     </div>
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
+  <div v-if="this.redirect">
+    <b-alert show variant="primary">
+      <h4 class="alert-heading">Success !</h4>
+      <p>
+      {{ this.res.usermessage }}
+      </p>
+      <p v-if="(this.res.recommendation === this.res.usermessage)">
+        {{ this.res.details }}
+      </p>
+      <p v-else>
+        {{ this.res.details }}
+      </p>
+      <hr />
+      <p class="mb-0">
+        {{ this.res.recommendation }}
+      </p>
+    </b-alert>
+  </div>
+  </div>
 </template>
 
 <script>
 import InformModal from '@/components/shared/modals/InformModal';
+import api from '@/api';
 
 export default {
   components: {
@@ -175,17 +197,41 @@ export default {
         email: '',
         password: '',
         password2: '',
-        isAgreedToTerms: 'off',
+        isAgreedToTerms: false,
+      },
+      redirect: false,
+      res: {
+        usermessage: '',
+        details: '',
+        recommendation: '',
       },
     };
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      console.log(evt); // eslint-disable-line no-console
+      api.postSignUp(this.form)
+        .then((response) => {
+          this.redirect = true;
+          this.res.usermessage = response.data.usermessage;
+          if (response.data.details === response.data.recommendation) {
+            this.res.recommendation = response.data.recommendation;
+          } else {
+            this.res.details = response.data.details;
+            this.res.recommendation = response.data.recommendation;
+          }
+          setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
+        })
+        .catch((error) => {
+          console.log(error); // eslint-disable-line
+        });
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;
+    },
+    handleConfirm() {
+      this.form.isAgreedToTerms = true;
+      this.isInformModalVisible = false;
     },
   },
 };

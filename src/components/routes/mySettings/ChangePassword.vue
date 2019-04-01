@@ -20,7 +20,7 @@
             Old Password
           </label>
           <b-form-input
-            v-model="form.oldPassword"
+            v-model="form.oldpassword"
             type="password"
             placeholder="********"
             required
@@ -39,7 +39,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.newPassword"
+            v-model="form.newpassword"
             type="password"
             placeholder="********"
             required
@@ -58,7 +58,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.confirmPassword"
+            v-model="form.confirmpassword"
             type="password"
             placeholder="********"
             required
@@ -79,19 +79,31 @@
 </template>
 
 <script>
+import api from '@/api';
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        oldpassword: '',
+        newpassword: '',
+        confirmpassword: '',
       },
     };
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+    }),
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
+      api.putChangePassword(this.user.uuid, this.form)
+        .then((response) => {
+          console.log(response); // eslint-disable-line no-console
+        });
     },
   },
 };

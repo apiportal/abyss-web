@@ -1,6 +1,11 @@
 <template>
-  <div class="open-api-object">
-    <div class="open-api-object-title" @click="() => handleToggleCollapse()">
+  <div 
+    :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`"
+  >
+    <div 
+      class="open-api-object-title"
+      @click="() => handleToggleCollapse()"
+    >
       <span style="float: right;">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
@@ -115,6 +120,11 @@ export default {
       required: false,
       default() { return false; },
     },
+    isCollapsedInitial: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
   },
   components: {
     OpenApiObjectForm: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm'),
@@ -127,7 +137,7 @@ export default {
   },
   data() {
     return {
-      isCollapsed: false,
+      isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
     };
   },
@@ -146,6 +156,10 @@ export default {
 .open-api-object {
   border: 1px solid silver;
   border-radius: .3rem;
+
+  &.collapsed {
+    border-left: 4px solid #0088CC;
+  }
 
   .open-api-object-title {
     padding: .5rem;

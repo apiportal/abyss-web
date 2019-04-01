@@ -13,7 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th>
+            <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -53,8 +53,9 @@
       <TbodyCollapsible
         v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          id="IdUsersItem"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon 
               :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
@@ -71,26 +72,26 @@
             {{ item.organizationname }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-user/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/edit-user-organizations/${item.uuid}`"><Icon icon="home" /> Edit User Organizations</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-user/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
+              <b-dropdown-item id="IdBtnEdit" :to="`${routePath}/edit-user/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+              <b-dropdown-item id="IdBtnEditGroups" :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+              <b-dropdown-item id="IdBtnEditOrganizations" :to="`${routePath}/edit-user-organizations/${item.uuid}`"><Icon icon="home" /> Edit User Organizations</b-dropdown-item>
+              <b-dropdown-item id="IdBtnDelete" :to="`${routePath}/delete-user/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+              <b-dropdown-item id="IdBtnLogsAll" :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="5">
             <div class="collapsible-content">
               <User

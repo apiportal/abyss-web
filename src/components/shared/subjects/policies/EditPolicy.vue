@@ -8,6 +8,7 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :policy="getPolicy(policyId)"
+      size="md"
     />
   </div>
 </template>

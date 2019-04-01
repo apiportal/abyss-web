@@ -5,6 +5,7 @@
   $brand-color: #0088CC;
   // $bg-sidebar: #00386C;
   $bg-sidebar: #003366;
+  $bg-sidebar: #004477;
   // $bg-sidebar: #004477;
   // $brand-color-light: #28ACE2;
   $brand-color-light: #00BBFF;
@@ -63,6 +64,18 @@
     line-height: 1rem;
     font-weight: 400;
   }
+  .popover-body {
+    padding: .5rem .75rem;
+    color: #212529;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  // h1, h2, h3, h4, h5, h6 {
+  //   margin-bottom: .5rem;
+  //   font-weight: 300;
+  //   line-height: 1.2;
+  //   color: #007bff;
+  // }
 // scrollbar
   ::-webkit-scrollbar {
     -webkit-appearance: none;

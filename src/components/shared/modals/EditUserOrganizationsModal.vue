@@ -22,13 +22,7 @@
           <div class="form-group">
             <Chips
               :chips="computedUserOrganizations"
-              :autocompleteOptions="this.organizationsEditable.map((item) => ({
-                text: item.name,
-                value: item.uuid,
-                isUserOrganization: item.isUserOrganization,
-                color: item.color,
-                // isowner: item.isowner,
-              }))"
+              :autocompleteOptions="organizationsEditable"
               :onDeleteChip="handleDeleteUserOrganization"
               :onAddChip="handleAddUserOrganization"
               label="User Organizations"
@@ -142,29 +136,30 @@ export default {
     computedUserOrganizations() {
       const { organizationsEditable, chipColor } = this;
       return organizationsEditable
-      .filter(organization => organization.isUserOrganization)
+      .filter(organization => organization.isAttached)
       .sort((a, b) => b.sortTime - a.sortTime)
       .map(organization => ({
-        value: organization.uuid,
-        text: organization.name,
-        isdeleted: organization.isdeleted,
-        isUserOrganization: organization.isUserOrganization,
-        isowner: organization.userorganization.isowner,
+        ...organization,
+        isAttached: organization.isAttached,
+        isowner: organization.userorganization ? organization.userorganization.isowner : false,
         color: chipColor(organization),
       }));
     },
   },
   data() {
-    const { organizations, userOrganizations } = this;
+    const { organizations, userOrganizations, chipColor } = this;
     return {
       organizationsEditable: [...JSON.parse(JSON.stringify(organizations))].map((organization) => {
         const userorganization = userOrganizations.find(
           o => o.organizationrefid === organization.uuid);
-        const isUserOrganization = Boolean(userorganization);
+        const isAttached = Boolean(userorganization);
         const sortTime = (new Date()).getTime();
         return {
           ...organization,
-          isUserOrganization,
+          text: organization.name,
+          value: organization.uuid,
+          color: chipColor(organization),
+          isAttached,
           userorganization,
           sortTime,
         };
@@ -176,11 +171,11 @@ export default {
   methods: {
     ...mapActions('subjectOrganizations', ['deleteSubjectOrganizations', 'postSubjectOrganizations']),
     chipColor(item) {
-      if (item.isUserOrganization && item.userorganization && item.userorganization.isowner) {
+      if (item.isAttached && item.userorganization && item.userorganization.isowner) {
         return 'btn-success';
-      } else if (!item.isUserOrganization &&
+      } else if (!item.isAttached &&
         item.userorganization && item.userorganization.isowner) {
-        return 'btn-error';
+        return 'btn-danger';
       }
       return 'btn-secondary';
     },
@@ -189,10 +184,10 @@ export default {
         deleteSubjectOrganizations, onUpdate } = this;
       evt.preventDefault();
       this.organizationsToDelete = organizationsEditable
-      .filter(organization => organization.userorganization && !organization.isUserOrganization)
+      .filter(organization => organization.userorganization && !organization.isAttached)
       .map(organization => (organization.userorganization));
       this.organizationsToAdd = organizationsEditable
-      .filter(organization => !organization.userorganization && organization.isUserOrganization)
+      .filter(organization => !organization.userorganization && organization.isAttached)
       .map(organization => ({
         // organizationid: this.currentUser.props.organizationid,
         organizationid: organization.organizationid,
@@ -226,21 +221,21 @@ export default {
     handleDeleteUserOrganization(index, chip) {
       const { organizationsEditable } = this;
       this.organizationsEditable = organizationsEditable.map((item) => {
-        const isUserOrganization = item.uuid === chip.value ? false : item.isUserOrganization;
+        const isAttached = item.uuid === chip.value ? false : item.isAttached;
         return {
           ...item,
-          isUserOrganization,
+          isAttached,
         };
       });
     },
     handleAddUserOrganization(chip) {
       const { organizationsEditable } = this;
       this.organizationsEditable = organizationsEditable.map((item) => {
-        const isUserOrganization = item.uuid === chip.value ? true : item.isUserOrganization;
+        const isAttached = item.uuid === chip.value ? true : item.isAttached;
         const sortTime = (new Date()).getTime();
         return {
           ...item,
-          isUserOrganization,
+          isAttached,
           sortTime,
         };
       });

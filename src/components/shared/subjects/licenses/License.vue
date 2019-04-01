@@ -51,7 +51,7 @@
       :onConfirm="toggleInformModal"
     >
     </TextAreaModal>
-    <div class="row abyss-table-buttons" v-if="childComponent === 'policies'">
+    <div class="row abyss-table-buttons">
       <b-button
         @click="handleTogglePoliciesTable"
         size="md"
@@ -61,61 +61,39 @@
         <span>Policies</span>
         <b-badge pill>{{ tableRows.length }}</b-badge>
       </b-button>
-    </div>
-    <div class="abyss-table-content" v-if="isPoliciesTableVisible">
-      <Policies
-        :rows="tableRows"
-        :routePath="routePath"
-      ></Policies>
-    </div>
-    <!-- APIs -->
-    <div class="row abyss-table-buttons" v-else-if="childComponent === 'apis'">
       <b-button
         @click="handleToggleApisTable"
         size="md"
         variant="link"
         :class="{'active': isApisTableVisible}"
       >
-        <span>APIs</span>
+        <span>Proxies with this License</span>
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
-    </div>
-    <div class="abyss-table-content" v-if="isApisTableVisible">
-      <Apis
-        :rows="computedLicenseApis"
-        :routePath="routePath"
-      ></Apis>
-    </div>
-    <!-- Proxies -->
-    <div class="row abyss-table-buttons" v-else-if="childComponent === 'proxies'">
-      <b-button
-        @click="handleToggleApisTable"
-        size="md"
-        variant="link"
-        :class="{'active': isApisTableVisible}"
-      >
-        <span>Proxies</span>
-        <b-badge pill>{{ licenseApis.length }}</b-badge>
-      </b-button>
-    </div>
-    <div class="abyss-table-content" v-if="isApisTableVisible && licenseApis.length">
-      <Proxies
-        :rows="computedLicenseApis"
-        :routePath="routePath"
-      ></Proxies>
-    </div>
-    <!-- Contracts -->
-    <div class="row abyss-table-buttons" v-else-if="childComponent === 'contracts'">
       <b-button
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
         :class="{'active': isContractsTableVisible}"
       >
-        <span>Contracts</span>
+        <span>Contracts with this License</span>
         <b-badge pill>{{ licenseContracts.length }}</b-badge>
       </b-button>
     </div>
+    <div v-if="isPoliciesTableVisible">
+      <Policies
+        :rows="tableRows"
+        :routePath="routePath"
+      ></Policies>
+    </div>
+    <!-- Proxies -->
+    <div v-if="isApisTableVisible && licenseApis.length">
+      <Proxies
+        :rows="computedLicenseApis"
+        :routePath="routePath"
+      ></Proxies>
+    </div>
+    <!-- Contracts -->
     <div v-if="isContractsTableVisible && licenseContracts.length">
       <Contracts
         :rows="computedLicenseContracts"
@@ -157,6 +135,7 @@ export default {
     Policies: () => import('@/components/shared/subjects/policies/Policies'),
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies.vue'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
+    Apis: () => import('@/components/shared/subjects/apis/Apis'),
   },
   computed: {
     ...mapState({
@@ -245,12 +224,24 @@ export default {
     },
     handleTogglePoliciesTable() {
       this.isPoliciesTableVisible = !this.isPoliciesTableVisible;
+      if (this.isPoliciesTableVisible) {
+        this.isApisTableVisible = false;
+        this.isContractsTableVisible = false;
+      }
     },
     handleToggleApisTable() {
       this.isApisTableVisible = !this.isApisTableVisible;
+      if (this.isApisTableVisible) {
+        this.isPoliciesTableVisible = false;
+        this.isContractsTableVisible = false;
+      }
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
+      if (this.isContractsTableVisible) {
+        this.isPoliciesTableVisible = false;
+        this.isApisTableVisible = false;
+      }
     },
     // handleDeleteModal() {
     //   const { item, routePath } = this;
@@ -258,23 +249,23 @@ export default {
     // },
   },
   mounted() {
-    if (this.childComponent === 'contracts') {
-      api
-      .getLicenseContracts(this.item.uuid)
-      .then((response) => {
-        if (response) {
-          this.licenseContracts = response.data;
-        }
-      });
-    } else if (this.childComponent === 'proxies') {
-      api
-      .getLicenseApis(this.item.uuid)
-      .then((response) => {
-        if (response) {
-          this.licenseApis = response.data;
-        }
-      });
-    }
+    // if (this.childComponent === 'contracts') {
+    api
+    .getLicenseContracts(this.item.uuid)
+    .then((response) => {
+      if (response) {
+        this.licenseContracts = response.data;
+      }
+    });
+    // } else if (this.childComponent === 'proxies') {
+    api
+    .getLicenseApis(this.item.uuid)
+    .then((response) => {
+      if (response) {
+        this.licenseApis = response.data;
+      }
+    });
+    // }
   },
 };
 </script>

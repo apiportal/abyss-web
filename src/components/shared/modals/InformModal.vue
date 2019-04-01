@@ -9,10 +9,10 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 id="IdModalTitle" class="modal-title">{{ title }}</h5>
     </template>
     <template>
-      <div>{{ text }}</div>
+      <p v-html="withBrTags" style="text-align: justify"></p>
     </template>
     <template slot="footer">
       <b-button 
@@ -20,6 +20,7 @@
         variant="primary" 
         size="sm" 
         @click="onConfirm"
+        id="IdBtnConfirm"
       >
         OK
       </b-button>
@@ -33,6 +34,12 @@ import Modal from '@/components/shared/modals/Modal';
 export default {
   components: {
     Modal,
+  },
+  computed: {
+    withBrTags() {
+      const doc = this.text;
+      return doc.replace(/(\\r)*\\n/g, '<br>');
+    },
   },
   props: {
     hideHeader: {

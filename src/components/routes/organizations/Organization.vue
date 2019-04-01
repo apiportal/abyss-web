@@ -39,8 +39,10 @@
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organizationUsers.length"
+        :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" /> Users
+        <Icon icon="users" /> 
+        <span class="btn-text">Users</span>
         <b-badge pill>{{ organizationUsers.length }}</b-badge>
       </b-button>
       <b-button
@@ -51,10 +53,10 @@
         @click="showSubOrganizations"
         :class="{'active': isShowSubOrganizations}"
         v-if="organization.suborganizations > 0"
-        id="3c652afc-8f3a-4243-9c4e-2821aa32d293
-"
+        :id="`IDOrganizationSubOrganizationsButton_${organization.uuid}`"
       >
-        <Icon icon="list-ol" /> Sub Organizations
+        <Icon icon="list-ol" />
+        <span class="btn-text">Sub Organizations</span>
         <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
     </div>

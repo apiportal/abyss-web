@@ -15,7 +15,7 @@
             {{ chip.text }}
           </span>
           <b-link
-            v-if="!chip.isdeleted"
+            v-if="!chip.disabled"
             v-b-tooltip.hover 
             title="Delete"
             @click="() => onDeleteChip(index, chip)"
@@ -32,6 +32,7 @@
             <span class="text-uppercase font-weight-bold">{{ addItemText }}</span> <Icon icon="plus" />
           </b-button>
           <b-popover target="addPopover" :show.sync="isAddPopoverVisible" triggers="click blur">
+          <!-- <b-popover target="addPopover" :show.sync="isAddPopoverVisible"> -->
             <template slot="title">{{ addItemText }}</template>
             <div>
               <div>
@@ -59,6 +60,7 @@
                   variant="secondary"
                   @click="() => addChip({ chip })"
                   style="margin: .125em;"
+                  :class="`${chip.color} ${chip.isdeleted ? 'is-deleted' : ''}`"
                 >
                   {{ chip.text }}
                 </b-button>
@@ -125,8 +127,10 @@ export default {
       this.isAddPopoverVisible = !this.isAddPopoverVisible;
     },
     addChip({ chip }) {
-      this.onAddChip(chip);
-      this.toggleAddPopover();
+      if (!chip.isdeleted) {
+        this.onAddChip(chip);
+        this.toggleAddPopover();
+      }
     },
     handleSubmit(evt) {
       evt.preventDefault();

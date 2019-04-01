@@ -21,8 +21,9 @@
         size="md"
         variant="link"
         :class="{'active': isApiProxiesTableVisible}"
+        :id="`apiProxyListButton_${item.uuid}`"
       >
-        <span>Proxy APIs</span>
+        <span class="btn-text">Proxy APIs</span>
         <b-badge pill>{{ apiProxies.length }}</b-badge>
       </b-button>
     </div>

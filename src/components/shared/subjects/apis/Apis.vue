@@ -3,7 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th>
+          <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environmwnt"
+              text="Environment"
               sortByKey="islive"
               sortByKeyType="boolean"
             />
@@ -74,12 +74,12 @@
         v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ environment(item) }}</td>
+            {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
@@ -110,7 +110,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="7">
             <div class="collapsible-content">
               <Api

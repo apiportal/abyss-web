@@ -12,7 +12,6 @@
       </div>
     </div>
     <LoadingModal v-if="isLoading" />
-    <SetCookieModal v-if="isSetCookieModalVisible" />
   </div>
 </template>
 
@@ -36,10 +35,6 @@ export default {
       isLoading: state => state.traffic.isLoading,
       user: state => state.user,
     }),
-    isSetCookieModalVisible() {
-      const { isUnauthorized } = this.user;
-      return isUnauthorized;
-    },
   },
 };
 </script>

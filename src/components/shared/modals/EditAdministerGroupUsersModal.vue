@@ -22,10 +22,7 @@
           <div>
             <Chips
               :chips="computedMemberships"
-              :autocompleteOptions="this.groupUsersEditable.map((item) => ({
-                text: item.displayname,
-                value: item.uuid,
-              }))"
+              :autocompleteOptions="groupUsersEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
               label="Group Users"
@@ -125,13 +122,8 @@ export default {
     computedMemberships() {
       const { groupUsersEditable } = this;
       return groupUsersEditable
-      .filter(user => user.isMembership)
-      .sort((a, b) => b.sortTime - a.sortTime)
-      .map(user => ({
-        value: user.uuid,
-        text: user.displayname,
-        isdeleted: user.isdeleted,
-      }));
+      .filter(user => user.isAttached)
+      .sort((a, b) => b.sortTime - a.sortTime);
     },
   },
   data() {
@@ -139,16 +131,17 @@ export default {
     return {
       groupUsersEditable: [...JSON.parse(JSON.stringify(users))].map((user) => {
         const membership = memberships.find(m => m.subjectid === user.uuid);
-        const isMembership = Boolean(membership);
+        const isAttached = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
           ...user,
-          isMembership,
+          value: user.uuid,
+          text: user.displayname,
+          isAttached,
           membership,
           sortTime,
         };
       }),
-      // userMemberships: [...JSON.parse(JSON.stringify(memberships))],
       usersToAdd: [],
       usersToDelete: [],
     };
@@ -160,10 +153,10 @@ export default {
         deleteSubjectMemberships, onUpdate } = this;
       evt.preventDefault();
       this.usersToDelete = groupUsersEditable
-      .filter(user => user.membership && !user.isMembership)
+      .filter(user => user.membership && !user.isAttached)
       .map(user => (user.membership));
       this.usersToAdd = groupUsersEditable
-      .filter(user => !user.membership && user.isMembership)
+      .filter(user => !user.membership && user.isAttached)
       .map(user => ({
         // organizationid: this.currentUser.props.organizationid,
         organizationid: group.organizationid,
@@ -196,21 +189,21 @@ export default {
     handleDeleteMembership(index, chip) {
       const { groupUsersEditable } = this;
       this.groupUsersEditable = groupUsersEditable.map((group) => {
-        const isMembership = group.uuid === chip.value ? false : group.isMembership;
+        const isAttached = group.uuid === chip.value ? false : group.isAttached;
         return {
           ...group,
-          isMembership,
+          isAttached,
         };
       });
     },
     handleAddMembership(chip) {
       const { groupUsersEditable } = this;
       this.groupUsersEditable = groupUsersEditable.map((group) => {
-        const isMembership = group.uuid === chip.value ? true : group.isMembership;
+        const isAttached = group.uuid === chip.value ? true : group.isAttached;
         const sortTime = (new Date()).getTime();
         return {
           ...group,
-          isMembership,
+          isAttached,
           sortTime,
         };
       });

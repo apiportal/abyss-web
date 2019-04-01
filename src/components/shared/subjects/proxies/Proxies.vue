@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environmwnt"
+              text="Environment"
               sortByKey="islive"
               sortByKeyType="boolean"
             />
@@ -68,14 +68,14 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="7"
       />
       <TbodyCollapsible
         v-for="(proxyItem, proxyIndex) in tableRows" v-bind:key="proxyIndex"
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
         :level="1"
       >
-        <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.openapidocument.info.title }}
           </td>
@@ -107,7 +107,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="6">
+          <td colspan="7">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"

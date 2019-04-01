@@ -13,12 +13,12 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th>
+          <th id="IdTheadName">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Name"
+              text="License Name"
               sortByKey="name"
               sortByKeyType="string"
             />
@@ -58,7 +58,7 @@
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
             <Icon
               :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"
@@ -101,7 +101,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
+        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
           <td colspan="5">
             <div class="collapsible-content">
               <License

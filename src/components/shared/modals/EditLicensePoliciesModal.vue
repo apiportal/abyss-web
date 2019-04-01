@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user-policies"
+    bodyClass="edit-license-policies"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -11,7 +11,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit User Groups of {{license.name}}
+        Edit License Policies of {{licenseEditable.name}}
       </h5>
     </template>
     <template>
@@ -20,21 +20,12 @@
       >
         <div style="padding: 1rem;">
           <div>
-            {{computedLicensePolicies}}
-            <hr>
-            {{xxx}}
-            <hr>
-            {{license.licensedocument.termsOfService.policyKey}}
             <Chips
               :chips="computedLicensePolicies"
-              :autocompleteOptions="this.policies.map((item) => ({
-                text: item.name,
-                value: item.uuid,
-                isdeleted: item.isdeleted,
-              }))"
+              :autocompleteOptions="policiesEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
-              label="User Groups"
+              label="License Policies"
             />
           </div>
 
@@ -118,7 +109,7 @@ export default {
       required: false,
       default() { return []; },
     },
-    memberships: {
+    policyTypes: {
       type: Array,
       required: false,
       default() { return []; },
@@ -127,122 +118,85 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      // policyTypes: state => state.policyTypes.items,
     }),
     computedLicensePolicies() {
       const { policiesEditable } = this;
       return policiesEditable
-      .filter(group => group.isMembership)
+      .filter(item => item.isAttached)
       .sort((a, b) => b.sortTime - a.sortTime)
-      .map(group => ({
-        value: group.uuid,
-        text: group.name,
-        isdeleted: group.isdeleted,
-        isMembership: group.isMembership,
-      }));
-    },
-    xxx() {
-      this.computedLicensePolicies.map(group => (group.uuid));
-    },
-    zzzz() {
-      const { license, policies, policyTypes } = this;
-      const licensePolicyIds = license.licensedocument.termsOfService.policyKey;
-      const getTypeName = (typeId) => {
-        const type = policyTypes.find(policyType => policyType.uuid === typeId);
-        return type ? type.name : typeId;
-      };
-      return policies
-      .filter(policy => licensePolicyIds.indexOf(policy.uuid) > -1)
-      .map(policy => ({
-        ...policy,
-        typename: getTypeName(policy.typeid),
-      }));
+      // .map(item => ({
+      //   ...item,
+      //   value: item.uuid,
+      //   text: `${item.name}: ${item.typename}`,
+      // }))
+      ;
     },
   },
   data() {
     const { license, policies } = this;
     const licensePolicyIds = license.licensedocument.termsOfService.policyKey;
+    // const getTypeName = (typeId) => {
+    //   console.log(typeId, this.policyTypes);
+    //   const type = this.policyTypes.find(policyType => policyType.uuid === typeId);
+    //   return type ? `${type.name} / ${type.type} / ${type.subtype}` : typeId;
+    // };
     return {
+      licenseEditable: JSON.parse(JSON.stringify(license)),
       policiesEditable: [...JSON.parse(JSON.stringify(policies))]
-      .map((group) => {
-        console.log(licensePolicyIds.indexOf(group.uuid) > -1);
-        // const membership = policies.find(policy => licensePolicyIds.indexOf(policy.uuid) > -1);
-        const isMembership = Boolean(licensePolicyIds.indexOf(group.uuid) > -1);
-        // console.log(membership.some(f =>
-        //     f.subjectid === el.uuid,
-        //   ),);
-        // console.log(isMembership, licensePolicyIds, membership);
+      .map((item) => {
+        const isAttached = Boolean(licensePolicyIds.indexOf(item.uuid) > -1);
         const sortTime = (new Date()).getTime();
         return {
-          ...group,
-          isMembership,
-          // membership,
+          ...item,
+          text: `${item.name}: ${item.policyinstance.info.type} / 
+          ${item.policyinstance.info.subType}`,
+          value: item.uuid,
+          isAttached,
           sortTime,
         };
       }),
-      policiesToAdd: [],
-      policiesToDelete: [],
     };
   },
   methods: {
-    ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
+    ...mapActions('subjectMemberships', ['putLicenses']),
+    xxx() {
+      this.licenseEditable.licensedocument.termsOfService.policyKey =
+      this.computedLicensePolicies.map(item => (item.value));
+    },
     handleSubmit(evt) {
-      const { policiesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
       evt.preventDefault();
-      this.policiesToDelete = policiesEditable
-      .filter(group => group.membership && !group.isMembership)
-      .map(group => (group.membership));
-      this.policiesToAdd = policiesEditable
-      .filter(group => !group.membership && group.isMembership)
-      .map(group => ({
-        // organizationid: this.currentUser.props.organizationid,
-        organizationid: group.organizationid,
-        crudsubjectid: this.currentUser.props.uuid,
-        subjectid: this.user.uuid,
-        subjectgroupid: group.uuid,
-        subjectdirectoryid: group.subjectdirectoryid,
-      }));
-      if (this.policiesToDelete.length) {
-        // console.log('policiesToDelete', this.policiesToDelete);
-        for (let i = 0; i < this.policiesToDelete.length; i += 1) {
-          deleteSubjectMemberships(this.policiesToDelete[i]).then((response) => {
-            if (response && response.data) {
-              onUpdate();
-            }
-          });
-        }
-      }
-      if (this.policiesToAdd.length) {
-        // console.log('policiesToAdd', this.policiesToAdd);
-        for (let i = 0; i < this.policiesToAdd.length; i += 1) {
-          postSubjectMemberships([this.policiesToAdd[i]]).then((response) => {
-            if (response && response.data) {
-              onUpdate();
-            }
-          });
-        }
-      }
+      const { licenseEditable, onUpdate, putLicenses } = this;
+      // const { licenseEditable, onUpdate } = this;
+      // console.log(licenseEditable);
+      // onUpdate();
+      putLicenses(licenseEditable).then(() => {
+        onUpdate();
+      });
     },
     handleDeleteMembership(index, chip) {
       const { policiesEditable } = this;
-      this.policiesEditable = policiesEditable.map((group) => {
-        const isMembership = group.uuid === chip.value ? false : group.isMembership;
+      this.policiesEditable = policiesEditable.map((item) => {
+        const isAttached = item.uuid === chip.value ? false : item.isAttached;
         return {
-          ...group,
-          isMembership,
+          ...item,
+          isAttached,
         };
       });
+      this.xxx();
     },
     handleAddMembership(chip) {
       const { policiesEditable } = this;
-      this.policiesEditable = policiesEditable.map((group) => {
-        const isMembership = group.uuid === chip.value ? true : group.isMembership;
+      this.policiesEditable = policiesEditable.map((item) => {
+        const isAttached = item.uuid === chip.value ? true : item.isAttached;
         const sortTime = (new Date()).getTime();
         return {
-          ...group,
-          isMembership,
+          ...item,
+          isAttached,
           sortTime,
         };
       });
+      this.xxx();
     },
   },
 };
@@ -250,7 +204,7 @@ export default {
 
 <style lang="scss">
 .modal-body {
-  &.edit-administer-user-policies {
+  &.edit-license-policies {
     padding: 0;
   }
 }

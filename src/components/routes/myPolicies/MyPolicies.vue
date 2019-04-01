@@ -2,8 +2,11 @@
   <div class="page-container page-my-policies">
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
+        <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
+          <span id="IdLinkMyAllLicenses" class="link-text">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
+        </b-nav-item>
         <b-nav-item active>
-          My Policies <b-badge pill>{{ policies.length }}</b-badge>
+          <span id="IdLinkMyPolicies" class="link-text">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -20,6 +23,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      subjectLicenses: state => state.subjectLicenses.items,
       policies: state => state.subjectPolicies.items,
     }),
   },
@@ -27,6 +31,7 @@ export default {
     this.$store.commit('currentPage/setRootPath', 'my-policies');
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
   },
 };

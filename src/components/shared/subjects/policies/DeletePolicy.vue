@@ -47,7 +47,7 @@ export default {
     },
   },
   created() {
-    console.log(this.policies);
+    // console.log(this.policies);
   },
   data() {
     return {

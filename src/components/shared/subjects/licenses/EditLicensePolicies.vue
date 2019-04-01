@@ -11,6 +11,7 @@
       :onUpdate="handleModalUpdate"
       :license="subjectLicenses.find(item => item.uuid === licenseId)"
       :policies="policies"
+      :policyTypes="policyTypes"
     />
   </div>
 </template>
@@ -56,7 +57,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('subjectPolicies/getSubjectPolicies', {});
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     // console.log(this.policies, this.policyTypes, this.subjectLicenses);

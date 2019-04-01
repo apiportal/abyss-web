@@ -7,10 +7,10 @@
           :active="false"
           to="/app/identity-managers/1"
         >
-          Identity Managers <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+          <span id="IdLinkIdentityManagers" class="link-text">Identity Managers</span> <b-badge pill>{{ subjectDirectories.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          Identity Manager Types <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
+          <span id="IdLinkIdentityManagerTypes" class="link-text">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -30,6 +30,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            id="IdBtnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -40,6 +41,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            id="IdBtnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -62,12 +64,12 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th>
+            <th id="IdTheadName">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Name"
+                text="Identity Manager Type Name"
                 sortByKey="typename"
                 sortByKeyType="string"
               />
@@ -102,8 +104,9 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          id="IdIdentityManagerTypesItem"
         >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactive ? 'check-circle' : 'times-circle'" 
@@ -120,24 +123,24 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item id="IdBtnEdit" :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item id="IdBtnDelete" :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/identity-manager-types/${page}/logs/${item.uuid}/subjectdirectorytype/1`">All</b-dropdown-item>
+                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/identity-manager-types/${page}/logs/${item.uuid}/subjectdirectorytype/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr slot="footer" class="footer">
+          <tr id="IdTableFooter" slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">

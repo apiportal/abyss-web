@@ -9,7 +9,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         <span class="text-danger h3 mr-2"><Icon icon="exclamation-triangle" /> </span>
         {{ title }}
       </h5>
@@ -21,12 +21,14 @@
       <b-button
         variant="secondary"
         @click="onClose"
+        id="IdBtnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onConfirm"
+        id="IdBtnSave"
       >
         {{ confirm }}
       </b-button>

@@ -47,16 +47,24 @@
             {{computedOrganizationUsers}}
             <Chips
               :chips="computedOrganizationUsers"
-              :autocompleteOptions="this.organizationUsersEditable.map((item) => ({
-                text: item.displayname,
-                value: item.uuid,
-                isOrganizationUser: item.isOrganizationUser,
-                color: item.color,
-              }))"
+              :autocompleteOptions="organizationUsersEditable"
               :onDeleteChip="handleDeleteOrganizationUser"
               :onAddChip="handleAddOrganizationUser"
               label="Organization Users"
             />
+            <!-- <Chips
+              :chips="computedOrganizationUsers"
+              :autocompleteOptions="this.organizationUsersEditable.map((item) => ({
+                text: item.displayname,
+                value: item.uuid,
+                isdeleted: item.isdeleted,
+                isAttached: item.isAttached,
+                color: chipColor(item),
+              }))"
+              :onDeleteChip="handleDeleteOrganizationUser"
+              :onAddChip="handleAddOrganizationUser"
+              label="Organization Users"
+            /> -->
           </div>
         </div>
         <footer class="modal-footer">
@@ -193,7 +201,9 @@ export default {
         const { computedOrganizationUsers } = this;
         const ownerNew = computedOrganizationUsers.find(user => user.value === newval.value);
         const user = newval;
-        user.isowner = true;
+        if (user) {
+          user.isowner = true;
+        }
         // console.log(newval, ownerNew);
         return ownerNew;
       },
@@ -201,30 +211,32 @@ export default {
     computedOrganizationUsers() {
       const { organizationUsersEditable, chipColor } = this;
       return organizationUsersEditable
-      .filter(user => user.isOrganizationUser)
+      .filter(user => user.isAttached)
       .sort((a, b) => b.sortTime - a.sortTime)
       .map(user => ({
-        value: user.uuid,
-        text: user.displayname,
-        isdeleted: user.isdeleted,
-        isOrganizationUser: user.isOrganizationUser,
+        ...user,
+        isAttached: user.isAttached,
         isowner: user.organizationuser ? user.organizationuser.isowner : false,
+        disabled: user.organizationuser ? user.organizationuser.isowner : false,
         color: chipColor(user),
       }));
     },
   },
   data() {
-    const { users, organizationUsers } = this;
+    const { users, organizationUsers, chipColor } = this;
     return {
       organizationUsersEditable: [...JSON.parse(JSON.stringify(users))]
       .map((user) => {
         const organizationuser = organizationUsers.find(
         o => o.subjectid === user.uuid);
-        const isOrganizationUser = Boolean(organizationuser);
+        const isAttached = Boolean(organizationuser);
         const sortTime = (new Date()).getTime();
         return {
           ...user,
-          isOrganizationUser,
+          text: user.displayname,
+          value: user.uuid,
+          color: chipColor(user),
+          isAttached,
           organizationuser,
           sortTime,
         };
@@ -237,11 +249,11 @@ export default {
   methods: {
     ...mapActions('subjectOrganizations', ['deleteSubjectOrganizations', 'postSubjectOrganizations']),
     chipColor(item) {
-      if (item.isOrganizationUser && item.organizationuser && item.organizationuser.isowner) {
+      if (item.isAttached && item.organizationuser && item.organizationuser.isowner) {
         return 'btn-success';
-      } else if (!item.isOrganizationUser &&
+      } else if (!item.isAttached &&
         item.organizationuser && item.organizationuser.isowner) {
-        return 'btn-error';
+        return 'btn-danger';
       }
       return 'btn-secondary';
     },
@@ -250,10 +262,10 @@ export default {
         deleteSubjectOrganizations, onUpdate } = this;
       evt.preventDefault();
       this.usersToDelete = organizationUsersEditable
-      .filter(user => user.organizationuser && !user.isOrganizationUser)
+      .filter(user => user.organizationuser && !user.isAttached)
       .map(user => (user.organizationuser));
       this.usersToAdd = organizationUsersEditable
-      .filter(user => !user.organizationuser && user.isOrganizationUser)
+      .filter(user => !user.organizationuser && user.isAttached)
       .map(user => ({
         // organizationid: this.currentUser.props.organizationid,
         organizationid: organization.uuid,
@@ -288,10 +300,10 @@ export default {
       const { organizationUsersEditable } = this;
       this.organizationUsersEditable = organizationUsersEditable.map((item) => {
         // console.log(item.uuid, chip.value);
-        const isOrganizationUser = item.uuid === chip.value ? false : item.isOrganizationUser;
+        const isAttached = item.uuid === chip.value ? false : item.isAttached;
         return {
           ...item,
-          isOrganizationUser,
+          isAttached,
         };
       });
     },
@@ -299,11 +311,11 @@ export default {
       const { organizationUsersEditable } = this;
       this.organizationUsersEditable = organizationUsersEditable.map((item) => {
         // console.log(item.uuid, chip.value);
-        const isOrganizationUser = item.uuid === chip.value ? true : item.isOrganizationUser;
+        const isAttached = item.uuid === chip.value ? true : item.isAttached;
         const sortTime = (new Date()).getTime();
         return {
           ...item,
-          isOrganizationUser,
+          isAttached,
           sortTime,
         };
       });

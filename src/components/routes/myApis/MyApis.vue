@@ -18,7 +18,7 @@
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          <span id="IdLinkMySubscriptions" class="link-text">My Subscriptions</span> <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
+          <span id="IdLinkMySubscriptions" class="link-text">My Contracted APIs</span> <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"

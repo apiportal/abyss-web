@@ -110,18 +110,18 @@
     <!-- End Form Group -->
 
     <!-- Checkbox -->
-    <div class="js-form-message mb-5">
+    <div class="js-form-message mb-5 d-flex flex-row">
       <b-form-checkbox
         v-model="form.isAgreedToTerms"
         :value="true"
         :unchecked-value="false"
         class="text-muted"
       >
-        <small>
-          I agree to the
-          <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
-        </small>
       </b-form-checkbox>
+      <small class="mt-1">
+        I agree to the
+        <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
+      </small>
       <InformModal
           v-if="isInformModalVisible"  
           size="md"
@@ -137,7 +137,7 @@
             Our company registration number is Kadİköy V.D., 924 051 8054.\n\n
             The term 'you' refers to the user or viewer of ABYSS API PORTAL."
           :onClose="toggleInformModal"
-          :onConfirm="toggleInformModal"
+          :onConfirm="handleConfirm"
         >
         </InformModal>
     </div>
@@ -151,7 +151,8 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" v-if="form.isAgreedToTerms">Get Started</b-button>
+        <b-button class="btn btn-secondary transition-3d-hover" variant="secondary" v-else>Get Started</b-button>
       </div>
     </div>
     <!-- End Button -->
@@ -227,6 +228,10 @@ export default {
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;
+    },
+    handleConfirm() {
+      this.form.isAgreedToTerms = true;
+      this.isInformModalVisible = false;
     },
   },
 };

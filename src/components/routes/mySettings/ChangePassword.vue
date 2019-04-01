@@ -79,6 +79,9 @@
 </template>
 
 <script>
+import api from '@/api';
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
@@ -89,9 +92,18 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+    }),
+  },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
+      api.putChangePassword(this.user.uuid, this.form)
+        .then((response) => {
+          console.log(response);
+        });
     },
   },
 };

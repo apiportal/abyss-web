@@ -69,9 +69,7 @@ export default {
       const sessionId = session[0].split('=');
       // console.log(sessionId[1]);
       api.deleteSession(sessionId[1]);
-        // .then(() => {
-        //   this.$router.push('/auth/login/');
-        // });
+      setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 1000); // eslint-disable-line
     },
   },
   data() {

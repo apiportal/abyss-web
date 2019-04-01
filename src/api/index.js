@@ -57,6 +57,9 @@ export default {
   getSubjectOrganizations() {
     return axios.get('/abyss/oapi/subject-organizations');
   },
+  getSubjectOrganizationsByUuid(uuid) {
+    return axios.get(`/abyss/oapi/subject-organizations/subject/${uuid}`);
+  },
   getOrganizationsOfUser(uuid) {
     return axios.get(`/abyss/oapi/subject-organizations/subject/${uuid}`);
   },

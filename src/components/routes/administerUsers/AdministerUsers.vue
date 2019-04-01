@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          <span id="IdLinkUsers" class="link-text">Users</span> <b-badge pill>{{ users.length }}</b-badge>
+          <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -24,7 +24,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -35,7 +35,7 @@
             variant="primary"
             class="page-btn-add"
             block
-            id="IdBtnAddNew"
+            data-qa="btnAddNew"
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -58,7 +58,7 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th id="IdTheadName">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -66,6 +66,7 @@
                 text="User Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
+                data-qa="tableHeadName"
               />
             </th>
             <th>
@@ -98,9 +99,9 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          id="IdUsersItem"
+          :data-qa="`tableRow-${index}`"
         >
-          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
@@ -117,25 +118,25 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item id="IdBtnEdit" :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
-                <b-dropdown-item id="IdBtnEditGroups" :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
-                <b-dropdown-item id="IdBtnDelete" :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-users/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEditGroups" :to="`/app/administer-users/${page}/edit-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/administer-users/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/administer-users/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+          <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
                 <AdministerUser
@@ -159,6 +160,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>

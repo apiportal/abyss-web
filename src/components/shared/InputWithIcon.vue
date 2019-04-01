@@ -11,7 +11,7 @@
       @keydown="handleKeydown"
       @keyup="handleKeyup"
       @keypress="handleKeypress"
-      id="IdFilter"
+      data-qa="inputFilter"
     />
     <b-input-group-text slot="append" v-if="!append.empty">
       <Icon :icon="append.icon" />

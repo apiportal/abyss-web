@@ -98,7 +98,6 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === rootOrganization"
           :level="0"
           id="IdOrganizationsItem"
         >
@@ -187,6 +186,7 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
+      rootOrganization: state => state.organizations.rootOrganization,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
     }),
@@ -226,7 +226,13 @@ export default {
           suborganizations: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid).length,
           organizationowner: getOwner(item.uuid),
-        })).filter((item) => {
+        }))
+        .filter((item) => {
+          const { rootOrganization } = this;
+          const { organizationid } = item;
+          return (organizationid === rootOrganization);
+        })
+        .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
             return true;
@@ -272,7 +278,6 @@ export default {
       sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
-      rootOrganization: '3c65fafc-8f3a-4243-9c4e-2821aa32d293',
       collapsedRows: [],
       itemsPerPage: 20,
     };

@@ -52,7 +52,11 @@ const actions = {
   getAppContracts: ({ commit }, { appIdsArray }) => {
     for (let i = 0; i < appIdsArray.length; i += 1) {
       api.getAppContracts(appIdsArray[i]).then((response) => {
-        commit('setAppContracts', { appId: appIdsArray[i], contracts: response.data});
+        if (response && response.data) {
+          commit('setAppContracts', { appId: appIdsArray[i], contracts: response.data});
+        } else {
+          commit('setAppContracts', { appId: appIdsArray[i], contracts: []});
+        }
       });
     }
   },

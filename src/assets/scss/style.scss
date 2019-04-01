@@ -366,9 +366,10 @@
                 background: $brand-color;
                 border-color: $brand-color;
                 color: white !important;
-              .btn-link {
-                color: white;
-              }
+                
+                .btn-link {
+                  color: white !important;
+                }
             }
           }
         }
@@ -514,14 +515,14 @@
         &.tbody-collapsed {
 
           & > tr:first-child {
-            border-left: 8px solid $brand-color;
-            font-weight: bold;
-            color: $brand-color;
+            & > td:first-child {
+              border-left: 8px solid $brand-color;
+            }
           }
 
           & > tr:last-child {
-            border-left: 8px solid $brand-color;
-            & > td {
+            & > td:first-child {
+              border-left: 8px solid $brand-color;
               padding: 0;
             }
           }

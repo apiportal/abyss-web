@@ -78,7 +78,7 @@
                 <small class="d-block">resource</small>
                 <code>{{ item.resource.uuid }}</code>
               </b-dropdown-header>
-              <b-dropdown-header v-if="item.resource.permission">
+              <b-dropdown-header v-if="item.resource && item.resource.permission">
                 <small class="d-block">permission</small>
                 <code>{{ item.resource.permission.uuid }}</code>
               </b-dropdown-header>

@@ -45,10 +45,6 @@ export default {
   components: {
     Icon,
   },
-  // created() {
-  //   const cookieItem = document.cookie.split('=');
-  //   console.log(cookieItem[1]);
-  // },
   computed: {
     ...mapState({
       user: state => state.user,

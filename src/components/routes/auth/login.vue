@@ -8,6 +8,10 @@
     </div>
     <!-- End Title -->
 
+    <!-- Alert -->
+        <b-alert v-if="responseAlert" show variant="danger">{{ this.alertResponse.message }}</b-alert>
+    <!-- End Alert -->
+
     <!-- Form Group -->
     <div class="js-form-message form-group">
       <b-form-group
@@ -61,7 +65,7 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started <Icon v-if="isLoading" icon="spinner" spin /></b-button>
       </div>
     </div>
     <!-- End Button -->
@@ -71,11 +75,21 @@
 
 <script>
 import api from '@/api';
+import Icon from '@/components/shared/Icon';
 import { mapState } from 'vuex';
 
 export default {
+  components: {
+    Icon,
+  },
   data() {
     return {
+      responseAlert: false,
+      alertResponse: {
+        message: '',
+        moreinfo: '',
+        recommendation: '',
+      },
       formLogin: {
         username: '',
         password: '',
@@ -85,6 +99,7 @@ export default {
   computed: {
     ...mapState({
       users: state => state.users.items,
+      isLoading: state => state.traffic.isLoading,
     }),
     userNameState() {
       const { username } = this.formLogin;
@@ -109,7 +124,6 @@ export default {
       api.postSignIn(this.formLogin)
         .then((response) => {
           if (response && response.data) {
-            console.log(response)  // eslint-disable-line
             const { principalid, sessionid } = response.data;
             document.cookie = `abyss.session=${sessionid}; path=/;`;
             document.cookie = `abyss.principal.uuid=${principalid}; path=/;`;
@@ -119,6 +133,8 @@ export default {
         })
         .catch((error) => {
           console.error('error: ' + error); // eslint-disable-line
+          this.responseAlert = true;
+          this.alertResponse.message = error.response.data.usermessage;
         });
     },
   },

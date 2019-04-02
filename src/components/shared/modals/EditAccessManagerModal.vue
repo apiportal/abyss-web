@@ -142,7 +142,7 @@
           <b-button
             variant="secondary"
             @click="onClose"
-            data-qa="btn-Cancel"
+            data-qa="btnCancel"
           >
             Cancel
           </b-button>

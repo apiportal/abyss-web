@@ -3,14 +3,14 @@
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="currentPage.firstChildPath === 'my-licenses'" to="/app/my-licenses/my-licenses/1">
-          <span id="IdLinkMyAllLicenses" class="link-text">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
-          <span id="IdLinkMyLicensesAttachedToApis" class="link-text">My Licenses Attached to APIs</span>
+          <span class="link-text" data-qa="linkMyLicensesAttachedToApis">My Licenses Attached to APIs</span>
           <!-- <b-badge pill>0</b-badge> -->
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'under-contracts'" to="/app/my-licenses/under-contracts/1">
-          <span id="IdLinkMyLicensesUnderContracts" class="link-text">My Licenses Under Contracts</span>
+          <span class="link-text" data-qa="linkMyLicensesUnderContracts">My Licenses Under Contracts</span>
           <!-- <b-badge pill>0</b-badge> -->
         </b-nav-item>
       </b-nav>

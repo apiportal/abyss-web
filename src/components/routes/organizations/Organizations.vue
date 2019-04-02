@@ -103,7 +103,7 @@
           :data-qa="`tableRow-${index}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.name }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">

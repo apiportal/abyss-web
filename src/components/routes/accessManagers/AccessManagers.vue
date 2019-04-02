@@ -114,7 +114,7 @@
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.accessmanagername }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">

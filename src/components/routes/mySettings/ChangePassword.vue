@@ -20,7 +20,7 @@
             Old Password
           </label>
           <b-form-input
-            v-model="form.oldPassword"
+            v-model="form.oldpassword"
             type="password"
             placeholder="********"
             required
@@ -39,7 +39,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.newPassword"
+            v-model="form.newpassword"
             type="password"
             placeholder="********"
             required
@@ -58,7 +58,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.confirmPassword"
+            v-model="form.confirmpassword"
             type="password"
             placeholder="********"
             required
@@ -86,9 +86,9 @@ export default {
   data() {
     return {
       form: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        oldpassword: '',
+        newpassword: '',
+        confirmpassword: '',
       },
     };
   },
@@ -102,7 +102,12 @@ export default {
       evt.preventDefault();
       api.putChangePassword(this.user.uuid, this.form)
         .then((response) => {
-          console.log(response);
+          if (response && response.data) {
+            console.log(response); // eslint-disable-line
+          }
+        })
+        .catch((e) => {
+          console.error('Error Message >>>', e); // eslint-disable-line
         });
     },
   },

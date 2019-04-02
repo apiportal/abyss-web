@@ -104,7 +104,8 @@ export default {
   },
   putUsers(user) {
     const { uuid, created, deleted, updated, totallogincount,
-      failedlogincount, invalidpasswordattemptcount, isactivated,
+      failedlogincount, invalidpasswordattemptcount,
+      // isactivated,
       ispasswordchangerequired, lastauthenticatedat, lastfailedloginat,
       lastloginat, lastpasswordchangeat, passwordexpiresat, ...rest } = user;
     return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);

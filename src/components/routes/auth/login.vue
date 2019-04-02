@@ -108,14 +108,17 @@ export default {
       evt.preventDefault();
       api.postSignIn(this.formLogin)
         .then((response) => {
-          const { principalid, sessionid } = response.data;
-          document.cookie = `abyss.session=${sessionid}; path=/;`;
-          document.cookie = `abyss.principal.uuid=${principalid}; path=/;`;
-          this.$store.dispatch('user/getUser', { principalid, sessionid });
-          setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
+          if (response && response.data) {
+            console.log(response)  // eslint-disable-line
+            const { principalid, sessionid } = response.data;
+            document.cookie = `abyss.session=${sessionid}; path=/;`;
+            document.cookie = `abyss.principal.uuid=${principalid}; path=/;`;
+            this.$store.dispatch('user/getUser', { principalid, sessionid });
+            setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
+          }
         })
         .catch((error) => {
-          console.log(error); // eslint-disable-line
+          console.error('error: ' + error); // eslint-disable-line
         });
     },
   },

@@ -289,21 +289,25 @@ export default {
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      api.postSignUp(this.form)
-        .then((response) => {
-          this.redirect = true;
-          this.res.usermessage = response.data.usermessage;
-          if (response.data.details === response.data.recommendation) {
-            this.res.recommendation = response.data.recommendation;
-          } else {
-            this.res.details = response.data.details;
-            this.res.recommendation = response.data.recommendation;
-          }
-          setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
-        })
-        .catch((error) => {
-          console.log(error); // eslint-disable-line
-        });
+      const { password, password2 } = this.form;
+      if ((password.length > 2) && (password2.length > 2) && (password === password2)) {
+        api.postSignUp(this.form)
+          .then((response) => {
+            this.redirect = true;
+            this.res.usermessage = response.data.usermessage;
+            if (response.data.details === response.data.recommendation) {
+              this.res.recommendation = response.data.recommendation;
+            } else {
+              this.res.details = response.data.details;
+              this.res.recommendation = response.data.recommendation;
+            }
+            setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
+          })
+          .catch((error) => {
+            console.log(error); // eslint-disable-line
+          });
+      }
+      console.error('Passwords didn\'t match or has less than 3 characters.');  // eslint-disable-line
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;

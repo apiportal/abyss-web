@@ -28,6 +28,9 @@ export default {
   postForgotPassword(params) {
     return axios.post('/abyss/oapi/forgot-password', params);
   },
+  getCheckToken(token) {
+    return axios.get(`/abyss/oapi/reset-password/?v=${token}`);
+  },
   // change-password
   putChangePassword(uuid, params) {
     return axios.put(`abyss/oapi/subjects/${uuid}/changepassword/`, params);

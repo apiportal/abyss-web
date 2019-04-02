@@ -11,7 +11,10 @@
 
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="firstNameInvalidFeedback"
+        :state="firstNameState"
+      >
         <label class="form-label">
           First Name
         </label>
@@ -19,6 +22,7 @@
           v-model="form.firstname"
           type="text"
           placeholder="First Name"
+          :state="firstNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -27,7 +31,10 @@
     
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="lastNameInvalidFeedback"
+        :state="lastNameState"
+      >
         <label class="form-label">
           Last Name
         </label>
@@ -35,6 +42,7 @@
           v-model="form.lastname"
           type="text"
           placeholder="Last Name"
+          :state="lastNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -43,7 +51,10 @@
 
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="userNameInvalidFeedback"
+        :state="userNameState"
+      >
         <label class="form-label">
           Username
         </label>
@@ -51,6 +62,7 @@
           v-model="form.username"
           type="text"
           placeholder="Username"
+          :state="userNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -59,7 +71,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="emailInvalidFeedback"
+        :state="emailState"
+      >
         <label class="form-label">
           Email address
         </label>
@@ -67,6 +82,7 @@
           v-model="form.email"
           type="email"
           placeholder="Email address"
+          :state="emailState"
           required
         ></b-form-input>
       </b-form-group>
@@ -75,7 +91,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="passwordInvalidFeedback"
+        :state="passwordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
@@ -85,6 +104,7 @@
           v-model="form.password"
           type="password"
           placeholder="********"
+          :state="passwordState"
           required
         ></b-form-input>
       </b-form-group>
@@ -93,7 +113,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="confirmPasswordInvalidFeedback"
+        :state="confirmPasswordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Confirm Password
@@ -103,6 +126,7 @@
           v-model="form.password2"
           type="password"
           placeholder="********"
+          :state="confirmPasswordState"
           required
         ></b-form-input>
       </b-form-group>
@@ -206,6 +230,61 @@ export default {
         recommendation: '',
       },
     };
+  },
+  computed: {
+    firstNameState() {
+      const { firstname } = this.form;
+      return firstname.length > 0;
+    },
+    firstNameInvalidFeedback() {
+      const { firstname } = this.form;
+      return (firstname.length === 0) ? 'Please enter something' : '';
+    },
+    lastNameState() {
+      const { lastname } = this.form;
+      return lastname.length > 0;
+    },
+    lastNameInvalidFeedback() {
+      const { lastname } = this.form;
+      return (lastname.length === 0) ? 'Please enter something' : '';
+    },
+    userNameState() {
+      const { username } = this.form;
+      return username.length > 0;
+    },
+    userNameInvalidFeedback() {
+      const { username } = this.form;
+      return (username.length === 0) ? 'Please enter something' : '';
+    },
+    emailState() {
+      const { email } = this.form;
+      return email.length > 0;
+    },
+    emailInvalidFeedback() {
+      const { email } = this.form;
+      return (email.length === 0) ? 'Please enter something' : '';
+    },
+    passwordState() {
+      const { password } = this.form;
+      return password.length >= 3;
+    },
+    passwordInvalidFeedback() {
+      const { password } = this.form;
+      return (password.length < 3) ? 'Please enter a password at least 3 characters.' : '';
+    },
+    confirmPasswordState() {
+      const { password, password2 } = this.form;
+      return password === password2 && password2.length > 0;
+    },
+    confirmPasswordInvalidFeedback() {
+      const { password, password2 } = this.form;
+      if (password2.length === 0) {
+        return 'Please re-enter your password.';
+      } else if (password !== password2) {
+        return 'Passwords did not match.';
+      }
+      return '';
+    },
   },
   methods: {
     handleSubmit(evt) {

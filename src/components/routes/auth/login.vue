@@ -10,14 +10,18 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="userNameInvalidFeedback"
+        :state="userNameState"
+      >
         <label class="form-label">
           Username
         </label>
         <b-form-input
-          v-model="form.username"
+          v-model="formLogin.username"
           type="text"
           placeholder="Username"
+          :state="userNameState"
           required
           class="form-control"
         ></b-form-input>
@@ -27,7 +31,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="passwordInvalidFeedback"
+        :state="passwordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
@@ -35,9 +42,10 @@
           </span>
         </label>
         <b-form-input
-          v-model="form.password"
+          v-model="formLogin.password"
           type="password"
           placeholder="********"
+          :state="passwordState"
           required
           class="form-control"
         ></b-form-input>
@@ -68,7 +76,7 @@ import { mapState } from 'vuex';
 export default {
   data() {
     return {
-      form: {
+      formLogin: {
         username: '',
         password: '',
       },
@@ -78,11 +86,27 @@ export default {
     ...mapState({
       users: state => state.users.items,
     }),
+    userNameState() {
+      const { username } = this.formLogin;
+      return username.length > 0;
+    },
+    userNameInvalidFeedback() {
+      const { username } = this.formLogin;
+      return (username.length === 0) ? 'Please enter username' : '';
+    },
+    passwordState() {
+      const { password } = this.formLogin;
+      return password.length >= 3;
+    },
+    passwordInvalidFeedback() {
+      const { password } = this.formLogin;
+      return (password.length < 3) ? 'Password must be at least 3 characters.' : '';
+    },
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      api.postSignIn(this.form)
+      api.postSignIn(this.formLogin)
         .then((response) => {
           const { principalid, sessionid } = response.data;
           document.cookie = `abyss.session=${sessionid}; path=/;`;

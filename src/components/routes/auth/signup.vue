@@ -135,14 +135,15 @@
 
     <!-- Checkbox -->
     <div class="js-form-message mb-5 d-flex flex-row">
-      <b-form-checkbox
+      <input
+        type="checkbox"
         v-model="form.isAgreedToTerms"
         :value="true"
         :unchecked-value="false"
         class="text-muted"
+        :required="true"
       >
-      </b-form-checkbox>
-      <small class="mt-1">
+      <small class="ml-1">
         I agree to the
         <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
       </small>
@@ -175,8 +176,7 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" v-if="form.isAgreedToTerms">Get Started</b-button>
-        <b-button class="btn btn-secondary transition-3d-hover" variant="secondary" v-else>Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary">Get Started</b-button>
       </div>
     </div>
     <!-- End Button -->

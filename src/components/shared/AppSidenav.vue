@@ -1,9 +1,12 @@
 <template>
   <div>
     <b-form inline class="switch-organization">
-      <b-form-select v-model="currentOrganization"
-        :options="myOrganizations" 
-        id="IdMenuSwitchOrganization"/>
+      <b-form-select
+        v-model="currentOrganization"
+        :options="organizationOptions" 
+        id="IdMenuSwitchOrganization"
+        style="width: 100%;"
+      ></b-form-select>
     </b-form>
     <ul class="sidenav-links">
       <li>
@@ -15,7 +18,7 @@
           <span class="route-icon"><Icon icon="globe" /></span> Marketplace
         </b-link>
 
-        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`" id="IdMenuAnalytics">
+        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" id="IdMenuAnalytics">
           <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics
         </b-link>
 
@@ -90,6 +93,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -98,57 +102,39 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       currentPage: state => state.currentPage,
+      organizations: state => state.organizations.items,
+      isOrganizationsLoaded: (state => state.organizations.lastUpdatedAt > 0),
+      rootOrganization: state => state.organizations.rootOrganization,
     }),
   },
   data() {
     return {
-      currentOrganization: 1,
-      myOrganizations: [
-        {
-          value: 1,
-          text: 'My Organization',
-        },
-        {
-          value: 2,
-          text: 'My Second Organization',
-        },
-      ],
+      currentOrganization: this.rootOrganization,
+      organizationOptions: [],
     };
+  },
+  mounted() {
+    this.getOrganizationOptions();
+  },
+  methods: {
+    getOrganizationOptions() {
+      const { isOrganizationsLoaded } = this;
+      if (!isOrganizationsLoaded) {
+        setTimeout(function() { this.getOrganizationOptions(); }.bind(this), 500); // eslint-disable-line
+        return false;
+      }
+      const { uuid } = this.currentUser;
+      const { organizations } = this;
+      api.getSubjectOrganizationsByUuid(uuid).then((response) => {
+        const subjectOrganizations = response.data.map(item => item.organizationid);
+        this.organizationOptions = organizations
+          .filter(item => subjectOrganizations.indexOf(item.uuid) > -1)
+          .map(item => ({ text: item.name, value: item.uuid }));
+      });
+      return false;
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-// ul.sidenav-links {
-//   list-style-type: none;
-//   padding: 0;
-
-//   li {
-//     a {
-//       display: block;
-//       position: relative;
-//       padding-left: 2.5rem;
-//       padding-top: .5rem;
-//       padding-bottom: .5rem;
-//       color: #C5B7C6;
-//       text-decoration: none;
-
-//       &:hover {
-//         background-color: #350D36;
-//       }
-
-//       &.selected {
-//         background-color: #1164A3;
-//         color: white;
-//       }
-
-//       .route-icon {
-//         position: absolute;
-//         top: .5em;
-//         left: 1rem;
-//       }
-//     }
-//   }
-// }
-</style>

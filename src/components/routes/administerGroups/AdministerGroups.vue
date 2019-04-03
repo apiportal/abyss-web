@@ -155,7 +155,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="totalRows.length"

@@ -46,7 +46,7 @@
       />
       <router-view></router-view>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"

@@ -45,111 +45,12 @@
     </div>
 
     <div class="page-content">
-      <table class="table abyss-table abyss-table-cards">
-        <thead>
-          <tr>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Organization Name"
-                sortByKey="name"
-                sortByKeyType="string"
-                data-qa="tableHeadName"
-              />
-            </th>
-            <th class="text-nowrap">
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Sub Organizations"
-                sortByKey="suborganizations"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Users"
-                sortByKey="organizationusers"
-                sortByKeyType="number"
-              />
-            </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
-                sortByKeyType="string"
-              />
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <TBodyLoading
-          v-if="isLoading && tableRows.length === 0"
-          :cols="5"
-        />
-        <TbodyCollapsible
-          v-for="(item, index) in paginatedRows" v-bind:key="index"
-          :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          :level="0"
-          :data-qa="`tableRow-${index}`"
-        >
-          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
-            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-              {{ item.name }}
-            </td>
-            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.suborganizations }}
-            </td>
-            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationusers }}
-            </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
-            </td>
-            <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
-                <template slot="button-content">
-                  <Icon icon="ellipsis-h" />
-                </template>
-
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
-
-                <b-dropdown-header>LOGS</b-dropdown-header>
-
-                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/organizations/${page}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
-
-                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
-
-              </b-dropdown>
-            </td>
-          </tr>
-          <tr data-qa="tableFooter" slot="footer" class="footer">
-            <td colspan="5">
-              <div class="collapsible-content">
-                <Organization
-                  :organizations="tableRows"
-                  :organization="item"
-                  :rootorganization="rootOrganization"
-                  :page="page"
-                />
-              </div>
-            </td>
-          </tr>
-        </TbodyCollapsible>
-        <router-view></router-view>
-      </table>
+      <Organizations
+        :organizations="paginatedRows"
+        :routePath="`/app/organizations/${page}`"
+      />
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -166,22 +67,15 @@
 
 <script>
 import { mapState } from 'vuex';
-import Organization from '@/components/routes/organizations/Organization';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
-import SortBy from '@/components/shared/SortBy';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
   components: {
-    Organization,
+    Organizations: () => import('@/components/shared/subjects/organizations/Organizations'),
     InputWithIcon,
     Icon,
-    SortBy,
-    TbodyCollapsible,
-    TBodyLoading,
   },
   computed: {
     ...mapState({
@@ -198,15 +92,14 @@ export default {
         return organization ? organization.name : organizationId;
       };
       const getSubOrganizations = (organizationId) => {
-        const subOrganizations = organizations.filter(
-          item => item.organizationid === organizationId);
-        return subOrganizations;
+        const subOrganizations = organizations
+          .filter(item => item.organizationid === organizationId);
+        return subOrganizations.map(item => item.uuid);
       };
       const getOrganizationUsers = (organizationId) => {
-        const organizationSubjects = subjectOrganizations.filter(item =>
-            // !item.isdeleted &&
-            item.organizationrefid === organizationId);
-        return organizationSubjects;
+        const organizationSubjects = subjectOrganizations
+          .filter(item => item.organizationrefid === organizationId);
+        return organizationSubjects.map(item => item.subjectid);
       };
       const getOwner = (organizationId) => {
         const { users } = this;
@@ -224,8 +117,8 @@ export default {
         array: organizations.map(item => ({
           ...item,
           organizationname: getOrganizationName(item.organizationid),
-          suborganizations: getSubOrganizations(item.uuid).length,
-          organizationusers: getOrganizationUsers(item.uuid).length,
+          suborganizations: getSubOrganizations(item.uuid),
+          organizationusers: getOrganizationUsers(item.uuid),
           organizationowner: getOwner(item.uuid),
         }))
         .filter((item) => {
@@ -272,6 +165,9 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
   },
+  mounted() {
+    this.isMounted = true;
+  },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
@@ -281,6 +177,7 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
+      isMounted: false,
     };
   },
   methods: {
@@ -299,25 +196,11 @@ export default {
         };
       });
     },
-    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
-      this.sortByKey = sortByKey;
-      this.sortByKeyType = sortByKeyType;
-      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    },
     handleFilterKeyup({ value }) {
       this.filterKey = value;
     },
     handlePageChange(page) {
       this.$router.push(`/app/organizations/${page}`);
-    },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
-        this.collapsedRows = [itemId];
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
     },
     refreshData() {
       this.$store.dispatch('organizations/getOrganizations', {

@@ -142,6 +142,7 @@
   }
   .switch-organization {
     padding-left: 1rem;
+    padding-right: 1rem;
     margin-bottom: .5rem;
     .custom-select {
       background-color: transparent;
@@ -498,6 +499,15 @@
           & > tr:first-child {
             & > td:first-child {
               border-left: 8px solid $brand-color;
+            }
+
+            & > td {
+              background-color: $brand-color;
+              color: white;
+
+              .btn-link {
+                color: white !important;
+              }
             }
           }
 

@@ -58,11 +58,9 @@ export default {
         .filter(item => item.trim()
           .startsWith('abyss.session='));
       const sessionId = session[0].split('=');
-      // console.log(sessionId[1]);
-      api.deleteSession(sessionId[1]);
-        // .then(() => {
-        //   this.$router.push('/auth/login/');
-        // });
+      api.deleteSession(sessionId[1]).then(() => {
+        this.$router.push('/auth/login/');
+      });
     },
   },
   data() {

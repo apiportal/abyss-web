@@ -159,8 +159,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions('subjectMemberships', ['putLicenses']),
-    xxx() {
+    ...mapActions('licenses', ['putLicenses']),
+    policyIds() {
       this.licenseEditable.licensedocument.termsOfService.policyKey =
       this.computedLicensePolicies.map(item => (item.value));
     },
@@ -183,7 +183,7 @@ export default {
           isAttached,
         };
       });
-      this.xxx();
+      this.policyIds();
     },
     handleAddMembership(chip) {
       const { policiesEditable } = this;
@@ -196,7 +196,7 @@ export default {
           sortTime,
         };
       });
-      this.xxx();
+      this.policyIds();
     },
   },
 };

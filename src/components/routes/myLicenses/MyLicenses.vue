@@ -11,6 +11,9 @@
         >
           <span data-qa="linkMyPolicies" class="link-text">My Policies</span> <b-badge pill>{{ subjectPolicies.length }}</b-badge>
         </b-nav-item>
+        <b-nav-item :active="false" to="/app/policy-types/1">
+          <span class="link-text" data-qa="linkPolicyTypes">Policy Types</span> <b-badge pill>{{ policyTypes.length }}</b-badge>
+        </b-nav-item>
         <!-- <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
           <span class="link-text" data-qa="linkMyLicensesAttachedToApis">My Licenses Attached to APIs</span>
         </b-nav-item>
@@ -35,6 +38,7 @@ export default {
       currentPage: state => state.currentPage,
       subjectLicenses: state => state.subjectLicenses.items,
       subjectPolicies: state => state.subjectPolicies.items,
+      policyTypes: state => state.policyTypes.items,
     }),
   },
   mounted() {

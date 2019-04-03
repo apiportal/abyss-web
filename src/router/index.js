@@ -70,6 +70,12 @@ import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/Acces
 import AddAccessManagerType from '@/components/routes/accessManagerTypes/AddAccessManagerType';
 import EditAccessManagerType from '@/components/routes/accessManagerTypes/EditAccessManagerType';
 import DeleteAccessManagerType from '@/components/routes/accessManagerTypes/DeleteAccessManagerType';
+// Policy Types Routes Components
+import PolicyTypes from '@/components/routes/policyTypes/PolicyTypes';
+import PolicyTypesLogs from '@/components/routes/policyTypes/PolicyTypesLogs';
+import AddPolicyType from '@/components/routes/policyTypes/AddPolicyType';
+import EditPolicyType from '@/components/routes/policyTypes/EditPolicyType';
+import DeletePolicyType from '@/components/routes/policyTypes/DeletePolicyType';
 // Administer Permissions Routes Components
 import AdministerPermissions from '@/components/routes/administerPermissions/AdministerPermissions';
 import AdministerPermissionsLogs from '@/components/routes/administerPermissions/AdministerPermissionsLogs';
@@ -415,6 +421,28 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAccessManagerType,
+            },
+          ],
+        },
+        {
+          path: 'policy-types/:page',
+          component: PolicyTypes,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: PolicyTypesLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddPolicyType,
+            },
+            {
+              path: 'edit/:id',
+              component: EditPolicyType,
+            },
+            {
+              path: 'delete/:id',
+              component: DeletePolicyType,
             },
           ],
         },

@@ -47,6 +47,7 @@ export default {
       this.$router.push(this.routePath);
     },
     handleModalUpdate() {
+      this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid, refresh: true });
       this.$router.push(this.routePath);
     },
   },

@@ -5,8 +5,11 @@
         <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
           <span id="IdLinkMyAllLicenses" class="link-text">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item active>
+        <b-nav-item :active="true">
           <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item :active="false" to="/app/policy-types/1">
+          <span class="link-text" data-qa="linkPolicyTypes">Policy Types</span> <b-badge pill>{{ policyTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -25,6 +28,7 @@ export default {
       currentUser: state => state.user,
       subjectLicenses: state => state.subjectLicenses.items,
       policies: state => state.subjectPolicies.items,
+      policyTypes: state => state.policyTypes.items,
     }),
   },
   mounted() {

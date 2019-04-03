@@ -341,6 +341,16 @@ export default {
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
   },
+  putPolicyTypes(policyType) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = policyType;
+    return axios.put(`/abyss/oapi/policy-types/${uuid}`, rest);
+  },
+  postPolicyTypes(policyType) {
+    return axios.post('/abyss/oapi/policy-types/', policyType);
+  },
+  deletePolicyTypes(uuid) {
+    return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
+  },
   getSubjectApps(uuid) {
     return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
   },

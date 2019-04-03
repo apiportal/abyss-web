@@ -26,6 +26,7 @@ export default {
       if (error.response.status === 401) {
         this.$router.push('/auth/login');
       }
+      // return Promise.reject(error);
     });
 
     // check user cookie

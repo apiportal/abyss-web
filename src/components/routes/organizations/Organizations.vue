@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          <span id="IdLinkOrganizations" class="link-text">Organizations</span> <b-badge pill>{{ organizations.length }}</b-badge>
+          <span class="link-text" data-qa="linkOrganizations">Organizations</span> <b-badge pill>{{ organizations.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -24,7 +24,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -35,7 +35,7 @@
             variant="primary"
             class="page-btn-add"
             block
-            id="IdBtnAddNew"
+            data-qa="btnAddNew"
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -58,6 +58,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>

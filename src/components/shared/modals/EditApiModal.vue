@@ -9,9 +9,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditApiModal"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Api' : 'Add New Api' }}
       </h5>
     </template>
@@ -26,14 +27,14 @@
       <b-button
         variant="link"
         @click="onClose"
-        id="IdBtnCancel"
+        data-qa="btnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onUpdate"
-        id="IdBtnSave"
+        data-qa="btnSave"
       >
         <Icon icon="save" /> Save
       </b-button>

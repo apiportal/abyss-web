@@ -8,16 +8,24 @@
     </div>
     <!-- End Title -->
 
+    <!-- Alert -->
+        <b-alert v-if="responseAlert" show variant="danger">{{ this.alertResponse.message }}</b-alert>
+    <!-- End Alert -->
+
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="userNameInvalidFeedback"
+        :state="userNameState"
+      >
         <label class="form-label">
           Username
         </label>
         <b-form-input
-          v-model="form.username"
+          v-model="formLogin.username"
           type="text"
           placeholder="Username"
+          :state="userNameState"
           required
           class="form-control"
         ></b-form-input>
@@ -27,7 +35,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="passwordInvalidFeedback"
+        :state="passwordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
@@ -35,9 +46,10 @@
           </span>
         </label>
         <b-form-input
-          v-model="form.password"
+          v-model="formLogin.password"
           type="password"
           placeholder="********"
+          :state="passwordState"
           required
           class="form-control"
         ></b-form-input>
@@ -53,7 +65,7 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started <Icon v-if="isLoading" icon="spinner" spin /></b-button>
       </div>
     </div>
     <!-- End Button -->
@@ -63,12 +75,22 @@
 
 <script>
 import api from '@/api';
+import Icon from '@/components/shared/Icon';
 import { mapState } from 'vuex';
 
 export default {
+  components: {
+    Icon,
+  },
   data() {
     return {
-      form: {
+      responseAlert: false,
+      alertResponse: {
+        message: '',
+        moreinfo: '',
+        recommendation: '',
+      },
+      formLogin: {
         username: '',
         password: '',
       },
@@ -77,19 +99,38 @@ export default {
   computed: {
     ...mapState({
       users: state => state.users.items,
+      isLoading: state => state.traffic.isLoading,
     }),
+    userNameState() {
+      const { username } = this.formLogin;
+      return username.length > 0;
+    },
+    userNameInvalidFeedback() {
+      const { username } = this.formLogin;
+      return (username.length === 0) ? 'Please enter username' : '';
+    },
+    passwordState() {
+      const { password } = this.formLogin;
+      return password.length >= 3;
+    },
+    passwordInvalidFeedback() {
+      const { password } = this.formLogin;
+      return (password.length < 3) ? 'Password must be at least 3 characters.' : '';
+    },
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      api.postSignIn(this.form)
+      api.postSignIn(this.formLogin)
         .then((response) => {
           const { principalid, sessionid, organizationid, organizationname } = response.data;
           this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname });
           setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
         })
         .catch((error) => {
-          console.log(error); // eslint-disable-line
+          console.error('error: ' + error); // eslint-disable-line
+          this.responseAlert = true;
+          this.alertResponse.message = error.response.data.usermessage;
         });
     },
   },

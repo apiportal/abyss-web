@@ -6,6 +6,7 @@ import AuthLayout from '@/layouts/AuthLayout';
 import Login from '@/components/routes/auth/login';
 import SignUp from '@/components/routes/auth/signup';
 import ForgotPassword from '@/components/routes/auth/forgotPassword';
+import ResetPassword from '@/components/routes/auth/resetPassword';
 // My Profile Components
 import MyProfile from '@/components/routes/mySettings/MyProfile';
 import MySettings from '@/components/routes/mySettings/MySettings';
@@ -126,6 +127,10 @@ export default new Router({
         {
           path: 'forgot-password',
           component: ForgotPassword,
+        },
+        {
+          path: 'reset-password',
+          component: ResetPassword,
         },
       ],
     },

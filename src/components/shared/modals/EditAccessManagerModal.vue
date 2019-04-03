@@ -8,10 +8,11 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
-    id="editAccessManagerModal"
+    data-qa="modalEditAccessManager"
+
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Access Manager' : 'Add New Access Manager' }}
       </h5>
     </template>
@@ -113,13 +114,13 @@
             </div>
             <div class="col-2">
               <b-button
-                id="IdBtnConfigure"
                 variant="primary"
                 block
                 v-b-tooltip.hover
                 title="Configure AccessManager"
                 @click="toggleConfigureAccessManager"
                 :disabled="!accessManagerEditable.accessmanagertypeid"
+                data-qa="btnConfigure"
               >
                 <Icon icon="cog" />
               </b-button>
@@ -139,16 +140,16 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
+            data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            id="IdBtnSave"
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>

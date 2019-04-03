@@ -4,13 +4,13 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          <span id="IdLinkAccessManagers" class="link-text">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="false"
           to="/app/access-manager-types/1"
         >
-          <span id="IdLinkAccessManagerTypes" class="link-text">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -30,7 +30,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -40,8 +40,8 @@
             :to="`/app/access-managers/${page}/add-new`"
             variant="primary"
             class="page-btn-add"
+            data-qa="btnAddNew"
             block
-            id="IdBtnAddNew"
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -64,7 +64,7 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th id="IdTheadName">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -72,6 +72,7 @@
                 text="Access Manager Name"
                 sortByKey="accessmanagername"
                 sortByKeyType="string"
+                data-qa="tableHeadName"
               />
             </th>
             <th>
@@ -104,16 +105,16 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          id="IdAccessManagersItem"
+          :data-qa="`tableRow-${index}`"
         >
-          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactive ? 'check-circle' : 'times-circle'" 
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.accessmanagername }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -123,24 +124,24 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item id="IdBtnEdit" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item id="IdBtnDelete" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr id="IdTableFooter" slot="footer" class="footer">
+          <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">
@@ -182,6 +183,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>

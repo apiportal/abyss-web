@@ -9,9 +9,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalLogs"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ title }}
       </h5>
     </template>
@@ -80,10 +81,9 @@
       </div>
       <div class="float-right">
         <b-button
-          id="IdBtnClose"
           variant="secondary"
-          class="closeButton"
           @click="onClose"
+          data-qa="btnClose"
         >
           Close
         </b-button>

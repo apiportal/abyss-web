@@ -191,6 +191,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.auth-container {
   .mb-0,
   .my-0 {
     margin-bottom: 0 !important
@@ -266,4 +267,5 @@ export default {
   .text-right {
     text-align: right !important
   }
+}
 </style>

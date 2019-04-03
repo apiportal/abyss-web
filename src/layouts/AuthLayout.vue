@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss">
-.auth-container{
+.auth-container {
   .d-flex {
     display: flex !important
   }

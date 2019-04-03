@@ -84,10 +84,8 @@ export default {
       evt.preventDefault();
       api.postSignIn(this.form)
         .then((response) => {
-          const { principalid, sessionid } = response.data;
-          document.cookie = `abyss.session=${sessionid}; path=/;`;
-          document.cookie = `abyss.principal.uuid=${principalid}; path=/;`;
-          this.$store.dispatch('user/getUser', { principalid, sessionid });
+          const { principalid, sessionid, organizationid, organizationname } = response.data;
+          this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname });
           setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
         })
         .catch((error) => {
@@ -98,6 +96,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.auth-container {
   h2 {
     margin-top: 0;
     margin-bottom: .5rem
@@ -184,67 +183,68 @@ export default {
     transition: all .2s ease-in-out
   }
   .form-control {
-      display: block;
-      width: 100%;
-      height: calc(3rem + 2px) !important;
-      padding: .75rem 1rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: #1e2022;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid #d5dae2;
-      border-radius: .25rem;
-      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
-    }
+    display: block;
+    width: 100%;
+    height: calc(3rem + 2px) !important;
+    padding: .75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1e2022;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #d5dae2;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
+  }
 
-    @media (prefers-reduced-motion:reduce) {
-      .form-control {
-        transition: none
-      }
+  @media (prefers-reduced-motion:reduce) {
+    .form-control {
+      transition: none
     }
+  }
 
-    .form-control::-ms-expand {
-      background-color: transparent;
-      border: 0
-    }
+  .form-control::-ms-expand {
+    background-color: transparent;
+    border: 0
+  }
 
-    .form-control:focus {
-      color: #495057;
-      background-color: #fff;
-      border-color: #80bdff;
-      outline: 0;
-      box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
-    }
+  .form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25)
+  }
 
-    .form-control::-webkit-input-placeholder {
-      color: #6c757d;
-      opacity: 1
-    }
+  .form-control::-webkit-input-placeholder {
+    color: #6c757d;
+    opacity: 1
+  }
 
-    .form-control:-ms-input-placeholder {
-      color: #6c757d;
-      opacity: 1
-    }
+  .form-control:-ms-input-placeholder {
+    color: #6c757d;
+    opacity: 1
+  }
 
-    .form-control::-ms-input-placeholder {
-      color: #6c757d;
-      opacity: 1
-    }
+  .form-control::-ms-input-placeholder {
+    color: #6c757d;
+    opacity: 1
+  }
 
-    .form-control::placeholder {
-      color: #6c757d;
-      opacity: 1
-    }
+  .form-control::placeholder {
+    color: #6c757d;
+    opacity: 1
+  }
 
-    .form-control:disabled,
-    .form-control[readonly] {
-      background-color: #e9ecef;
-      opacity: 1
-    }
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1
+  }
 
-    select.form-control:focus::-ms-value {
-      color: #495057;
-      background-color: #fff
-    }
+  select.form-control:focus::-ms-value {
+    color: #495057;
+    background-color: #fff
+  }
+}
 </style>

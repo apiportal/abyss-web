@@ -188,6 +188,9 @@
         </template>
         <b-form @submit="sendReferral">
           <div class="d-flex align-items-center flex-column">
+            <div class="row w-75 subheader mb-3">
+              <h2 class="h2 font-weight-normal mt-1">Invite a Friend</h2>
+            </div>
             <div class="row w-75">
               <div class="col">
                 <b-form-group id="referralEmailAddress">

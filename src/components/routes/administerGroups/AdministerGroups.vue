@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          Groups <b-badge pill>{{ groups.length }}</b-badge>
+          <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ groups.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -24,6 +24,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -34,8 +35,9 @@
             variant="primary"
             class="page-btn-add"
             block
+            data-qa="btnAddNew"
           >
-            <span>Add New</span>
+            <span class="btn-text">Add New</span>
             <Icon icon="plus" />
           </b-button>
         </div>
@@ -61,9 +63,10 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Display Name"
+                text="Group Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
+                data-qa="tableHeadName"
               />
             </th>
             <th class="number">
@@ -96,6 +99,7 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          :data-qa="`tableRow-${index}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -104,7 +108,7 @@
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.displayname }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -114,24 +118,24 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item :to="`/app/administer-groups/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll"  :to="`/app/administer-groups/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr slot="footer" class="footer">
+          <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
                 <!-- <AdministerGroup
@@ -151,7 +155,7 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="totalRows.length"
@@ -159,6 +163,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>
@@ -273,7 +278,7 @@ export default {
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
-    this.$store.dispatch('subjectMemberships/getSubjectMemberships', {});
+    this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
   },
   data() {
     return {

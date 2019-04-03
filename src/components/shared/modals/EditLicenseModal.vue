@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalMyLicense"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit License' : 'Add New License' }}
       </h5>
     </template>
@@ -349,12 +350,14 @@
         <b-button
           variant="secondary"
           @click="onClose"
+          data-qa="btnCancel"
         >
           Cancel
         </b-button>
         <b-button
           variant="success"
           type="submit"
+          data-qa="btnSave"
         >
           Save
         </b-button>

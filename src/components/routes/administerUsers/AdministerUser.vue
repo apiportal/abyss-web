@@ -38,7 +38,7 @@
         <dt>Email:</dt>
         <dd>{{ user.email }}</dd>
         <dt>Secondary Email:</dt>
-        <dd>{{ user.secondaryemail }}</dd>
+        <dd>{{ secondaryEmail }}</dd>
         <dt>Groups:</dt>
         <dd>
           <span 
@@ -99,6 +99,13 @@ export default {
     },
   },
   computed: {
+    secondaryEmail() {
+      const { email, secondaryemail } = this.user;
+      if (secondaryemail === email) {
+        return '';
+      }
+      return secondaryemail;
+    },
     computedMemberships() {
       const { memberships, groups } = this;
       return memberships.map((item) => {

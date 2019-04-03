@@ -10,7 +10,7 @@
     :onClose="onClose"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 id="IdModalTitle" class="modal-title">
         {{ role === 'edit' ? 'Edit Access Manager Type' : 'Add New Access Manager Type' }}
       </h5>
     </template>
@@ -75,6 +75,16 @@
               required
             />
           </b-form-group>
+          <b-form-group id="accessManagerTypeEnabledGroup">
+            <b-form-checkbox
+              id="accessManagerTypeEnabledChecks"
+              v-model="accessManagerTypeEditable.isactive"
+              :value="true"
+              :unchecked-value="false"
+            >
+              Enabled
+            </b-form-checkbox>
+          </b-form-group>
           <b-form-group 
             id="accessManagerTypeTemplateGroup"
           >
@@ -95,12 +105,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
+            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
+            id="IdBtnSave"
             variant="success"
             type="submit"
           >

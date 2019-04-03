@@ -8,10 +8,11 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditGroup"
   >
     <template slot="header">
-      <h5 class="modal-title">
-        {{ role === 'edit' ? 'Edit Administer Group' : 'Add New Administer Group' }}
+      <h5 class="modal-title" data-qa="modalTitle">
+        {{ role === 'edit' ? 'Edit Group' : 'Add New Group' }}
       </h5>
     </template>
     <template>
@@ -189,12 +190,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -459,12 +462,11 @@ export default {
         });
       } else if (role === 'add') {
         const { currentUser } = this;
-        const { uuid, subjecttypeid } = currentUser.props;
+        const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
         groupToUpdate = [{
           ...groupToUpdate,
           crudsubjectid,
-          subjecttypeid,
         }];
         postGroups(groupToUpdate).then((response) => {
           if (response && response.data) {

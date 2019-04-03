@@ -67,6 +67,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faChartBar,
+  faHome,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -134,6 +135,7 @@ library.add(
   faChevronLeft,
   faChevronRight,
   faChartBar,
+  faHome,
   faLock,
   faFacebookSquare,
   faTwitterSquare,

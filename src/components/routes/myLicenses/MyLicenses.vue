@@ -3,13 +3,15 @@
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="currentPage.firstChildPath === 'my-licenses'" to="/app/my-licenses/my-licenses/1">
-          My All Licenses <b-badge pill>{{ licenses.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
+          <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
-          My Licenses Attached to APIs <b-badge pill>0</b-badge>
+          <span class="link-text" data-qa="linkMyLicensesAttachedToApis">My Licenses Attached to APIs</span>
+          <!-- <b-badge pill>0</b-badge> -->
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'under-contracts'" to="/app/my-licenses/under-contracts/1">
-          My Licenses Under Contracts <b-badge pill>0</b-badge>
+          <span class="link-text" data-qa="linkMyLicensesUnderContracts">My Licenses Under Contracts</span>
+          <!-- <b-badge pill>0</b-badge> -->
         </b-nav-item>
       </b-nav>
     </div>
@@ -27,13 +29,13 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
-      licenses: state => state.licenses.items,
+      subjectLicenses: state => state.subjectLicenses.items,
     }),
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-licenses');
-    this.$store.dispatch('licenses/getLicenses', {});
-    this.$store.dispatch('policies/getPolicies', {});
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});

@@ -7,11 +7,13 @@
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
         <div>
-          <!-- {{ currentObjectInterface[item] }} -->
           <OpenApiObject
             :item="item"
             :type="currentObjectInterface[item].type"
-            :formData="formData[item] || {}"
+            :formData="(
+              formData[item] ||
+              (currentObjectInterface[item].Array ? [] : {})
+            )"
             :pathArray="[...pathArray, item]"
             :onChange="onChange"
             :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
@@ -28,7 +30,7 @@
               :propAddress="[...pathArray, item]"
               :onChange="onChange"
               :value="formData[item]"
-              :addItemText="`Add ${item} item`"
+              addItemText="New Item"
             />
           </div>
           <div v-else>
@@ -38,6 +40,7 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :debounce="1000"
               />
             </div>
             <div v-else>
@@ -46,21 +49,18 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :debounce="1000"
               />
             </div>
           </div>
         </div>
         <div v-else-if="currentObjectInterface[item].type === 'boolean'">
-          <b-form-group>
-            <b-form-checkbox-group>
-              <b-form-checkbox 
-                :value="true"
-                :unchecked-value="false"
-              >
-                {{ item }}
-              </b-form-checkbox>
-            </b-form-checkbox-group>
-          </b-form-group>
+          <DynamicFormCheckbox
+            :description="item"
+            :propAddress="[...pathArray, item]"
+            :onChange="onChange"
+            :value="formData[item]"
+          />
         </div>
         <div v-else>
           {{ currentObjectInterface[item] }}
@@ -75,6 +75,7 @@ import Interfaces from '@/assets/openAPI3.0.json';
 import Icon from '@/components/shared/Icon';
 import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormInputString';
 import DynamicFormTextarea from '@/components/shared/dynamicForm/DynamicFormTextarea';
+import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
 import DynamicFormChips from '@/components/shared/dynamicForm/DynamicFormChips';
 
 export default {
@@ -102,6 +103,7 @@ export default {
     Icon,
     DynamicFormInputString,
     DynamicFormTextarea,
+    DynamicFormCheckbox,
     DynamicFormChips,
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },

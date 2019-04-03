@@ -13,6 +13,7 @@ export default {
     },
   },
   created() {
+    this.$store.dispatch('organizations/getOrganizations', {});
     // axios global listeners
     axios.interceptors.request.use((config) => {
       this.$store.commit('traffic/increaseRequests');

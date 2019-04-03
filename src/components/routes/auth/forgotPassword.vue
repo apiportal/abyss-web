@@ -38,31 +38,26 @@
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
-  <div v-if="this.redirect">
-    <b-alert show variant="primary">
-      <h4 class="alert-heading">Success !</h4>
-      <p>
-      {{ this.res.usermessage }}
-      </p>
-      <p v-if="(this.res.recommendation === this.res.usermessage)">
-        {{ this.res.details }}
-      </p>
-      <p v-else>
-        {{ this.res.details }}
-      </p>
-      <hr />
-      <p class="mb-0">
-        {{ this.res.recommendation }}
-      </p>
-    </b-alert>
-  </div>
+  <!-- Redirect -->
+  <Alert
+    v-if="redirect"
+    title="Success!"
+    :text="this.res.usermessage"
+    :footer="this.res.recommendation"
+    variant="primary"
+  />
+  <!-- End Redirect -->
   </div>
 </template>
 
 <script>
 import api from '@/api';
+import Alert from '@/components/shared/Alert';
 
 export default {
+  components: {
+    Alert,
+  },
   data() {
     return {
       redirect: false,

@@ -1,6 +1,7 @@
 <template>
+  <div>
   <!-- Form -->
-  <b-form @submit="handleSubmit">
+  <b-form @submit="handleSubmit" v-if="!this.redirect">
     <!-- Title -->
     <div class="mb-7">
       <h1 class="h3 text-primary font-weight-normal mb-0">Welcome to <span class="font-weight-semi-bold">Abyss</span></h1>
@@ -10,7 +11,10 @@
 
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="firstNameInvalidFeedback"
+        :state="firstNameState"
+      >
         <label class="form-label">
           First Name
         </label>
@@ -18,6 +22,7 @@
           v-model="form.firstname"
           type="text"
           placeholder="First Name"
+          :state="firstNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -26,7 +31,10 @@
     
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="lastNameInvalidFeedback"
+        :state="lastNameState"
+      >
         <label class="form-label">
           Last Name
         </label>
@@ -34,6 +42,7 @@
           v-model="form.lastname"
           type="text"
           placeholder="Last Name"
+          :state="lastNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -42,7 +51,10 @@
 
      <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="userNameInvalidFeedback"
+        :state="userNameState"
+      >
         <label class="form-label">
           Username
         </label>
@@ -50,6 +62,7 @@
           v-model="form.username"
           type="text"
           placeholder="Username"
+          :state="userNameState"
           required
         ></b-form-input>
       </b-form-group>
@@ -58,7 +71,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="emailInvalidFeedback"
+        :state="emailState"
+      >
         <label class="form-label">
           Email address
         </label>
@@ -66,6 +82,7 @@
           v-model="form.email"
           type="email"
           placeholder="Email address"
+          :state="emailState"
           required
         ></b-form-input>
       </b-form-group>
@@ -74,7 +91,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="passwordInvalidFeedback"
+        :state="passwordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
@@ -84,6 +104,7 @@
           v-model="form.password"
           type="password"
           placeholder="********"
+          :state="passwordState"
           required
         ></b-form-input>
       </b-form-group>
@@ -92,7 +113,10 @@
 
     <!-- Form Group -->
     <div class="js-form-message form-group">
-      <b-form-group>
+      <b-form-group
+        :invalid-feedback="confirmPasswordInvalidFeedback"
+        :state="confirmPasswordState"
+      >
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Confirm Password
@@ -102,6 +126,7 @@
           v-model="form.password2"
           type="password"
           placeholder="********"
+          :state="confirmPasswordState"
           required
         ></b-form-input>
       </b-form-group>
@@ -109,18 +134,19 @@
     <!-- End Form Group -->
 
     <!-- Checkbox -->
-    <div class="js-form-message mb-5">
-      <b-form-checkbox
+    <div class="js-form-message mb-5 d-flex flex-row">
+      <input
+        type="checkbox"
         v-model="form.isAgreedToTerms"
-        :value="'on'"
-        :unchecked-value="'off'"
+        :value="true"
+        :unchecked-value="false"
         class="text-muted"
+        :required="true"
       >
-        <small>
-          I agree to the
-          <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
-        </small>
-      </b-form-checkbox>
+      <small class="ml-1">
+        I agree to the
+        <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
+      </small>
       <InformModal
           v-if="isInformModalVisible"  
           size="md"
@@ -136,7 +162,7 @@
             Our company registration number is Kadİköy V.D., 924 051 8054.\n\n
             The term 'you' refers to the user or viewer of ABYSS API PORTAL."
           :onClose="toggleInformModal"
-          :onConfirm="toggleInformModal"
+          :onConfirm="handleConfirm"
         >
         </InformModal>
     </div>
@@ -150,16 +176,36 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary">Get Started</b-button>
       </div>
     </div>
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
+  <div v-if="this.redirect">
+    <b-alert show variant="primary">
+      <h4 class="alert-heading">Success !</h4>
+      <p>
+      {{ this.res.usermessage }}
+      </p>
+      <p v-if="(this.res.recommendation === this.res.usermessage)">
+        {{ this.res.details }}
+      </p>
+      <p v-else>
+        {{ this.res.details }}
+      </p>
+      <hr />
+      <p class="mb-0">
+        {{ this.res.recommendation }}
+      </p>
+    </b-alert>
+  </div>
+  </div>
 </template>
 
 <script>
 import InformModal from '@/components/shared/modals/InformModal';
+import api from '@/api';
 
 export default {
   components: {
@@ -175,22 +221,106 @@ export default {
         email: '',
         password: '',
         password2: '',
-        isAgreedToTerms: 'off',
+        isAgreedToTerms: false,
+      },
+      redirect: false,
+      res: {
+        usermessage: '',
+        details: '',
+        recommendation: '',
       },
     };
+  },
+  computed: {
+    firstNameState() {
+      const { firstname } = this.form;
+      return firstname.length > 0;
+    },
+    firstNameInvalidFeedback() {
+      const { firstname } = this.form;
+      return (firstname.length === 0) ? 'Please enter something' : '';
+    },
+    lastNameState() {
+      const { lastname } = this.form;
+      return lastname.length > 0;
+    },
+    lastNameInvalidFeedback() {
+      const { lastname } = this.form;
+      return (lastname.length === 0) ? 'Please enter something' : '';
+    },
+    userNameState() {
+      const { username } = this.form;
+      return username.length > 0;
+    },
+    userNameInvalidFeedback() {
+      const { username } = this.form;
+      return (username.length === 0) ? 'Please enter something' : '';
+    },
+    emailState() {
+      const { email } = this.form;
+      return email.length > 0;
+    },
+    emailInvalidFeedback() {
+      const { email } = this.form;
+      return (email.length === 0) ? 'Please enter something' : '';
+    },
+    passwordState() {
+      const { password } = this.form;
+      return password.length >= 3;
+    },
+    passwordInvalidFeedback() {
+      const { password } = this.form;
+      return (password.length < 3) ? 'Please enter a password at least 3 characters.' : '';
+    },
+    confirmPasswordState() {
+      const { password, password2 } = this.form;
+      return password === password2 && password2.length > 0;
+    },
+    confirmPasswordInvalidFeedback() {
+      const { password, password2 } = this.form;
+      if (password2.length === 0) {
+        return 'Please re-enter your password.';
+      } else if (password !== password2) {
+        return 'Passwords did not match.';
+      }
+      return '';
+    },
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      console.log(evt); // eslint-disable-line no-console
+      const { password, password2 } = this.form;
+      if ((password.length > 2) && (password2.length > 2) && (password === password2)) {
+        api.postSignUp(this.form)
+          .then((response) => {
+            this.redirect = true;
+            this.res.usermessage = response.data.usermessage;
+            if (response.data.details === response.data.recommendation) {
+              this.res.recommendation = response.data.recommendation;
+            } else {
+              this.res.details = response.data.details;
+              this.res.recommendation = response.data.recommendation;
+            }
+            setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
+          })
+          .catch((error) => {
+            console.log(error); // eslint-disable-line
+          });
+      }
+      console.error('Passwords didn\'t match or has less than 3 characters.');  // eslint-disable-line
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;
+    },
+    handleConfirm() {
+      this.form.isAgreedToTerms = true;
+      this.isInformModalVisible = false;
     },
   },
 };
 </script>
 <style lang="scss" scoped>
+.auth-container {
   .mb-0,
   .my-0 {
     margin-bottom: 0 !important
@@ -266,4 +396,5 @@ export default {
   .text-right {
     text-align: right !important
   }
+}
 </style>

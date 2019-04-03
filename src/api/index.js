@@ -22,6 +22,19 @@ export default {
   deleteSession(sessionId) {
     return axios.delete(`/abyss/oapi/abyss-session/${sessionId}`);
   },
+  postSignUp(params) {
+    return axios.post('/abyss/oapi/signup', params);
+  },
+  postForgotPassword(params) {
+    return axios.post('/abyss/oapi/forgot-password', params);
+  },
+  getCheckToken(token) {
+    return axios.get(`/abyss/oapi/reset-password/?v=${token}`);
+  },
+  // change-password
+  putChangePassword(uuid, params) {
+    return axios.put(`abyss/oapi/subjects/${uuid}/changepassword/`, params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');

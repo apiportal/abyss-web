@@ -15,7 +15,9 @@ const actions = {
       return false;
     }
     api.getResources().then((response) => {
-      commit('setResources', response.data);
+      if (response && response.data) {
+        commit('setResources', response.data);
+      }
     });
   },
 };

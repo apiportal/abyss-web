@@ -1,9 +1,6 @@
 <template>
   <div>
     <EditLicenseModal
-      v-if="
-        areLicensesLoaded
-      "
       role="add"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"

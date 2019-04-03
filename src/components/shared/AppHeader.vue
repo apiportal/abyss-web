@@ -51,14 +51,11 @@ export default {
     }),
   },
   methods: {
-    handleSignOut(e) {
-      e.preventDefault();
-      const session = document.cookie
-        .split(';')
-        .filter(item => item.trim()
-          .startsWith('abyss.session='));
-      const sessionId = session[0].split('=');
-      api.deleteSession(sessionId[1]).then(() => {
+    handleSignOut(evt) {
+      evt.preventDefault();
+      const { sessionid } = this.user;
+      api.deleteSession(sessionid).then(() => {
+        this.$store.dispatch('user/resetUser');
         this.$router.push('/auth/login/');
       });
     },

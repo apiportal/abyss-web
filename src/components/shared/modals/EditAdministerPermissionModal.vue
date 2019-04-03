@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditPermissions"
   >
       <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Permission' : 'Add New Permission' }}
       </h5>
     </template>
@@ -253,16 +254,16 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
-            id="IdBtnSave"
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
         </b-button>

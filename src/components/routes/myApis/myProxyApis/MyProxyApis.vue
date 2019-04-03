@@ -18,7 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -31,7 +31,7 @@
             variant="primary"
             class="page-btn-add"
             block
-            id="IdBtnAddNew"
+            data-qa="btnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -46,7 +46,7 @@
       />
       <router-view></router-view>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -54,6 +54,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>

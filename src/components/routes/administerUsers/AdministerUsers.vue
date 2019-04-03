@@ -1,9 +1,10 @@
 <template>
-  <div class="page-container page-my-users">
+  <div class="page-container page-users">
+    
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
-        <b-nav-item active>
-          Users <b-badge pill>{{ users.length }}</b-badge>
+        <b-nav-item :active="true">
+          <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>

@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditPolicy"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Policy' : 'Add New Policy' }}
       </h5>
     </template>
@@ -115,14 +116,14 @@
         <b-button
           variant="secondary"
           @click="onClose"
-          id="IdBtnCancel"
+          data-qa="btn-Cancel"
         >
           Cancel
         </b-button>
         <b-button 
           variant="primary"
           @click="handleSubmit"
-          id="IdBtnSave"
+          data-qa="btnSave"
           >
           Save
         </b-button>

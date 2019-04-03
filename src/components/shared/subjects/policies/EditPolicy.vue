@@ -8,7 +8,7 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :policy="getPolicy(policyId)"
-      size="md"
+      data-qa="modalEditPolicy"
     />
   </div>
 </template>

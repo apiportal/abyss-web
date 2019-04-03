@@ -67,7 +67,10 @@
       />
     </div>
   
-    <div class="abyss-table-content" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
+    <div
+      class="abyss-table-content"
+      v-if="organization.suborganizations > 0 && organization.uuid !== rootOrganization && isShowSubOrganizations"
+    >
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -117,7 +120,6 @@
         <TbodyCollapsible
           v-for="(item, index) in organizations" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
           :level="1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
@@ -192,7 +194,7 @@ export default {
       required: false,
       default() { return {}; },
     },
-    rootorganization: {
+    rootOrganization: {
       Type: String,
       required: false,
       default() { return ''; },
@@ -298,7 +300,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

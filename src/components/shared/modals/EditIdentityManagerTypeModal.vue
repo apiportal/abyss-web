@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditIdentityManagerTypes"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Identity Manager Type' : 'Add New Identity Manager Type' }}
       </h5>
     </template>
@@ -107,14 +108,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
-            id="IdBtnCancel"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
-            id="IdBtnSave"
+            data-qa="btnSave"
           >
             Save
           </b-button>

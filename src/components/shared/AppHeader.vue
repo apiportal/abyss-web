@@ -9,20 +9,20 @@
           <b-nav-item-dropdown right class="navbar-user">
             <!-- Using button-content slot -->
             <template slot="button-content">
-              <div id="IdNavbarUser" class="d-flex align-items-center">
+              <div class="d-flex align-items-center" data-qa="navbarUser">
                 <span>{{ user.props.displayname }}</span>
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>
             </template>
-            <b-dropdown-item to="/app/my-profile/">
+            <b-dropdown-item to="/app/my-profile/" data-qa="navbarMyProfile">
               <Icon icon="user" />
               My Profile
             </b-dropdown-item>
-            <b-dropdown-item to="/app/my-settings/">
+            <b-dropdown-item to="/app/my-settings/" data-qa="navbarSettings">
               <Icon icon="cog" />
               Settings
             </b-dropdown-item>
-            <b-dropdown-item @click="handleSignOut">
+            <b-dropdown-item @click="handleSignOut" data-qa="navbarSignOut">
               <Icon icon="sign-out-alt" />
               Signout
             </b-dropdown-item>
@@ -58,11 +58,9 @@ export default {
         .filter(item => item.trim()
           .startsWith('abyss.session='));
       const sessionId = session[0].split('=');
-      // console.log(sessionId[1]);
-      api.deleteSession(sessionId[1]);
-        // .then(() => {
-        //   this.$router.push('/auth/login/');
-        // });
+      api.deleteSession(sessionId[1]).then(() => {
+        this.$router.push('/auth/login/');
+      });
     },
   },
   data() {

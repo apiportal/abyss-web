@@ -6,7 +6,7 @@
           <span id="IdLinkMyAllLicenses" class="link-text">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
         <b-nav-item active>
-          <span id="IdLinkMyPolicies" class="link-text">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>

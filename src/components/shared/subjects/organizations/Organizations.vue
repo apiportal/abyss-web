@@ -3,35 +3,25 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th class="status">
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Status"
-              sortByKey="isactive"
-              sortByKeyType="boolean"
-            />
-          </th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Policy Name"
+              text="Organization Name"
               sortByKey="name"
               sortByKeyType="string"
               data-qa="tableHeadName"
             />
           </th>
-          <th>
+          <th class="text-nowrap">
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Type"
-              sortByKey="typename"
-              sortByKeyType="string"
+              text="Sub Organizations"
+              sortByKey="suborganizations"
+              sortByKeyType="number"
             />
           </th>
           <th>
@@ -39,8 +29,18 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Subtype"
-              sortByKey="policyinstance.info.subType"
+              text="Users"
+              sortByKey="organizationusers"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Owner"
+              sortByKey="organizationowner"
               sortByKeyType="string"
             />
           </th>
@@ -48,26 +48,27 @@
         </tr>
       </thead>
       <TBodyLoading
-        v-if="isLoading && rows.length === 0"
+        v-if="isLoading && organizations.length === 0"
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(item, index) in sortedRows" v-bind:key="index"
+        v-for="(item, index) in organizations" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-        :level="3"
+        :level="0"
+        :data-qa="`tableRow-${index}`"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
-          <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
-          </td>
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.name }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.typename }}
+          <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.suborganizations ? item.suborganizations.length : 0 }}
+          </td>
+          <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.organizationusers ? item.organizationusers.length : 0 }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.policyinstance.info.subType }}
+            {{ item.organizationowner }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -75,46 +76,44 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-policy/${item.uuid}`"><Icon icon="edit" /> Edit Policy</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-policy/${item.uuid}`"><Icon icon="trash-alt" /> Delete Policy</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/policy/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/organization/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
+        <tr slot="footer" class="footer">
           <td colspan="5">
             <div class="collapsible-content">
-              <Policy
-                :item="item"
-                :organizations="organizations"
+              <Organization
+                :organization="item"
                 :routePath="routePath"
-              ></Policy>
+              />
             </div>
           </td>
         </tr>
       </TbodyCollapsible>
+      <router-view></router-view>
     </table>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
-import Policy from '@/components/shared/subjects/policies/Policy';
-import Helpers from '@/helpers';
+import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 
 export default {
   props: {
-    rows: {
+    organizations: {
       type: Array,
       required: false,
       default() { return []; },
@@ -128,28 +127,14 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      organizations: state => state.organizations.items,
     }),
-    sortedRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
-      const { sortArrayOfObjects } = Helpers;
-      return sortArrayOfObjects({
-        array: rows
-          .map(item => ({
-            ...item,
-          })),
-        sortByKey,
-        sortByKeyType,
-        sortDirection,
-      });
-    },
   },
   components: {
-    TbodyCollapsible,
-    TBodyLoading,
     Icon,
     SortBy,
-    Policy,
+    TbodyCollapsible,
+    TBodyLoading,
+    Organization: () => import('@/components/shared/subjects/organizations/Organization'),
   },
   data() {
     return {
@@ -160,19 +145,18 @@ export default {
     };
   },
   methods: {
-    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
-      this.sortByKey = sortByKey;
-      this.sortByKeyType = sortByKeyType;
-      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
     },
   },
 };

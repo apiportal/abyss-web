@@ -6,31 +6,31 @@
           :active="currentPage.firstChildPath === 'businesses'"
           to="/app/my-apis/businesses/1"
         >
-          <span id="IdLinkMyBusinessApis" class="link-text">My Business APIs</span> <b-badge pill>{{ businessApis.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyBusinessApis">My Business APIs</span> <b-badge pill>{{ myBusinessApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-proxy-apis'"
           to="/app/my-apis/my-proxy-apis/1"
         >
-          <span id="IdLinkMyProxyApis" class="link-text">My Proxy APIs</span> <b-badge pill>{{ proxies.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyProxyApis">My Proxy APIs</span> <b-badge pill>{{ proxies.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          <span id="IdLinkMySubscriptions" class="link-text">My Subscriptions</span> <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
+          <span class="link-text" data-qa="linkMySubscriptions">My Contracted APIs</span> <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"
           to="/app/my-apis/shared-by-me/1"
         >
-          <span id="IdLinkApisSharedByMe" class="link-text">APIs Shared By Me</span> <b-badge pill>{{ apisSharedByUser.length }}</b-badge>
+          <span class="link-text" data-qa="linkApisSharedByMe">APIs Shared By Me</span> <b-badge pill>{{ apisSharedByUser.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-with-me'"
           to="/app/my-apis/shared-with-me/1"
         >
-          <span id="IdLinkApisSharedWithMe" class="link-text">APIs Shared With Me</span> <b-badge pill>{{ apisSharedWithUser.length }}</b-badge>
+          <span class="link-text" data-qa="linkApisSharedWithMe">APIs Shared With Me</span> <b-badge pill>{{ apisSharedWithUser.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -54,12 +54,12 @@ export default {
       apisSharedByUser: state => state.apisSharedByUser.items,
       proxies: state => state.proxies.items,
     }),
-    // myBusinessApis() {
-    //   return this.businessApis.filter(item => !item.isproxyapi);
-    // },
-    // myProxyApis() {
-    //   return this.businessApis.filter(item => item.isproxyapi);
-    // },
+    myBusinessApis() {
+      return this.businessApis.filter(item => !item.isproxyapi);
+    },
+    myProxyApis() {
+      return this.businessApis.filter(item => item.isproxyapi);
+    },
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
@@ -71,22 +71,10 @@ export default {
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes');
-    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    // this.$store.dispatch('licenses/getLicenses', {});
+    this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
-    // const apiIdsArray = this.proxies.map(item => item.uuid);
-    // this.$store.dispatch('proxies/getApiContracts', { apiIdsArray });
-  },
-  watch: {
-    proxies(newVal, oldVal) {
-      // console.log(newVal, oldVal);
-      if (newVal.length !== oldVal.length) {
-        const apiIdsArray = newVal.map(item => item.uuid);
-        this.$store.dispatch('proxies/getApiContracts', { apiIdsArray });
-      }
-    },
   },
 };
 </script>

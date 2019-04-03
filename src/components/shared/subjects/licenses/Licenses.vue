@@ -13,7 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th id="IdTheadName">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -21,6 +21,7 @@
               text="License Name"
               sortByKey="name"
               sortByKeyType="string"
+              data-qa="tableHeadName"
             />
           </th>
           <th>
@@ -54,17 +55,17 @@
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(licenseItem, licenseIndex) in sortedRows" v-bind:key="licenseIndex"
+        v-for="(licenseItem, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr id="IdTableRow" slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
             <Icon
               :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"
               :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${index}`">
             {{ licenseItem.name }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
@@ -101,7 +102,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
           <td colspan="5">
             <div class="collapsible-content">
               <License

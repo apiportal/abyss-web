@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApiVisibilityTypes().then((response) => {
+    api.getApiVisibilityTypes()
+    .then((response) => {
       if (response && response.data) {
         commit('setApiVisibilityTypes', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setApiVisibilityTypes', []);
       }
     });
   },

@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getApisSharedWithUser(uuid).then((response) => {
+    api.getApisSharedWithUser(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setApisSharedWithUser', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setApisSharedWithUser', []);
       }
     });
   },

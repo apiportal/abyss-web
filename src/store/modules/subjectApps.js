@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getSubjectApps(uuid).then((response) => {
+    api.getSubjectApps(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectApps', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setSubjectApps', []);
       }
     });
   },

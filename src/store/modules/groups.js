@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getGroups().then((response) => {
+    api.getGroups()
+    .then((response) => {
       if (response && response.data) {
         commit('setGroups', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setGroups', []);
       }
     });
   },

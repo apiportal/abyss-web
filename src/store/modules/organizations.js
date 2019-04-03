@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getOrganizations().then((response) => {
+    api.getOrganizations()
+    .then((response) => {
       if (response && response.data) {
         commit('setOrganizations', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setOrganizations', []);
       }
     });
   },

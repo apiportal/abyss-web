@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getAccessManagerTypes().then((response) => {
+    api.getAccessManagerTypes()
+    .then((response) => {
       if (response && response.data) {
         commit('setAccessManagerTypes', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setAccessManagerTypes', []);
       }
     });
   },

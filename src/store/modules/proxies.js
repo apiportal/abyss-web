@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getProxies(uuid).then((response) => {
+    api.getProxies(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setProxies', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setProxies', []);
       }
     });
   },

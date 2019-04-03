@@ -111,10 +111,10 @@ export default {
     organizationOptions() {
       const { userOrganizations, organizations } = this;
       return userOrganizations.map((item) => {
-        const organization = organizations.find(org => org.uuid === item.organizationid);
+        const organization = organizations.find(org => org.uuid === item.organizationrefid);
         return {
-          text: organization ? organization.name : item.organizationid,
-          value: item.organizationid,
+          text: organization ? organization.name : item.organizationrefid,
+          value: item.organizationrefid,
         };
       });
     },
@@ -146,7 +146,7 @@ export default {
         organizationname: name,
       }).then((response) => {
         if (response && response.data) {
-          this.$store.dispatch('user/resetUser');
+          // this.$store.dispatch('user/resetUser');
           const { principalid, sessionid, organizationid, organizationname } = response.data;
           this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
         }

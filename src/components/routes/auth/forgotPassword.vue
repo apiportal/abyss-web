@@ -1,6 +1,7 @@
 <template>
+  <div>
   <!-- Form -->
-  <b-form @submit="handleSubmit">
+  <b-form v-if="!this.redirect" @submit="handleSubmit">
     <!-- Title -->
     <div class="mb-7">
       <h1 class="h3 text-primary font-weight-normal mb-0">Forgot your <span class="font-weight-semi-bold">password?</span></h1>
@@ -12,12 +13,12 @@
     <div class="js-form-message form-group">
       <b-form-group>
         <label class="form-label">
-          Email address
+          Username
         </label>
         <b-form-input
-          v-model="form.email"
-          type="email"
-          placeholder="Email address"
+          v-model="form.username"
+          type="text"
+          placeholder="Username"
           required
         ></b-form-input>
       </b-form-group>
@@ -37,25 +38,66 @@
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
+  <div v-if="this.redirect">
+    <b-alert show variant="primary">
+      <h4 class="alert-heading">Success !</h4>
+      <p>
+      {{ this.res.usermessage }}
+      </p>
+      <p v-if="(this.res.recommendation === this.res.usermessage)">
+        {{ this.res.details }}
+      </p>
+      <p v-else>
+        {{ this.res.details }}
+      </p>
+      <hr />
+      <p class="mb-0">
+        {{ this.res.recommendation }}
+      </p>
+    </b-alert>
+  </div>
+  </div>
 </template>
 
 <script>
+import api from '@/api';
+
 export default {
   data() {
     return {
+      redirect: false,
       form: {
-        email: '',
+        username: '',
+      },
+      res: {
+        usermessage: '',
+        details: '',
+        recommendation: '',
       },
     };
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
+      api.postForgotPassword(this.form)
+        .then((response) => {
+          // console.log(response);
+          this.redirect = true;
+          this.res.usermessage = response.data.usermessage;
+          if (response.data.details === response.data.recommendation) {
+            this.res.recommendation = response.data.recommendation;
+          } else {
+            this.res.details = response.data.details;
+            this.res.recommendation = response.data.recommendation;
+          }
+          setTimeout(function () { this.$router.push('/auth/login'); }.bind(this), 5000); // eslint-disable-line
+        });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
+.auth-container {
   .mb-0,
   .my-0 {
     margin-bottom: 0 !important
@@ -122,4 +164,5 @@ export default {
   .text-right {
     text-align: right !important
   }
+}
 </style>

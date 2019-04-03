@@ -9,7 +9,7 @@
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
       </dl>
-      <dl class="col">
+      <dl class="col" v-if="item.policyinstance && item.policyinstance.info">
         <dt>Type:</dt>
         <dd>{{ item.policyinstance.info.type }}</dd>
         <dt>Subtype:</dt>
@@ -19,7 +19,7 @@
         <dt>Description:</dt>
         <dd>{{ item.policyinstance.info.description }}</dd>
       </dl>
-      <dl class="col">
+      <dl class="col" v-if="item.policyinstance && item.policyinstance.openApiLifeCycle">
         <dt>Business Request</dt>
         <dd class="text-black-50">
           <Icon icon="circle" :class="item.policyinstance.openApiLifeCycle.onBusinessRequest ? 'business-true' : ''" />

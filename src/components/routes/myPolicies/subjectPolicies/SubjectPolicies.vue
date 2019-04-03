@@ -164,6 +164,7 @@ export default {
     },
     refreshData() {
       this.$store.dispatch('subjectPolicies/getSubjectPolicies', {
+        uuid: this.currentUser.uuid,
         refresh: true,
       });
     },

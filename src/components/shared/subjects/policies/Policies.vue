@@ -67,7 +67,7 @@
             {{ item.typename }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.policyinstance.info.subType }}
+            {{ (item.policyinstance && item.policyinstance.info ) ? item.policyinstance.info.subType : '' }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">

@@ -2,10 +2,11 @@
   <div>
     <b-form inline class="switch-organization">
       <b-form-select
-        v-model="currentOrganization"
-        :options="organizationOptions" 
-        style="width: 100%;"
+        :value="currentUser.organizationid"
+        :options="organizationOptions"
+        @change="handleOrganizationChange"
         data-qa="sideMenuSwitchOrganization"
+        style="width: 100%;"
       ></b-form-select>
     </b-form>
     <ul class="sidenav-links">
@@ -105,35 +106,37 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
-      isOrganizationsLoaded: (state => state.organizations.lastUpdatedAt > 0),
       rootOrganization: state => state.organizations.rootOrganization,
     }),
+    organizationOptions() {
+      const { userOrganizations } = this;
+      return userOrganizations.map(item => ({
+        text: item.organizationid,
+        value: item.organizationid,
+      }));
+    },
   },
   data() {
     return {
       currentOrganization: this.rootOrganization,
-      organizationOptions: [],
+      userOrganizations: [],
     };
+  },
+  created() {
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   mounted() {
     this.getOrganizationOptions();
   },
   methods: {
     getOrganizationOptions() {
-      const { isOrganizationsLoaded } = this;
-      if (!isOrganizationsLoaded) {
-        setTimeout(function() { this.getOrganizationOptions(); }.bind(this), 500); // eslint-disable-line
-        return false;
-      }
       const { uuid } = this.currentUser;
-      const { organizations } = this;
       api.getSubjectOrganizationsByUuid(uuid).then((response) => {
-        const subjectOrganizations = response.data.map(item => item.organizationid);
-        this.organizationOptions = organizations
-          .filter(item => subjectOrganizations.indexOf(item.uuid) > -1)
-          .map(item => ({ text: item.name, value: item.uuid }));
+        this.userOrganizations = response.data;
       });
-      return false;
+    },
+    handleOrganizationChange(newOrganizationUuid) {
+      console.log(newOrganizationUuid); // eslint-disable-line
     },
   },
 };

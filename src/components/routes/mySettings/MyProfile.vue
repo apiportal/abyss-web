@@ -209,6 +209,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
+import api from '@/api';
 
 export default {
   name: 'my-profile',
@@ -233,31 +234,36 @@ export default {
     ...mapActions('users', ['putUsers']),
     handleSubmit(e) {
       e.preventDefault();
-      const { description, url, effectiveenddate, secondaryemail,
-        email, picture, distinguishedname, uniqueid,
-        phonebusiness, phoneextension, phonehome, phonemobile,
-        jobtitle, department, company } = this.userEditable.props;
-      this.putUsers({
+      const {
+        // description, url, effectiveenddate, secondaryemail, email,
+        picture,
+        // distinguishedname, uniqueid, phonebusiness, phoneextension,
+        // phonehome, phonemobile, jobtitle, department, company
+        } = this.userEditable.props;
+      api.putUsers({
         ...this.userEditable.props,
-        description: (description === null ? '' : description),
-        url: (url === null ? '' : url),
+        // description: (description === null ? '' : description),
+        // url: (url === null ? '' : url),
         picture: (picture === null ? '' : picture),
-        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-        uniqueid: (uniqueid === null ? '' : uniqueid),
-        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-        phoneextension: (phoneextension === null ? '' : phoneextension),
-        phonehome: (phonehome === null ? '' : phonehome),
-        phonemobile: (phonemobile === null ? '' : phonemobile),
-        jobtitle: (jobtitle === null ? '' : jobtitle),
-        department: (department === null ? '' : department),
-        company: (company === null ? '' : company),
-        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : email),
+        // distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        // uniqueid: (uniqueid === null ? '' : uniqueid),
+        // phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        // phoneextension: (phoneextension === null ? '' : phoneextension),
+        // phonehome: (phonehome === null ? '' : phonehome),
+        // phonemobile: (phonemobile === null ? '' : phonemobile),
+        // jobtitle: (jobtitle === null ? '' : jobtitle),
+        // department: (department === null ? '' : department),
+        // company: (company === null ? '' : company),
+        // effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        // secondaryemail: (secondaryemail === null ? email : email),
       }).then((response) => {
         if (response && response.data) {
           this.$store.commit('user/setUserProps', response.data[0]);
         }
-      });
+      })
+        .catch((err) => {
+          console.error('Error Message >>> ', err); // eslint-disable-line no-console
+        });
     },
     onFileSelected(event) {
       console.log(event.target.files[0]); // eslint-disable-line no-console

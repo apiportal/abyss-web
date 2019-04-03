@@ -3,12 +3,12 @@
     <AuthHeader />
     <main>
       <div class="d-flex align-items-center position-relative height-lg-100vh">
-        <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0">
-          <div class="w-100 p-5">
+        <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0" style="background-image: url('/static/abyss1.jpg'); background-position: bottom center; background-size: cover">
+           <div class="w-100 p-5">
             <AuthSide />
           </div>
         </div>
-        <div class="container height-lg-100vh" style="overflow-y: auto;">
+        <div class="container height-lg-100vh" style="overflow-y: auto;" id="no-scroll">
           <div class="row no-gutters">
             <div class="col-lg-7 col-xl-6 offset-lg-2 offset-xl-3 space-3 space-lg-0">
               <router-view></router-view>
@@ -44,6 +44,12 @@ export default {
 
 <style lang="scss">
 .auth-container{
+  #no-scroll::-webkit-scrollbar-thumb {
+      display: none
+  }
+  .scrollbar {
+    display: none
+  }
   .d-flex {
     display: flex !important
   }

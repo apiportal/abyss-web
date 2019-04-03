@@ -5,30 +5,13 @@
     <!-- Form -->
     <b-form
       @submit="handleSubmit"
-      class="w-50"
+      class="w-100"
     >
       <!-- Title -->
       <div class="mb-7">
-        <h2 class="h3 text-primary font-weight-normal mb-0 mt-5">Change Password</h2>
+        <h2 class="h3 text-primary font-weight-normal mb-0 mt-5">Reset Password</h2>
       </div>
       <!-- End Title -->
-
-      <!-- Form Group -->
-      <div class="js-form-message form-group">
-        <b-form-group>
-          <label class="form-label">
-            Old Password
-          </label>
-          <b-form-input
-            v-model="form.oldpassword"
-            type="password"
-            placeholder="********"
-            required
-            class="form-control"
-          ></b-form-input>
-        </b-form-group>
-      </div>
-      <!-- End Form Group -->
 
       <!-- Form Group -->
       <div class="js-form-message form-group">
@@ -39,7 +22,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.newpassword"
+            v-model="form.newPassword"
             type="password"
             placeholder="********"
             required
@@ -58,7 +41,7 @@
             </span>
           </label>
           <b-form-input
-            v-model="form.confirmpassword"
+            v-model="form.confirmPassword"
             type="password"
             placeholder="********"
             required
@@ -70,7 +53,7 @@
 
       <!-- Button -->
       <div class="text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Change</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Reset</b-button>
       </div>
       <!-- End Button -->
     </b-form>
@@ -79,36 +62,26 @@
 </template>
 
 <script>
-import api from '@/api';
-import { mapState } from 'vuex';
+// import api from '@/api';
+// import { mapState } from 'vuex';
 
 export default {
   data() {
     return {
       form: {
-        oldpassword: '',
-        newpassword: '',
-        confirmpassword: '',
+        newPassword: '',
+        confirmPassword: '',
       },
     };
   },
-  computed: {
-    ...mapState({
-      user: state => state.user,
-    }),
-  },
+  // computed: {
+  //   ...mapState({
+  //     user: state => state.user,
+  //   }),
+  // },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      api.putChangePassword(this.user.uuid, this.form)
-        .then((response) => {
-          if (response && response.data) {
-            console.log(response); // eslint-disable-line
-          }
-        })
-        .catch((e) => {
-          console.error('Error Message >>>', e); // eslint-disable-line
-        });
     },
   },
 };

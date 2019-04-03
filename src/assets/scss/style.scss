@@ -457,6 +457,7 @@
           }
         }
         + tr {
+        // + tr:not(.opaque) {
           opacity: 0.45;
         }
       }

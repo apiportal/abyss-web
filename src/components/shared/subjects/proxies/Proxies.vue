@@ -8,7 +8,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Api Name"
+              text="Proxy Api Name"
               sortByKey="openapidocument.info.title"
               sortByKeyType="string"
             />
@@ -58,8 +58,8 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Subscriptions"
-              sortByKey="subscriptions"
+              text="Contracts"
+              sortByKey="contractscount"
               sortByKeyType="number"
             />
           </th>
@@ -80,6 +80,9 @@
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ environment(proxyItem) }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -89,7 +92,7 @@
             {{ proxyItem.apivisibilityname }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.subscriptions ? proxyItem.subscriptions.length : 0 }}
+            {{ proxyItem.contractscount }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
@@ -124,6 +127,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
@@ -155,6 +159,7 @@ export default {
         array: rows
           .map(item => ({
             ...item,
+            contractscount: item.contracts ? item.contracts.length : 5000,
           })),
         sortByKey,
         sortByKeyType,
@@ -172,12 +177,29 @@ export default {
   data() {
     return {
       collapsedRows: [],
+      proxyRows: [],
       sortByKey: 'openapidocument.info.title',
       sortByKeyType: 'string',
       sortDirection: 'desc',
     };
   },
   methods: {
+    getApiContracts(newRows) {
+      const rows = newRows;
+      for (let i = 0; i < rows.length; i += 1) {
+        api.getApiContracts(rows[i].uuid).then((response) => {
+          if (response && response.data) {
+            rows[i].contracts = response.data;
+          } else {
+            rows[i].contracts = [];
+          }
+        });
+      }
+      return rows;
+    },
+    environment(item) {
+      return item.islive ? 'Live' : 'Sandbox';
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

@@ -354,6 +354,9 @@ export default {
   getResourceAccessTokens(uuid) {
     return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
   },
+  getApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
+  },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
   },

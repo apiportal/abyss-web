@@ -6,7 +6,7 @@
           :active="currentPage.firstChildPath === 'businesses'"
           to="/app/my-apis/businesses/1"
         >
-          <span id="IdLinkMyBusinessApis" class="link-text">My Business APIs</span> <b-badge pill>{{ myBusinessApis.length }}</b-badge>
+          <span id="IdLinkMyBusinessApis" class="link-text">My Business APIs</span> <b-badge pill>{{ businessApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-proxy-apis'"
@@ -54,12 +54,12 @@ export default {
       apisSharedByUser: state => state.apisSharedByUser.items,
       proxies: state => state.proxies.items,
     }),
-    myBusinessApis() {
-      return this.businessApis.filter(item => !item.isproxyapi);
-    },
-    myProxyApis() {
-      return this.businessApis.filter(item => item.isproxyapi);
-    },
+    // myBusinessApis() {
+    //   return this.businessApis.filter(item => !item.isproxyapi);
+    // },
+    // myProxyApis() {
+    //   return this.businessApis.filter(item => item.isproxyapi);
+    // },
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
@@ -73,8 +73,20 @@ export default {
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes');
-    this.$store.dispatch('licenses/getLicenses', {});
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    // this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
+    // const apiIdsArray = this.proxies.map(item => item.uuid);
+    // this.$store.dispatch('proxies/getApiContracts', { apiIdsArray });
+  },
+  watch: {
+    proxies(newVal, oldVal) {
+      // console.log(newVal, oldVal);
+      if (newVal.length !== oldVal.length) {
+        const apiIdsArray = newVal.map(item => item.uuid);
+        this.$store.dispatch('proxies/getApiContracts', { apiIdsArray });
+      }
+    },
   },
 };
 </script>

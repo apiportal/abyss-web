@@ -193,6 +193,21 @@ export default {
       }));
     },
   },
+  watch: {
+    computedLicenseApis(newVal, oldVal) {
+      // console.log(newVal, oldVal);
+      const contractApis = newVal;
+      if (newVal.length !== oldVal.length) {
+        for (let i = 0; i < contractApis.length; i += 1) {
+          api.getApiContracts(contractApis[i].uuid).then((res) => {
+            if (res && res.data) {
+              contractApis[i].contracts = res.data;
+            }
+          });
+        }
+      }
+    },
+  },
   data() {
     return {
       collapsedRows: [],

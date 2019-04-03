@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getLicenses().then((response) => {
+    api.getLicenses()
+    .then((response) => {
       if (response && response.data) {
         commit('setLicenses', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setLicenses', []);
       }
     });
   },

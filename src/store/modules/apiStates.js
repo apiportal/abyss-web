@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApiStates().then((response) => {
+    api.getApiStates()
+    .then((response) => {
       if (response && response.data) {
         commit('setApiStates', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setApiStates', []);
       }
     });
   },

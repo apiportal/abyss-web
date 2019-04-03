@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getPolicies().then((response) => {
+    api.getPolicies()
+    .then((response) => {
       if (response && response.data) {
         commit('setPolicies', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setPolicies', []);
       }
     });
   },

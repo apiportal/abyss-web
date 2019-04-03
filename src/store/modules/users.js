@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getUsers().then((response) => {
+    api.getUsers()
+    .then((response) => {
       if (response && response.data) {
         commit('setUsers', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 404) {
+        commit('setUsers', []);
       }
     });
   },

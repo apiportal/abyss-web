@@ -12,6 +12,12 @@
         >
           <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/roles/1"
+        >
+          <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+        </b-nav-item>
       </b-nav>
       <div class="row">
         <div class="col">

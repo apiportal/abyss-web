@@ -1,19 +1,19 @@
 <template>
-  <div class="page-container page-access-manager-types">
-    
+  <div class="page-container page-access-managers">
+
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
-        <b-nav-item
-          :active="false"
-          to="/app/access-managers/1"
-        >
+        <b-nav-item :active="false">
           <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item :active="true">
+        <b-nav-item
+          :active="false"
+          to="/app/access-manager-types/1"
+        >
           <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
-                <b-nav-item
-          :active="false"
+        <b-nav-item
+          :active="true"
           to="/app/roles/1"
         >
           <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
@@ -43,11 +43,11 @@
         </div>
         <div class="col-auto">
           <b-button
-            :to="`/app/access-manager-types/${page}/add-new`"
+            :to="`/app/access-managers/${page}/add-new`"
             variant="primary"
             class="page-btn-add"
-            block
             data-qa="btnAddNew"
+            block
           >
             <span class="btn-text">Add New</span>
             <Icon icon="plus" />
@@ -75,8 +75,8 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Access Manager Type Name"
-                sortByKey="typename"
+                text="Access Manager Name"
+                sortByKey="accessmanagername"
                 sortByKeyType="string"
                 data-qa="tableHeadName"
               />
@@ -86,8 +86,8 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Description"
-                sortByKey="description"
+                text="Access Manager Type"
+                sortByKey="accessmanagertypename"
                 sortByKeyType="string"
               />
             </th>
@@ -121,10 +121,10 @@
               />
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-              {{ item.typename }}
+              {{ item.accessmanagername }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.description }}
+              {{ item.accessmanagertypename }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
@@ -135,12 +135,12 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/access-manager-types/${page}/logs/${item.uuid}/accessmanagertype/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -154,7 +154,11 @@
                   <div class="row">
                     <dl class="col">
                       <dt>Name:</dt>
-                      <dd>{{ item.typename }}</dd>
+                      <dd>{{ item.accessmanagername }}</dd>
+                      <dt>Type:</dt>
+                      <dd>{{ item.accessmanagertypename }}</dd>
+                    </dl>
+                    <dl class="col">
                       <dt>Description:</dt>
                       <dd>{{ item.description }}</dd>
                       <dt>Organization:</dt>
@@ -177,7 +181,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -212,20 +216,25 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      accessManagerTypes: state => state.accessManagerTypes.items,
       accessManagers: state => state.accessManagers.items,
+      accessManagerTypes: state => state.accessManagerTypes.items,
       organizations: state => state.organizations.items,
     }),
     tableRows() {
-      const { accessManagerTypes, organizations } = this;
+      const { accessManagers, accessManagerTypes, organizations } = this;
+      const getAccessManagerTypeName = (accessManagerId) => {
+        const accessManager = accessManagerTypes.find(item => item.uuid === accessManagerId);
+        return accessManager ? accessManager.typename : accessManagerId;
+      };
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
-        array: accessManagerTypes.map(item => ({
+        array: accessManagers.map(item => ({
           ...item,
+          accessmanagertypename: getAccessManagerTypeName(item.accessmanagertypeid),
           organizationname: getOrganizationName(item.organizationid),
         })).filter((item) => {
           const { filterKey } = this;
@@ -235,12 +244,12 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.typename &&
-              item.typename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.accessmanagername &&
+              item.accessmanagername.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.description &&
-              item.description.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.accessmanagertypename &&
+              item.accessmanagertypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -260,15 +269,15 @@ export default {
     },
   },
   created() {
-    this.$store.commit('currentPage/setRootPath', 'access-manager-types');
-    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
+    this.$store.commit('currentPage/setRootPath', 'access-managers');
     this.$store.dispatch('accessManagers/getAccessManagers', {});
+    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'typename',
+      sortByKey: 'accessmanagername',
       sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
@@ -286,7 +295,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/access-manager-types/${page}`);
+      this.$router.push(`/app/access-managers/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -298,7 +307,7 @@ export default {
       }
     },
     refreshData() {
-      this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {
+      this.$store.dispatch('accessManagers/getAccessManagers', {
         refresh: true,
       });
     },

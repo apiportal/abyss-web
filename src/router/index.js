@@ -57,6 +57,7 @@ import AccessManagersLogs from '@/components/routes/accessManagers/AccessManager
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
+import Roles from '@/components/routes/accessManagers/roles/Roles';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
 import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
@@ -350,6 +351,10 @@ export default new Router({
               component: DeleteAccessManager,
             },
           ],
+        },
+        {
+          path: 'roles',
+          component: Roles,
         },
         {
           path: 'access-manager-types/:page',

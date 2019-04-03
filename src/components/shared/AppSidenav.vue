@@ -138,7 +138,17 @@ export default {
       });
     },
     handleOrganizationChange(newOrganizationUuid) {
-      console.log(newOrganizationUuid); // eslint-disable-line
+      const { organizations } = this;
+      const organization = organizations.find(org => org.uuid === newOrganizationUuid);
+      const { name, uuid } = organization;
+      this.$store.dispatch('user/resetUser');
+      api.putSetCurrentOrganization({
+        organizationid: uuid,
+        organizationname: name,
+      }).then((response) => {
+        const { principalid, sessionid, organizationid, organizationname } = response.data;
+        this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
+      });
     },
   },
 };

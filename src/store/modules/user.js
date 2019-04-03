@@ -14,7 +14,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  getUser: ({ commit }, { principalid, sessionid, organizationid, organizationname }) => {
+  getUser: ({ commit }, { principalid, sessionid, organizationid, organizationname, refresh = false }) => {
     api.getUser(principalid).then((response) => {
       if (response && response.data) {
         // set principalid
@@ -43,6 +43,11 @@ const actions = {
         }
         // set user signedin
         commit('setUserSignedIn', true);
+
+        // refresh, if required: for example: switch organization
+        if (refresh) {
+          setTimeout(function() { location.reload(); }, 100);
+        }
       }
     });
   },

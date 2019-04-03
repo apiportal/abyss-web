@@ -46,7 +46,7 @@ const actions = {
 
         // refresh, if required: for example: switch organization
         if (refresh) {
-          setTimeout(function() { location.reload(); }, 100);
+          setTimeout(function() { location.reload(); }, 10);
         }
       }
     });

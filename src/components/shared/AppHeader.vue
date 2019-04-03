@@ -10,7 +10,7 @@
             <!-- Using button-content slot -->
             <template slot="button-content">
               <div class="d-flex align-items-center" data-qa="navbarUser">
-                <span>{{ user.props.displayname }}</span>
+                <span v-if="user.props">{{ user.props.displayname }}</span>
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>
             </template>

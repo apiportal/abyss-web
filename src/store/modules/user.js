@@ -37,8 +37,10 @@ const actions = {
           commit('setOrganizationName', organizationname);
           document.cookie = `abyss.login.organization.name=${organizationname}; path=/;`;
         }
-        // set user props
-        commit('setUserProps', response.data[0]);
+        // set user props, just in case: another if case
+        if (response.data.length > 0) {
+          commit('setUserProps', response.data[0]);
+        }
         // set user signedin
         commit('setUserSignedIn', true);
       }

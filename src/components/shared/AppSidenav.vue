@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-form inline class="switch-organization">
+    <b-form class="switch-organization">
+      <label>Organization:</label>
       <b-form-select
         :value="currentUser.organizationid"
         :options="organizationOptions"
@@ -106,19 +107,20 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
-      rootOrganization: state => state.organizations.rootOrganization,
     }),
     organizationOptions() {
-      const { userOrganizations } = this;
-      return userOrganizations.map(item => ({
-        text: item.organizationid,
-        value: item.organizationid,
-      }));
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const organization = organizations.find(org => org.uuid === item.organizationid);
+        return {
+          text: organization ? organization.name : item.organizationid,
+          value: item.organizationid,
+        };
+      });
     },
   },
   data() {
     return {
-      currentOrganization: this.rootOrganization,
       userOrganizations: [],
     };
   },
@@ -141,3 +143,12 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.switch-organization {
+  label {
+    color: silver;
+    font-size: .75rem;
+  }
+}
+</style>

@@ -3,7 +3,10 @@
 
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
-        <b-nav-item :active="false">
+        <b-nav-item
+          :active="false"
+          to="/app/access-managers/1"
+        >
           <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
@@ -14,7 +17,6 @@
         </b-nav-item>
         <b-nav-item
           :active="true"
-          to="/app/roles/1"
         >
           <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
@@ -43,7 +45,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            :to="`/app/access-managers/${page}/add-new`"
+            :to="`/app/roles/add-new`"
             variant="primary"
             class="page-btn-add"
             data-qa="btnAddNew"

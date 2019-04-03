@@ -14,7 +14,7 @@
         </b-nav-item>
         <b-nav-item
           :active="false"
-          to="/app/roles/1"
+          to="/app/roles"
         >
           <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>

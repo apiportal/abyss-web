@@ -59,6 +59,8 @@ import AddAccessManager from '@/components/routes/accessManagers/AddAccessManage
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
 import Roles from '@/components/routes/accessManagers/roles/Roles';
+import AddRole from '@/components/routes/accessManagers/roles/AddRole';
+import EditRole from '@/components/routes/accessManagers/roles/EditRole';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
 import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
@@ -360,6 +362,16 @@ export default new Router({
         {
           path: 'roles',
           component: Roles,
+          children: [
+            {
+              path: 'add-new',
+              component: AddRole,
+            },
+            {
+              path: 'edit/:id',
+              component: EditRole,
+            },
+          ],
         },
         {
           path: 'access-manager-types/:page',

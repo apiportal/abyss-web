@@ -3,10 +3,47 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th class="status">Status</th>
-          <th>Policy Name</th>
-          <th>Policy Type</th>
-          <th>Policy SubType</th>
+          <th class="status">
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Status"
+              sortByKey="isactive"
+              sortByKeyType="boolean"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Policy Name"
+              sortByKey="name"
+              sortByKeyType="string"
+              data-qa="tableHeadName"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Type"
+              sortByKey="typename"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Subtype"
+              sortByKey="policyinstance.info.subType"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
@@ -15,25 +52,22 @@
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(item, index) in rows" v-bind:key="index"
+        v-for="(item, index) in sortedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :level="3"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.name }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.typename }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item
-            .policyinstance
-            .info
-            .subType }}
+            {{ item.policyinstance.info.subType }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -53,7 +87,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
           <td colspan="5">
             <div class="collapsible-content">
               <Policy
@@ -74,7 +108,9 @@ import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
+import SortBy from '@/components/shared/SortBy';
 import Policy from '@/components/shared/subjects/policies/Policy';
+import Helpers from '@/helpers';
 
 export default {
   props: {
@@ -94,19 +130,41 @@ export default {
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
     }),
+    sortedRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
   },
   components: {
     TbodyCollapsible,
     TBodyLoading,
     Icon,
+    SortBy,
     Policy,
   },
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'name',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

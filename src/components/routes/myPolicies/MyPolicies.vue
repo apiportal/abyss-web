@@ -3,7 +3,7 @@
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item active>
-          My Policies <b-badge pill>{{ policies.filter(item => item.subjectid === currentUser.uuid).length }}</b-badge>
+          <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -20,12 +20,12 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
     }),
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-policies');
-    this.$store.dispatch('policies/getPolicies', {});
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
   },

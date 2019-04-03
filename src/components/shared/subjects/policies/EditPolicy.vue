@@ -8,6 +8,7 @@
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :policy="getPolicy(policyId)"
+      data-qa="modalEditPolicy"
     />
   </div>
 </template>
@@ -28,9 +29,9 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
-      isPoliciesLoaded: state => (state.policies.lastUpdatedAt > 0),
+      isPoliciesLoaded: state => (state.subjectPolicies.lastUpdatedAt > 0),
       isPolicyTypesLoaded: state => (state.policyTypes.lastUpdatedAt > 0),
     }),
   },

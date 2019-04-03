@@ -38,8 +38,8 @@ export default {
   },
   computed: {
     ...mapState({
-      licenses: state => state.licenses.items,
-      areLicensesLoaded: state => state.licenses.lastUpdatedAt,
+      licenses: state => state.subjectLicenses.items,
+      areLicensesLoaded: state => state.subjectLicenses.lastUpdatedAt,
     }),
     license() {
       const { licenseId, licenses } = this;

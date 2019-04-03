@@ -39,8 +39,10 @@
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organizationUsers.length"
+        :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" /> Users
+        <Icon icon="users" /> 
+        <span class="btn-text">Users</span>
         <b-badge pill>{{ organizationUsers.length }}</b-badge>
       </b-button>
       <b-button
@@ -51,8 +53,10 @@
         @click="showSubOrganizations"
         :class="{'active': isShowSubOrganizations}"
         v-if="organization.suborganizations > 0"
+        :id="`IDOrganizationSubOrganizationsButton_${organization.uuid}`"
       >
-        <Icon icon="list-ol" /> Sub Organizations
+        <Icon icon="list-ol" />
+        <span class="btn-text">Sub Organizations</span>
         <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
     </div>
@@ -65,7 +69,10 @@
       />
     </div>
   
-    <div class="abyss-table-content" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
+    <div
+      class="abyss-table-content"
+      v-if="organization.suborganizations > 0 && organization.uuid !== rootOrganization && isShowSubOrganizations"
+    >
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -76,16 +83,6 @@
                 :onClick="handleSortByClick"
                 text="Name"
                 sortByKey="name"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
                 sortByKeyType="string"
               />
             </th>
@@ -109,27 +106,36 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
         <TbodyCollapsible
           v-for="(item, index) in organizations" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
           :level="1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
-            </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -188,7 +194,7 @@ export default {
       required: false,
       default() { return {}; },
     },
-    rootorganization: {
+    rootOrganization: {
       Type: String,
       required: false,
       default() { return ''; },
@@ -294,7 +300,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

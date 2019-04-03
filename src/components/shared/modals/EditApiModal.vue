@@ -9,9 +9,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditApiModal"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Api' : 'Add New Api' }}
       </h5>
     </template>
@@ -19,19 +20,21 @@
       <ApiDesigner
         :api="api"
         :height="700"
-        title='Edit API'
+        :title="api.openapidocument.info.title"
       />
     </template>
     <template slot="footer">
       <b-button
         variant="link"
         @click="onClose"
+        data-qa="btnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onUpdate"
+        data-qa="btnSave"
       >
         <Icon icon="save" /> Save
       </b-button>

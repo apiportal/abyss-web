@@ -7,9 +7,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalConfirm"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         <span class="text-danger h3 mr-2"><Icon icon="exclamation-triangle" /> </span>
         {{ title }}
       </h5>
@@ -21,14 +22,14 @@
       <b-button
         variant="secondary"
         @click="onClose"
-        id="IdBtnCancel"
+        data-qa="btnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onConfirm"
-        id="IdBtnSave"
+        data-qa="btnConfirm"
       >
         {{ confirm }}
       </b-button>

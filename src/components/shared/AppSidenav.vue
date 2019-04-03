@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-form inline class="switch-organization">
+    <b-form class="switch-organization">
+      <label>Organization:</label>
       <b-form-select
         :value="currentUser.organizationid"
         :options="organizationOptions"
@@ -106,19 +107,20 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
-      rootOrganization: state => state.organizations.rootOrganization,
     }),
     organizationOptions() {
-      const { userOrganizations } = this;
-      return userOrganizations.map(item => ({
-        text: item.organizationid,
-        value: item.organizationid,
-      }));
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const organization = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          text: organization ? organization.name : item.organizationrefid,
+          value: item.organizationrefid,
+        };
+      });
     },
   },
   data() {
     return {
-      currentOrganization: this.rootOrganization,
       userOrganizations: [],
     };
   },
@@ -136,8 +138,29 @@ export default {
       });
     },
     handleOrganizationChange(newOrganizationUuid) {
-      console.log(newOrganizationUuid); // eslint-disable-line
+      const { organizations } = this;
+      const organization = organizations.find(org => org.uuid === newOrganizationUuid);
+      const { name, uuid } = organization;
+      api.putSetCurrentOrganization({
+        organizationid: uuid,
+        organizationname: name,
+      }).then((response) => {
+        if (response && response.data) {
+          // this.$store.dispatch('user/resetUser');
+          const { principalid, sessionid, organizationid, organizationname } = response.data;
+          this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
+        }
+      });
     },
   },
 };
 </script>
+
+<style lang="scss">
+.switch-organization {
+  label {
+    color: silver;
+    font-size: .75rem;
+  }
+}
+</style>

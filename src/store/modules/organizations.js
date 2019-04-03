@@ -4,7 +4,6 @@ import api from '@/api';
 const state = {
   items: [],
   lastUpdatedAt: 0,
-  rootOrganization: '3c65fafc-8f3a-4243-9c4e-2821aa32d293',
 };
 
 const getters = {};

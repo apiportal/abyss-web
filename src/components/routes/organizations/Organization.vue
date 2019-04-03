@@ -69,7 +69,7 @@
   
     <div
       class="abyss-table-content"
-      v-if="organization.suborganizations > 0 && organization.uuid !== rootOrganization && isShowSubOrganizations"
+      v-if="organization.suborganizations > 0 && isShowSubOrganizations"
     >
       <table class="table abyss-table abyss-table-cards">
         <thead>

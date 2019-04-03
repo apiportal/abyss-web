@@ -10,7 +10,7 @@
             <!-- Using button-content slot -->
             <template slot="button-content">
               <div class="d-flex align-items-center" data-qa="navbarUser">
-                <span>{{ user.props.displayname }}</span>
+                <span v-if="user.props">{{ user.props.displayname }}</span>
                 <span class="bg-cover bg-secondary rounded-circle avatar"></span>
               </div>
             </template>
@@ -57,6 +57,7 @@ export default {
       api.deleteSession(sessionid).then(() => {
         this.$store.dispatch('user/resetUser');
         this.$router.push('/auth/login/');
+        setTimeout(function() { location.reload(); }, 10); // eslint-disable-line
       });
     },
   },

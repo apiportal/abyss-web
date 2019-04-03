@@ -35,6 +35,10 @@ export default {
   putChangePassword(uuid, params) {
     return axios.put(`abyss/oapi/subjects/${uuid}/changepassword/`, params);
   },
+  // switch organization
+  putSetCurrentOrganization(params) {
+    return axios.put('abyss/oapi/set-current-organization', params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');

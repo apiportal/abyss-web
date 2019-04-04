@@ -2,7 +2,12 @@
 <div>
   <nav class="navbar d-flex justify-content-between" style="background-color: #036; color: rgba(255, 255, 255, 0.8);">
     <div class="d-flex">
-      <span class="bg-cover bg-secondary rounded-circle avatar"></span>
+      <div v-if="userEditable.props.picture" class="item p-0">
+        <Icon class="notify-badge" @click="userEditable.props.picture = ''" icon="times" style="color: rgba(255, 255, 255, 0.8);"/>
+        <img :src="userEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      </div>
+      <img  v-if="!userEditable.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
         <div class="d-flex align-items-center">
           <dl class="m-0">
           <dd class="m-0"><h4>{{ user.props.displayname }}</h4></dd>
@@ -12,11 +17,6 @@
         <div class="d-flex align-items-end ">
           <dl class="m-0">
           <dt class="m-0">
-          <!-- 
-            <label for="image-upload" class="btn btn-primary btn-sm">Upload New Picture</label>
-          <input type="file" id="image-upload" @change="onFileSelected"/> 
-          ###Upload image span @click ile çalışacak
-          -->
         </dt>
       </dl>
       </div>
@@ -259,27 +259,27 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       const {
-        // description, url, effectiveenddate, secondaryemail, email,
+        description, url, effectiveenddate, secondaryemail, email,
         picture,
-        // distinguishedname, uniqueid, phonebusiness, phoneextension,
-        // phonehome, phonemobile, jobtitle, department, company
+        distinguishedname, uniqueid, phonebusiness, phoneextension,
+        phonehome, phonemobile, jobtitle, department, company,
         } = this.userEditable.props;
       api.putUsers({
         ...this.userEditable.props,
-        // description: (description === null ? '' : description),
-        // url: (url === null ? '' : url),
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
         picture: (picture === null ? '' : picture),
-        // distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-        // uniqueid: (uniqueid === null ? '' : uniqueid),
-        // phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-        // phoneextension: (phoneextension === null ? '' : phoneextension),
-        // phonehome: (phonehome === null ? '' : phonehome),
-        // phonemobile: (phonemobile === null ? '' : phonemobile),
-        // jobtitle: (jobtitle === null ? '' : jobtitle),
-        // department: (department === null ? '' : department),
-        // company: (company === null ? '' : company),
-        // effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        // secondaryemail: (secondaryemail === null ? email : email),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? email : email),
       }).then((response) => {
         if (response && response.data) {
           this.$store.commit('user/setUserProps', response.data[0]);
@@ -290,7 +290,17 @@ export default {
         });
     },
     onFileSelected(event) {
-      console.log(event.target.files[0]); // eslint-disable-line no-console
+      // console.log(event.target.files[0]); // eslint-disable-line no-console
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.userEditable.props.picture = reader.result;
+        console.log(this.userEditable.props.picture); // eslint-disable-line no-console
+      };
+      reader.readAsDataURL(file);
+    },
+    handleDeleteImage() {
+      this.userEditable.props.picture = '';
     },
     sendReferral(e) {
       e.preventDefault();
@@ -309,6 +319,24 @@ export default {
 };
 </script>
 <style>
+  .item {
+      position:relative;
+      padding-top:20px;
+      display:inline-block;
+  }
+  .notify-badge{
+      position: absolute;
+      right:5px;
+      top:0px;
+      background:gray;
+      text-align: center;
+      border-radius: 50%;
+      color:white;
+      padding: 0px 3.125px 0px 3.125px;
+      font-size:20px;
+      line-height: 0px;
+      width: 1em !important;
+  }
   .avatar {
     width: 70px;
     height: 70px;

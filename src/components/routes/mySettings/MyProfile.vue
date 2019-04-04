@@ -134,6 +134,15 @@
                 <h2 class="h2 font-weight-normal mt-1">Change Password</h2>
               </div>
           <!-- End Title -->
+          <!-- Alert -->
+              <Alert
+                v-if="isAlertVisible"
+                :text="this.alertResponse.message"
+                :hideFooter="true"
+                :hideHeader="true"
+                :dismissable="true"
+              />
+          <!-- End Alert -->
           <!-- Form Group -->
           <div class="w-50 js-form-message form-group">
             <b-form-group>
@@ -227,16 +236,24 @@ import api from '@/api';
 import { mapState, mapActions } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
+import Alert from '@/components/shared/Alert';
 
 export default {
   name: 'my-profile',
   components: {
+    Alert,
     InputWithIcon,
     Icon,
   },
   data() {
     // const { user } = this;
     return {
+      isAlertVisible: false,
+      alertResponse: {
+        message: '',
+        moreinfo: '',
+        recommendation: '',
+      },
       referralEmailAddress: '',
       form: {
         oldpassword: '',
@@ -313,6 +330,10 @@ export default {
       api.putChangePassword(this.user.uuid, this.form)
         .then((response) => {
           console.log(response); // eslint-disable-line no-console
+        })
+        .catch((e) => {
+          this.isAlertVisible = true;
+          this.alertResponse.message = e.data.usermessage;
         });
     },
   },

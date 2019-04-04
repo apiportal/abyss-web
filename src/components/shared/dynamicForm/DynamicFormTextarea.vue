@@ -57,6 +57,10 @@ export default {
     value: {
       required: false,
     },
+    debounce: {
+      type: Number,
+      required: false,
+    },
   },
   computed: {
     state() {
@@ -85,8 +89,18 @@ export default {
   },
   methods: {
     handleKeyup() {
-      const { inputValue, propAddress, onChange } = this;
-      onChange(propAddress, inputValue);
+      const { inputValue, propAddress, onChange, debounce } = this;
+
+      if (debounce) {
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+          onChange(propAddress, inputValue);
+        }, debounce);
+      } else {
+        onChange(propAddress, inputValue);
+      }
     },
   },
 };

@@ -3,8 +3,8 @@
     <AuthHeader />
     <main>
       <div class="d-flex align-items-center position-relative height-lg-100vh">
-        <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0">
-          <div class="w-100 p-5">
+        <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0" style="background-image: url('/static/abyss1.jpg'); background-position: bottom center; background-size: cover">
+           <div class="w-100 p-5">
             <AuthSide />
           </div>
         </div>
@@ -47,6 +47,9 @@ export default {
     display: none
 }
 .auth-container{
+  #no-scroll::-webkit-scrollbar-thumb {
+      display: none
+  }
   .scrollbar {
     display: none
   }

@@ -46,10 +46,12 @@ export default {
   },
   methods: {
     handleAddChip(chip) {
-      console.log(chip); // eslint-disable-line
+      const { propAddress, value } = this;
+      this.onChange(propAddress, [...value, chip.value]);
     },
-    handleDeleteChip(index) {
-      console.log(index); // eslint-disable-line
+    handleDeleteChip(indexToDelete) {
+      const { propAddress, value } = this;
+      this.onChange(propAddress, [...value.filter((item, index) => index !== indexToDelete)]);
     },
   },
 };

@@ -1,48 +1,20 @@
 <template>
   <div>
-    <ConfirmModal
-      v-if="isUsersLoaded"
-      title="Are you sure?"
-      :text="`${user.displayname} will be deleted. You can't revert your action.`"
-      :onClose="handleModalClose"
-      :onConfirm="handleModalConfirm"
+    <DeleteUser
+      :routePath="`/app/administer-users/users/${page}`"
     />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import ConfirmModal from '@/components/shared/modals/ConfirmModal';
+import DeleteUser from '@/components/shared/subjects/users/DeleteUser';
 
 export default {
   components: {
-    ConfirmModal,
-  },
-  methods: {
-    ...mapActions('users', ['deleteUsers']),
-    handleModalClose() {
-      this.$router.push(`/app/administer-users/${this.page}`);
-    },
-    handleModalConfirm() {
-      const { deleteUsers, user } = this;
-      deleteUsers({ ...user }).then(() => {
-        this.$router.push(`/app/administer-users/${this.page}`);
-      });
-    },
-  },
-  computed: {
-    ...mapState({
-      users: state => state.users.items,
-      isUsersLoaded: state => state.users.lastUpdatedAt,
-    }),
-    user() {
-      const { userId, users } = this;
-      return users.find(item => item.uuid === userId);
-    },
+    DeleteUser,
   },
   data() {
     return {
-      userId: this.$route.params.id,
       page: this.$route.params.page,
     };
   },

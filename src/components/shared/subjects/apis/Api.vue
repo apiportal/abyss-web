@@ -14,14 +14,16 @@
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
-    <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`">
+    <!-- <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`"> -->
+    <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">
       <b-button
         @click="handleToggleApiProxiesTable"
         size="md"
         variant="link"
         :class="{'active': isApiProxiesTableVisible}"
+        :id="`apiProxyListButton_${item.uuid}`"
       >
-        <span>Proxy APIs</span>
+        <span class="btn-text">Proxy APIs</span>
         <b-badge pill>{{ apiProxies.length }}</b-badge>
       </b-button>
     </div>
@@ -125,9 +127,9 @@ export default {
     },
   },
   mounted() {
-    this.proxies
-      .filter(proxy => proxy.businessapiid === this.item.uuid)
-      .map(item => this.getApiLicenses(item.uuid));
+    // this.proxies
+      // .filter(proxy => proxy.businessapiid === this.item.uuid)
+      // .map(item => this.getApiLicenses(item.uuid));
   },
 };
 </script>

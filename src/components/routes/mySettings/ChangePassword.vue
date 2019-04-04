@@ -102,7 +102,12 @@ export default {
       evt.preventDefault();
       api.putChangePassword(this.user.uuid, this.form)
         .then((response) => {
-          console.log(response); // eslint-disable-line no-console
+          if (response && response.data) {
+            console.log(response); // eslint-disable-line
+          }
+        })
+        .catch((e) => {
+          console.error('Error Message >>>', e); // eslint-disable-line
         });
     },
   },

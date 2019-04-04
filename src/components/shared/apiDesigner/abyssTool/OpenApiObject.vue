@@ -1,6 +1,11 @@
 <template>
-  <div class="open-api-object">
-    <div class="open-api-object-title" @click="() => handleToggleCollapse()">
+  <div 
+    :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`"
+  >
+    <div 
+      class="open-api-object-title"
+      @click="() => handleToggleCollapse()"
+    >
       <span style="float: right;">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
@@ -50,6 +55,13 @@
             :pathArray="[...pathArray, index]"
             :onChange="onChange"
           />
+        </div>
+        <div :style="`margin-top: ${formData.length === 0 ? 0 : 1}rem;`">
+          <b-button
+            @click="() => addArrayItem(pathArray, formData)"
+          >
+            New "{{item}}" item
+          </b-button>
         </div>
       </div>
       <div v-else>
@@ -108,6 +120,11 @@ export default {
       required: false,
       default() { return false; },
     },
+    isCollapsedInitial: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
   },
   components: {
     OpenApiObjectForm: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm'),
@@ -120,13 +137,16 @@ export default {
   },
   data() {
     return {
-      isCollapsed: false,
+      isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
     };
   },
   methods: {
     handleToggleCollapse() {
       this.isCollapsed = !this.isCollapsed;
+    },
+    addArrayItem(pathArray, currentItems) {
+      this.onChange(pathArray, [...currentItems, {}]);
     },
   },
 };
@@ -137,8 +157,13 @@ export default {
   border: 1px solid silver;
   border-radius: .3rem;
 
+  &.collapsed {
+    border-left: 4px solid #0088CC;
+  }
+
   .open-api-object-title {
     padding: .5rem;
+    cursor: pointer;
   }
 }
 

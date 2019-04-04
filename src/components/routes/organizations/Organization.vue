@@ -39,8 +39,10 @@
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organizationUsers.length"
+        :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" /> Users
+        <Icon icon="users" /> 
+        <span class="btn-text">Users</span>
         <b-badge pill>{{ organizationUsers.length }}</b-badge>
       </b-button>
       <b-button
@@ -51,21 +53,24 @@
         @click="showSubOrganizations"
         :class="{'active': isShowSubOrganizations}"
         v-if="organization.suborganizations > 0"
+        :id="`IDOrganizationSubOrganizationsButton_${organization.uuid}`"
       >
-        <Icon icon="list-ol" /> Sub Organizations
+        <Icon icon="list-ol" />
+        <span class="btn-text">Sub Organizations</span>
         <b-badge pill>{{ organization.suborganizations }}</b-badge>
       </b-button>
     </div>
     <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
-        :users="organizationUsers"
-        path="organizations"
-        title="Organization"
-        :page="page"
+        :rows="organizationUsers"
+        :routePath="`/app/organizations/${page}`"
       />
     </div>
   
-    <div class="abyss-table-content" v-if="organization.suborganizations > 0 && organization.uuid !== rootorganization && isShowSubOrganizations">
+    <div
+      class="abyss-table-content"
+      v-if="organization.suborganizations > 0 && isShowSubOrganizations"
+    >
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -76,16 +81,6 @@
                 :onClick="handleSortByClick"
                 text="Name"
                 sortByKey="name"
-                sortByKeyType="string"
-              />
-            </th>
-            <th>
-              <SortBy
-                :selectedSortByKey="sortByKey"
-                :selectedSortDirection="sortDirection"
-                :onClick="handleSortByClick"
-                text="Owner"
-                sortByKey="organizationowner"
                 sortByKeyType="string"
               />
             </th>
@@ -109,27 +104,36 @@
                 sortByKeyType="number"
               />
             </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Owner"
+                sortByKey="organizationowner.displayname"
+                sortByKeyType="string"
+              />
+            </th>
             <th></th>
           </tr>
         </thead>
         <TbodyCollapsible
           v-for="(item, index) in organizations" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          v-if="item.organizationid === organization.uuid && item.uuid !== rootorganization"
           :level="1"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.name }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationowner }}
-            </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.suborganizations }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationusers }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)">
+              {{ item.organizationowner.displayname }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -138,6 +142,8 @@
                 </template>
       
                 <b-dropdown-item :to="`/app/organizations/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item :to="`/app/organizations/${page}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Edit Organization Users</b-dropdown-item>
+                
                 <b-dropdown-item :to="`/app/organizations/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
       
                 <b-dropdown-header>LOGS</b-dropdown-header>
@@ -172,7 +178,7 @@ import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/Users';
+import Users from '@/components/shared/subjects/users/Users';
 
 export default {
   name: 'Organization',
@@ -188,7 +194,7 @@ export default {
       required: false,
       default() { return {}; },
     },
-    rootorganization: {
+    rootOrganization: {
       Type: String,
       required: false,
       default() { return ''; },
@@ -294,7 +300,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

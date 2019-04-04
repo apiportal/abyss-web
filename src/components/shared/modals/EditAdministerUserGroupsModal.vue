@@ -8,10 +8,11 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditUserGroups"
   >
     <template slot="header">
-      <h5 class="modal-title">
-        Edit Administer User Groups
+      <h5 class="modal-title" data-qa="modalTitle">
+        Edit User Groups of {{user.displayname}}
       </h5>
     </template>
     <template>
@@ -22,26 +23,26 @@
           <div>
             <Chips
               :chips="computedMemberships"
-              :autocompleteOptions="this.groups.map((item) => ({
-                text: item.subjectname,
-                value: item.uuid,
-              }))"
+              :autocompleteOptions="groupsEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
               label="User Groups"
             />
           </div>
+
         </div>
         <footer class="modal-footer">
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import Chips from '@/components/shared/Chips';
@@ -117,54 +119,93 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     computedMemberships() {
       const { groupsEditable } = this;
       return groupsEditable
-      .filter(group => group.isMembership)
-      .sort((a, b) => b.sortTime - a.sortTime)
-      .map(group => ({
-        value: group.uuid,
-        text: group.subjectname,
-      }));
+      .filter(group => group.isAttached)
+      .sort((a, b) => b.sortTime - a.sortTime);
     },
   },
   data() {
     const { groups, memberships } = this;
     return {
       groupsEditable: [...JSON.parse(JSON.stringify(groups))].map((group) => {
-        const isMembership =
-          Boolean(memberships.find(membership => membership.subjectgroupid === group.uuid));
+        const membership = memberships.find(m => m.subjectgroupid === group.uuid);
+        const isAttached = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
           ...group,
-          isMembership,
+          text: group.displayname,
+          value: group.uuid,
+          isAttached,
+          membership,
           sortTime,
         };
       }),
+      groupsToAdd: [],
+      groupsToDelete: [],
     };
   },
   methods: {
+    ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
+      const { groupsEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
       evt.preventDefault();
+      this.groupsToDelete = groupsEditable
+      .filter(group => group.membership && !group.isAttached)
+      .map(group => (group.membership));
+      this.groupsToAdd = groupsEditable
+      .filter(group => !group.membership && group.isAttached)
+      .map(group => ({
+        // organizationid: this.currentUser.props.organizationid,
+        organizationid: group.organizationid,
+        crudsubjectid: this.currentUser.props.uuid,
+        subjectid: this.user.uuid,
+        subjectgroupid: group.uuid,
+        subjectdirectoryid: group.subjectdirectoryid,
+      }));
+      if (this.groupsToDelete.length) {
+        // console.log('groupsToDelete', this.groupsToDelete);
+        for (let i = 0; i < this.groupsToDelete.length; i += 1) {
+          deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        }
+      }
+      if (this.groupsToAdd.length) {
+        // console.log('groupsToAdd', this.groupsToAdd);
+        for (let i = 0; i < this.groupsToAdd.length; i += 1) {
+          postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        }
+      }
     },
-    handleDeleteMembership({ uuid }) {
+    handleDeleteMembership(index, chip) {
       const { groupsEditable } = this;
       this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? false : group.isMembership;
+        const isAttached = group.uuid === chip.value ? false : group.isAttached;
         return {
           ...group,
-          isMembership,
+          isAttached,
         };
       });
     },
-    handleAddMembership({ uuid }) {
+    handleAddMembership(chip) {
       const { groupsEditable } = this;
       this.groupsEditable = groupsEditable.map((group) => {
-        const isMembership = group.uuid === uuid ? true : group.isMembership;
+        const isAttached = group.uuid === chip.value ? true : group.isAttached;
         const sortTime = (new Date()).getTime();
         return {
           ...group,
-          isMembership,
+          isAttached,
           sortTime,
         };
       });

@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditOrganization"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Organization' : 'Add New Organization' }}
       </h5>
     </template>
@@ -57,7 +58,7 @@
             id="organizationOrganizationIdGroup"
           >
             <label>
-              Organization:
+              Parent Organization:
               <span class="text-danger">*</span>
             </label>
             <b-form-select
@@ -94,12 +95,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>

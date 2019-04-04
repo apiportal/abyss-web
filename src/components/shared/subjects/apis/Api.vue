@@ -127,9 +127,9 @@ export default {
     },
   },
   mounted() {
-    this.proxies
-      .filter(proxy => proxy.businessapiid === this.item.uuid)
-      .map(item => this.getApiLicenses(item.uuid));
+    // this.proxies
+      // .filter(proxy => proxy.businessapiid === this.item.uuid)
+      // .map(item => this.getApiLicenses(item.uuid));
   },
 };
 </script>

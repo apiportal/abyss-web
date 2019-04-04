@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="app-flex">
-    <div class="app-header-flex">
+    <div class="app-header-flex" v-if="user.signedIn">
       <AppHeader />
     </div>
-    <div class="app-body-flex">
+    <div class="app-body-flex" v-if="user.signedIn">
       <div class="app-sidenav-flex">
         <AppSidenav />
       </div>

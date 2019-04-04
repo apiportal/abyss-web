@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getApiSubscriptions(uuid).then((response) => {
+    api.getApiSubscriptions(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setApiSubscriptions', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setApiSubscriptions', []);
       }
     });
   },

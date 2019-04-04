@@ -14,8 +14,14 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getSubjectTypes().then((response) => {
+    api.getSubjectTypes()
+    .then((response) => {
       commit('setSubjectTypes', response.data);
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectTypes', []);
+      }
     });
   },
 };

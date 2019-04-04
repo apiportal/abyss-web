@@ -28,7 +28,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Subscriptions"
+              text="Contracts"
               sortByKey="contractsCount"
               sortByKeyType="number"
             />

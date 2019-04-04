@@ -29,7 +29,7 @@ module.exports = {
       'js': 'never',
       'vue': 'never'
     }],
-    //'linebreak-style': ["error", "windows"],
+    // 'linebreak-style': ["error", "windows"],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': ['error', {
       'optionalDependencies': ['test/unit/index.js']
@@ -38,3 +38,4 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
 }
+

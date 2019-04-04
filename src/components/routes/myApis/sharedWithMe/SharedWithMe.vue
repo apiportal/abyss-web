@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="page-content">
-      <Apis
+      <Proxies
         :rows="paginatedRows"
         :routePath="`/app/my-apis/shared-by-me/${page}`"
       />
@@ -64,14 +64,14 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Apis from '@/components/shared/subjects/apis/Apis';
+import Proxies from '@/components/shared/subjects/proxies/Proxies';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Apis,
+    Proxies,
     Icon,
   },
   computed: {

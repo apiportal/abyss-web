@@ -1,11 +1,13 @@
 <template>
   <div>
-    <b-form inline class="switch-organization">
+    <b-form class="switch-organization">
+      <label>Organization:</label>
       <b-form-select
-        v-model="currentOrganization"
-        :options="organizationOptions" 
-        style="width: 100%;"
+        :value="currentUser.organizationid"
+        :options="organizationOptions"
+        @change="handleOrganizationChange"
         data-qa="sideMenuSwitchOrganization"
+        style="width: 100%;"
       ></b-form-select>
     </b-form>
     <ul class="sidenav-links">
@@ -40,11 +42,11 @@
           <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
         </b-link> 
 
-        <b-link to="/app/my-policies/my-policies/1" class="pl--4" :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuPolicies">
+        <!-- <b-link to="/app/my-policies/my-policies/1" class="pl--4" :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuPolicies">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My Policies
         </b-link> 
 
-        <!-- <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
+        <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My SLAs
         </b-link> 
         
@@ -55,7 +57,7 @@
         <p>ADMIN</p>
 
 
-        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
+        <b-link to="/app/administer-users/users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
           <span class="route-icon"><Icon icon="user" /></span> Users
         </b-link> 
 
@@ -105,36 +107,60 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
-      isOrganizationsLoaded: (state => state.organizations.lastUpdatedAt > 0),
-      rootOrganization: state => state.organizations.rootOrganization,
     }),
+    organizationOptions() {
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const organization = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          text: organization ? organization.name : item.organizationrefid,
+          value: item.organizationrefid,
+        };
+      });
+    },
   },
   data() {
     return {
-      currentOrganization: this.rootOrganization,
-      organizationOptions: [],
+      userOrganizations: [],
     };
+  },
+  created() {
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   mounted() {
     this.getOrganizationOptions();
   },
   methods: {
     getOrganizationOptions() {
-      const { isOrganizationsLoaded } = this;
-      if (!isOrganizationsLoaded) {
-        setTimeout(function() { this.getOrganizationOptions(); }.bind(this), 500); // eslint-disable-line
-        return false;
-      }
       const { uuid } = this.currentUser;
-      const { organizations } = this;
       api.getSubjectOrganizationsByUuid(uuid).then((response) => {
-        const subjectOrganizations = response.data.map(item => item.organizationid);
-        this.organizationOptions = organizations
-          .filter(item => subjectOrganizations.indexOf(item.uuid) > -1)
-          .map(item => ({ text: item.name, value: item.uuid }));
+        this.userOrganizations = response.data;
       });
-      return false;
+    },
+    handleOrganizationChange(newOrganizationUuid) {
+      const { organizations } = this;
+      const organization = organizations.find(org => org.uuid === newOrganizationUuid);
+      const { name, uuid } = organization;
+      api.putSetCurrentOrganization({
+        organizationid: uuid,
+        organizationname: name,
+      }).then((response) => {
+        if (response && response.data) {
+          // this.$store.dispatch('user/resetUser');
+          const { principalid, sessionid, organizationid, organizationname } = response.data;
+          this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
+        }
+      });
     },
   },
 };
 </script>
+
+<style lang="scss">
+.switch-organization {
+  label {
+    color: silver;
+    font-size: .75rem;
+  }
+}
+</style>

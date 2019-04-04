@@ -43,10 +43,10 @@ export default {
 </script>
 
 <style lang="scss">
-#no-scroll::-webkit-scrollbar-thumb {
-    display: none
-}
 .auth-container{
+  #no-scroll::-webkit-scrollbar-thumb {
+      display: none
+  }
   .scrollbar {
     display: none
   }

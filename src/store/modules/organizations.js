@@ -4,7 +4,6 @@ import api from '@/api';
 const state = {
   items: [],
   lastUpdatedAt: 0,
-  rootOrganization: '3c65fafc-8f3a-4243-9c4e-2821aa32d293',
 };
 
 const getters = {};
@@ -15,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getOrganizations().then((response) => {
+    api.getOrganizations()
+    .then((response) => {
       if (response && response.data) {
         commit('setOrganizations', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setOrganizations', []);
       }
     });
   },

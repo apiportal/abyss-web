@@ -104,7 +104,7 @@
           v-if="policyEditable.typeid"
           :class="`configure-directory ${isConfigurePolicyVisible ? 'd-block' : 'd-none'}`"
         >
-          <h6>Configure Policy</h6>
+          <h5 class="mb-3">Configure Policy</h5>
           <DynamicForm
             :formTemplate="policyConfigurationTemplate"
             :formData="{ AuthorizationConfiguration: policyEditable.policyInstance }"
@@ -311,9 +311,9 @@ export default {
 }
 
 .configure-directory {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
+  // border: 1px solid #e9ecef;
+  // border-radius: .3rem;
+  // padding: 1rem;
   position: relative;
 
   &:before {

@@ -2,11 +2,11 @@
 <div>
   <nav class="navbar d-flex justify-content-between" style="background-color: #036; color: rgba(255, 255, 255, 0.8);">
     <div class="d-flex">
-      <div v-if="userEditable.props.picture" class="item p-0">
-        <Icon class="notify-badge" @click="userEditable.props.picture = ''" icon="times" style="color: rgba(255, 255, 255, 0.8);"/>
-        <img :src="userEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <div v-if="pictureEditable.props.picture" class="item p-0">
+        <span class="p-0" @click="handleDeleteImage" ><Icon class="notify-badge" icon="times" style="color: rgba(255, 255, 255, 0.8); cursor: pointer;"/></span>
+        <img :src="pictureEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       </div>
-      <img  v-if="!userEditable.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <img  v-if="!pictureEditable.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
         <div class="d-flex align-items-center">
           <dl class="m-0">
@@ -270,6 +270,9 @@ export default {
     userEditable() {
       return JSON.parse(JSON.stringify(this.user));
     },
+    pictureEditable() {
+      return JSON.parse(JSON.stringify(this.user));
+    },
   },
   methods: {
     ...mapActions('users', ['putUsers']),
@@ -311,13 +314,74 @@ export default {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.userEditable.props.picture = reader.result;
-        console.log(this.userEditable.props.picture); // eslint-disable-line no-console
+        this.pictureEditable.props.picture = reader.result;
+        console.log(this.pictureEditable.props.picture); // eslint-disable-line no-console
+        const {
+        description, url, effectiveenddate, secondaryemail, email,
+        picture,
+        distinguishedname, uniqueid, phonebusiness, phoneextension,
+        phonehome, phonemobile, jobtitle, department, company,
+        } = this.pictureEditable.props;
+        api.putUsers({
+          ...this.pictureEditable.props,
+          description: (description === null ? '' : description),
+          url: (url === null ? '' : url),
+          picture: (picture === null ? '' : picture),
+          distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+          uniqueid: (uniqueid === null ? '' : uniqueid),
+          phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+          phoneextension: (phoneextension === null ? '' : phoneextension),
+          phonehome: (phonehome === null ? '' : phonehome),
+          phonemobile: (phonemobile === null ? '' : phonemobile),
+          jobtitle: (jobtitle === null ? '' : jobtitle),
+          department: (department === null ? '' : department),
+          company: (company === null ? '' : company),
+          effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+          secondaryemail: (secondaryemail === null ? email : email),
+        }).then((response) => {
+          if (response && response.data) {
+            this.$store.commit('user/setUserProps', response.data[0]);
+          }
+        })
+          .catch((err) => {
+            console.error('Error Message >>> ', err); // eslint-disable-line no-console
+          });
       };
       reader.readAsDataURL(file);
     },
     handleDeleteImage() {
-      this.userEditable.props.picture = '';
+      // this.pictureEditable.props.picture = '';
+      console.log('e');
+      const {
+        description, url, effectiveenddate, secondaryemail, email,
+        // picture,
+        distinguishedname, uniqueid, phonebusiness, phoneextension,
+        phonehome, phonemobile, jobtitle, department, company,
+        } = this.pictureEditable.props;
+      api.putUsers({
+        ...this.pictureEditable.props,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        picture: (''),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? email : email),
+      }).then((response) => {
+        if (response && response.data) {
+          this.$store.commit('user/setUserProps', response.data[0]);
+        }
+      })
+        .catch((err) => {
+          console.error('Error Message >>> ', err); // eslint-disable-line no-console
+        });
     },
     sendReferral(e) {
       e.preventDefault();

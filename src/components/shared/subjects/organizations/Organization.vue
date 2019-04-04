@@ -88,7 +88,7 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
-import Users from '@/components/shared/Users';
+import Users from '@/components/shared/subjects/users/Users';
 
 export default {
   props: {

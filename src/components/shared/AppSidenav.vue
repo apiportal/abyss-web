@@ -1,6 +1,7 @@
 <template>
   <div>
-    <b-form inline class="switch-organization">
+    <b-form class="switch-organization">
+      <label>Organization:</label>
       <b-form-select
         :value="currentUser.organizationid"
         :options="organizationOptions"
@@ -41,11 +42,11 @@
           <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
         </b-link> 
 
-        <b-link to="/app/my-policies/my-policies/1" class="pl--4" :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuPolicies">
+        <!-- <b-link to="/app/my-policies/my-policies/1" class="pl--4" :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuPolicies">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My Policies
         </b-link> 
 
-        <!-- <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
+        <b-link to="/app/my-slas/1" class="pl--4" :class="`${currentPage.rootPath === 'my-slas' ? 'selected' : ''}`">
           <span class="route-icon"><Icon icon="file-powerpoint" /></span> My SLAs
         </b-link> 
         
@@ -56,7 +57,7 @@
         <p>ADMIN</p>
 
 
-        <b-link to="/app/administer-users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
+        <b-link to="/app/administer-users/users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
           <span class="route-icon"><Icon icon="user" /></span> Users
         </b-link> 
 
@@ -106,19 +107,20 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
-      rootOrganization: state => state.organizations.rootOrganization,
     }),
     organizationOptions() {
-      const { userOrganizations } = this;
-      return userOrganizations.map(item => ({
-        text: item.organizationid,
-        value: item.organizationid,
-      }));
+      const { userOrganizations, organizations } = this;
+      return userOrganizations.map((item) => {
+        const organization = organizations.find(org => org.uuid === item.organizationrefid);
+        return {
+          text: organization ? organization.name : item.organizationrefid,
+          value: item.organizationrefid,
+        };
+      });
     },
   },
   data() {
     return {
-      currentOrganization: this.rootOrganization,
       userOrganizations: [],
     };
   },
@@ -136,7 +138,19 @@ export default {
       });
     },
     handleOrganizationChange(newOrganizationUuid) {
-      console.log(newOrganizationUuid); // eslint-disable-line
+      const { organizations } = this;
+      const organization = organizations.find(org => org.uuid === newOrganizationUuid);
+      const { name, uuid } = organization;
+      api.putSetCurrentOrganization({
+        organizationid: uuid,
+        organizationname: name,
+      }).then((response) => {
+        if (response && response.data) {
+          // this.$store.dispatch('user/resetUser');
+          const { principalid, sessionid, organizationid, organizationname } = response.data;
+          this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
+        }
+      });
     },
   },
 };
@@ -147,5 +161,11 @@ export default {
   font-size: 0.8em;
   font-style: italic;
   color:lightcoral;
+}
+.switch-organization {
+  label {
+    color: silver;
+    font-size: .75rem;
+  }
 }
 </style>

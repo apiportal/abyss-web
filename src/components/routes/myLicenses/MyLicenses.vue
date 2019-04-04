@@ -5,14 +5,21 @@
         <b-nav-item :active="currentPage.firstChildPath === 'my-licenses'" to="/app/my-licenses/my-licenses/1">
           <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
+        <b-nav-item
+          :active="false"
+          to="/app/my-policies/my-policies/1"
+        >
+          <span data-qa="linkMyPolicies" class="link-text">My Policies</span> <b-badge pill>{{ subjectPolicies.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item :active="false" to="/app/policy-types/1">
+          <span class="link-text" data-qa="linkPolicyTypes">Policy Types</span> <b-badge pill>{{ policyTypes.length }}</b-badge>
+        </b-nav-item>
+        <!-- <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
           <span class="link-text" data-qa="linkMyLicensesAttachedToApis">My Licenses Attached to APIs</span>
-          <!-- <b-badge pill>0</b-badge> -->
         </b-nav-item>
         <b-nav-item :active="currentPage.firstChildPath === 'under-contracts'" to="/app/my-licenses/under-contracts/1">
           <span class="link-text" data-qa="linkMyLicensesUnderContracts">My Licenses Under Contracts</span>
-          <!-- <b-badge pill>0</b-badge> -->
-        </b-nav-item>
+        </b-nav-item> -->
       </b-nav>
     </div>
     <div class="page-content-nested">
@@ -30,6 +37,8 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       subjectLicenses: state => state.subjectLicenses.items,
+      subjectPolicies: state => state.subjectPolicies.items,
+      policyTypes: state => state.policyTypes.items,
     }),
   },
   mounted() {

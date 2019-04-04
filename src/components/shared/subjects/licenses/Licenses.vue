@@ -44,9 +44,6 @@
               sortByKeyType="string"
             />
           </th>
-          <!-- <th v-if="childComponent === 'policies'">Policies</th>
-          <th v-if="childComponent === 'proxies'">Proxies</th>
-          <th v-if="childComponent === 'contracts'">Contracts</th> -->
           <th></th>
         </tr>
       </thead>
@@ -59,13 +56,13 @@
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${licenseIndex}`">
           <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
             <Icon
               :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"
               :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${index}`">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${licenseIndex}`">
             {{ licenseItem.name }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
@@ -89,8 +86,9 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license-policies/${licenseItem.uuid}`"><Icon icon="edit" /> Add/Edit Policies</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

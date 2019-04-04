@@ -72,7 +72,7 @@ export default {
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('policyTypes/getPolicyTypes');
+    this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
   },

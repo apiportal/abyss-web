@@ -35,6 +35,10 @@ export default {
   putChangePassword(uuid, params) {
     return axios.put(`abyss/oapi/subjects/${uuid}/changepassword/`, params);
   },
+  // switch organization
+  putSetCurrentOrganization(params) {
+    return axios.put('abyss/oapi/set-current-organization', params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');
@@ -176,6 +180,9 @@ export default {
     return axios.post('/abyss/oapi/subjects/', group);
   },
   // subject-memberships
+  getGroupMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
@@ -338,6 +345,16 @@ export default {
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
   },
+  putPolicyTypes(policyType) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = policyType;
+    return axios.put(`/abyss/oapi/policy-types/${uuid}`, rest);
+  },
+  postPolicyTypes(policyType) {
+    return axios.post('/abyss/oapi/policy-types/', policyType);
+  },
+  deletePolicyTypes(uuid) {
+    return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
+  },
   getSubjectApps(uuid) {
     return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
   },
@@ -367,10 +384,17 @@ export default {
   getResourceAccessTokens(uuid) {
     return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
   },
+  getApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
+  },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
   },
   getLicenseApis(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
+  },
+  // roles
+  getRoles() {
+    return axios.get('/abyss/oapi/subjects/roles/');
   },
 };

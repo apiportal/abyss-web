@@ -39,11 +39,13 @@ import AddIdentityManagerType from '@/components/routes/identityManagerTypes/Add
 import EditIdentityManagerType from '@/components/routes/identityManagerTypes/EditIdentityManagerType';
 import DeleteIdentityManagerType from '@/components/routes/identityManagerTypes/DeleteIdentityManagerType';
 // Administer Users Routes Components
+import SubjectUsers from '@/components/routes/administerUsers/subjectUsers/SubjectUsers';
 import AdministerUsers from '@/components/routes/administerUsers/AdministerUsers';
 import AdministerUsersLogs from '@/components/routes/administerUsers/AdministerUsersLogs';
 import AddAdministerUser from '@/components/routes/administerUsers/AddAdministerUser';
 import EditAdministerUser from '@/components/routes/administerUsers/EditAdministerUser';
 import EditAdministerUserGroups from '@/components/routes/administerUsers/EditAdministerUserGroups';
+import EditAdministerUserOrganizations from '@/components/routes/administerUsers/EditAdministerUserOrganizations';
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
 // Administer Groups Routes Components
 import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
@@ -51,7 +53,11 @@ import AdministerGroupsLogs from '@/components/routes/administerGroups/Administe
 import AddAdministerGroup from '@/components/routes/administerGroups/AddAdministerGroup';
 import EditAdministerGroup from '@/components/routes/administerGroups/EditAdministerGroup';
 import DeleteAdministerGroup from '@/components/routes/administerGroups/DeleteAdministerGroup';
+import DeleteAdministerGroupUser from '@/components/routes/administerGroups/DeleteAdministerGroupUser';
 import EditAdministerGroupUser from '@/components/routes/administerGroups/EditAdministerGroupUser';
+import EditAdministerGroupUserOrganizations from '@/components/routes/administerGroups/EditAdministerGroupUserOrganizations';
+import EditAdministerGroupUserGroups from '@/components/routes/administerGroups/EditAdministerGroupUserGroups';
+import EditAdministerGroupUsers from '@/components/routes/administerGroups/EditAdministerGroupUsers';
 // Access Managers Routes Components
 import AccessManagers from '@/components/routes/accessManagers/AccessManagers';
 import AccessManagersLogs from '@/components/routes/accessManagers/AccessManagersLogs';
@@ -67,6 +73,12 @@ import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/Acces
 import AddAccessManagerType from '@/components/routes/accessManagerTypes/AddAccessManagerType';
 import EditAccessManagerType from '@/components/routes/accessManagerTypes/EditAccessManagerType';
 import DeleteAccessManagerType from '@/components/routes/accessManagerTypes/DeleteAccessManagerType';
+// Policy Types Routes Components
+import PolicyTypes from '@/components/routes/policyTypes/PolicyTypes';
+import PolicyTypesLogs from '@/components/routes/policyTypes/PolicyTypesLogs';
+import AddPolicyType from '@/components/routes/policyTypes/AddPolicyType';
+import EditPolicyType from '@/components/routes/policyTypes/EditPolicyType';
+import DeletePolicyType from '@/components/routes/policyTypes/DeletePolicyType';
 // Administer Permissions Routes Components
 import AdministerPermissions from '@/components/routes/administerPermissions/AdministerPermissions';
 import AdministerPermissionsLogs from '@/components/routes/administerPermissions/AdministerPermissionsLogs';
@@ -89,6 +101,9 @@ import AddMyLicense from '@/components/routes/myLicenses/AddMyLicense';
 import DeleteMyLicense from '@/components/routes/myLicenses/DeleteMyLicense';
 import LicensesAttachedToApis from '@/components/routes/myLicenses/licensesAttachedToApis/LicensesAttachedToApis';
 import MyLicensesUnderContracts from '@/components/routes/myLicenses/myLicensesUnderContracts/MyLicensesUnderContracts';
+import EditMyLicensePolicy from '@/components/routes/myLicenses/EditMyLicensePolicy';
+import DeleteMyLicensePolicy from '@/components/routes/myLicenses/DeleteMyLicensePolicy';
+import EditMyLicensePolicies from '@/components/routes/myLicenses/EditMyLicensePolicies';
 // My Policies
 import MyPolicies from '@/components/routes/myPolicies/MyPolicies';
 import SubjectPolicies from '@/components/routes/myPolicies/subjectPolicies/SubjectPolicies';
@@ -105,7 +120,11 @@ import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLo
 import AddOrganization from '@/components/routes/organizations/AddOrganization';
 import EditOrganization from '@/components/routes/organizations/EditOrganization';
 import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
+import DeleteOrganizationUser from '@/components/routes/organizations/DeleteOrganizationUser';
 import EditOrganizationUser from '@/components/routes/organizations/EditOrganizationUser';
+import EditOrganizationUserGroups from '@/components/routes/organizations/EditOrganizationUserGroups';
+import EditOrganizationUserOrganizations from '@/components/routes/organizations/EditOrganizationUserOrganizations';
+import EditOrganizationUsers from '@/components/routes/organizations/EditOrganizationUsers';
 
 Vue.use(Router);
 
@@ -286,30 +305,41 @@ export default new Router({
           ],
         },
         {
-          path: 'administer-users/:page',
+          path: 'administer-users',
           component: AdministerUsers,
           children: [
             {
-              path: 'logs/:id/:logType/:logPage',
-              component: AdministerUsersLogs,
-            },
-            {
-              path: 'add-new',
-              component: AddAdministerUser,
-            },
-            {
-              path: 'edit/:id',
-              component: EditAdministerUser,
-            },
-            {
-              path: 'edit-groups/:id',
-              component: EditAdministerUserGroups,
-            },
-            {
-              path: 'delete/:id',
-              component: DeleteAdministerUser,
+              path: 'users/:page',
+              component: SubjectUsers,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: AdministerUsersLogs,
+                },
+                {
+                  path: 'add-new',
+                  component: AddAdministerUser,
+                },
+                {
+                  path: 'edit-user/:id',
+                  component: EditAdministerUser,
+                },
+                {
+                  path: 'edit-user-groups/:id',
+                  component: EditAdministerUserGroups,
+                },
+                {
+                  path: 'edit-user-organizations/:id',
+                  component: EditAdministerUserOrganizations,
+                },
+                {
+                  path: 'delete-user/:id',
+                  component: DeleteAdministerUser,
+                },
+              ],
             },
           ],
+
         },
         {
           path: 'administer-groups/:page',
@@ -334,6 +364,22 @@ export default new Router({
             {
               path: 'edit-user/:id',
               component: EditAdministerGroupUser,
+            },
+            {
+              path: 'delete-user/:id',
+              component: DeleteAdministerGroupUser,
+            },
+            {
+              path: 'edit-user-groups/:id',
+              component: EditAdministerGroupUserGroups,
+            },
+            {
+              path: 'edit-group-users/:id',
+              component: EditAdministerGroupUsers,
+            },
+            {
+              path: 'edit-user-organizations/:id',
+              component: EditAdministerGroupUserOrganizations,
             },
           ],
         },
@@ -392,6 +438,28 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAccessManagerType,
+            },
+          ],
+        },
+        {
+          path: 'policy-types/:page',
+          component: PolicyTypes,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: PolicyTypesLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddPolicyType,
+            },
+            {
+              path: 'edit/:id',
+              component: EditPolicyType,
+            },
+            {
+              path: 'delete/:id',
+              component: DeletePolicyType,
             },
           ],
         },
@@ -469,6 +537,18 @@ export default new Router({
                   path: 'delete-license/:licenseId',
                   component: DeleteMyLicense,
                 },
+                {
+                  path: 'edit-policy/:policyId',
+                  component: EditMyLicensePolicy,
+                },
+                {
+                  path: 'delete-policy/:policyId',
+                  component: DeleteMyLicensePolicy,
+                },
+                {
+                  path: 'edit-license-policies/:licenseId',
+                  component: EditMyLicensePolicies,
+                },
               ],
             },
             {
@@ -532,6 +612,22 @@ export default new Router({
             {
               path: 'edit-user/:id',
               component: EditOrganizationUser,
+            },
+            {
+              path: 'delete-user/:id',
+              component: DeleteOrganizationUser,
+            },
+            {
+              path: 'edit-user-groups/:id',
+              component: EditOrganizationUserGroups,
+            },
+            {
+              path: 'edit-user-organizations/:id',
+              component: EditOrganizationUserOrganizations,
+            },
+            {
+              path: 'edit-organization-users/:id',
+              component: EditOrganizationUsers,
             },
           ],
         },

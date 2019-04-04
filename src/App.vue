@@ -23,10 +23,10 @@ export default {
       // error
       this.$store.commit('traffic/increaseResponses');
 
-      if (error.response.status === 401) {
+      if (error.status === 401) {
         this.$router.push('/auth/login');
       }
-      // return Promise.reject(error);
+      return Promise.reject(error.response);
     });
 
     // check user cookie
@@ -47,7 +47,9 @@ export default {
     });
     const { principalid, organizationid, organizationname, sessionid } = cookiesObj;
     if (principalid && organizationid && organizationname && sessionid) {
-      this.$store.dispatch('user/getUser', { principalid, organizationid, organizationname, sessionid });
+      if (this.$route.path.indexOf('/auth') === -1) {
+        this.$store.dispatch('user/getUser', { principalid, organizationid, organizationname, sessionid });
+      }
     } else {
       this.$store.dispatch('user/resetUser');
       this.$router.push('/auth/login');

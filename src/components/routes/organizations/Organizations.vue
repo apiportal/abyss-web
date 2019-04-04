@@ -81,9 +81,9 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
-      rootOrganization: state => state.organizations.rootOrganization,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
+      currentUser: state => state.user,
     }),
     tableRows() {
       const { organizations, subjectOrganizations } = this;
@@ -122,9 +122,9 @@ export default {
           organizationowner: getOwner(item.uuid),
         }))
         .filter((item) => {
-          const { rootOrganization } = this;
+          const { currentUser } = this;
           const { organizationid } = item;
-          return (organizationid === rootOrganization);
+          return (organizationid === currentUser.organizationid);
         })
         .filter((item) => {
           const { filterKey } = this;

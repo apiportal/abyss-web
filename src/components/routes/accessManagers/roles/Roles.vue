@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container page-access-managers">
+  <div class="page-container page-roles">
 
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
@@ -7,18 +7,18 @@
           :active="false"
           to="/app/access-managers/1"
         >
-          <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{  }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="false"
           to="/app/access-manager-types/1"
         >
-          <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{  }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="true"
         >
-          <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -77,8 +77,8 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Access Manager Name"
-                sortByKey="accessmanagername"
+                text="Display Name"
+                sortByKey="displayname"
                 sortByKeyType="string"
                 data-qa="tableHeadName"
               />
@@ -88,8 +88,8 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Access Manager Type"
-                sortByKey="accessmanagertypename"
+                text="Effective Start Date"
+                sortByKey="effectivestartdate"
                 sortByKeyType="string"
               />
             </th>
@@ -98,8 +98,8 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Organization"
-                sortByKey="organizationname"
+                text="Effective End Date"
+                sortByKey="effectiveenddate"
                 sortByKeyType="string"
               />
             </th>
@@ -123,13 +123,13 @@
               />
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-              {{ item.accessmanagername }}
+              {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.accessmanagertypename }}
+              {{ item.effectivestartdate }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.organizationname }}
+              {{ item.effectiveenddate }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
@@ -137,12 +137,12 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/roles/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/roles/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/access-managers/${page}/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/roles/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -156,15 +156,11 @@
                   <div class="row">
                     <dl class="col">
                       <dt>Name:</dt>
-                      <dd>{{ item.accessmanagername }}</dd>
-                      <dt>Type:</dt>
-                      <dd>{{ item.accessmanagertypename }}</dd>
+                      <dd>{{ item.displayname }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Description:</dt>
-                      <dd>{{ item.description }}</dd>
-                      <dt>Organization:</dt>
-                      <dd>{{ item.organizationname }}</dd>
+                      <dd>{{ item.subjecttypeid }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Created:</dt>
@@ -218,26 +214,16 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      accessManagers: state => state.accessManagers.items,
-      accessManagerTypes: state => state.accessManagerTypes.items,
-      organizations: state => state.organizations.items,
+      roles: state => state.roles.items,
+      // subjectTypes: state => state.subjectTypes.items,
+
     }),
     tableRows() {
-      const { accessManagers, accessManagerTypes, organizations } = this;
-      const getAccessManagerTypeName = (accessManagerId) => {
-        const accessManager = accessManagerTypes.find(item => item.uuid === accessManagerId);
-        return accessManager ? accessManager.typename : accessManagerId;
-      };
-      const getOrganizationName = (organizationId) => {
-        const organization = organizations.find(item => item.uuid === organizationId);
-        return organization ? organization.name : organizationId;
-      };
+      const { roles } = this;
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
-        array: accessManagers.map(item => ({
+        array: roles.map(item => ({
           ...item,
-          accessmanagertypename: getAccessManagerTypeName(item.accessmanagertypeid),
-          organizationname: getOrganizationName(item.organizationid),
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -246,12 +232,12 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.accessmanagername &&
-              item.accessmanagername.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.subjectname &&
+              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.accessmanagertypename &&
-              item.accessmanagertypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.subjectname &&
+              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -271,15 +257,14 @@ export default {
     },
   },
   created() {
-    this.$store.commit('currentPage/setRootPath', 'access-managers');
-    this.$store.dispatch('accessManagers/getAccessManagers', {});
-    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
-    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.commit('currentPage/setRootPath', 'roles');
+    this.$store.dispatch('roles/getRoles', {});
+    // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'accessmanagername',
+      sortByKey: 'displayname',
       sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',
@@ -297,7 +282,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/access-managers/${page}`);
+      this.$router.push(`/app/roles/${page}`);
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -309,7 +294,7 @@ export default {
       }
     },
     refreshData() {
-      this.$store.dispatch('accessManagers/getAccessManagers', {
+      this.$store.dispatch('roles/getRoles', {
         refresh: true,
       });
     },

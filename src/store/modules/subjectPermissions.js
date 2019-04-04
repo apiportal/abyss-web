@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getSubjectPermissions(uuid).then((response) => {
+    api.getSubjectPermissions(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectPermissions', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectPermissions', []);
       }
     });
   },

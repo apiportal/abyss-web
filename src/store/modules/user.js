@@ -14,7 +14,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  getUser: ({ commit }, { principalid, sessionid, organizationid, organizationname }) => {
+  getUser: ({ commit }, { principalid, sessionid, organizationid, organizationname, refresh = false }) => {
     api.getUser(principalid).then((response) => {
       if (response && response.data) {
         // set principalid
@@ -37,10 +37,17 @@ const actions = {
           commit('setOrganizationName', organizationname);
           document.cookie = `abyss.login.organization.name=${organizationname}; path=/;`;
         }
-        // set user props
-        commit('setUserProps', response.data[0]);
+        // set user props, just in case: another if case
+        if (response.data.length > 0) {
+          commit('setUserProps', response.data[0]);
+        }
         // set user signedin
         commit('setUserSignedIn', true);
+
+        // refresh, if required: for example: switch organization
+        if (refresh) {
+          setTimeout(function() { location.reload(); }, 10);
+        }
       }
     });
   },

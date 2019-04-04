@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getContractStates().then((response) => {
+    api.getContractStates()
+    .then((response) => {
       if (response && response.data) {
         commit('setContractStates', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setContractStates', []);
       }
     });
   },

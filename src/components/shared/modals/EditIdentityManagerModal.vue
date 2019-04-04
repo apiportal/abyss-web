@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditIdentityManager"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Identity Manager' : 'Add New Identity Manager' }}
       </h5>
     </template>
@@ -145,6 +146,7 @@
                 title="Configure Directory"
                 @click="toggleConfigureDirectory"
                 :disabled="!subjectDirectoryEditable.directorytypeid"
+                data-qa="btnConfigure"
               >
                 <Icon icon="cog" />
               </b-button>
@@ -166,12 +168,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -182,7 +186,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -253,6 +257,9 @@ export default {
     },
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     directoryNameState() {
       const { directoryname } = this.subjectDirectoryEditable;
 

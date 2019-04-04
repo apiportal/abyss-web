@@ -30,6 +30,8 @@
           :required="required.indexOf(key) > -1"
           :propAddress="[ ...propAddress, ...[ 'properties', key] ]"
           :onChange="onChange"
+          :isEnum="Boolean(properties[key].enum)"
+          :enumOptions="properties[key].enum || []"
         />
       </div>
     </div>

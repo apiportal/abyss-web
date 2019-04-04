@@ -11,14 +11,12 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               Login Notifications
               <small>An immidiate email about new Abyss login notification</small>
               </div>
-          </li>
-          <li class="list-group-item" @click="onChangePassClick" style="cursor: pointer;">
-            <div class="md-v-line"></div><Icon icon="lock" class="mr-5"/>Change Password
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -27,28 +25,31 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               Show deleted items
               <small>Show all deleted items such as APIs, APPs, Licenses, User, Groups etc.</small>
               </div>
+            </b-form-checkbox>
           </li>
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               Show dark sidebar
               <small>Sidebar dark toggle button</small>
               </div>
+            </b-form-checkbox>
           </li>
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-row" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-row ml-4">
               Delegate a user
               <button type="button" class="btn btn-secondary btn-sm mx-2">Select User</button>
               <button type="button" class="btn btn-secondary btn-sm mx-2">Select Date</button>
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -57,11 +58,12 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               News for you
               <small>A weekly email featuring about Abyss</small>
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -70,25 +72,28 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4">
               Allow Subscribe to my APIs without approval
               </div>
+            </b-form-checkbox>
           </li>
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               API Subscriptions
               <small>Get notifications about new subscriptions about your APIs</small>
               </div>
+            </b-form-checkbox>
           </li>
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4">
               Allow developers to promote API version without approval
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -97,11 +102,12 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               APP Subscriptions
               <small>Get notifications about new subscriptions about your APPs</small>
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -110,11 +116,12 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               License Subscriptions
               <small>Get notifications about new subscriptions about your Licenses</small>
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>
@@ -123,11 +130,12 @@
           <ul class="list-group">
           <li class="list-group-item">
             <div class="md-v-line"></div>
-            <input type="checkbox" class="mr-5">
-              <div class="d-flex flex-column" style="margin-top: -30px; margin-left: 4rem;">
+            <b-form-checkbox switch class="mt-2" style="margin-left: -.4rem">
+              <div class="d-flex flex-column ml-4" style="margin-top: -.6rem">
               Expirations
               <small>Get an email when your API or APP key, contracts and licenses are about to expire</small>
               </div>
+            </b-form-checkbox>
           </li>
           </ul>
         </b-tab>

@@ -46,46 +46,17 @@
           <b-badge pill>{{ computedContractApis.length }}</b-badge>
         </b-button>
       </div>
-      <div class="abyss-table-content" v-if="isTokensTableVisible">
-        <table class="table abyss-table abyss-table-cards">
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Expire Date</th>
-              <th>isActive</th>
-              <th>Deleted</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(accessToken, index) in accessTokens" v-bind:key="index" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${accessToken.isdeleted ? 'is-deleted' : ''}`">
-              <td>
-                <b-form-textarea
-                  id="textarea1"
-                  v-model="accessToken.token"
-                  placeholder="Enter something"
-                  rows="4"
-                  max-rows="6"
-                  :disabled="true"
-                />
-              </td>
-              <td>
-                {{ accessToken.expiredate | moment("DD.MM.YYYY HH:mm") }}
-              </td>
-              <td>
-                {{ accessToken.isactive }}
-              </td>
-              <td>
-                {{ accessToken.isdeleted }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div v-if="isTokensTableVisible">
+        <AccessTokens
+          :rows="accessTokens"
+          :routePath="routePath"
+        ></AccessTokens>
       </div>
       <div v-if="isApisTableVisible">
-        <Apis
+        <Proxies
           :rows="computedContractApis"
-          :routePath="`/app/my-apps/my-apps/${page}`"
-        ></Apis>
+          :routePath="routePath"
+        ></Proxies>
       </div>
     </div>
   </div>
@@ -95,6 +66,7 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import AccessTokens from '@/components/shared/subjects/subscriptions/AccessTokens';
 
 export default {
   props: {
@@ -115,7 +87,8 @@ export default {
   },
   components: {
     Icon,
-    Apis: () => import('@/components/shared/subjects/apis/Apis'),
+    AccessTokens,
+    Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({
@@ -163,7 +136,27 @@ export default {
       }
     },
   },
-  mounted() {
+  watch: {
+    computedContractApis(newVal, oldVal) {
+      // console.log(newVal, oldVal);
+      const contractApis = newVal;
+      if (newVal.length !== oldVal.length) {
+        for (let i = 0; i < contractApis.length; i += 1) {
+          api.getApiContracts(contractApis[i].uuid).then((res) => {
+            if (res && res.data) {
+              contractApis[i].contracts = res.data;
+            }
+          });
+          api.getResourceAccessTokens(this.item.subjectpermissionid).then((res) => {
+            if (res && res.data) {
+              contractApis[i].accessTokens = res.data;
+            }
+          });
+        }
+      }
+    },
+  },
+  created() {
     // get tokens
     api
     .getResourceAccessTokens(this.item.subjectpermissionid)

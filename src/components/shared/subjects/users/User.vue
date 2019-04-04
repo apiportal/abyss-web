@@ -38,7 +38,7 @@
         <dt>Email:</dt>
         <dd>{{ user.email }}</dd>
         <dt>Secondary Email:</dt>
-        <dd>{{ user.secondaryemail }}</dd>
+        <dd>{{ secondaryEmail }}</dd>
         <dt>Groups:</dt>
         <dd>
           <span 
@@ -69,23 +69,20 @@
 </template>
 
 <script>
+// import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 
 export default {
-  components: {
-    Icon,
-  },
   props: {
     user: {
-      Type: Object,
-      required: false,
-      default() { return {}; },
+      type: Object,
+      required: true,
     },
-    page: {
-      Type: Number,
+    routePath: {
+      type: String,
       required: false,
-      default() { return 1; },
+      default() { return ''; },
     },
     groups: {
       Type: Array,
@@ -93,12 +90,21 @@ export default {
       default() { return []; },
     },
     organizations: {
-      Type: Array,
+      type: Array,
       required: false,
-      default() { return []; },
     },
   },
+  components: {
+    Icon,
+  },
   computed: {
+    secondaryEmail() {
+      const { email, secondaryemail } = this.user;
+      if (secondaryemail === email) {
+        return '';
+      }
+      return secondaryemail;
+    },
     computedMemberships() {
       const { memberships, groups } = this;
       return memberships.map((item) => {
@@ -122,12 +128,6 @@ export default {
       });
     },
   },
-  data() {
-    return {
-      memberships: [],
-      userOrganizations: [],
-    };
-  },
   mounted() {
     this.getSubjectMemberships();
     this.getOrganizationsOfUser();
@@ -148,6 +148,13 @@ export default {
         }
       });
     },
+  },
+  data() {
+    return {
+      page: parseInt(this.$route.params.page, 10),
+      memberships: [],
+      userOrganizations: [],
+    };
   },
 };
 </script>

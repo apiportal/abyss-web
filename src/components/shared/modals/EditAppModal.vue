@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditApp"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit App' : 'Add New App' }}
       </h5>
     </template>
@@ -28,7 +29,7 @@
             <b-form-input
               id="appNameInput"
               type="text"
-              v-model="appEditable.subjectname"
+              v-model="appEditable.displayname"
               placeholder="App Name"
               :state="appNameState"
               required
@@ -135,12 +136,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -214,12 +217,12 @@ export default {
       organizations: state => state.organizations.items,
     }),
     appNameState() {
-      const { subjectname } = this.appEditable;
-      return subjectname.length > 0;
+      const { displayname } = this.appEditable;
+      return displayname.length > 0;
     },
     appNameInvalidFeedback() {
-      const { subjectname } = this.appEditable;
-      if (subjectname.length === 0) {
+      const { displayname } = this.appEditable;
+      if (displayname.length === 0) {
         return 'Please enter something';
       }
       return '';
@@ -270,19 +273,42 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { appEditable, putApps, postApps, onUpdate, role } = this;
-
+      const { description, url, secondaryemail,
+        effectivestartdate, effectiveenddate,
+        email, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = appEditable;
+      let appToUpdate = {
+        ...appEditable,
+        description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        picture: (picture === null ? '' : picture),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
+        effectivestartdate: (effectivestartdate === null ?
+          this.$moment.utc().toISOString() : effectivestartdate),
+        effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? email : secondaryemail),
+      };
       if (role === 'edit') {
-        putApps(appEditable).then(() => {
+        putApps(appToUpdate).then(() => {
           onUpdate();
         });
       } else if (role === 'add') {
-        const appToAdd = {
-          ...appEditable,
-          displayname: appEditable.subjectname,
-          firstname: appEditable.subjectname,
-          lastname: appEditable.subjectname,
+        appToUpdate = {
+          ...appToUpdate,
+          subjectname: appToUpdate.displayname.replace(/ /g, '').toLowerCase(),
+          firstname: appToUpdate.displayname,
+          lastname: appToUpdate.displayname,
         };
-        postApps([appToAdd]).then(() => {
+        postApps([appToUpdate]).then(() => {
           onUpdate();
         });
       }

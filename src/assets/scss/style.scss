@@ -5,6 +5,8 @@
   $brand-color: #0088CC;
   // $bg-sidebar: #00386C;
   $bg-sidebar: #003366;
+  $bg-sidebar: #004477;
+  // $bg-sidebar: #004477;
   // $brand-color-light: #28ACE2;
   $brand-color-light: #00BBFF;
   // $brand-color-light: #0099EE;
@@ -56,6 +58,24 @@
       color: white;
     }
   }
+  .modal-header .close {
+    padding: .75rem 1rem 1.25rem 1rem;
+    font-size: 2.4rem;
+    line-height: 1rem;
+    font-weight: 400;
+  }
+  .popover-body {
+    padding: .5rem .75rem;
+    color: #212529;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  // h1, h2, h3, h4, h5, h6 {
+  //   margin-bottom: .5rem;
+  //   font-weight: 300;
+  //   line-height: 1.2;
+  //   color: #007bff;
+  // }
 // scrollbar
   ::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -63,13 +83,16 @@
     height: 8px;
   }
   :hover::-webkit-scrollbar-thumb {
-    background-color: #aaa;
+    background-color: rgba(black, 0.25);
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: #bbb;
+    background-color: rgba(black, 0.15);
   }
 // app
+  .loading-modal-backdrop {
+    color: $brand-color;
+  }
   .app-flex {
     position: absolute;
     top: 0;
@@ -106,7 +129,8 @@
   }
   .app-header {
     .logo {
-      height: 42px;
+      height: 46px;
+      // max-width: 100%;
     }
     .navbar {
       background-color: #fff;
@@ -137,6 +161,17 @@
   }
   .switch-organization {
     padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: .5rem;
+    .custom-select {
+      background-color: transparent;
+      // border-color: lighten($bg-sidebar, 40%);
+      border-color: rgba(white, .2);
+      // color: lighten($bg-sidebar, 50%);
+      color: lighten($bg-sidebar, 40%);
+      border-radius: 0;
+      background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff77' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+    }
   }
   ul.sidenav-links {
     list-style-type: none;
@@ -332,9 +367,10 @@
                 background: $brand-color;
                 border-color: $brand-color;
                 color: white !important;
-              .btn-link {
-                color: white;
-              }
+                
+                .btn-link {
+                  color: white !important;
+                }
             }
           }
         }
@@ -422,6 +458,7 @@
           }
         }
         + tr {
+        // + tr:not(.opaque) {
           opacity: 0.45;
         }
       }
@@ -480,14 +517,23 @@
         &.tbody-collapsed {
 
           & > tr:first-child {
-            border-left: 8px solid $brand-color;
-            font-weight: bold;
-            color: $brand-color;
+            & > td:first-child {
+              border-left: 8px solid $brand-color;
+            }
+
+            & > td {
+              background-color: $brand-color;
+              color: white;
+
+              .btn-link {
+                color: white !important;
+              }
+            }
           }
 
           & > tr:last-child {
-            border-left: 8px solid $brand-color;
-            & > td {
+            & > td:first-child {
+              border-left: 8px solid $brand-color;
               padding: 0;
             }
           }
@@ -510,6 +556,44 @@
   }
   pre {
     margin-bottom: 0;
+  }
+  .btn {
+    &.is-deleted {
+      opacity: 0.45;
+      position: relative;
+      &:before  {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-right: 10px solid transparent;
+        border-left: 10px solid red;
+        border-bottom: 10px solid transparent;
+        height: 0;
+        width: 0;
+        z-index: 1;
+      }
+    }
+  }
+  .modal-body {
+    + .popover {
+      max-width: 600px;
+    }
+  }
+  .btn-icon {
+    // border-radius: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    span {
+      // border-right: 1px solid rgba(white, 0.2);
+      padding: 0 .5rem;
+    }
+    svg {
+      margin: 0 .5rem;
+    }
   }
 // form
   option[disabled] {

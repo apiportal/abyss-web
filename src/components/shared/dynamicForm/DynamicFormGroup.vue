@@ -1,7 +1,19 @@
 <template>
   <div>
+    <DynamicFormSelect
+      v-if="isEnum"
+      :label="title"
+      :example="example"
+      :description="description"
+      :readonly="readonly"
+      :required="required"
+      :propAddress="propAddress"
+      :onChange="onChange"
+      :value="value"
+      :options="enumOptions.map(option => ({ text: option, value: option }))"
+    />
     <DynamicFormInputString
-      v-if="type === 'string'"
+      v-else-if="type === 'string'"
       :label="title"
       :example="example"
       :description="description"
@@ -54,6 +66,7 @@ import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormI
 import DynamicFormInputInteger from '@/components/shared/dynamicForm/DynamicFormInputInteger';
 import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
 import DynamicFormArray from '@/components/shared/dynamicForm/DynamicFormArray';
+import DynamicFormSelect from '@/components/shared/dynamicForm/DynamicFormSelect';
 
 export default {
   props: {
@@ -99,12 +112,23 @@ export default {
       required: false,
       default() { return {}; },
     },
+    isEnum: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    enumOptions: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   components: {
     DynamicFormInputString,
     DynamicFormInputInteger,
     DynamicFormCheckbox,
     DynamicFormArray,
+    DynamicFormSelect,
   },
 };
 </script>

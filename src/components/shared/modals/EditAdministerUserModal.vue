@@ -8,10 +8,11 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditUser"
   >
     <template slot="header">
-      <h5 class="modal-title">
-        {{ role === 'edit' ? 'Edit Administer User' : 'Add New Administer User' }}
+      <h5 class="modal-title" data-qa="modalTitle">
+        {{ role === 'edit' ? 'Edit User' : 'Add New User' }}
       </h5>
     </template>
     <template>
@@ -150,7 +151,7 @@
             <b-form-input
               id="secondaryEmailInput"
               type="email"
-              v-model="userEditable.secondaryemail"
+              v-model="secondaryEmail"
               placeholder="Secondary Email"
             >
             </b-form-input>
@@ -237,12 +238,14 @@
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btn-Cancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -325,6 +328,21 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
+    secondaryEmail: {
+      get() {
+        if (this.userEditable.secondaryemail === this.userEditable.email) {
+          return '';
+        }
+        return this.userEditable.secondaryemail;
+      },
+      set(value) {
+        if (value === '') {
+          this.userEditable.secondaryemail = this.userEditable.email;
+        } else {
+          this.userEditable.secondaryemail = value;
+        }
+      },
+    },
     firstNameState() {
       const { firstname } = this.userEditable;
       return firstname.length > 0;
@@ -444,7 +462,8 @@ export default {
       evt.preventDefault();
 
       const { userEditable, putUsers, postUsers, onUpdate, role } = this;
-      const { description, url, effectiveenddate, secondaryemail,
+      const { description, url, secondaryemail,
+        effectivestartdate, effectiveenddate,
         email, picture, distinguishedname, uniqueid,
         phonebusiness, phoneextension, phonehome, phonemobile,
         jobtitle, department, company } = userEditable;
@@ -462,8 +481,10 @@ export default {
         jobtitle: (jobtitle === null ? '' : jobtitle),
         department: (department === null ? '' : department),
         company: (company === null ? '' : company),
-        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : email),
+        effectivestartdate: (effectivestartdate === null ?
+          this.$moment.utc().toISOString() : effectivestartdate),
+        effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
+        secondaryemail: (secondaryemail === null ? email : secondaryemail),
       };
 
       if (role === 'edit') {
@@ -474,12 +495,11 @@ export default {
         });
       } else if (role === 'add') {
         const { currentUser } = this;
-        const { uuid, subjecttypeid } = currentUser.props;
+        const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
         userToUpdate = [{
           ...userToUpdate,
           crudsubjectid,
-          subjecttypeid,
         }];
         postUsers(userToUpdate).then((response) => {
           if (response && response.data) {

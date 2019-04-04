@@ -18,6 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -30,6 +31,7 @@
             variant="primary"
             class="page-btn-add"
             block
+            data-qa="btnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -38,13 +40,13 @@
       </div>
     </div>
     <div class="page-content">
-      <Apis
+      <Proxies
         :rows="paginatedRows"
         :routePath="`/app/my-apis/shared-by-me/${page}`"
       />
       <router-view></router-view>
     </div>
-    <div class="page-footer">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -52,6 +54,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>
@@ -61,14 +64,14 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Apis from '@/components/shared/subjects/apis/Apis';
+import Proxies from '@/components/shared/subjects/proxies/Proxies';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Apis,
+    Proxies,
     Icon,
   },
   computed: {

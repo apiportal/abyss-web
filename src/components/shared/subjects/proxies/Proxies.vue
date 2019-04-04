@@ -3,26 +3,84 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
-          <th>Proxy Api Name</th>
-          <th>Version</th>
-          <th>State</th>
-          <th>Visibility</th>
-          <th># of Subscriptions</th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Proxy Api Name"
+              sortByKey="openapidocument.info.title"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Environment"
+              sortByKey="islive"
+              sortByKeyType="boolean"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Version"
+              sortByKey="version"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="State"
+              sortByKey="apistatename"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Visibility"
+              sortByKey="apivisibilityname"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Contracts"
+              sortByKey="contractscount"
+              sortByKeyType="number"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="7"
       />
       <TbodyCollapsible
-        v-for="(proxyItem, proxyIndex) in rows" v-bind:key="proxyIndex"
+        v-for="(proxyItem, proxyIndex) in tableRows" v-bind:key="proxyIndex"
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
         :level="1"
       >
-        <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr id="IdTableRow" slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`">
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.openapidocument.info.title }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
@@ -34,7 +92,7 @@
             {{ proxyItem.apivisibilityname }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.subscriptions ? proxyItem.subscriptions.length : 0 }}
+            {{ proxyItem.contractscount }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
@@ -52,7 +110,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="6">
+          <td colspan="7">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -69,10 +127,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
+import SortBy from '@/components/shared/SortBy';
+import Helpers from '@/helpers';
 
 export default {
   props: {
@@ -91,19 +152,59 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
+    tableRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+            contractscount: item.contracts ? item.contracts.length : 5000,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
   },
   components: {
     TbodyCollapsible,
     TBodyLoading,
     Icon,
+    SortBy,
     Proxy,
   },
   data() {
     return {
       collapsedRows: [],
+      proxyRows: [],
+      sortByKey: 'openapidocument.info.title',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
+    getApiContracts(newRows) {
+      const rows = newRows;
+      for (let i = 0; i < rows.length; i += 1) {
+        api.getApiContracts(rows[i].uuid).then((response) => {
+          if (response && response.data) {
+            rows[i].contracts = response.data;
+          } else {
+            rows[i].contracts = [];
+          }
+        });
+      }
+      return rows;
+    },
+    environment(item) {
+      return item.islive ? 'Live' : 'Sandbox';
+    },
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

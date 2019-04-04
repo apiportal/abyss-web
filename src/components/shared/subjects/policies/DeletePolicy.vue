@@ -38,13 +38,16 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.policies.items,
-      arePoliciesLoaded: state => state.policies.lastUpdatedAt,
+      policies: state => state.subjectPolicies.items,
+      arePoliciesLoaded: state => state.subjectPolicies.lastUpdatedAt,
     }),
     policy() {
       const { policyId, policies } = this;
       return policies.find(item => item.uuid === policyId);
     },
+  },
+  created() {
+    // console.log(this.policies);
   },
   data() {
     return {

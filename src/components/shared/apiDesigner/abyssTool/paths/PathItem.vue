@@ -23,6 +23,7 @@
           :operationKey="item.parentProps.operationType"
           :pathKey="item.parentProps.path"
           :onChange="onChange"
+          :refs="refs"
         />
       </div>
     </div>
@@ -38,6 +39,9 @@ export default {
     path: {
       type: String,
       required: true,
+    },
+    refs: {
+      type: Array,
     },
     operations: {
       type: Array,

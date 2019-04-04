@@ -26,6 +26,7 @@
             :tag="tag"
             :operations="operations.filter(item => item.tags.indexOf(tag) > -1)"
             :onChange="onChange"
+            :refs="refs"
           />
         </div>
       </div>
@@ -38,6 +39,7 @@
             :path="path"
             :operations="operations.filter(item => item.parentProps.path === path)"
             :onChange="onChange"
+            :refs="refs"
           />
         </div>
       </div>
@@ -55,6 +57,11 @@ export default {
       type: Object,
       required: false,
       default() { return {}; },
+    },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     onChange: {
       type: Function,

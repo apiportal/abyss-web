@@ -21,7 +21,7 @@ const actions = {
       }
     })
     .catch((error) => {
-      if (error.response.status === 404) {
+      if (error.status === 404) {
         commit('setSubjectResources', []);
       }
     });

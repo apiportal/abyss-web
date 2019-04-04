@@ -28,6 +28,7 @@
           :state="userNameState"
           required
           class="form-control"
+          id="username"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -128,11 +129,13 @@ export default {
           setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
         })
         .catch((error) => {
-          console.error('error: ' + error); // eslint-disable-line
           this.responseAlert = true;
-          this.alertResponse.message = error.response.data.usermessage;
+          this.alertResponse.message = error.data.usermessage;
         });
     },
+  },
+  mounted() {
+    document.getElementById('username').focus();
   },
 };
 </script>

@@ -23,7 +23,7 @@ export default {
       // error
       this.$store.commit('traffic/increaseResponses');
 
-      if (error.status === 401) {
+      if (error.response.status === 401) {
         this.$router.push('/auth/login');
       }
       return Promise.reject(error.response);

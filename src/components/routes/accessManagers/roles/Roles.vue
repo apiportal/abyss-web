@@ -7,13 +7,13 @@
           :active="false"
           to="/app/access-managers/1"
         >
-          <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{  }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="false"
           to="/app/access-manager-types/1"
         >
-          <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{  }}</b-badge>
+          <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="true"
@@ -45,7 +45,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            :to="`/app/roles/add-new`"
+            :to="`/app/roles/${page}/add-new`"
             variant="primary"
             class="page-btn-add"
             data-qa="btnAddNew"
@@ -137,12 +137,12 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/roles/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/roles/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/roles/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/roles/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/roles/logs/${item.uuid}/accessmanager/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/roles/${page}/logs/${item.uuid}/role/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -179,7 +179,7 @@
         <router-view></router-view>
       </table>
     </div>
-    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+    <div class="page-footer">
       <b-pagination 
         size="md"
         :total-rows="tableRows.length"
@@ -215,6 +215,8 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       roles: state => state.roles.items,
+      accessManagers: state => state.accessManagers.items,
+      accessManagerTypes: state => state.accessManagerTypes.items,
       // subjectTypes: state => state.subjectTypes.items,
 
     }),

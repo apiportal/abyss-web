@@ -64,9 +64,12 @@ import AccessManagersLogs from '@/components/routes/accessManagers/AccessManager
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
+// Roles Routes Components
 import Roles from '@/components/routes/accessManagers/roles/Roles';
+import RolesLogs from '@/components/routes/accessManagers/roles/RolesLogs';
 import AddRole from '@/components/routes/accessManagers/roles/AddRole';
 import EditRole from '@/components/routes/accessManagers/roles/EditRole';
+import DeleteRole from '@/components/routes/accessManagers/roles/DeleteRole';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
 import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
@@ -406,9 +409,13 @@ export default new Router({
           ],
         },
         {
-          path: 'roles',
+          path: 'roles/:page',
           component: Roles,
           children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: RolesLogs,
+            },
             {
               path: 'add-new',
               component: AddRole,
@@ -416,6 +423,10 @@ export default new Router({
             {
               path: 'edit/:id',
               component: EditRole,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteRole,
             },
           ],
         },

@@ -7,9 +7,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+      data-qa="modalInform"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">{{ title }}</h5>
+      <h5 class="modal-title" data-qa="modalTitle">{{ title }}</h5>
     </template>
     <template>
       <p v-html="withBrTags" style="text-align: justify"></p>
@@ -20,7 +21,7 @@
         variant="primary" 
         size="sm" 
         @click="onConfirm"
-        id="IdBtnConfirm"
+        data-qa="btnConfirm"
       >
         OK
       </b-button>

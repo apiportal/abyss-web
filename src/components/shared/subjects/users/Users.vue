@@ -13,7 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
-            <th id="IdTheadName">
+            <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -21,7 +21,7 @@
               text="Display Name"
               sortByKey="displayname"
               sortByKeyType="string"
-                data-qa="tableHeadName"
+              data-qa="tableHeadName"
             />
           </th>
           <th>

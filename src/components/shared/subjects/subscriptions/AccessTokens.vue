@@ -12,7 +12,7 @@
         v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" class="opaque">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" class="opaque" :data-qa="`tableRow-${index}`">
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.created | moment("DD.MM.YYYY HH:mm") }}
           </td>

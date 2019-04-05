@@ -275,9 +275,10 @@
     .nav-link {
       color: inherit;
       border: 0 none;
-      border-bottom: 3px solid transparent;
+      border-bottom: 5px solid transparent;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+      font-size: 1.2rem;
       &.active {
         color: inherit;
         background-color: transparent;
@@ -460,6 +461,11 @@
         + tr {
         // + tr:not(.opaque) {
           opacity: 0.45;
+        }
+      }
+      tr.is-expired {
+        .expire-date {
+          color: #F60;
         }
       }
       td.actions {

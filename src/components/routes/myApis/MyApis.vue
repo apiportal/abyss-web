@@ -3,16 +3,16 @@
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item
-          :active="currentPage.firstChildPath === 'businesses'"
-          to="/app/my-apis/businesses/1"
-        >
-          <span class="link-text" data-qa="linkMyBusinessApis">My Business APIs</span> <b-badge pill>{{ myBusinessApis.length }}</b-badge>
-        </b-nav-item>
-        <b-nav-item
           :active="currentPage.firstChildPath === 'my-proxy-apis'"
           to="/app/my-apis/my-proxy-apis/1"
         >
           <span class="link-text" data-qa="linkMyProxyApis">My Proxy APIs</span> <b-badge pill>{{ proxies.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item
+          :active="currentPage.firstChildPath === 'businesses'"
+          to="/app/my-apis/businesses/1"
+        >
+          <span class="link-text" data-qa="linkMyBusinessApis">My Business APIs</span> <b-badge pill>{{ myBusinessApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-subscriptions'"

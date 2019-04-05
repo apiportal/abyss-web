@@ -30,7 +30,7 @@
 
         <p>MANAGE</p>
 
-        <b-link to="/app/my-apis/businesses/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
+        <b-link to="/app/my-apis/my-proxy-apis/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
           <span class="route-icon"><Icon icon="cube" /></span>  My APIs
         </b-link>
 

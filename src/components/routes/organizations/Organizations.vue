@@ -4,7 +4,7 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          <span class="link-text" data-qa="linkOrganizations">Organizations</span> <b-badge pill>{{ organizations.length }}</b-badge>
+          <span class="link-text" data-qa="linkOrganizations">Organizations</span> <b-badge pill>{{ tableRows.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -46,7 +46,8 @@
 
     <div class="page-content">
       <Organizations
-        :organizations="paginatedRows"
+        :rows="paginatedRows"
+        :organizations="tableRows"
         :routePath="`/app/organizations/${page}`"
       />
     </div>
@@ -93,24 +94,29 @@ export default {
       };
       const getSubOrganizations = (organizationId) => {
         const subOrganizations = organizations
-          .filter(item => item.organizationid === organizationId);
-        return subOrganizations.map(item => item.uuid);
+          .filter(item => item.organizationid === organizationId
+            && item.organizationid !== item.uuid);
+        // return subOrganizations.map(item => item.uuid);
+        return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
         const organizationSubjects = subjectOrganizations
           .filter(item => item.organizationrefid === organizationId);
-        return organizationSubjects.map(item => item.subjectid);
+        // return organizationSubjects.map(item => item.subjectid);
+        return organizationSubjects;
       };
       const getOwner = (organizationId) => {
         const { users } = this;
         const ownerSubject = getOrganizationUsers(organizationId).find(item => item.isowner);
         if (ownerSubject) {
+// console.log('ownerSubject.subjectid: ', ownerSubject.subjectid, users); // eslint-disable-line
           const owner = users.find(item => item.uuid === ownerSubject.subjectid);
+// console.log('owner: ', organizationId, owner); // eslint-disable-line
           if (owner) {
-            return owner.displayname;
+            return owner;
           }
         }
-        return '-';
+        return false;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
@@ -118,13 +124,22 @@ export default {
           ...item,
           organizationname: getOrganizationName(item.organizationid),
           suborganizations: getSubOrganizations(item.uuid),
+          suborganizationscount: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid),
-          organizationowner: getOwner(item.uuid),
+          organizationowner: getOwner(item.uuid).displayname,
+          organizationownerid: getOwner(item.uuid).uuid,
+          isorganizationowner: Boolean(getOwner(item.uuid)),
         }))
+        // .filter((item) => {
+        //   const { currentUser } = this;
+        //   const { organizationid } = item;
+        //   return (organizationid === currentUser.organizationid);
+        // })
         .filter((item) => {
           const { currentUser } = this;
-          const { organizationid } = item;
-          return (organizationid === currentUser.organizationid);
+          return item.organizationusers.some(f =>
+            f.subjectid === currentUser.uuid,
+          );
         })
         .filter((item) => {
           const { filterKey } = this;
@@ -153,7 +168,7 @@ export default {
       const { tableRows, itemsPerPage, page } = this;
       const { paginateArray } = Helpers;
       return paginateArray({
-        array: tableRows,
+        array: tableRows.filter(item => item.uuid === item.organizationid),
         itemsPerPage,
         page,
       });
@@ -161,7 +176,7 @@ export default {
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'organizations');
-    this.$store.dispatch('organizations/getOrganizations', {});
+    // this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
   },

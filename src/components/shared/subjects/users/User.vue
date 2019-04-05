@@ -139,12 +139,21 @@ export default {
           this.memberships = response.data;
         }
         this.isMembershipsLoaded = true;
+      }).catch((error) => {
+        if (error.status === 404) {
+          this.memberships = [];
+          this.isMembershipsLoaded = true;
+        }
       });
     },
     getOrganizationsOfUser() {
       api.getOrganizationsOfUser(this.user.uuid).then((response) => {
         if (response && response.data) {
           this.userOrganizations = response.data;
+        }
+      }).catch((error) => {
+        if (error.status === 404) {
+          this.userOrganizations = [];
         }
       });
     },

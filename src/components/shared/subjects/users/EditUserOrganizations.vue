@@ -51,6 +51,11 @@ export default {
           this.userOrganizations = response.data;
         }
         this.isUserOrganizationsLoaded = true;
+      }).catch((error) => {
+        if (error.status === 404) {
+          this.userOrganizations = [];
+          this.isUserOrganizationsLoaded = true;
+        }
       });
     },
   },

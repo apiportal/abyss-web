@@ -203,6 +203,11 @@ export default {
             if (res && res.data) {
               contractApis[i].contracts = res.data;
             }
+          })
+          .catch((error) => {
+            if (error.status === 404) {
+              contractApis[i].contracts = [];
+            }
           });
         }
       }
@@ -271,6 +276,11 @@ export default {
       if (response) {
         this.licenseContracts = response.data;
       }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        this.licenseContracts = [];
+      }
     });
     // } else if (this.childComponent === 'proxies') {
     api
@@ -278,6 +288,11 @@ export default {
     .then((response) => {
       if (response) {
         this.licenseApis = response.data;
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        this.licenseApis = [];
       }
     });
     // }

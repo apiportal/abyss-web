@@ -25,9 +25,9 @@
             <label>
               Owner:
               <span class="text-danger">*</span>
-              {{computedOrganizationOwner}}
+              <!-- {{computedOrganizationOwner}}
               <hr>
-              {{organizationOwner}}
+              {{organizationOwner}} -->
             </label>
             <b-form-select
               id="organizationOwnerInput"
@@ -44,7 +44,7 @@
             />
           </b-form-group>
           <div class="form-group">
-            {{computedOrganizationUsers}}
+            <!-- {{computedOrganizationUsers}} -->
             <Chips
               :chips="computedOrganizationUsers"
               :autocompleteOptions="organizationUsersEditable"

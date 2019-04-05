@@ -212,7 +212,7 @@ export default {
       };
       const getUsers = (groupId) => {
         const members = this.memberships.filter(item =>
-          !item.isdeleted &&
+          // !item.isdeleted &&
           item.subjectgroupid === groupId);
         // console.log('members.length: ', members.length);
         const groupUsers = users.filter(el =>

@@ -51,29 +51,40 @@
       </div>
       <div v-else-if="isArray">
         <div
-          v-for="(formItemData, index) in formData"
-          v-bind:key="index"
-          :class="(index < (formData.length - 1) ? 'mb-3' : '')"
+          v-if="type === 'Security Requirement Object'"
         >
-          <!-- {{ formItemData.name }} -->
-          <OpenApiObject
-            :item="index"
-            :type="type"
-            :formData="formItemData"
-            :pathArray="[...pathArray, index]"
-            :refs="refs"
-            :onChange="onChange"
-            :isDynamicTitle ="true"
-            :title="getTitle(type, formItemData)"
-            :description="getDescription(type, formItemData)"
-          />
+          <b-form-group>
+            <b-form-radio v-model="selected" name="some-radios" value="A">Use default security</b-form-radio>
+            <b-form-radio v-model="selected" name="some-radios" value="B">Disable security</b-form-radio>
+            <b-form-radio v-model="selected" name="some-radios" value="C">Use custom security</b-form-radio>
+          </b-form-group>
         </div>
-        <div :style="`margin-top: ${formData.length === 0 ? 0 : 1}rem;`">
-          <b-button
-            @click="() => addArrayItem(pathArray, formData)"
+        <div v-else>
+          <div
+            v-for="(formItemData, index) in formData"
+            v-bind:key="index"
+            :class="(index < (formData.length - 1) ? 'mb-3' : '')"
           >
-            New "{{item}}" item
-          </b-button>
+            <!-- {{ formItemData.name }} -->
+            <OpenApiObject
+              :item="index"
+              :type="type"
+              :formData="formItemData"
+              :pathArray="[...pathArray, index]"
+              :refs="refs"
+              :onChange="onChange"
+              :isDynamicTitle ="true"
+              :title="getTitle(type, formItemData)"
+              :description="getDescription(type, formItemData)"
+            />
+          </div>
+          <div :style="`margin-top: ${formData.length === 0 ? 0 : 1}rem;`">
+            <b-button
+              @click="() => addArrayItem(pathArray, formData)"
+            >
+              New "{{item}}" item
+            </b-button>
+          </div>
         </div>
       </div>
       <div v-else>
@@ -83,7 +94,8 @@
             type === 'Response Object' ||
             type === 'Request Body Object' ||
             type === 'Parameter Object' ||
-            type === 'Callback Object'
+            type === 'Callback Object' ||
+            type === 'Security Scheme Object'
           "
           style="margin-bottom: 1rem;"
         >
@@ -209,6 +221,7 @@ export default {
       isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
       refAddress: this.formData['$ref'] || null, // eslint-disable-line
+      selected: 'A', // get rid of this line
     };
   },
   methods: {

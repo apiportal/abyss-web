@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getSubjectLicenses(uuid).then((response) => {
+    api.getSubjectLicenses(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectLicenses', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectLicenses', []);
       }
     });
   },

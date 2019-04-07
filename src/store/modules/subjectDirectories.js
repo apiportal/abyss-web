@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh) {
       return false;
     }
-    api.getSubjectDirectories().then((response) => {
+    api.getSubjectDirectories()
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectDirectories', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectDirectories', []);
       }
     });
   },

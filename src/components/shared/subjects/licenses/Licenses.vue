@@ -13,7 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th id="IdTheadName">
+          <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -21,6 +21,7 @@
               text="License Name"
               sortByKey="name"
               sortByKeyType="string"
+              data-qa="tableHeadName"
             />
           </th>
           <th>
@@ -43,9 +44,6 @@
               sortByKeyType="string"
             />
           </th>
-          <!-- <th v-if="childComponent === 'policies'">Policies</th>
-          <th v-if="childComponent === 'proxies'">Proxies</th>
-          <th v-if="childComponent === 'contracts'">Contracts</th> -->
           <th></th>
         </tr>
       </thead>
@@ -58,13 +56,13 @@
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
-        <tr id="IdTableRow" slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr slot="main" :class="`${licenseIndex % 2 === 0 ? 'odd' : 'even'} ${licenseItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${licenseIndex}`">
           <td class="status" @click="() => handleCollapseTableRows(licenseItem.uuid)">
             <Icon
               :icon="licenseItem.isactive ? 'check-circle' : 'times-circle'"
               :class="licenseItem.isactive ? 'text-success' : 'text-danger'" />
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${licenseIndex}`">
             {{ licenseItem.name }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
@@ -88,8 +86,9 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/edit-license-policies/${licenseItem.uuid}`"><Icon icon="edit" /> Add/Edit Policies</b-dropdown-item>
+              <b-dropdown-item :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -100,7 +99,7 @@
             </b-dropdown>
           </td>
         </tr>
-        <tr id="IdTableFooter" slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
           <td colspan="5">
             <div class="collapsible-content">
               <License

@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getSubjectResources(uuid).then((response) => {
+    api.getSubjectResources(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectResources', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectResources', []);
       }
     });
   },

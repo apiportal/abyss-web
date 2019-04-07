@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditPolicy"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Policy' : 'Add New Policy' }}
       </h5>
     </template>
@@ -103,7 +104,7 @@
           v-if="policyEditable.typeid"
           :class="`configure-directory ${isConfigurePolicyVisible ? 'd-block' : 'd-none'}`"
         >
-          <h6>Configure Policy</h6>
+          <h5 class="mb-3">Configure Policy</h5>
           <DynamicForm
             :formTemplate="policyConfigurationTemplate"
             :formData="{ AuthorizationConfiguration: policyEditable.policyInstance }"
@@ -115,14 +116,14 @@
         <b-button
           variant="secondary"
           @click="onClose"
-          id="IdBtnCancel"
+          data-qa="btn-Cancel"
         >
           Cancel
         </b-button>
         <b-button 
           variant="primary"
           @click="handleSubmit"
-          id="IdBtnSave"
+          data-qa="btnSave"
           >
           Save
         </b-button>
@@ -310,9 +311,9 @@ export default {
 }
 
 .configure-directory {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
+  // border: 1px solid #e9ecef;
+  // border-radius: .3rem;
+  // padding: 1rem;
   position: relative;
 
   &:before {

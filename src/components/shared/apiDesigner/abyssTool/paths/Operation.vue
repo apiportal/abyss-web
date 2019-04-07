@@ -11,6 +11,7 @@
         :formData="operation"
         :pathArray="['openapidocument', 'paths', pathKey, operationKey]"
         :onChange="onChange"
+        :refs="refs"
       />
     </div>
   </div>
@@ -39,6 +40,9 @@ export default {
     onChange: {
       type: Function,
       required: true,
+    },
+    refs: {
+      type: Array,
     },
   },
   components: {

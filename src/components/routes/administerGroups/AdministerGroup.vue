@@ -37,12 +37,24 @@
         <dd v-if="group.isdeleted">{{ group.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
+    <div class="row abyss-table-buttons">
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Users"
+        @click="listGroupUsers"
+        :class="{'active': isShowGroupUsers}"
+        v-if="group.users.length"
+      >
+        <Icon icon="users" /> Users
+        <b-badge pill>{{ group.users.length }}</b-badge>
+      </b-button>
+    </div>
     <div class="abyss-table-content" v-if="isShowGroupUsers && group.users.length">
       <Users
-        :users="group.users"
-        path="administer-groups"
-        title="Group"
-        :page="page"
+        :rows="group.users"
+        :routePath="`/app/administer-groups/${page}`"
       />
     </div>
   </div>
@@ -52,7 +64,7 @@
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/Users';
+import Users from '@/components/shared/subjects/users/Users';
 
 export default {
   components: {

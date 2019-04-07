@@ -8,10 +8,14 @@
         <li 
           v-for="(chip, index) in chips" 
           v-bind:key="index"
-          class="btn btn-secondary chip-btn"
+          class="btn btn-secondary chip-btn btn-icon"
+          :class="`${chip.color} ${chip.isdeleted ? 'is-deleted' : ''}`"
         >
-          {{ chip.text }}
+          <span :title="chip.value">
+            {{ chip.text }}
+          </span>
           <b-link
+            v-if="!chip.disabled"
             v-b-tooltip.hover 
             title="Delete"
             @click="() => onDeleteChip(index, chip)"
@@ -19,15 +23,16 @@
             <Icon icon="times" />
           </b-link>
         </li>
-        <li class="chip-btn">
+        <li class="chip-btn btn-icon">
           <b-button
-            variant="info"
+            variant="primary"
             id="addPopover"
             @click="toggleAddPopover"
           >
-            <Icon icon="plus" /> {{ addItemText }}
+            <span class="text-uppercase font-weight-bold">{{ addItemText }}</span> <Icon icon="plus" />
           </b-button>
-          <b-popover target="addPopover" :show.sync="isAddPopoverVisible">
+          <b-popover target="addPopover" :show.sync="isAddPopoverVisible" triggers="click blur">
+          <!-- <b-popover target="addPopover" :show.sync="isAddPopoverVisible"> -->
             <template slot="title">{{ addItemText }}</template>
             <div>
               <div>
@@ -55,6 +60,7 @@
                   variant="secondary"
                   @click="() => addChip({ chip })"
                   style="margin: .125em;"
+                  :class="`${chip.color} ${chip.isdeleted ? 'is-deleted' : ''}`"
                 >
                   {{ chip.text }}
                 </b-button>
@@ -121,8 +127,10 @@ export default {
       this.isAddPopoverVisible = !this.isAddPopoverVisible;
     },
     addChip({ chip }) {
-      this.onAddChip(chip);
-      this.toggleAddPopover();
+      if (!chip.isdeleted) {
+        this.onAddChip(chip);
+        this.toggleAddPopover();
+      }
     },
     handleSubmit(evt) {
       evt.preventDefault();

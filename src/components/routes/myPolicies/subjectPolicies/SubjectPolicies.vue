@@ -18,7 +18,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -29,7 +29,7 @@
             variant="primary"
             class="page-btn-add"
             block
-            id="IdBtnAddNew"
+            data-qa="btnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -164,6 +164,7 @@ export default {
     },
     refreshData() {
       this.$store.dispatch('subjectPolicies/getSubjectPolicies', {
+        uuid: this.currentUser.uuid,
         refresh: true,
       });
     },

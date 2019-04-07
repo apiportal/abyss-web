@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    api.getSubjectPolicies(uuid).then((response) => {
+    api.getSubjectPolicies(uuid)
+    .then((response) => {
       if (response && response.data) {
         commit('setSubjectPolicies', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setSubjectPolicies', []);
       }
     });
   },

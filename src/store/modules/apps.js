@@ -14,9 +14,15 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApps().then((response) => {
+    api.getApps()
+    .then((response) => {
       if (response && response.data) {
         commit('setApps', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setApps', []);
       }
     });
   },
@@ -52,7 +58,7 @@ const actions = {
   getAppContracts: ({ commit }, { appIdsArray }) => {
     for (let i = 0; i < appIdsArray.length; i += 1) {
       api.getAppContracts(appIdsArray[i]).then((response) => {
-        commit('setAppContracts', { appId: appIdsArray[i], contracts: response.data});
+        commit('setAppContracts', { appId: appIdsArray[i], contracts: ((response && response.data) ? response.data : []) });
       });
     }
   },

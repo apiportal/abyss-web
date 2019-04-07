@@ -14,8 +14,14 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getResourceActions().then((response) => {
+    api.getResourceActions()
+    .then((response) => {
       commit('setResourceActions', response.data);
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setResourceActions', []);
+      }
     });
   },
 };

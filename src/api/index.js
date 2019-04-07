@@ -22,6 +22,23 @@ export default {
   deleteSession(sessionId) {
     return axios.delete(`/abyss/oapi/abyss-session/${sessionId}`);
   },
+  postSignUp(params) {
+    return axios.post('/abyss/oapi/signup', params);
+  },
+  postForgotPassword(params) {
+    return axios.post('/abyss/oapi/forgot-password', params);
+  },
+  getCheckToken(token) {
+    return axios.get(`/abyss/oapi/reset-password/?v=${token}`);
+  },
+  // change-password
+  putChangePassword(uuid, params) {
+    return axios.put(`abyss/oapi/subjects/${uuid}/changepassword/`, params);
+  },
+  // switch organization
+  putSetCurrentOrganization(params) {
+    return axios.put('abyss/oapi/set-current-organization', params);
+  },
   // subject-directories
   getSubjectDirectories() {
     return axios.get('/abyss/oapi/subject-directories');
@@ -56,6 +73,9 @@ export default {
   },
   getSubjectOrganizations() {
     return axios.get('/abyss/oapi/subject-organizations');
+  },
+  getSubjectOrganizationsByUuid(uuid) {
+    return axios.get(`/abyss/oapi/subject-organizations/subject/${uuid}`);
   },
   getOrganizationsOfUser(uuid) {
     return axios.get(`/abyss/oapi/subject-organizations/subject/${uuid}`);
@@ -160,6 +180,9 @@ export default {
     return axios.post('/abyss/oapi/subjects/', group);
   },
   // subject-memberships
+  getGroupMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
@@ -322,6 +345,16 @@ export default {
   getPolicyTypes() {
     return axios.get('/abyss/oapi/policy-types');
   },
+  putPolicyTypes(policyType) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = policyType;
+    return axios.put(`/abyss/oapi/policy-types/${uuid}`, rest);
+  },
+  postPolicyTypes(policyType) {
+    return axios.post('/abyss/oapi/policy-types/', policyType);
+  },
+  deletePolicyTypes(uuid) {
+    return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
+  },
   getSubjectApps(uuid) {
     return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
   },
@@ -350,6 +383,9 @@ export default {
   },
   getResourceAccessTokens(uuid) {
     return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
+  },
+  getApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
   },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);

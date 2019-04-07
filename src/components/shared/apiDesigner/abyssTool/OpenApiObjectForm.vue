@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div 
+    <div
       v-for="(item, index) in currentObjectInterfaceKeys" 
       v-bind:key="index" 
       :class="(index < (currentObjectInterfaceKeys.length - 1) ? 'mb-3' : '')"
@@ -19,6 +19,7 @@
             :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
             :isMap="currentObjectInterface[item].Map || false"
             :isArray="currentObjectInterface[item].Array || false"
+            :refs="refs"
           />
         </div>
       </div>
@@ -97,6 +98,9 @@ export default {
     onChange: {
       type: Function,
       required: true,
+    },
+    refs: {
+      type: Array,
     },
   },
   components: {

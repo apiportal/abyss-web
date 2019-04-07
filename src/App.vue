@@ -7,11 +7,6 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 
 export default {
-  watch: {
-    user(newVal) {
-      this.checkUser(newVal.uuid);
-    },
-  },
   created() {
     // axios global listeners
     axios.interceptors.request.use((config) => {
@@ -26,24 +21,38 @@ export default {
       return response;
     }, (error) => {
       // error
-      this.$store.commit('user/setUserUnauthorized', (error.response.status === 401));
       this.$store.commit('traffic/increaseResponses');
 
       if (error.response.status === 401) {
         this.$router.push('/auth/login');
       }
+      return Promise.reject(error.response);
     });
 
     // check user cookie
-    const userUuid = document.cookie.split('; ').filter((cookie) => {
-      const [name] = cookie.split('=');
-      return name === 'abyss.principal.uuid';
-    }).map(cookie => cookie.split('=')[1]);
-    if (userUuid.length > 0) {
-      this.$store.commit('user/setUuid', userUuid[0]);
-      this.$store.dispatch('user/getUser', { principalid: userUuid[0] });
+    let cookiesObj = {}; // eslint-disable-line
+    const cookiesArr = document.cookie.split('; ');
+    cookiesArr.map((cookie) => {
+      const [key, value] = cookie.split('=');
+      if (key === 'abyss.principal.uuid') {
+        cookiesObj['principalid'] = value; // eslint-disable-line
+      } else if (key === 'abyss.login.organization.uuid') {
+        cookiesObj['organizationid'] = value; // eslint-disable-line
+      } else if (key === 'abyss.login.organization.name') {
+        cookiesObj['organizationname'] = value; // eslint-disable-line
+      } else if (key === 'abyss.session') {
+        cookiesObj['sessionid'] = value; // eslint-disable-line
+      }
+      return cookie;
+    });
+    const { principalid, organizationid, organizationname, sessionid } = cookiesObj;
+    if (principalid && organizationid && organizationname && sessionid) {
+      if (this.$route.path.indexOf('/auth') === -1) {
+        this.$store.dispatch('user/getUser', { principalid, organizationid, organizationname, sessionid });
+      }
     } else {
-      this.$store.commit('user/setUserUnauthorized', true);
+      this.$store.dispatch('user/resetUser');
+      this.$router.push('/auth/login');
     }
   },
   computed: {

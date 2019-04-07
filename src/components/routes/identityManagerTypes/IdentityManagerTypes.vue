@@ -7,10 +7,10 @@
           :active="false"
           to="/app/identity-managers/1"
         >
-          <span id="IdLinkIdentityManagers" class="link-text">Identity Managers</span> <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+          <span class="link-text" data-qa="linkIdentityManagers">Identity Managers</span> <b-badge pill>{{ subjectDirectories.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          <span id="IdLinkIdentityManagerTypes" class="link-text">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
+          <span class="link-text" data-qa="linkIdentityManagerTypes">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -30,7 +30,7 @@
             class="page-btn-refresh"
             block
             @click="refreshData"
-            id="IdBtnRefresh"
+            data-qa="btnRefresh"
           >
             <Icon icon="redo" />
           </b-button>
@@ -41,7 +41,7 @@
             variant="primary"
             class="page-btn-add"
             block
-            id="IdBtnAddNew"
+            data-qa="btnAddNew"
           >
             <span>Add New</span>
             <Icon icon="plus" />
@@ -64,7 +64,7 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th id="IdTheadName">
+            <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
@@ -72,6 +72,7 @@
                 text="Identity Manager Type Name"
                 sortByKey="typename"
                 sortByKeyType="string"
+                data-qa="tableHeadName"
               />
             </th>
             <th>
@@ -104,16 +105,16 @@
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
-          id="IdIdentityManagerTypesItem"
+          :data-qa="`tableRow-${index}`"
         >
-          <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
                 :icon="item.isactive ? 'check-circle' : 'times-circle'" 
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.typename }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -123,24 +124,24 @@
               {{ item.organizationname }}
             </td>
             <td class="actions">
-              <b-dropdown id="IdItemDropDown" variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
                 <template slot="button-content">
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item id="IdBtnEdit" :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item id="IdBtnDelete" :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item id="IdBtnLogsAll" :to="`/app/identity-manager-types/${page}/logs/${item.uuid}/subjectdirectorytype/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/identity-manager-types/${page}/logs/${item.uuid}/subjectdirectorytype/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
           </tr>
-          <tr id="IdTableFooter" slot="footer" class="footer">
+          <tr data-qa="tableFooter" slot="footer" class="footer">
             <td colspan="5">
               <div class="collapsible-content">
                 <div class="abyss-table-content">
@@ -178,6 +179,7 @@
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>

@@ -34,6 +34,7 @@
         v-if="activeTab === 'paths'"
         :paths="api.openapidocument.paths"
         :onChange="onChange"
+        :refs="refs"
       />
       <ComponentsTags
         v-if="activeTab === 'componentsTags'"
@@ -77,6 +78,21 @@ export default {
     ComponentsTags,
     Information,
     Servers,
+  },
+  computed: {
+    refs() {
+      const { components } = this.api.openapidocument;
+      const optionGroups = Object.keys(components);
+      return optionGroups.map((optionGroup) => {
+        const optionGroupProps = Object.keys(components[optionGroup]);
+        const optionGroupOptions = optionGroupProps
+        .map(optionGroupProp => `#/components/${optionGroup}/${optionGroupProp}`);
+        return {
+          name: optionGroup,
+          options: optionGroupOptions,
+        };
+      });
+    },
   },
   data() {
     return {

@@ -124,12 +124,13 @@
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.displayname }}
+              {{ item.users }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.effectivestartdate }}
+              {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.effectiveenddate }}
+              {{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
@@ -152,26 +153,9 @@
           <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
-                <div class="abyss-table-content">
-                  <div class="row">
-                    <dl class="col">
-                      <dt>Name:</dt>
-                      <dd>{{ item.displayname }}</dd>
-                    </dl>
-                    <dl class="col">
-                      <dt>Description:</dt>
-                      <dd>{{ item.subjecttypeid }}</dd>
-                    </dl>
-                    <dl class="col">
-                      <dt>Created:</dt>
-                      <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
-                      <dt v-if="!item.isdeleted">Updated:</dt>
-                      <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
-                      <dt v-if="item.isdeleted">Deleted:</dt>
-                      <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
-                    </dl>
-                  </div>
-                </div>
+                <Role
+                  :item="item"
+                />
               </div>
             </td>
           </tr>
@@ -201,7 +185,9 @@ import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
+import Role from '@/components/routes/accessManagers/roles/Role';
 import Helpers from '@/helpers';
+import api from '@/api';
 
 export default {
   components: {
@@ -210,6 +196,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Role,
   },
   computed: {
     ...mapState({
@@ -217,15 +204,39 @@ export default {
       roles: state => state.roles.items,
       accessManagers: state => state.accessManagers.items,
       accessManagerTypes: state => state.accessManagerTypes.items,
+      users: state => state.users.items,
+      memberships: state => state.subjectMemberships.items,
       // subjectTypes: state => state.subjectTypes.items,
-
     }),
     tableRows() {
-      const { roles } = this;
+      const { roles, users } = this;
+      const getUsers = (roleId) => { // eslint-disable-line
+        // const members = this.memberships.filter(item =>
+        //   !item.isdeleted &&
+        //   item.subjectroleid === roleId);
+        // console.log('members.length: ', members.length);
+        return this.getRoleMemberships(roleId).then((response) => {
+          console.log(response, users);
+          // if (response && response.data) {
+          //   const members = response.data;
+          //   const roleUsers = users.filter(el =>
+          //       members.some(f =>
+          //       f.subjectid === el.uuid,
+          //     ),
+          //   );
+          //   return roleUsers;
+          // }
+          // return [];
+        });
+        // console.log('users.length: ', roleUsers.length);
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
-      return Helpers.sortArrayOfObjects({
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
         array: roles.map(item => ({
           ...item,
+          users: getUsers(item.uuid),
+          userscount: getUsers(item.uuid).length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -234,12 +245,20 @@ export default {
           const filterKeyLowerCase = filterKey.toLowerCase();
           return (
             (
-              item.subjectname &&
-              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.firstname &&
+              item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
             ) ||
             (
-              item.subjectname &&
-              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              item.lastname &&
+              item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.displayname &&
+              item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.email &&
+              item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
         }),
@@ -261,6 +280,9 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'roles');
     this.$store.dispatch('roles/getRoles', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('accessManagers/getAccessManagers', {});
+    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {
@@ -275,6 +297,14 @@ export default {
     };
   },
   methods: {
+    getRoleMemberships(roleId) {
+      return api.getRoleMemberships(roleId).then((response) => {
+        if (response && response.data) {
+          return response.data;
+        }
+        return [];
+      });
+    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

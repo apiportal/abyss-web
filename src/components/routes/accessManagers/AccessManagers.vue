@@ -274,6 +274,7 @@ export default {
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('roles/getRoles', {});
   },
   data() {
     return {

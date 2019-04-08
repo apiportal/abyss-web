@@ -186,6 +186,9 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  getRoleMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/user-role/${uuid}`);
+  },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
   },

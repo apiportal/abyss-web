@@ -195,13 +195,37 @@
               <div class="col">
                 <b-form-group id="referralEmailAddress">
                   <label for="referralEmailAddressInput">Referral Email Address <code>*</code></label>
-                  <b-form-input id="referralEmailAddressInput" type="email"
-                    v-model="referralEmailAddress"
-                    placeholder="Referral Email Address" required
+                  <b-form-input 
+                    id="referralEmailAddressInput" 
+                    type="email"
+                    v-model="referral.email"
+                    placeholder="Referral Email Address" 
+                    required
                   >
                   </b-form-input>
                 </b-form-group>
+
+                <b-form-group id="invitationGroup" label="Invitation Text" label-for="invitationTextarea">
+                  <b-form-textarea 
+                    id="invitationTextarea" 
+                    v-model="referral.message"
+                    placeholder="Invitation text" :rows="4" :cols="100"
+                  >
+                  </b-form-textarea>
+                </b-form-group>
+
+                <b-form-group id="hasConsentGroup">
+                  <b-form-checkbox
+                    id="hasConsentChecks"
+                    v-model="referral.hasConsentToShare"
+                    :value="true"
+                    :unchecked-value="false"
+                  >
+                  Send my name, last name and e-mail information with the invite message.
+                  </b-form-checkbox>
+                </b-form-group>
               </div>
+
               <div class="col">
 
               </div>
@@ -237,7 +261,11 @@ export default {
   data() {
     // const { user } = this;
     return {
-      referralEmailAddress: '',
+      referral: {
+        email: '',
+        message: '',
+        hasConsentToShare: false,
+      },
       form: {
         oldpassword: '',
         newpassword: '',
@@ -294,9 +322,17 @@ export default {
     },
     sendReferral(e) {
       e.preventDefault();
-      const uniqueId = this.userEditable.props.uuid;
-      const referralEmailAddress = this.referralEmailAddress;
-      console.log(`${uniqueId} - ${referralEmailAddress}`); // eslint-disable-line no-console
+      api.postInviteUser(this.referral)
+        .then((response) => {
+          console.log(response); // eslint-disable-line no-console
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      const referralEmailAddress = this.referral.referralEmailAddress;
+      const invitationText = this.referral.invitationText;
+      const hasConsent = this.referral.hasConsent;
+      console.log(`giden : ${referralEmailAddress} - ${invitationText} - ${hasConsent}`); // eslint-disable-line no-console
     },
     handlePasswordReset(evt) {
       evt.preventDefault();

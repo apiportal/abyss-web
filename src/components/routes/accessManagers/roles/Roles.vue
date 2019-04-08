@@ -187,7 +187,6 @@ import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Role from '@/components/routes/accessManagers/roles/Role';
 import Helpers from '@/helpers';
-import api from '@/api';
 
 export default {
   components: {
@@ -206,29 +205,22 @@ export default {
       accessManagerTypes: state => state.accessManagerTypes.items,
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
+      roleMemberships: state => state.roleMemberships.items,
       // subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
       const { roles, users } = this;
       const getUsers = (roleId) => { // eslint-disable-line
-        // const members = this.memberships.filter(item =>
-        //   !item.isdeleted &&
-        //   item.subjectroleid === roleId);
-        // console.log('members.length: ', members.length);
-        return this.getRoleMemberships(roleId).then((response) => {
-          console.log(response, users);
-          // if (response && response.data) {
-          //   const members = response.data;
-          //   const roleUsers = users.filter(el =>
-          //       members.some(f =>
-          //       f.subjectid === el.uuid,
-          //     ),
-          //   );
-          //   return roleUsers;
-          // }
-          // return [];
-        });
-        // console.log('users.length: ', roleUsers.length);
+        const members = this.memberships.filter(item =>
+          !item.isdeleted &&
+          item.subjectroleid === roleId);
+        console.log('members.length: ', members.length);
+        const roleUsers = users.filter(el =>
+          members.some(f =>
+            f.subjectid === el.uuid,
+          ),
+        );
+        return roleUsers;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
@@ -282,6 +274,7 @@ export default {
     this.$store.dispatch('roles/getRoles', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('accessManagers/getAccessManagers', {});
+    this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
@@ -297,13 +290,13 @@ export default {
     };
   },
   methods: {
-    getRoleMemberships(roleId) {
-      return api.getRoleMemberships(roleId).then((response) => {
-        if (response && response.data) {
-          return response.data;
-        }
-        return [];
-      });
+    getAllRoleMemberships() {
+      // return api.getRoleMemberships(roleId).then((response) => {
+      //   if (response && response.data) {
+      //     return response.data;
+      //   }
+      //   return [];
+      // });
     },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;

@@ -36,6 +36,7 @@ import subjectResources from '@/store/modules/subjectResources';
 import subjectPermissions from '@/store/modules/subjectPermissions';
 import subjectPolicies from '@/store/modules/subjectPolicies';
 import roles from '@/store/modules/roles';
+import roleMemberships from '@/store/modules/roleMemberships';
 
 Vue.use(Vuex);
 
@@ -77,6 +78,7 @@ export default new Vuex.Store({
     subjectPermissions,
     subjectPolicies,
     roles,
+    roleMemberships,
   },
   debug: true,
 });

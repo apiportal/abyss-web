@@ -12,7 +12,8 @@
             :type="currentObjectInterface[item].type"
             :formData="(
               formData[item] ||
-              (currentObjectInterface[item].Array ? [] : {})
+              (currentObjectInterface[item].Array ?
+              (currentObjectInterface[item].type === 'Security Requirement Object' ? { empty: true } : []) : {})
             )"
             :pathArray="[...pathArray, item]"
             :onChange="onChange"
@@ -20,6 +21,7 @@
             :isMap="currentObjectInterface[item].Map || false"
             :isArray="currentObjectInterface[item].Array || false"
             :refs="refs"
+            :securitySchemes="securitySchemes"
           />
         </div>
       </div>
@@ -101,6 +103,9 @@ export default {
     },
     refs: {
       type: Array,
+    },
+    securitySchemes: {
+      type: Object,
     },
   },
   components: {

@@ -27,6 +27,7 @@
             :operations="operations.filter(item => item.tags.indexOf(tag) > -1)"
             :onChange="onChange"
             :refs="refs"
+            :securitySchemes="securitySchemes"
           />
         </div>
       </div>
@@ -40,6 +41,7 @@
             :operations="operations.filter(item => item.parentProps.path === path)"
             :onChange="onChange"
             :refs="refs"
+            :securitySchemes="securitySchemes"
           />
         </div>
       </div>
@@ -62,6 +64,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    securitySchemes: {
+      type: Object,
+      required: false,
+      default() { return {}; },
     },
     onChange: {
       type: Function,

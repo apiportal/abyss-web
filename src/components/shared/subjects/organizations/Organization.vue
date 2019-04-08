@@ -62,7 +62,6 @@
         <b-badge pill>{{ organization.suborganizations.length }}</b-badge>
       </b-button>
     </div>
-    <pre>{{organization.organizationusers}}</pre>
     <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
         :rows="organizationUsers"
@@ -78,6 +77,8 @@
         :routePath="routePath"
       />
     </div>
+    <!-- <pre>{{subOrganizations}}</pre> -->
+    <!-- <pre>{{organization.organizationusers}}</pre> -->
 
   </div>
 </template>

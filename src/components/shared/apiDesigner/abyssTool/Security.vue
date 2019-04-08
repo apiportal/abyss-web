@@ -6,13 +6,26 @@
       <b-form-radio @change="handleChange" v-model="selected" value="custom">Use custom security</b-form-radio>
     </b-form-group>
     <div v-if="selected === 'custom'">
-      {{ securityOptions }}
+      <div
+        v-for="(securityOption, index) in securityOptions"
+        v-bind:key="index"
+      >
+        <SecurityOption
+          :securityKey="securityOption"
+          :formData="formData.filter(item => Object.keys(item).indexOf(securityOption) > -1)"
+          :onAddSecurity="handleAddSecurity"
+          :onDeleteSecurity="handleDeleteSecurity"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  components: {
+    SecurityOption: () => import('@/components/shared/apiDesigner/abyssTool/SecurityOption'),
+  },
   props: {
     pathArray: {
       type: Array,
@@ -60,7 +73,24 @@ export default {
       } else if (newVal === 'disabled') {
         // set empty array
         this.onChange(this.pathArray, []);
+      } else if (newVal === 'custom') {
+        const options = this.securityOptions.map(option => ({ [option]: [] }));
+        this.onChange(this.pathArray, options);
       }
+    },
+    handleAddSecurity(securityKey) {
+      const securityOptions = [
+        ...this.formData,
+        {
+          [securityKey]: [],
+        },
+      ];
+      this.onChange(this.pathArray, securityOptions);
+    },
+    handleDeleteSecurity(securityKey) {
+      const securityOptions = this.formData
+        .filter(item => Object.keys(item).indexOf(securityKey) === -1);
+      this.onChange(this.pathArray, securityOptions);
     },
   },
   mounted() {

@@ -24,6 +24,7 @@
           :pathKey="item.parentProps.path"
           :onChange="onChange"
           :refs="refs"
+          :securitySchemes="securitySchemes"
         />
       </div>
     </div>
@@ -42,6 +43,9 @@ export default {
     },
     refs: {
       type: Array,
+    },
+    securitySchemes: {
+      type: Object,
     },
     operations: {
       type: Array,

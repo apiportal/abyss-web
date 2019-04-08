@@ -29,6 +29,7 @@
             :formData="formData[key]"
             :pathArray="[...pathArray, key]"
             :refs="refs"
+            :securitySchemes="securitySchemes"
             :onChange="onChange"
           />
         </div>
@@ -45,6 +46,7 @@
             :formData="formData[key]"
             :pathArray="[...pathArray, key]"
             :refs="refs"
+            :securitySchemes="securitySchemes"
             :onChange="onChange"
           />
         </div>
@@ -53,11 +55,12 @@
         <div
           v-if="type === 'Security Requirement Object'"
         >
-          <b-form-group>
-            <b-form-radio v-model="selected" name="some-radios" value="A">Use default security</b-form-radio>
-            <b-form-radio v-model="selected" name="some-radios" value="B">Disable security</b-form-radio>
-            <b-form-radio v-model="selected" name="some-radios" value="C">Use custom security</b-form-radio>
-          </b-form-group>
+          <Security
+            :onChange="onChange"
+            :pathArray="pathArray"
+            :formData="formData"
+            :securitySchemes="securitySchemes"
+          />
         </div>
         <div v-else>
           <div
@@ -72,6 +75,7 @@
               :formData="formItemData"
               :pathArray="[...pathArray, index]"
               :refs="refs"
+              :securitySchemes="securitySchemes"
               :onChange="onChange"
               :isDynamicTitle ="true"
               :title="getTitle(type, formItemData)"
@@ -131,6 +135,7 @@
             :formData="formData"
             :pathArray="pathArray"
             :refs="refs"
+            :securitySchemes="securitySchemes"
             :onChange="onChange"
           />
         </div>
@@ -206,9 +211,13 @@ export default {
     refs: {
       type: Array,
     },
+    securitySchemes: {
+      type: Object,
+    },
   },
   components: {
     OpenApiObjectForm: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm'),
+    Security: () => import('@/components/shared/apiDesigner/abyssTool/Security'),
     Icon,
   },
   computed: {
@@ -221,7 +230,6 @@ export default {
       isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
       refAddress: this.formData['$ref'] || null, // eslint-disable-line
-      selected: 'A', // get rid of this line
     };
   },
   methods: {

@@ -12,6 +12,7 @@
         :pathArray="['openapidocument', 'paths', pathKey, operationKey]"
         :onChange="onChange"
         :refs="refs"
+        :securitySchemes="securitySchemes"
       />
     </div>
   </div>
@@ -43,6 +44,9 @@ export default {
     },
     refs: {
       type: Array,
+    },
+    securitySchemes: {
+      type: Object,
     },
   },
   components: {

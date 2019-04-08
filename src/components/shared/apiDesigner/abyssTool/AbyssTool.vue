@@ -35,6 +35,7 @@
         :paths="api.openapidocument.paths"
         :onChange="onChange"
         :refs="refs"
+        :securitySchemes="api.openapidocument.components.securitySchemes"
       />
       <ComponentsTags
         v-if="activeTab === 'componentsTags'"

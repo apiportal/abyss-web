@@ -52,8 +52,10 @@
 
     <div class="page-content">
       <Organizations
-        :rows="paginatedRows"
+        :rows="tableRows.filter(item => item.uuid === item.organizationid)"
         :organizations="tableRows"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
         :routePath="`/app/organizations/${page}`"
       />
     </div>

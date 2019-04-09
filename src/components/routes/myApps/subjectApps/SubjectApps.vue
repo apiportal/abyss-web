@@ -183,7 +183,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-apis/businesses/${page}`);
+      this.$router.push(`/app/my-apps/my-apps/${page}`);
     },
     refreshData() {
       this.$store.dispatch('subjectApps/getSubjectApps', {

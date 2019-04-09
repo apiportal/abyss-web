@@ -1,14 +1,17 @@
 <template>
   <div>
     <b-form class="switch-organization">
-      <label class="text-uppercase font-weight-bold">Organization</label>
-      <b-form-select
-        :value="currentUser.organizationid"
-        :options="organizationOptions"
-        @change="handleOrganizationChange"
-        data-qa="sideMenuSwitchOrganization"
-        style="width: 100%;"
-      ></b-form-select>
+      <label class="text-uppercase">Organization</label>
+      <div class="row">
+        <b-form-select
+          size="lg"
+          :value="currentUser.organizationid"
+          :options="organizationOptions"
+          @change="handleOrganizationChange"
+          data-qa="sideMenuSwitchOrganization"
+          style="width: 100%;"
+        ></b-form-select>
+      </div>
     </b-form>
     <ul class="sidenav-links">
       <li>
@@ -156,11 +159,3 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.switch-organization {
-  label {
-    color: silver;
-    font-size: .75rem;
-  }
-}
-</style>

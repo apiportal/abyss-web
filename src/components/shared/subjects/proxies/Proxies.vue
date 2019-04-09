@@ -159,7 +159,6 @@ export default {
         array: rows
           .map(item => ({
             ...item,
-            contractscount: item.contracts ? item.contracts.length : 5000,
           })),
         sortByKey,
         sortByKeyType,
@@ -183,24 +182,36 @@ export default {
       sortDirection: 'desc',
     };
   },
+  watch: {
+    tableRows(newVal, oldVal) {
+      console.log('newVal, oldVal: ',newVal, oldVal); // eslint-disable-line
+      const contractApis = newVal;
+      if (newVal.length !== oldVal.length) {
+        this.getApiContracts(contractApis);
+      }
+    },
+  },
+  created() {
+    this.getApiContracts(this.tableRows);
+  },
   methods: {
-    getApiContracts(newRows) {
-      const rows = newRows;
-      for (let i = 0; i < rows.length; i += 1) {
-        api.getApiContracts(rows[i].uuid).then((response) => {
-          if (response && response.data) {
-            rows[i].contracts = response.data;
-          } else {
-            rows[i].contracts = [];
+    getApiContracts(newVal) {
+      console.log('newVal: ', newVal); // eslint-disable-line
+      const contractApis = newVal;
+      for (let i = 0; i < contractApis.length; i += 1) {
+        api.getApiContracts(contractApis[i].uuid).then((res) => {
+          if (res && res.data) {
+            contractApis[i].contracts = res.data;
+            contractApis[i].contractscount = res.data.length;
           }
         })
         .catch((error) => {
           if (error.status === 404) {
-            rows[i].contracts = [];
+            contractApis[i].contracts = [];
+            contractApis[i].contractscount = 0;
           }
         });
       }
-      return rows;
     },
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';

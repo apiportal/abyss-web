@@ -42,13 +42,13 @@
         <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
     </div>
-    <div v-if="isLicensesTableVisible">
+    <div v-if="isLicensesTableVisible && licenses.length">
       <Licenses
         :rows="licenses"
         :routePath="routePath"
       ></Licenses>
     </div>
-    <div v-if="isContractsTableVisible">
+    <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
         :rows="item.contracts"
         :routePath="routePath"

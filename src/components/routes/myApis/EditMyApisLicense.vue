@@ -1,7 +1,7 @@
 <template>
   <div>
     <EditLicense
-      :routePath="`/app/my-apis/businesses/${page}`"
+      :routePath="`/app/my-apis/my-proxy-apis/${page}`"
     />
   </div>
 </template>

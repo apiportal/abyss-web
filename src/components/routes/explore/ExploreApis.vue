@@ -1,10 +1,10 @@
 <template>
   <div>
     <ExploreModal
-      v-if="isProxiesLoaded"
+      v-if="isApisLoaded && isLicensesLoaded"
       :onClose="handleModalClose"
       :hideHeader="true"
-      :cardItem="getCardItem(apiId)"
+      :api="getCardItem(apiId)"
       size="lg"
     />
   </div>
@@ -20,8 +20,10 @@ export default {
   },
   computed: {
     ...mapState({
-      proxies: state => state.proxies.items,
-      isProxiesLoaded: state => state.proxies.lastUpdatedAt > 0,
+      apis: state => state.apis.items,
+      isApisLoaded: state => state.apis.lastUpdatedAt > 0,
+      licenses: state => state.licenses.items,
+      isLicensesLoaded: state => state.licenses.lastUpdatedAt > 0,
     }),
   },
   methods: {
@@ -29,7 +31,7 @@ export default {
       this.$router.push('/app/explore/');
     },
     getCardItem(apiId) {
-      return this.proxies.find(item => item.uuid === apiId);
+      return this.apis.find(item => item.uuid === apiId);
     },
   },
   data() {

@@ -394,7 +394,10 @@ export default {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
   },
   postInviteUser(referral) {
-    // const { email, message, hasConsentToShare, ...rest } = referral;
     return axios.post('/abyss/oapi/invite-user/', referral);
+  },
+  // api-licenses
+  getExploreApiLicenses(uuid) {
+    return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },
 };

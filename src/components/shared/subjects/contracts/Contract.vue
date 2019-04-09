@@ -30,6 +30,14 @@
 
       <div class="row abyss-table-buttons">
         <b-button
+          @click="handleToggleLicensesTable"
+          size="md"
+          variant="link"
+          :class="{'active': isLicensesTableVisible}"
+        >
+          <span>Contract License</span>
+        </b-button>
+        <b-button
           @click="handleToggleApisTable"
           size="md"
           variant="link"
@@ -62,6 +70,12 @@
           :routePath="routePath"
         ></Proxies>
       </div>
+      <div v-if="isLicensesTableVisible">
+        <Licenses
+          :rows="computedContractLicenses"
+          :routePath="routePath"
+        ></Licenses>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +85,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import AccessTokens from '@/components/shared/subjects/subscriptions/AccessTokens';
+import Licenses from '@/components/shared/subjects/licenses/Licenses';
 
 export default {
   props: {
@@ -92,12 +107,15 @@ export default {
   components: {
     Icon,
     AccessTokens,
+    Licenses,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      licenses: state => state.subjectLicenses.items,
     }),
     computedContractApis() {
       const { contractApis, apiStates, apiVisibilityTypes } = this;
@@ -120,12 +138,16 @@ export default {
       const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
       return Boolean(!hasNoActiveToken);
     },
+    computedContractLicenses() {
+      return this.licenses.filter(license => license.uuid === this.item.licenseid);
+    },
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
       isApisTableVisible: false,
       isTokensTableVisible: false,
+      isLicensesTableVisible: false,
       accessTokens: [],
       contractApis: [],
     };
@@ -135,11 +157,20 @@ export default {
       this.isTokensTableVisible = !this.isTokensTableVisible;
       if (this.isTokensTableVisible) {
         this.isApisTableVisible = false;
+        this.isLicensesTableVisible = false;
       }
     },
     handleToggleApisTable() {
       this.isApisTableVisible = !this.isApisTableVisible;
       if (this.isApisTableVisible) {
+        this.isTokensTableVisible = false;
+        this.isLicensesTableVisible = false;
+      }
+    },
+    handleToggleLicensesTable() {
+      this.isLicensesTableVisible = !this.isLicensesTableVisible;
+      if (this.isLicensesTableVisible) {
+        this.isApisTableVisible = false;
         this.isTokensTableVisible = false;
       }
     },
@@ -189,6 +220,9 @@ export default {
     },
   },
   created() {
+    if (!this.licenses.length) {
+      this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    }
     // get tokens
     this.getAccessTokens();
     // get contract api

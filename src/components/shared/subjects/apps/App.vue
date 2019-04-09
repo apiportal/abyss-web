@@ -41,7 +41,7 @@
         <b-badge pill>{{ item.contracts.length }}</b-badge>
       </b-button>
     </div>
-    <div v-if="isContractsTableVisible">
+    <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
         :rows="appContracts"
         :routePath="routePath"

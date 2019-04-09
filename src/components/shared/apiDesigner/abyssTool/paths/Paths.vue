@@ -3,16 +3,16 @@
     <div style="text-align: center;">
       <b-button-group size="sm" style="width: 100%;">
         <b-button
-          :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
-          @click="handleGroupBy('tags')"
-        >
-          Group by Tags
-        </b-button>
-        <b-button
           :class="`${ groupBy === 'paths' ? 'btn-selected' : '' }`"
           @click="handleGroupBy('paths')"
         >
           Group by Paths
+        </b-button>
+        <b-button
+          :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
+          @click="handleGroupBy('tags')"
+        >
+          Group by Tags
         </b-button>
       </b-button-group>
     </div>
@@ -109,7 +109,7 @@ export default {
   },
   data() {
     return {
-      groupBy: 'tags',
+      groupBy: 'paths',
     };
   },
   methods: {

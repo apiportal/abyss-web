@@ -9,6 +9,67 @@
       <span style="float: right;">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
+      <span v-if="type === 'Response Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete response</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Schema Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete schema</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Parameter Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem" v-if="!isDynamicTitle">Delete parameter</b-dropdown-item>
+          <b-dropdown-item @click="handleDeleteArrayItem" v-if="isDynamicTitle">Delete parameter</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Request Body Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete request body</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Header Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete header</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Security Scheme Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete security scheme</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Link Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete link</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Callback Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteObjectItem">Delete callback</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Server Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteArrayItem">Delete tag</b-dropdown-item>
+        </b-dropdown>
+      </span>
+      <span v-if="type === 'Tag Object' && !isMap && !isArray" class="oao-dropdown">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteArrayItem">Delete tag</b-dropdown-item>
+        </b-dropdown>
+      </span>
       <span v-if="isDynamicTitle">
         {{ title }} <span style="font-size: .75rem; color: grey;">{{ description }}</span>
       </span>
@@ -68,7 +129,6 @@
             v-bind:key="index"
             :class="(index < (formData.length - 1) ? 'mb-3' : '')"
           >
-            <!-- {{ formItemData.name }} -->
             <OpenApiObject
               :item="index"
               :type="type"
@@ -92,7 +152,6 @@
         </div>
       </div>
       <div v-else>
-        <!-- {{ type }} -->
         <div
           v-if="
             type === 'Response Object' ||
@@ -248,7 +307,6 @@ export default {
       this.onChange(pathArray, [...currentItems, {}]);
     },
     getTitle(type, data) {
-      // console.log(type, data);
       if (data['$ref']) { // eslint-disable-line
         return data['$ref']; // eslint-disable-line
       }
@@ -262,7 +320,6 @@ export default {
       return '';
     },
     getDescription(type, data) {
-      // console.log(type, data);
       if (type === 'Tag Object') {
         return (data.description || '');
       } else if (type === 'Server Object') {
@@ -271,6 +328,14 @@ export default {
         return (data.description || '');
       }
       return '';
+    },
+    handleDeleteObjectItem() {
+      this.handleToggleCollapse();
+      this.onChange(this.pathArray, null, 'deleteLastItem');
+    },
+    handleDeleteArrayItem() {
+      this.handleToggleCollapse();
+      this.onChange(this.pathArray, null, 'deleteLastIndex');
     },
   },
 };
@@ -288,6 +353,16 @@ export default {
   .open-api-object-title {
     padding: .5rem;
     cursor: pointer;
+  }
+
+  .oao-dropdown {
+    float: right;
+    margin-right: .5rem;
+
+    .btn-sm {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   }
 }
 

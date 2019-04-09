@@ -4,6 +4,12 @@
       <span class="operation-name">{{ operationKey }}</span>
       <span class="path-name">{{ pathKey }}</span>
       <span class="operation-summary">{{ operation.summary }}</span>
+      <span class="operation-more-button">
+        <b-dropdown variant="link" size="sm" right no-caret>
+          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
+          <b-dropdown-item @click="handleDeleteOperation">Delete operation</b-dropdown-item>
+        </b-dropdown>
+      </span>
     </div>
     <div class="operation-details" v-if="isOperationDetailsVisible">
       <OpenApiObjectForm
@@ -20,6 +26,7 @@
 
 <script>
 import OpenApiObjectForm from '@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm';
+import Icon from '@/components/shared/Icon';
 
 export default {
   props: {
@@ -51,6 +58,7 @@ export default {
   },
   components: {
     OpenApiObjectForm,
+    Icon,
   },
   data() {
     return {
@@ -60,6 +68,11 @@ export default {
   methods: {
     toggleOperationDetails() {
       this.isOperationDetailsVisible = !this.isOperationDetailsVisible;
+    },
+    handleDeleteOperation() {
+      const { pathKey, operationKey } = this;
+      this.toggleOperationDetails();
+      this.onChange(['openapidocument', 'paths', pathKey, operationKey], null, 'deleteLastItem');
     },
   },
 };
@@ -94,6 +107,14 @@ export default {
       font-size: .75rem;
       vertical-align: middle;
       line-height: 24px;
+      flex: 1;
+    }
+
+    & > .operation-more-button {
+      .btn-sm {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
     }
   }
 

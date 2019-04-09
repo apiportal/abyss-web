@@ -9,7 +9,13 @@
     <!-- End Title -->
 
     <!-- Alert -->
-        <b-alert v-if="responseAlert" show variant="danger">{{ this.alertResponse.message }}</b-alert>
+        <Alert
+          v-if="isAlertVisible"
+          :text="this.alertResponse.message"
+          :hideFooter="true"
+          :hideHeader="true"
+          :dismissable="true"
+        />
     <!-- End Alert -->
 
     <!-- Form Group -->
@@ -77,15 +83,17 @@
 <script>
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import Alert from '@/components/shared/Alert';
 import { mapState } from 'vuex';
 
 export default {
   components: {
     Icon,
+    Alert,
   },
   data() {
     return {
-      responseAlert: false,
+      isAlertVisible: false,
       alertResponse: {
         message: '',
         moreinfo: '',
@@ -129,7 +137,7 @@ export default {
           setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
         })
         .catch((error) => {
-          this.responseAlert = true;
+          this.isAlertVisible = true;
           this.alertResponse.message = error.data.usermessage;
         });
     },

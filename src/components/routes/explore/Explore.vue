@@ -1,38 +1,40 @@
 <template>
   <div
-    style="margin: 1rem;"
+    class="page-container"
   >
-    <div class="row">
-      <div
-        class="col-md-3"
-        v-for="(cardItem, index) in cardItems"
-        v-bind:key="index"
-      >
-        <div>
-          <b-card
-            :img-src="cardItem.image"
-            :img-alt="cardItem.openapidocument.info.title"
-            img-top
-            img-height="40%"
-            class="mb-2"
-            style="height: 20rem;"
-            @click="handleModalOpen(cardItem.uuid)"
-          >
-            <div class="row">
-              <h6 class="col-md">{{ cardItem.openapidocument.info.title }}</h6>
-              <div class="col-">
-                <small>{{ cardItem.apistatename }}</small>
-                <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
+    <div class="page-content">
+      <div class="row">
+        <div
+          class="col-md-3"
+          v-for="(cardItem, index) in cardItems"
+          v-bind:key="index"
+        >
+          <div>
+            <b-card
+              :img-src="cardItem.image"
+              :img-alt="cardItem.openapidocument.info.title"
+              img-top
+              img-height="40%"
+              class="mb-2"
+              style="height: 20rem;"
+              @click="handleModalOpen(cardItem.uuid)"
+            >
+              <div class="row">
+                <h6 class="col-md">{{ cardItem.openapidocument.info.title }}</h6>
+                <div class="col-">
+                  <small>{{ cardItem.apistatename }}</small>
+                  <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
+                </div>
               </div>
-            </div>
-            <div>
-              <small>{{ cardItem.openapidocument.info.version }}</small>
-            </div>
-            <p>{{ cardItem.ownername }}</p>
-            <b-card-text>
-              {{ subStr(cardItem.openapidocument.info.description) }}
-            </b-card-text>
-          </b-card>
+              <div>
+                <small>{{ cardItem.openapidocument.info.version }}</small>
+              </div>
+              <p>{{ cardItem.ownername }}</p>
+              <b-card-text>
+                {{ subStr(cardItem.openapidocument.info.description) }}
+              </b-card-text>
+            </b-card>
+          </div>
         </div>
       </div>
     </div>
@@ -69,12 +71,12 @@ export default {
         return user.displayname || subjectId;
       };
       return apis
-        .filter((item) => {
-          if (item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14') {
-            return item;
-          }
-          return '';
-        })
+        .filter(item => (
+          item.isproxyapi &&
+          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
+          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
+          !item.isdeleted
+        ))
         .map(item => ({
           ...item,
           apistatename: getApiStateName(item.apistateid),
@@ -82,11 +84,6 @@ export default {
         }));
     },
   },
-  // filters: {
-  //   subStr(i) {
-  //     return `${i.substring(0, 15)} ...`;
-  //   },
-  // },
   mounted() {
     this.$store.dispatch('apis/getApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
@@ -95,7 +92,7 @@ export default {
   methods: {
     subStr(i) {
       if (i && i.length > 70) {
-        return `${i.substr(0, 70)} [...]`;
+        return `${i.substr(0, 70)}...`;
       } else if (i && i.length <= 70) {
         return i;
       }

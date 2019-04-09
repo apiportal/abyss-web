@@ -1,11 +1,9 @@
 <template>
   <div>
     <ExploreModal
-      v-if="
-        areProxiesLoaded
-      "
+      v-if="isProxiesLoaded"
       :onClose="handleModalClose"
-      :hideHeader=true
+      :hideHeader="true"
       :cardItem="getCardItem(apiId)"
       size="lg"
     />
@@ -23,7 +21,7 @@ export default {
   computed: {
     ...mapState({
       proxies: state => state.proxies.items,
-      areProxiesLoaded: state => state.proxies.lastUpdatedAt,
+      isProxiesLoaded: state => state.proxies.lastUpdatedAt > 0,
     }),
   },
   methods: {

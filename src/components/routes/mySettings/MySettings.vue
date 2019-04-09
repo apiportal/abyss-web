@@ -18,9 +18,6 @@
               </div>
             </b-form-checkbox>
           </li>
-          <li class="list-group-item" @click="onChangePassClick" style="cursor: pointer;">
-            <div class="md-v-line"></div><Icon icon="lock" class="mr-5"/>Change Password
-          </li>
           </ul>
         </b-tab>
 

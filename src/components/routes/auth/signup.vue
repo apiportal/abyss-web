@@ -179,41 +179,42 @@
         <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary">Get Started</b-button>
       </div>
     </div>
+    <Alert
+      v-if="pAlert"
+      text="Passwords didn't match or has less than 3 characters."
+      :dismissable="true"
+      :hideHeader="true"
+      :hideFooter="true"
+    />
     <!-- End Button -->
   </b-form>
   <!-- End Form -->
-  <div v-if="this.redirect">
-    <b-alert show variant="primary">
-      <h4 class="alert-heading">Success !</h4>
-      <p>
-      {{ this.res.usermessage }}
-      </p>
-      <p v-if="(this.res.recommendation === this.res.usermessage)">
-        {{ this.res.details }}
-      </p>
-      <p v-else>
-        {{ this.res.details }}
-      </p>
-      <hr />
-      <p class="mb-0">
-        {{ this.res.recommendation }}
-      </p>
-    </b-alert>
-  </div>
+  <!-- Redirect -->
+  <Alert
+    v-if="redirect"
+    title="Success!"
+    :text="this.res.usermessage"
+    :footer="this.res.recommendation"
+    variant="primary"
+  />
+  <!-- End Redirect -->
   </div>
 </template>
 
 <script>
 import InformModal from '@/components/shared/modals/InformModal';
 import api from '@/api';
+import Alert from '@/components/shared/Alert';
 
 export default {
   components: {
     InformModal,
+    Alert,
   },
   data() {
     return {
       isInformModalVisible: false,
+      pAlert: false,
       form: {
         firstname: '',
         lastname: '',
@@ -307,7 +308,7 @@ export default {
             console.log(error); // eslint-disable-line
           });
       }
-      console.error('Passwords didn\'t match or has less than 3 characters.');  // eslint-disable-line
+      this.pAlert = true;
     },
     toggleInformModal() {
       this.isInformModalVisible = !this.isInformModalVisible;

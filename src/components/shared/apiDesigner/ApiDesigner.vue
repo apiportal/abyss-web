@@ -108,11 +108,11 @@ export default {
     setView(view) {
       this.view = view;
     },
-    handleChange(propAddress, newPropValue) {
+    handleChange(propAddress, newPropValue, customAction) {
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
-      objectDeepUpdate(propAddress, newPropValue, newApiState);
+      objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },

@@ -52,12 +52,20 @@ const paginateArray = ({ array, itemsPerPage, page }) => {
   return array.slice(startIndex, (endIndex <= totalItems ? endIndex : totalItems));
 };
 
-const objectDeepUpdate = (propPath, value, object) => {
+const objectDeepUpdate = (propPath, value, object, customAction) => {
   if (propPath.length > 1) {
     if (object[propPath[0]] === undefined) {
       object[propPath[0]] = {}; // eslint-disable-line
     }
-    return objectDeepUpdate(propPath.slice(1), value, object[propPath[0]]);
+    if (propPath.length === 2 && customAction === 'deleteLastItem') {
+      delete object[propPath[0]][propPath[1]];
+      return true;
+    }
+    if (propPath.length === 2 && customAction === 'deleteLastIndex') {
+      object[propPath[0]].splice(propPath[0], 1);
+      return true;
+    }
+    return objectDeepUpdate(propPath.slice(1), value, object[propPath[0]], customAction);
   }
   object[propPath[0]] = value; // eslint-disable-line
   return true;

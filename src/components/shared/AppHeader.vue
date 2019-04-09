@@ -11,7 +11,8 @@
             <template slot="button-content">
               <div class="d-flex align-items-center" data-qa="navbarUser">
                 <span v-if="user.props">{{ user.props.displayname }}</span>
-                <span class="bg-cover bg-secondary rounded-circle avatar"></span>
+                <img  v-if="user.props.picture" :src="user.props.picture" class="bg-cover bg-secondary rounded-circle avatar" />
+                <img  v-if="!user.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" />
               </div>
             </template>
             <b-dropdown-item to="/app/my-profile/" data-qa="navbarMyProfile">

@@ -53,6 +53,9 @@ export default {
           this.memberships = response.data;
         }
         this.isMembershipsLoaded = true;
+      })
+      .catch(() => {
+        this.isMembershipsLoaded = true;
       });
     },
   },

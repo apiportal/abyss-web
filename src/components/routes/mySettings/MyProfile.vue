@@ -379,7 +379,7 @@ export default {
     },
     handleDeleteImage() {
       // this.pictureEditable.props.picture = '';
-      console.log('e');
+      // console.log('e');
       const {
         description, url, effectiveenddate, secondaryemail, email,
         // picture,

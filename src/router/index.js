@@ -110,6 +110,7 @@ import DeleteMyPolicy from '@/components/routes/myPolicies/DeleteMyPolicy';
 
 // Explore
 import Explore from '@/components/routes/explore/Explore';
+import ExploreModal from '@/components/routes/explore/ExploreApis';
 // Organizations Routes Components
 import Organizations from '@/components/routes/organizations/Organizations';
 import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
@@ -171,6 +172,12 @@ export default new Router({
         {
           path: 'explore',
           component: Explore,
+          children: [
+            {
+              path: 'apis/:apiId',
+              component: ExploreModal,
+            },
+          ],
         },
         {
           path: 'my-apis',

@@ -124,7 +124,6 @@
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.displayname }}
-              {{ item.users }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}
@@ -210,11 +209,10 @@ export default {
     }),
     tableRows() {
       const { roles, users } = this;
-      const getUsers = (roleId) => { // eslint-disable-line
-        const members = this.memberships.filter(item =>
+      const getUsers = (roleId) => {
+        const members = this.roleMemberships.filter(item =>
           !item.isdeleted &&
-          item.subjectroleid === roleId);
-        console.log('members.length: ', members.length);
+          item.subjectgroupid === roleId);
         const roleUsers = users.filter(el =>
           members.some(f =>
             f.subjectid === el.uuid,

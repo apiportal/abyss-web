@@ -2,11 +2,11 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Name:</dt>
-        <dd>{{ item.displayname }}</dd>
+        <dt>Description:</dt>
+        <dd>{{ item.description }}</dd>
       </dl>
       <dl class="col">
-        <dt>Description:</dt>
+        <dt>UUID:</dt>
         <dd>{{ item.uuid }}</dd>
       </dl>
       <dl class="col">

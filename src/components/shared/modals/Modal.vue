@@ -16,7 +16,7 @@
   >
     <div class="d-flex w-100 align--items-center" slot="modal-header">
       <slot name="header"></slot>
-      <button type="button" aria-label="Close" v-if="!hideHeaderClose" class="close align-items-center d-flex justify-content-center" @click="onClose">×</button>
+      <button type="button" aria-label="Close" v-if="!hideHeaderClose" class="close align-items-center d-flex justify-content-center" @click="onClose" data-qa="btnClose">×</button>
     </div>
     <div>
       <main>

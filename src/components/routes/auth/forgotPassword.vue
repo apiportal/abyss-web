@@ -20,6 +20,7 @@
           type="text"
           placeholder="Username"
           required
+          data-qa="formUsername"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -28,11 +29,11 @@
     <!-- Button -->
     <div class="row align-items-center mb-5">
       <div class="col-6">
-        <b-link class="small link-muted" to="login">Back to sign in</b-link>
+        <b-link class="small link-muted" to="login" data-qa="linkBack">Back to sign in</b-link>
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Request Reset Link</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" data-qa="btnRequestLink">Request Reset Link</b-button>
       </div>
     </div>
     <!-- End Button -->

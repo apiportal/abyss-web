@@ -68,7 +68,7 @@
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
                 text="Status"
-                sortByKey="isactive"
+                sortByKey="isactivated"
                 sortByKeyType="boolean"
               />
             </th>
@@ -118,8 +118,8 @@
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon 
-                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
-                :class="item.isactive ? 'text-success' : 'text-danger'"
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+                :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
@@ -205,10 +205,11 @@ export default {
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
       roleMemberships: state => state.roleMemberships.items,
+      organizations: state => state.organizations.items,
       // subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
-      const { roles, users } = this;
+      const { roles, users, organizations } = this;
       const getUsers = (roleId) => {
         const members = this.roleMemberships.filter(item =>
           !item.isdeleted &&
@@ -220,6 +221,10 @@ export default {
         );
         return roleUsers;
       };
+      const getOrganizationName = (organizationId) => {
+        const organization = organizations.find(item => item.uuid === organizationId);
+        return organization ? organization.name : organizationId;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
@@ -227,6 +232,7 @@ export default {
           ...item,
           users: getUsers(item.uuid),
           userscount: getUsers(item.uuid).length,
+          organizationname: getOrganizationName(item.organizationid),
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

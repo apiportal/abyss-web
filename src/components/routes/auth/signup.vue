@@ -24,6 +24,7 @@
           placeholder="First Name"
           :state="firstNameState"
           required
+          data-qa="formFirstName"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -44,6 +45,7 @@
           placeholder="Last Name"
           :state="lastNameState"
           required
+          data-qa="formLastName"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -64,6 +66,7 @@
           placeholder="Username"
           :state="userNameState"
           required
+          data-qa="formUsername"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -84,6 +87,7 @@
           placeholder="Email address"
           :state="emailState"
           required
+          data-qa="formEmail"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -106,6 +110,7 @@
           placeholder="********"
           :state="passwordState"
           required
+          data-qa="formPassword"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -128,6 +133,7 @@
           placeholder="********"
           :state="confirmPasswordState"
           required
+          data-qa="formConfirmPassword"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -142,10 +148,11 @@
         :unchecked-value="false"
         class="text-muted"
         :required="true"
+        data-qa="chkAgree"
       >
       <small class="ml-1">
         I agree to the
-        <a class="link-muted" @click="toggleInformModal">Terms of Use</a>
+        <a class="link-muted" @click="toggleInformModal" data-qa="linkTerms">Terms of Use</a>
       </small>
       <InformModal
           v-if="isInformModalVisible"  
@@ -172,11 +179,11 @@
     <div class="row align-items-center mb-5">
       <div class="col-6">
         <span class="small text-muted">Already have an account? </span>
-        <b-link class="small" to="login">Login</b-link>
+        <b-link class="small" to="login" data-qa="linkLogin">Login</b-link>
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary">Get Started</b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" data-qa="btnGetStarted">Get Started</b-button>
       </div>
     </div>
     <Alert
@@ -238,32 +245,32 @@ export default {
       return firstname.length > 0;
     },
     firstNameInvalidFeedback() {
-      const { firstname } = this.form;
-      return (firstname.length === 0) ? 'Please enter something' : '';
+      // const { firstname } = this.form;
+      // return (firstname.length === 0) ? 'Please enter your first name.' : '';
     },
     lastNameState() {
       const { lastname } = this.form;
       return lastname.length > 0;
     },
     lastNameInvalidFeedback() {
-      const { lastname } = this.form;
-      return (lastname.length === 0) ? 'Please enter something' : '';
+      // const { lastname } = this.form;
+      // return (lastname.length === 0) ? 'Please enter your last name.' : '';
     },
     userNameState() {
       const { username } = this.form;
       return username.length > 0;
     },
     userNameInvalidFeedback() {
-      const { username } = this.form;
-      return (username.length === 0) ? 'Please enter something' : '';
+      // const { username } = this.form;
+      // return (username.length === 0) ? 'Please enter your user name.' : '';
     },
     emailState() {
       const { email } = this.form;
       return email.length > 0;
     },
     emailInvalidFeedback() {
-      const { email } = this.form;
-      return (email.length === 0) ? 'Please enter something' : '';
+      // const { email } = this.form;
+      // return (email.length === 0) ? 'Please enter your e-mail.' : '';
     },
     passwordState() {
       const { password } = this.form;
@@ -280,7 +287,7 @@ export default {
     confirmPasswordInvalidFeedback() {
       const { password, password2 } = this.form;
       if (password2.length === 0) {
-        return 'Please re-enter your password.';
+        // return 'Please re-enter your password.';
       } else if (password !== password2) {
         return 'Passwords did not match.';
       }

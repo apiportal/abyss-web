@@ -6,8 +6,8 @@
         <dd>{{ item.description }}</dd>
       </dl>
       <dl class="col">
-        <dt>UUID:</dt>
-        <dd>{{ item.uuid }}</dd>
+        <dt>Organization:</dt>
+        <dd>{{ item.organizationname }}</dd>
       </dl>
       <dl class="col">
         <dt>Created:</dt>
@@ -27,6 +27,7 @@
         @click="listRoleUsers" 
         :class="{'active': isShowRoleUsers}"
         v-if="item.users.length"
+        data-qa="btnRoleUsers"
       >
         <Icon icon="users" /> Users
         <b-badge pill>{{ item.users.length }}</b-badge>

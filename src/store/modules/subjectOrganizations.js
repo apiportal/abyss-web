@@ -10,11 +10,13 @@ const getters = {};
 
 const actions = {
   getSubjectOrganizations: ({ commit }) => {
+  // getSubjectOrganizations: ({ rootState, commit }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 ) {
       return false;
     }
     api.getSubjectOrganizations()
+    // api.getSubjectOrganizationsByUuid(rootState.user.uuid)
     .then((response) => {
       if (response && response.data) {
         commit('setSubjectOrganizations', response.data);

@@ -6,8 +6,8 @@
         <dd>{{ item.subjectname }}</dd>
         <dt>Url:</dt>
         <dd>{{ item.url }}</dd>
-        <dt>Email:</dt>
-        <!-- <dd>{{ item.email }}</dd> -->
+        <dt>Description:</dt>
+        <dd>{{ item.description }}</dd>
       </dl>
       <dl class="col">
         <dt>Organization:</dt>

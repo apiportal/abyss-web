@@ -81,6 +81,12 @@ export default {
         this.subject = response.data[0];
         this.subjectType = this.subjectTypes.find(item =>
           item.uuid === this.subject.subjecttypeid) || {};
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.subject = {};
+          this.subjectType = {};
+        }
       });
     },
   },

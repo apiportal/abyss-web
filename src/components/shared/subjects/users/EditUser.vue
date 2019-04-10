@@ -61,6 +61,12 @@ export default {
           this.memberships = response.data;
         }
         this.isMembershipsLoaded = true;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.memberships = [];
+          this.isMembershipsLoaded = true;
+        }
       });
     },
   },

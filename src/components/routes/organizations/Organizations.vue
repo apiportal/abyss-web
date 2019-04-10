@@ -4,7 +4,13 @@
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="true">
-          <span class="link-text" data-qa="linkOrganizations">Organizations</span> <b-badge pill>{{ organizations.length }}</b-badge>
+          <span class="link-text" data-qa="linkOrganizations">Organizations</span> <b-badge pill>{{ tableRows.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item :active="false" to="/app/administer-users/users/1">
+          <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item :active="false" to="/app/administer-groups/1">
+          <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ groups.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -46,7 +52,8 @@
 
     <div class="page-content">
       <Organizations
-        :organizations="paginatedRows"
+        :rows="paginatedRows"
+        :organizations="tableRows"
         :routePath="`/app/organizations/${page}`"
       />
     </div>
@@ -79,11 +86,12 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
-      currentUser: state => state.user,
+      groups: state => state.groups.items,
     }),
     tableRows() {
       const { organizations, subjectOrganizations } = this;
@@ -92,14 +100,19 @@ export default {
         return organization ? organization.name : organizationId;
       };
       const getSubOrganizations = (organizationId) => {
+      // const getSubOrganizations = (obj) => {
         const subOrganizations = organizations
-          .filter(item => item.organizationid === organizationId);
-        return subOrganizations.map(item => item.uuid);
+          // .filter(item => item.organizationid === obj.uuid
+          .filter(item => item.organizationid === organizationId
+            && item.organizationid !== item.uuid);
+        // return subOrganizations.map(item => item.uuid);
+        return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
         const organizationSubjects = subjectOrganizations
           .filter(item => item.organizationrefid === organizationId);
-        return organizationSubjects.map(item => item.subjectid);
+        // return organizationSubjects.map(item => item.subjectid);
+        return organizationSubjects;
       };
       const getOwner = (organizationId) => {
         const { users } = this;
@@ -107,24 +120,34 @@ export default {
         if (ownerSubject) {
           const owner = users.find(item => item.uuid === ownerSubject.subjectid);
           if (owner) {
-            return owner.displayname;
+            return owner;
           }
         }
-        return '-';
+        return false;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       return Helpers.sortArrayOfObjects({
         array: organizations.map(item => ({
           ...item,
           organizationname: getOrganizationName(item.organizationid),
+          // suborganizations: getSubOrganizations(item),
           suborganizations: getSubOrganizations(item.uuid),
+          suborganizationscount: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid),
-          organizationowner: getOwner(item.uuid),
+          organizationowner: getOwner(item.uuid).displayname,
+          organizationownerid: getOwner(item.uuid).uuid,
+          isorganizationowner: Boolean(getOwner(item.uuid)),
         }))
+        // .filter((item) => {
+        //   const { currentUser } = this;
+        //   const { organizationid } = item;
+        //   return (organizationid === currentUser.organizationid);
+        // })
         .filter((item) => {
           const { currentUser } = this;
-          const { organizationid } = item;
-          return (organizationid === currentUser.organizationid);
+          return item.organizationusers.some(f =>
+            f.subjectid === currentUser.uuid,
+          );
         })
         .filter((item) => {
           const { filterKey } = this;
@@ -153,7 +176,7 @@ export default {
       const { tableRows, itemsPerPage, page } = this;
       const { paginateArray } = Helpers;
       return paginateArray({
-        array: tableRows,
+        array: tableRows.filter(item => item.uuid === item.organizationid),
         itemsPerPage,
         page,
       });
@@ -161,9 +184,10 @@ export default {
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'organizations');
-    this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('users/getUsers', {});
+    // this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
   },
   mounted() {
     this.isMounted = true;
@@ -181,21 +205,6 @@ export default {
     };
   },
   methods: {
-    computedMemberships() {
-      const { subjectOrganizations, organizations, users } = this;
-      return subjectOrganizations.map((item) => {
-        const subjectuser = users.find(user => user.uuid === item.subjectid);
-        const subjectorg = organizations.find(org => org.uuid === item.organizationrefid);
-        return {
-          org: subjectorg.name,
-          org1: item.organizationrefid,
-          org2: subjectorg.uuid,
-          user1: item.subjectid,
-          user2: subjectuser.uuid,
-          user: subjectuser.displayname,
-        };
-      });
-    },
     handleFilterKeyup({ value }) {
       this.filterKey = value;
     },

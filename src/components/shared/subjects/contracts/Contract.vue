@@ -23,33 +23,37 @@
           <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
           <dt v-if="item.deleted">Deleted:</dt>
           <dd v-if="item.deleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+          <dt>subjectpermissionid:</dt>
+          <dd>{{ item.subjectpermissionid }}</dd>
         </dl>
       </div>
 
       <div class="row abyss-table-buttons">
-        <b-button
-          @click="handleToggleTokensTable"
-          size="md"
-          variant="link"
-          :class="{'active': isTokensTableVisible}"
-        >
-          <span>API Access Tokens</span>
-          <b-badge pill>{{ accessTokens.length }}</b-badge>
-        </b-button>
         <b-button
           @click="handleToggleApisTable"
           size="md"
           variant="link"
           :class="{'active': isApisTableVisible}"
         >
-          <span>APIs</span>
-          <b-badge pill>{{ computedContractApis.length }}</b-badge>
+          <span>Contracted API</span>
+        </b-button>
+        <b-button
+          @click="handleToggleTokensTable"
+          size="md"
+          variant="link"
+          :class="{'active': isTokensTableVisible}"
+        >
+          <span>Access Tokens</span>
+          <b-badge
+            :variant="`${computedExpiredTokens ? 'warning' : 'secondary'}`"
+            pill>{{ accessTokens.length }}</b-badge>
         </b-button>
       </div>
       <div v-if="isTokensTableVisible">
         <AccessTokens
           :rows="accessTokens"
           :routePath="routePath"
+          :onUpdate="getAccessTokens"
         ></AccessTokens>
       </div>
       <div v-if="isApisTableVisible">
@@ -112,6 +116,10 @@ export default {
         apivisibilityname: getApiVisibilityName(contractApiItem.apivisibilityid),
       }));
     },
+    computedExpiredTokens() {
+      const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
+      return Boolean(!hasNoActiveToken);
+    },
   },
   data() {
     return {
@@ -135,6 +143,19 @@ export default {
         this.isTokensTableVisible = false;
       }
     },
+    getAccessTokens() {
+      api.getAccessTokens(this.item.subjectpermissionid).then((response) => {
+        this.accessTokens = response.data.map(item => ({
+          ...item,
+          isexpired: this.$moment(item.expiredate).isBefore(this.$moment.utc()),
+        }));
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.accessTokens = [];
+        }
+      });
+    },
   },
   watch: {
     computedContractApis(newVal, oldVal) {
@@ -146,28 +167,40 @@ export default {
             if (res && res.data) {
               contractApis[i].contracts = res.data;
             }
-          });
-          api.getResourceAccessTokens(this.item.subjectpermissionid).then((res) => {
-            if (res && res.data) {
-              contractApis[i].accessTokens = res.data;
+          })
+          .catch((error) => {
+            if (error.status === 404) {
+              contractApis[i].contracts = [];
             }
           });
+          // api.getAccessTokens(this.item.subjectpermissionid).then((res) => {
+          //   if (res && res.data) {
+          //     contractApis[i].accessTokens = res.data;
+          //   }
+          // })
+          // .catch((error) => {
+          //   if (error.status === 404) {
+          //     contractApis[i].accessTokens = [];
+          //   }
+          // });
+          // this.getAccessTokens(contractApis[i]);
         }
       }
     },
   },
   created() {
     // get tokens
-    api
-    .getResourceAccessTokens(this.item.subjectpermissionid)
-    .then((response) => {
-      this.accessTokens = response.data;
-    });
+    this.getAccessTokens();
     // get contract api
     api
     .getApi(this.item.apiid)
     .then((response) => {
       this.contractApis = response.data;
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        this.contractApis = [];
+      }
     });
   },
 };

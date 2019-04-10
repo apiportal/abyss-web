@@ -70,6 +70,7 @@
     max-height: 50vh;
     overflow-y: auto;
   }
+  .form-control::-webkit-input-placeholder{color:#ccc;opacity:1}.form-control::-moz-placeholder{color:#ccc;opacity:1}.form-control:-ms-input-placeholder{color:#ccc;opacity:1}.form-control::-ms-input-placeholder{color:#ccc;opacity:1}.form-control::placeholder{color:#ccc;opacity:1}
   // h1, h2, h3, h4, h5, h6 {
   //   margin-bottom: .5rem;
   //   font-weight: 300;
@@ -115,6 +116,9 @@
     flex: 0 0 250px;
     overflow-y: auto;
     background-color: $bg-sidebar;
+    // background-image: linear-gradient(150deg, #2d1582, #19a0ff);
+    background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $brand-color);
+    background-repeat: repeat-x
     &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(white, 0.35);
     }
@@ -272,12 +276,17 @@
   .page-tabs {
     margin-bottom: 1rem;
     border-bottom: 1px solid $border-color-light;
+    border-top: 1px solid $border-color-light;
+    margin-left: -2rem;
+    margin-right: -2rem;
+    padding: 0 2rem;
     .nav-link {
       color: inherit;
       border: 0 none;
-      border-bottom: 3px solid transparent;
+      border-bottom: 5px solid transparent;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
+      font-size: 1.2rem;
       &.active {
         color: inherit;
         background-color: transparent;
@@ -460,6 +469,11 @@
         + tr {
         // + tr:not(.opaque) {
           opacity: 0.45;
+        }
+      }
+      tr.is-expired {
+        .expire-date {
+          color: #F60;
         }
       }
       td.actions {

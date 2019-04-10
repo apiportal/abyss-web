@@ -193,6 +193,11 @@ export default {
           } else {
             rows[i].contracts = [];
           }
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            rows[i].contracts = [];
+          }
         });
       }
       return rows;

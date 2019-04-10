@@ -51,6 +51,12 @@ export default {
           this.organizationUsers = response.data;
         }
         this.isOrganizationUsersLoaded = true;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.organizationUsers = [];
+          this.isOrganizationUsersLoaded = true;
+        }
       });
     },
   },

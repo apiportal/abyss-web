@@ -76,6 +76,16 @@
               required
             />
           </b-form-group>
+          <b-form-group id="organizationEnabledGroup">
+            <b-form-checkbox
+                id="organizationEnabledChecks"
+                v-model="organization.isactive"
+                :value="true"
+                :unchecked-value="false"
+            >
+                Is Active?
+            </b-form-checkbox>
+          </b-form-group>
           <b-form-group 
             id="organizationUrlGroup"
           >

@@ -19,6 +19,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
+          <pre>{{policiesEditable}}</pre>
           <div>
             <Chips
               :chips="computedLicensePolicies"
@@ -141,6 +142,14 @@ export default {
     //   const type = this.policyTypes.find(policyType => policyType.uuid === typeId);
     //   return type ? `${type.name} / ${type.type} / ${type.subtype}` : typeId;
     // };
+    const policyText = (item) => {
+      if (item.policyinstance.info) {
+        const nameWithTypes = `${item.name} /
+        ${item.policyinstance.info.type} / ${item.policyinstance.info.subType}`;
+        return nameWithTypes;
+      }
+      return item.name;
+    };
     return {
       licenseEditable: JSON.parse(JSON.stringify(license)),
       policiesEditable: [...JSON.parse(JSON.stringify(policies))]
@@ -149,8 +158,7 @@ export default {
         const sortTime = (new Date()).getTime();
         return {
           ...item,
-          text: `${item.name}: ${item.policyinstance.info.type} / 
-          ${item.policyinstance.info.subType}`,
+          text: policyText(item),
           value: item.uuid,
           isAttached,
           sortTime,

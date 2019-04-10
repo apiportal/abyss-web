@@ -384,8 +384,18 @@ export default {
   getContractStates() {
     return axios.get('/abyss/oapi/contract-states');
   },
-  getResourceAccessTokens(uuid) {
+  getAccessTokens(uuid) {
     return axios.get(`/abyss/oapi/resource-access-tokens/subject-permission/${uuid}`);
+  },
+  putAccessTokens(token) {
+    const { uuid, created, updated, deleted, isdeleted, ...rest } = token;
+    return axios.put(`/abyss/oapi/resource-access-tokens/${uuid}`, rest);
+  },
+  deleteAccessTokens(uuid) {
+    return axios.delete(`/abyss/oapi/resource-access-tokens/${uuid}`);
+  },
+  postAccessTokens(token) {
+    return axios.post('/abyss/oapi/resource-access-tokens/', token);
   },
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
@@ -399,5 +409,12 @@ export default {
   // roles
   getRoles() {
     return axios.get('/abyss/oapi/subjects/roles/');
+  },
+  postInviteUser(referral) {
+    return axios.post('/abyss/oapi/invite-user/', referral);
+  },
+  // api-licenses
+  getExploreApiLicenses(uuid) {
+    return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },
 };

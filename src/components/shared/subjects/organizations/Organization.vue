@@ -31,7 +31,7 @@
       </dl>
     </div>
 
-    <div class="row abyss-table-buttons">
+    <div class="row abyss-table-buttons" v-if="organization.isorganizationowner">
       <b-button
         size="md"
         variant="link"
@@ -62,24 +62,23 @@
         <b-badge pill>{{ organization.suborganizations.length }}</b-badge>
       </b-button>
     </div>
-
-    <div v-if="isShowOrganizationUsers">
+    <div v-if="isShowOrganizationUsers && organizationUsers.length">
       <Users
-        :users="users.filter(user => (organization.organizationusers.indexOf(user.uuid) > -1))"
-        path="organizations"
-        title="Organization"
-        :page="1"
-      />
-    </div>
-
-    <div
-      v-if="isShowSubOrganizations"
-    >      
-      <Organizations
-        :organizations="organizations.filter(item => organization.suborganizations.indexOf(item.uuid) > -1 )"
+        :rows="organizationUsers"
         :routePath="routePath"
       />
     </div>
+    <div
+      v-if="isShowSubOrganizations"
+    >
+      <Organizations
+        :rows="subOrganizations"
+        :organizations="organizations"
+        :routePath="routePath"
+      />
+    </div>
+    <!-- <pre>{{subOrganizations}}</pre> -->
+    <!-- <pre>{{organization.organizationusers}}</pre> -->
 
   </div>
 </template>
@@ -92,6 +91,16 @@ import Users from '@/components/shared/subjects/users/Users';
 
 export default {
   props: {
+    organizations: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    rows: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     organization: {
       type: Object,
       required: false,
@@ -114,7 +123,7 @@ export default {
       users: state => state.users.items,
       apps: state => state.apps.items,
       apis: state => state.apis.items,
-      organizations: state => state.organizations.items,
+      // organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
     }),
     // organizationGroups() {
@@ -138,6 +147,25 @@ export default {
           item.organizationrefid === organization.uuid);
       return organizationSubjects;
     },
+    subOrganizations() {
+      const { organization, organizations } = this;
+      const subOrganizations = organizations.filter(item =>
+        item.uuid !== item.organizationid &&
+        item.organizationid === organization.uuid,
+      );
+      return subOrganizations;
+    },
+    organizationUsers() {
+      // const { users, organizationSubjects } = this;
+      const { users, organization } = this;
+      const organizationUsers = users.filter(user =>
+        // organizationSubjects.some(f =>
+        organization.organizationusers.some(f =>
+          f.subjectid === user.uuid,
+        ),
+      );
+      return organizationUsers;
+    },
   },
   data() {
     return {
@@ -150,6 +178,11 @@ export default {
       api.getUsersOfOrganizations(this.organization.uuid).then((response) => {
         if (!this.organizationSubjects.length) {
           this.organizationSubjects = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.organizationSubjects = [];
         }
       });
     },

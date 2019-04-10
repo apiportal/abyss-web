@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-form class="switch-organization">
-      <label>Organization:</label>
+      <label class="text-uppercase font-weight-bold">Organization</label>
       <b-form-select
         :value="currentUser.organizationid"
         :options="organizationOptions"
@@ -30,7 +30,7 @@
 
         <p>MANAGE</p>
 
-        <b-link to="/app/my-apis/businesses/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
+        <b-link to="/app/my-apis/my-proxy-apis/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
           <span class="route-icon"><Icon icon="cube" /></span>  My APIs
         </b-link>
 
@@ -57,13 +57,13 @@
         <p>ADMIN</p>
 
 
-        <b-link to="/app/administer-users/users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
+        <!-- <b-link to="/app/administer-users/users/1" :class="`${currentPage.rootPath === 'administer-users' ? 'selected' : ''}`" data-qa="sideMenuUsers">
           <span class="route-icon"><Icon icon="user" /></span> Users
         </b-link> 
 
         <b-link to="/app/administer-groups/1" :class="`${currentPage.rootPath === 'administer-groups' ? 'selected' : ''}`" data-qa="sideMenuGroups">
           <span class="route-icon"><Icon icon="users" /></span> Groups
-        </b-link> 
+        </b-link>  -->
         
         <b-link to="/app/organizations/1" :class="`${currentPage.rootPath === 'organizations' ? 'selected' : ''}`" data-qa="sideMenuOrganizations">
           <span class="route-icon"><Icon icon="sitemap" /></span> Organizations

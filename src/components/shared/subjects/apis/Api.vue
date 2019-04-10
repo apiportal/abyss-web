@@ -120,6 +120,11 @@ export default {
           this.subscriptions[uuid] = response.data;
           this.subscriptions.lastUpdated = (new Date()).getTime();
         }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.subscriptions[uuid] = [];
+        }
       });
     },
     handleToggleApiProxiesTable() {

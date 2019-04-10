@@ -41,16 +41,6 @@
         <span>Contracts</span>
         <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
-      <b-button
-        @click="handleToggleTokensTable"
-        size="md"
-        variant="link"
-        :class="{'active': isTokensTableVisible}"
-        v-if="item.accessTokens"
-      >
-        <span>API Access Tokens</span>
-        <b-badge pill>{{ item.accessTokens.length }}</b-badge>
-      </b-button>
     </div>
     <div v-if="isLicensesTableVisible">
       <Licenses
@@ -63,12 +53,6 @@
         :rows="item.contracts"
         :routePath="routePath"
       ></Contracts>
-    </div>
-    <div v-if="isTokensTableVisible && item.accessTokens">
-      <AccessTokens
-        :rows="item.accessTokens"
-        :routePath="routePath"
-      ></AccessTokens>
     </div>
   </div>
 </template>
@@ -90,7 +74,6 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    AccessTokens: () => import('@/components/shared/subjects/subscriptions/AccessTokens'),
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
@@ -128,6 +111,11 @@ export default {
         if (response && response.data) {
           this.licenses = response.data;
           // console.log(this.licenses);
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.licenses = [];
         }
       });
     },

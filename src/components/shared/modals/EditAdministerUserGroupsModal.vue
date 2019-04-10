@@ -171,7 +171,7 @@ export default {
         // console.log('groupsToDelete', this.groupsToDelete);
         for (let i = 0; i < this.groupsToDelete.length; i += 1) {
           deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.groupsToDelete.length - 1) {
               onUpdate();
             }
           });

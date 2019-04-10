@@ -279,7 +279,7 @@ export default {
         // console.log('usersToDelete', this.usersToDelete);
         for (let i = 0; i < this.usersToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.usersToDelete[i]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.usersToDelete.length - 1) {
               onUpdate();
             }
           });

@@ -201,7 +201,7 @@ export default {
         // console.log('organizationsToDelete', this.organizationsToDelete);
         for (let i = 0; i < this.organizationsToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.organizationsToDelete[i]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.organizationsToDelete.length - 1) {
               onUpdate();
             }
           });

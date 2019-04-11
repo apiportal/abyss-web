@@ -89,6 +89,8 @@ export default {
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('licenses/getLicenses', {});
+    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('contractStates/getContractStates', {});
   },
   methods: {
     subStr(i) {

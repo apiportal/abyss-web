@@ -400,4 +400,7 @@ export default {
   getExploreApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },
+  postContracts(contracts) {
+    return axios.post('/abyss/oapi/contracts', contracts);
+  },
 };

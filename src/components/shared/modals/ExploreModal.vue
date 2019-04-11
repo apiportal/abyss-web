@@ -1,5 +1,6 @@
 <template>
   <Modal
+    dialogClass="modal-xl"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -65,6 +66,68 @@
             <dd>{{ api.openapidocument.info.description }}</dd>
           </b-col>
         </b-row>
+        <div class="licenses-container">
+          <div class="licenses-header-container">
+            Subscribe
+          </div>
+          <div class="licenses-content-container">
+            <b-form @submit="handleSubscribe">
+              <div class="row">
+                <div class="col-md-4">
+                  <b-form-group 
+                    id="selectedAppId"
+                    label="My Apps:"
+                    label-for="selectedAppIdInput"
+                  >
+                    <b-form-select
+                      id="selectedAppIdInput"
+                      v-model="form.appId"
+                      :options="[
+                        {
+                          value: null,
+                          text: 'Please select app',
+                        },
+                        ...apps.map(app => ({
+                          value: app.uuid,
+                          text: app.displayname,
+                        })),
+                      ]"
+                      :required="true"
+                    />
+                  </b-form-group>
+                </div>
+                <div class="col-md-4">
+                  <b-form-group 
+                    id="selectedLicenseId"
+                    label="Available API Licenses:"
+                    label-for="selectedLicenseIdInput"
+                  >
+                    <b-form-select
+                      id="selectedLicenseIdInput"
+                      v-model="form.licenseId" 
+                      :options="[
+                        {
+                          value: null,
+                          text: 'Please select license',
+                        },
+                        ...apiLicenses.map(license => ({
+                          value: license.uuid,
+                          text: license.name,
+                        })),
+                      ]"
+                      :required="true"
+                    />
+                  </b-form-group>
+                </div>
+                <div class="col-md-4">
+                  <b-button type="submit" block variant="primary" style="margin-top: 32px;">
+                    Subscribe
+                  </b-button>
+                </div>
+              </div>
+            </b-form>
+          </div>
+        </div>
         <div class="row abyss-table-buttons">
           <b-button
             @click="handleToggleLicensesTable"
@@ -108,16 +171,24 @@ export default {
   },
   data() {
     return {
-      isLicensesTableVisible: false,
+      isLicensesTableVisible: true,
       apiLicenses: [],
+      form: {
+        appId: null,
+        licenseId: null,
+      },
     };
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       users: state => state.users.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.licenses.items,
+      apps: state => state.apps.items,
+      apis: state => state.apis.items,
+      contractStates: state => state.contractStates.items,
     }),
   },
   props: {
@@ -190,6 +261,32 @@ export default {
         }
       });
     },
+    handleSubscribe(evt) {
+      evt.preventDefault();
+      const { organizationid, uuid } = this.currentUser;
+      const { appId, licenseId } = this.form;
+      const { apiId } = this.$route.params;
+      const { apps, apis, contractStates } = this;
+      const licenseApp = apps.find(item => item.uuid === appId);
+      const licenseApi = apis.find(item => item.uuid === apiId);
+      const desc = `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`;
+      const contractstateid = contractStates.find(item => item.name === 'activated').uuid;
+      const subscribe = {
+        apiid: apiId,
+        contractstateid,
+        crudsubjectid: uuid,
+        description: desc,
+        environment: 'LIVE',
+        isrestrictedtosubsetofapi: false,
+        licenseid: licenseId,
+        name: desc,
+        organizationid,
+        status: 'inforce',
+        subjectid: appId,
+        subjectpermissionid: '5a513b54-fa27-4230-a3e6-784f329fede7',
+      };
+      console.log([subscribe]);
+    },
   },
   mounted() {
     const { uuid } = this.api;
@@ -197,3 +294,20 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.licenses-container {
+  border: 1px solid silver;
+  border-radius: .3rem;
+  margin-bottom: 1rem;
+
+  .licenses-header-container {
+    padding: .5rem 1rem;
+  }
+
+  .licenses-content-container {
+    border-top: 1px solid silver;
+    padding: 1rem;
+  }
+}
+</style>

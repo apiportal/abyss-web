@@ -45,7 +45,7 @@ export default {
   },
   data() {
     return {
-      accessManagerId: this.$route.params.id,
+      roleId: this.$route.params.id,
       page: this.$route.params.page,
     };
   },

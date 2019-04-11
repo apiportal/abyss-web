@@ -198,6 +198,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       isLoading: state => state.traffic.isLoading,
       roles: state => state.roles.items,
       accessManagers: state => state.accessManagers.items,
@@ -206,6 +207,7 @@ export default {
       memberships: state => state.subjectMemberships.items,
       roleMemberships: state => state.roleMemberships.items,
       organizations: state => state.organizations.items,
+      permissions: state => state.permissions.items,
       // subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
@@ -221,6 +223,18 @@ export default {
         );
         return roleUsers;
       };
+      const getPermissions = (roleId) => {
+        const permissions = this.permissions.filter(item =>
+          !item.isdeleted &&
+          item.subjectid === roleId);
+        // const rolePermissions = permissions.filter(el =>
+        //   permissions.some(f =>
+        //     f.subjectid === el.uuid,
+        //   ),
+        // );
+        return permissions;
+      };
+
       const getOrganizationName = (organizationId) => {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
@@ -233,6 +247,7 @@ export default {
           users: getUsers(item.uuid),
           userscount: getUsers(item.uuid).length,
           organizationname: getOrganizationName(item.organizationid),
+          permissions: getPermissions(item.uuid),
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -280,6 +295,7 @@ export default {
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
+    this.$store.dispatch('permissions/getPermissions', {});
     // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {

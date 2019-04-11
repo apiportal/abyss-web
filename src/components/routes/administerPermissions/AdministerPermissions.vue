@@ -45,7 +45,11 @@
       </div>
 
       <div class="page-content">
-        <table class="table abyss-table abyss-table-cards">            
+        <Permissions
+          :rows="paginatedRows"
+          :routePath="`/app/administer-permissions/${page}`"
+        />
+        <!-- <table class="table abyss-table abyss-table-cards">            
           <thead>
             <tr>
               <th class="status">
@@ -173,7 +177,7 @@
               </td>
             </tr>
           </TbodyCollapsible>
-        </table>
+        </table> -->
         <router-view></router-view>
       </div>
       <div class="page-footer" v-if="tableRows.length > itemsPerPage">
@@ -198,6 +202,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import AdministerPermission from '@/components/routes/administerPermissions/AdministerPermission';
+import Permissions from '@/components/shared/subjects/permissions/Permissions';
 import Helpers from '@/helpers';
 
 export default {
@@ -208,6 +213,7 @@ export default {
     TbodyCollapsible,
     TBodyLoading,
     AdministerPermission,
+    Permissions,
   },
   computed: {
     ...mapState({

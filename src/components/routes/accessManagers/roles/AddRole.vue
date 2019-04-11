@@ -1,23 +1,15 @@
 <template>
   <div>
     <EditRoleModal
-      v-if="
-        isAccessManagerTypesLoaded &&
-        isOrganizationsLoaded
-      "
       role="add"
       iconTitle="plus"
       :onClose="handleEditRoleModalClose"
       :onUpdate="handleEditRoleModalUpdate"
-      :accessManager="accessManager"
-      :accessManagerTypes="accessManagerTypes"
-      :organizations="organizations"
     />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import EditRoleModal from '@/components/shared/modals/EditRoleModal';
 
 export default {
@@ -31,26 +23,41 @@ export default {
     handleEditRoleModalUpdate() {
       this.$router.push(`/app/roles/${this.page}`);
     },
-  },
-  computed: {
-    ...mapState({
-      accessManagerTypes: state => state.accessManagerTypes.items,
-      organizations: state => state.organizations.items,
-      isAccessManagerTypesLoaded: state => state.accessManagerTypes.lastUpdatedAt,
-      isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
-    }),
+    getRole() {
+      const now = new Date();
+      return {
+        organizationid: null,
+        crudsubjectid: this.currentUser.props.uuid,
+        subjecttypeid: '',
+        subjectname: '',
+        firstname: '',
+        lastname: '',
+        displayname: '',
+        email: this.currentUser.props.email,
+        secondaryemail: '',
+        effectivestartdate: now.toISOString(),
+        effectiveenddate: '',
+        password: 'temppassword',
+        picture: '',
+        subjectdirectoryid: null,
+        islocked: false,
+        issandbox: false,
+        url: '',
+        isrestrictedtoprocessing: false,
+        description: '',
+        distinguishedname: '',
+        uniqueid: '',
+        phonebusiness: '',
+        phonehome: '',
+        phonemobile: '',
+        phoneextension: '',
+        jobtitle: '',
+        department: '',
+        company: '',
+      };
+    },
   },
   data() {
-    return {
-      accessManager: {
-        accessmanagername: '',
-        description: '',
-        isactive: true,
-        organizationid: null,
-        accessmanagertypeid: null,
-      },
-      page: this.$route.params.page,
-    };
   },
 };
 </script>

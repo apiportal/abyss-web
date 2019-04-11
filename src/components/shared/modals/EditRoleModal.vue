@@ -14,7 +14,7 @@
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
         <Icon :icon=iconTitle class="name" />
-        {{ role === 'edit' ? this.accessManagerEditable.accessmanagername : 'New Role' }}
+        {{ role === 'edit' ? 'edit role' : 'New Role' }}
       </h5>
     </template>
     <template>
@@ -23,32 +23,32 @@
       >
         <div style="padding: 1rem;">
           <b-form-group 
-            id="accessManagerNameGroup"
+            id="roleNameGroup"
           >
             <label>
               Name:
               <span class="text-danger">*</span>
             </label>
             <b-form-input
-              id="accessManagerNameInput"
+              id="roleNameInput"
               type="text"
-              v-model="accessManagerEditable.accessmanagername"
-              :state="accessManagerNameState"
+              v-model="roleEditable.rolename"
+              :state="roleNameState"
               placeholder="Name"
               required
             >
             </b-form-input>
           </b-form-group>
           <b-form-group 
-            id="accessManagerDescriptionGroup"
+            id="roleDescriptionGroup"
           >
             <label>
               Description:
               <span class="text-danger">*</span>
             </label>
             <b-form-textarea
-              id="accessManagerDescriptionTextarea"
-              v-model="accessManagerEditable.description"
+              id="roleDescriptionTextarea"
+              v-model="roleEditable.description"
               :state="descriptionState"
               placeholder="Description"
               :rows="3"
@@ -56,10 +56,10 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group id="accessManagerEnabledGroup">
+          <b-form-group id="roleEnabledGroup">
             <b-form-checkbox
-              id="accessManagerEnabledChecks"
-              v-model="accessManagerEditable.isactive"
+              id="roleEnabledChecks"
+              v-model="roleEditable.isactive"
               :value="true"
               :unchecked-value="false"
             >
@@ -139,20 +139,6 @@ export default {
       type: Function,
       required: true,
     },
-    accessManager: {
-      type: Object,
-      required: false,
-    },
-    accessManagerTypes: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
-    organizations: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
     role: {
       type: String,
       required: false,
@@ -167,37 +153,19 @@ export default {
     ...mapState({
       currentUser: state => state.user,
     }),
-    accessManagerNameState() {
-      const { accessmanagername } = this.accessManagerEditable;
+    roleNameState() {
+      const { rolename } = this.roleEditable;
 
-      if (accessmanagername && accessmanagername.length > 0) {
+      if (rolename && rolename.length > 0) {
         return true;
       }
 
       return false;
     },
     descriptionState() {
-      const { description } = this.accessManagerEditable;
+      const { description } = this.roleEditable;
 
       if (description && description.length > 0) {
-        return true;
-      }
-
-      return false;
-    },
-    accessManagerOrganizationIdState() {
-      const { organizationid } = this.accessManagerEditable;
-
-      if (organizationid) {
-        return true;
-      }
-
-      return false;
-    },
-    accessManagerTypeState() {
-      const { accessmanagertypeid } = this.accessManagerEditable;
-
-      if (accessmanagertypeid) {
         return true;
       }
 
@@ -206,19 +174,17 @@ export default {
   },
   data() {
     return {
-      accessManagerEditable: JSON.parse(JSON.stringify(this.accessManager)),
-      isConfigureAccessManagerVisible: false,
-      accessManagerConfigurationTemplate: {},
+      roleEditable: JSON.parse(JSON.stringify(this.role)),
     };
   },
   methods: {
-    ...mapActions('accessManagers', ['putAccessManagers', 'postAccessManagers']),
+    ...mapActions('roles', ['putRoles', 'postRoles']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { putAccessManagers, postAccessManagers, accessManagerEditable, onUpdate, role } = this;
+      const { putRoles, postRoles, roleEditable, onUpdate, role } = this;
       if (role === 'edit') {
-        putAccessManagers({
-          ...accessManagerEditable,
+        putRoles({
+          ...roleEditable,
         }).then((response) => {
           if (response && response.data) {
             onUpdate();
@@ -228,48 +194,19 @@ export default {
         const { currentUser } = this;
         const { uuid } = currentUser.props;
         const crudsubjectid = uuid;
-        const accessManagerToAdd = [{
-          ...accessManagerEditable,
+        const roleToAdd = [{
+          ...roleEditable,
           crudsubjectid,
         }];
-        postAccessManagers(accessManagerToAdd).then((response) => {
+        postRoles(roleToAdd).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
         });
       }
     },
-    toggleConfigureAccessManager() {
-      this.isConfigureAccessManagerVisible = !this.isConfigureAccessManagerVisible;
-    },
-    handleAccessManagerTypeChange(newAccessManagerTypeId) {
-      this.isConfigureAccessManagerVisible = true;
-      this.setAccessManagerConfigurationTemplate({ accessmanagertypeid: newAccessManagerTypeId });
-    },
-    handleConfigurationUpdate(newDirecoryConfiguration) {
-      const { accessManagerEditable } = this;
-      this.accessManagerEditable = {
-        ...accessManagerEditable,
-        accessmanagerattributes: {
-          ...newDirecoryConfiguration.AccessManagerConfiguration,
-        },
-      };
-    },
-    setAccessManagerConfigurationTemplate(newAccessManagerTypeId) {
-      const { accessmanagertypeid } = newAccessManagerTypeId || this.accessManagerEditable;
-      if (accessmanagertypeid) {
-        const { accessManagerTypes } = this;
-        this.accessManagerConfigurationTemplate =
-          accessManagerTypes
-          .find(item => item.uuid === accessmanagertypeid)
-          .attributetemplate
-          .components
-          .schemas;
-      }
-    },
   },
   mounted() {
-    this.setAccessManagerConfigurationTemplate();
   },
 };
 </script>

@@ -410,6 +410,17 @@ export default {
   getRoles() {
     return axios.get('/abyss/oapi/subjects/roles/');
   },
+  putRoles(role) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = role;
+    return axios.put(`/abyss/oapi/subjects/roles/${uuid}`, rest);
+  },
+  postRoles(role) {
+    return axios.post('/abyss/oapi/subjects/roles/', role);
+  },
+  deleteRoles(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/roles/${uuid}`);
+  },
+  // invite users
   postInviteUser(referral) {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },

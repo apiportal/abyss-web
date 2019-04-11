@@ -4,6 +4,7 @@
       <dl class="col">
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
+        <dd>{{ item.uuid }}</dd>
       </dl>
       <dl class="col">
         <dt>Organization:</dt>
@@ -32,10 +33,25 @@
         <Icon icon="users" /> Users
         <b-badge pill>{{ item.users.length }}</b-badge>
       </b-button>
+      <b-button
+        @click="listRolePermissions"
+        size="md"
+        variant="link"
+        :class="{'active': isShowRolePermissions}" 
+      >
+        <Icon icon="user-cog" /> Permissions
+        <b-badge pill>{{ item.permissions.length }}</b-badge>
+      </b-button>
     </div>
     <div class="abyss-table-content" v-if="isShowRoleUsers && item.users.length">
       <Users
         :rows="item.users"
+        :routePath="`/app/roles/${page}`"
+      />
+    </div>
+    <div v-if="isShowRolePermissions">
+      <Permissions
+        :rows="item.permissions"
         :routePath="`/app/roles/${page}`"
       />
     </div>
@@ -47,6 +63,7 @@ import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Users from '@/components/shared/subjects/users/Users';
+import Permissions from '@/components/shared/subjects/permissions/Permissions';
 
 export default {
   components: {
@@ -54,6 +71,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     Users,
+    Permissions,
   },
   props: {
     item: {
@@ -70,10 +88,16 @@ export default {
       required: false,
       default() { return 1; },
     },
+    permissions: {
+      Type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   data() {
     return {
       isShowRoleUsers: false,
+      isShowRolePermissions: false,
     };
   },
   mounted() {
@@ -81,7 +105,12 @@ export default {
   },
   methods: {
     listRoleUsers() {
+      this.isShowRolePermissions = false;
       this.isShowRoleUsers = !this.isShowRoleUsers;
+    },
+    listRolePermissions() {
+      this.isShowRoleUsers = false;
+      this.isShowRolePermissions = !this.isShowRolePermissions;
     },
   },
 };

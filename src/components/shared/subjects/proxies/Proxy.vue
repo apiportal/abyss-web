@@ -18,6 +18,8 @@
         <dd>{{ environment(item) }}</dd>
       </dl>
       <dl class="col">
+        <dt>Business API:</dt>
+        <dd>{{ computedBusinessApi }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
@@ -66,7 +68,12 @@ import Icon from '@/components/shared/Icon';
 export default {
   computed: {
     ...mapState({
+      businessApis: state => state.businessApis.items,
     }),
+    computedBusinessApi() {
+      return this.businessApis.find(business =>
+        business.uuid === this.item.businessapiid).openapidocument.info.title;
+    },
   },
   components: {
     TbodyCollapsible,

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import api from '@/api';
+import Helpers from '@/helpers';
 
 const state = {
   items: [],
@@ -30,7 +31,7 @@ const actions = {
 
 const mutations = {
   setApisSharedByUser: (state, apisSharedByUser) => {
-    state.items = apisSharedByUser;
+    state.items = Helpers.getUnique(apisSharedByUser, 'uuid');
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

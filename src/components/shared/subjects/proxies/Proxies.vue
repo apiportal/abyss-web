@@ -63,15 +63,25 @@
               sortByKeyType="number"
             />
           </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Owner"
+              sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="7"
+        :cols="8"
       />
       <TbodyCollapsible
-        v-for="(proxyItem, proxyIndex) in tableRows" v-bind:key="proxyIndex"
+        v-for="(proxyItem, proxyIndex) in paginatedRows" v-bind:key="proxyIndex"
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
         :level="1"
       >
@@ -94,6 +104,9 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.contractscount }}
           </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.owner.name }}
+          </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
               <template slot="button-content">
@@ -112,7 +125,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="7">
+          <td colspan="8">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -149,22 +162,65 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      users: state => state.users.items,
+      currentPage: state => state.currentPage,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortByKey, sortByKeyType, sortDirection, rows, users,
+        apiStates, apiVisibilityTypes } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getApiOwner = (apiItem) => {
+        const apiOwner = users.find(item => item.uuid === apiItem.subjectid);
+        // return apiOwner || {};
+        return {
+          name: apiOwner.displayname,
+          uuid: apiOwner.uuid,
+        };
+      };
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            apistatename: getApiStateName(item.apistateid),
+            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            owner: getApiOwner(item),
           })),
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },
@@ -192,7 +248,8 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
+    this.$store.dispatch('users/getUsers', {});
     this.getApiContracts(this.tableRows);
   },
   methods: {
@@ -211,6 +268,16 @@ export default {
             contractApis[i].contractscount = 0;
           }
         });
+        // api.getResource(contractApis[i].uuid).then((res) => {
+        //   if (res && res.data) {
+        //     contractApis[i].resource = res.data;
+        //   }
+        // })
+        // .catch((error) => {
+        //   if (error.status === 404) {
+        //     contractApis[i].resource = [];
+        //   }
+        // });
       }
     },
     environment(item) {

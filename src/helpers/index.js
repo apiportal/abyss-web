@@ -27,6 +27,16 @@ const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = '
   return array;
 };
 
+const getUnique = (arr, comp) => {
+  const unique = arr
+    .map(e => e[comp])
+    // store the keys of the unique objects
+    .map((e, i, final) => final.indexOf(e) === i && i)
+    // eliminate the dead keys & store unique objects
+    .filter(e => arr[e]).map(e => arr[e]);
+  return unique;
+}
+
 /* const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = 'desc' }) => {
   if (sortByKeyType === 'string') {
     const arr = array.sort((a, b) => {
@@ -109,6 +119,7 @@ const mergeFlatObjectIntoOpenApiObject = (openApiObject, flatObject, mergedObjec
 
 export default {
   sortArrayOfObjects,
+  getUnique,
   paginateArray,
   objectDeepUpdate,
   openApiObjectToFlatObject,

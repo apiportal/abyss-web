@@ -156,7 +156,7 @@ export default {
     itemsPerPage: {
       Type: Number,
       required: false,
-      default() { return 20; },
+      default() { return 2000; },
     },
   },
   computed: {

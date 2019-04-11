@@ -162,22 +162,9 @@ export default {
       }));
     },
     computedLicenseApis() {
-      const { licenseApis, apiStates, apiVisibilityTypes, proxies } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      const { licenseApis } = this;
       return licenseApis.map(licenseApiItem => ({
         ...licenseApiItem,
-        apistatename: getApiStateName(licenseApiItem.apistateid),
-        apivisibilityname: getApiVisibilityName(licenseApiItem.apivisibilityid),
-        numberofproxies: getNumberOfProxies(licenseApiItem.uuid),
       }));
     },
     computedLicenseContracts() {
@@ -269,6 +256,8 @@ export default {
     // },
   },
   mounted() {
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     // if (this.childComponent === 'contracts') {
     api
     .getLicenseContracts(this.item.uuid)

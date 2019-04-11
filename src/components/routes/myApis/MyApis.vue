@@ -53,6 +53,7 @@ export default {
       apisSharedWithUser: state => state.apisSharedWithUser.items,
       apisSharedByUser: state => state.apisSharedByUser.items,
       proxies: state => state.proxies.items,
+      users: state => state.users.items,
     }),
     myBusinessApis() {
       return this.businessApis.filter(item => !item.isproxyapi);
@@ -75,6 +76,7 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
+    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

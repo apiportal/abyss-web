@@ -41,8 +41,10 @@
     </div>
     <div class="page-content">
       <Proxies
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-apis/my-proxy-apis/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -77,33 +79,18 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      businessApis: state => state.businessApis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      businesses: state => state.businesses.items,
       proxies: state => state.proxies.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { proxies, apiStates, apiVisibilityTypes } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      const { proxies } = this;
       return sortArrayOfObjects({
         array: proxies
           .map(item => ({
             ...item,
-            apistatename: getApiStateName(item.apistateid),
-            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            numberofproxies: getNumberOfProxies(item.uuid),
           }))
           .filter((item) => {
             const { filterKey } = this;

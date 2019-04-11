@@ -291,7 +291,7 @@ export default {
     return axios.get('/abyss/oapi/apis/proxies');
   },
   getApiSubscriptions(uuid) {
-    return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);
+    return axios.get(`/abyss/oapi/subject-permissions/my-apis-subscriptions/subject/${uuid}`);
   },
   getApisSharedWithUser(uuid) {
     return axios.get(`/abyss/oapi/apis/sharedwith/subject/${uuid}`);

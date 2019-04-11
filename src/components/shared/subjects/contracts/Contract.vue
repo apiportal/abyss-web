@@ -118,20 +118,9 @@ export default {
       licenses: state => state.subjectLicenses.items,
     }),
     computedContractApis() {
-      const { contractApis, apiStates, apiVisibilityTypes } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-
+      const { contractApis } = this;
       return contractApis.map(contractApiItem => ({
         ...contractApiItem,
-        apistatename: getApiStateName(contractApiItem.apistateid),
-        apivisibilityname: getApiVisibilityName(contractApiItem.apivisibilityid),
       }));
     },
     computedExpiredTokens() {
@@ -221,6 +210,8 @@ export default {
   },
   created() {
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     // get tokens
     this.getAccessTokens();
     // get contract api

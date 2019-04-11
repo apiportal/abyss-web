@@ -86,24 +86,11 @@ export default {
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { apisSharedByUser, apiStates, apiVisibilityTypes, proxies } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      const { apisSharedByUser } = this;
       return sortArrayOfObjects({
         array: apisSharedByUser
           .map(item => ({
             ...item,
-            apistatename: getApiStateName(item.apistateid),
-            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            numberofproxies: getNumberOfProxies(item.uuid),
           }))
           .filter((item) => {
             const { filterKey } = this;

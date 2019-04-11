@@ -65,7 +65,7 @@ const actions = {
 
 const mutations = {
   setSubjectMemberships: (state, subjectMemberships) => {
-    state.items = subjectMemberships;
+    state.items = subjectMemberships.filter(item => !item.isdeleted);
     state.lastUpdatedAt = (new Date()).getTime();
   },
   setSubjectMembershipDeleted: (state, membershipUuid) => {

@@ -27,10 +27,13 @@ export default {
       subjectPermissions: state => state.subjectPermissions.items,
     }),
     userApps() {
-      const subjectAppsIds = this.subjectApps.map(item => item.appid);
+      // SubjectApps NEW
+      // const subjectAppsIds = this.subjectApps.map(item => item.appid);
+      const subjectAppsIds = this.subjectApps.map(item => item.subjectgroupid);
       // return this.apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
       const getSubjectApp = (appId) => {
-        const subjectapp = this.subjectApps.find(item => item.appid === appId);
+        // const subjectapp = this.subjectApps.find(item => item.appid === appId);
+        const subjectapp = this.subjectApps.find(item => item.subjectgroupid === appId);
         return subjectapp;
       };
       const getSubjectPermissions = (resource) => {

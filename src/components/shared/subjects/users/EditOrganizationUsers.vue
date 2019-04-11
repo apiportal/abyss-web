@@ -48,7 +48,7 @@ export default {
     getOrganizationsOfUser() {
       api.getUsersOfOrganizations(this.organizationId).then((response) => {
         if (response && response.data) {
-          this.organizationUsers = response.data;
+          this.organizationUsers = response.data.filter(item => !item.isdeleted);
         }
         this.isOrganizationUsersLoaded = true;
       })

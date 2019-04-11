@@ -49,6 +49,11 @@ const actions = {
           setTimeout(function() { location.reload(); }, 10);
         }
       }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setUuid', null);
+      }
     });
   },
   resetUser: ({ commit }) => {

@@ -67,9 +67,6 @@ export default {
   computed: {
     ...mapState({
     }),
-    tableRows() {
-      return this.licenses;
-    },
   },
   components: {
     TbodyCollapsible,

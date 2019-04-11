@@ -137,7 +137,7 @@ export default {
     getOrganizationOptions() {
       const { uuid } = this.currentUser;
       api.getSubjectOrganizationsByUuid(uuid).then((response) => {
-        this.userOrganizations = response.data;
+        this.userOrganizations = response.data.filter(item => !item.isdeleted);
       });
     },
     handleOrganizationChange(newOrganizationUuid) {

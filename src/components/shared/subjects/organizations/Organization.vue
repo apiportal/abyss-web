@@ -177,7 +177,7 @@ export default {
     getUsersOfOrganizations() {
       api.getUsersOfOrganizations(this.organization.uuid).then((response) => {
         if (!this.organizationSubjects.length) {
-          this.organizationSubjects = response.data;
+          this.organizationSubjects = response.data.filter(item => !item.isdeleted);
         }
       })
       .catch((error) => {

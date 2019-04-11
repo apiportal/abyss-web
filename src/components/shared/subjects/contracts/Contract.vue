@@ -220,9 +220,7 @@ export default {
     },
   },
   created() {
-    if (!this.licenses.length) {
-      this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    }
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     // get tokens
     this.getAccessTokens();
     // get contract api

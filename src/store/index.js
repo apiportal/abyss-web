@@ -35,6 +35,7 @@ import subjectOrganizations from '@/store/modules/subjectOrganizations';
 import subjectResources from '@/store/modules/subjectResources';
 import subjectPermissions from '@/store/modules/subjectPermissions';
 import subjectPolicies from '@/store/modules/subjectPolicies';
+import apiLicenses from '@/store/modules/apiLicenses';
 
 Vue.use(Vuex);
 
@@ -75,6 +76,7 @@ export default new Vuex.Store({
     subjectResources,
     subjectPermissions,
     subjectPolicies,
+    apiLicenses,
   },
   debug: true,
 });

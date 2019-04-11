@@ -145,12 +145,6 @@
           <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
-                <!-- <AdministerGroup
-                  :group="item"
-                  :users="users"
-                  :memberships="memberships"
-                  :page="page"
-                /> -->
                 <AdministerGroup
                   :group="item"
                   :page="page"
@@ -226,15 +220,12 @@ export default {
       };
       const getUsers = (groupId) => {
         const members = this.memberships.filter(item =>
-          // !item.isdeleted &&
           item.subjectgroupid === groupId);
-        // console.log('members.length: ', members.length);
         const groupUsers = users.filter(el =>
           members.some(f =>
             f.subjectid === el.uuid,
           ),
         );
-        // console.log('users.length: ', groupUsers.length);
         return groupUsers;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
@@ -295,6 +286,8 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
+    // eslint-disable-next-line
+    // this.$store.dispatch('subjectMemberships/getSubjectMemberships', { uuid: this.currentUser.uuid });
   },
   data() {
     return {

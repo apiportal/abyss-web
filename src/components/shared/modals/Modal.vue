@@ -1,6 +1,7 @@
 <template>
   <b-modal
     :size="size"
+    :scrollable="scrollable"
     :hide-header="hideHeader"
     :hide-footer="hideFooter"
     :no-close-on-backdrop="noCloseOnBackdrop"
@@ -32,6 +33,11 @@
 <script>
 export default {
   props: {
+    scrollable: {
+      type: Boolean,
+      required: false,
+      default() { return true; },
+    },
     modalClass: {
       type: [Array, String],
       required: false,

@@ -100,6 +100,8 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
+              <b-dropdown-item data-qa="IdBtnEditApiLİcenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+
               <b-dropdown-header>LOGS</b-dropdown-header>
 
               <b-dropdown-item :to="`${routePath}/logs/${proxyItem.uuid}/api/1`">All</b-dropdown-item>
@@ -184,7 +186,6 @@ export default {
   },
   watch: {
     tableRows(newVal, oldVal) {
-      console.log('newVal, oldVal: ',newVal, oldVal); // eslint-disable-line
       const contractApis = newVal;
       if (newVal.length !== oldVal.length) {
         this.getApiContracts(contractApis);
@@ -196,7 +197,6 @@ export default {
   },
   methods: {
     getApiContracts(newVal) {
-      console.log('newVal: ', newVal); // eslint-disable-line
       const contractApis = newVal;
       for (let i = 0; i < contractApis.length; i += 1) {
         api.getApiContracts(contractApis[i].uuid).then((res) => {

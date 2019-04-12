@@ -32,7 +32,7 @@
             <b-form-input
               id="roleNameInput"
               type="text"
-              v-model="roleEditable.rolename"
+              v-model="roleEditable.displayname"
               :state="roleNameState"
               placeholder="Name"
               required
@@ -148,15 +148,19 @@ export default {
       type: String,
       required: false,
     },
+    accessRole: {
+      type: Object,
+      required: false,
+    },
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
     }),
     roleNameState() {
-      const { rolename } = this.roleEditable;
+      const { displayname } = this.roleEditable;
 
-      if (rolename && rolename.length > 0) {
+      if (displayname && displayname.length > 0) {
         return true;
       }
 
@@ -173,29 +177,71 @@ export default {
     },
   },
   data() {
+    const { accessRole } = this;
     return {
-      roleEditable: JSON.parse(JSON.stringify(this.role)),
+      roleEditable: JSON.parse(JSON.stringify(accessRole)),
     };
   },
   methods: {
-    ...mapActions('roles', ['putRoles', 'postRoles']),
+    ...mapActions('accessRole', ['putRoles', 'postRoles']),
     handleSubmit(evt) {
       evt.preventDefault();
       const { putRoles, postRoles, roleEditable, onUpdate, role } = this;
+      const { organizationid, crudsubjectid, subjecttypeid, subjectname,
+      firstname, lastname, displayname, email, secondaryemail,
+      effectivestartdate, effectiveenddate, password, picture,
+      subjectdirectoryid, islockedfalse, issandbox, url,
+      isrestrictedtoprocessing, description, distinguishedname,
+      uniqueid, phonebusiness, phonehome, phonemobile, phoneextension,
+      jobtitle, department, company } = roleEditable;
+
+      const accessRoleToUpdate = {
+        ...roleEditable,
+        organizationid: (organizationid === null ? '' : organizationid),
+        crudsubjectid: (crudsubjectid === null ? '' : crudsubjectid),
+        subjecttypeid: (subjecttypeid === null ? '' : subjecttypeid),
+        subjectname: (subjectname === null ? '' : subjectname),
+        firstname: (firstname === null ? '' : firstname),
+        lastname: (lastname === null ? '' : lastname),
+        displayname: (displayname === null ? '' : displayname),
+        email: (email === null ? '' : email),
+        secondaryemail: (secondaryemail === null ? '' : secondaryemail),
+        effectivestartdate: (effectivestartdate === null ?
+          this.$moment.utc().toISOString() : effectivestartdate),
+        effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
+        password: (password === null ? '' : password),
+        picture: (picture === null ? '' : picture),
+        subjectdirectoryid: (subjectdirectoryid === null ? '' : subjectdirectoryid),
+        islockedfalse: (islockedfalse === null ? '' : islockedfalse),
+        issandbox: (issandbox === null ? '' : issandbox),
+        url: (url === null ? '' : url),
+        isrestrictedtoprocessing: (isrestrictedtoprocessing === null ? '' : isrestrictedtoprocessing),
+        description: (description === null ? '' : description),
+        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+        uniqueid: (uniqueid === null ? '' : uniqueid),
+        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phonehome: (phonehome === null ? '' : phonehome),
+        phonemobile: (phonemobile === null ? '' : phonemobile),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
+        jobtitle: (jobtitle === null ? '' : jobtitle),
+        department: (department === null ? '' : department),
+        company: (company === null ? '' : company),
+      };
+
       if (role === 'edit') {
         putRoles({
-          ...roleEditable,
+          accessRoleToUpdate,
         }).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
         });
       } else if (role === 'add') {
-        const { currentUser } = this;
-        const { uuid } = currentUser.props;
-        const crudsubjectid = uuid;
+        // const { currentUser } = this;
+        // const { uuid } = currentUser.props;
+        // const crudsubjectid = uuid;
         const roleToAdd = [{
-          ...roleEditable,
+          ...accessRoleToUpdate,
           crudsubjectid,
         }];
         postRoles(roleToAdd).then((response) => {
@@ -205,8 +251,6 @@ export default {
         });
       }
     },
-  },
-  mounted() {
   },
 };
 </script>

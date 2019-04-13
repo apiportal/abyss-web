@@ -87,7 +87,8 @@
                           value: null,
                           text: 'Please select app',
                         },
-                        ...apps.map(app => ({
+                        ...computedApps
+                        .map(app => ({
                           value: app.uuid,
                           text: app.displayname,
                         })),
@@ -138,12 +139,30 @@
             <span>Licenses</span>
             <b-badge pill>{{ apiLicenses.length }}</b-badge>
           </b-button>
+          <b-button
+            @click="handleToggleContractsTable"
+            size="md"
+            variant="link"
+            :class="{'active': isContractsTableVisible}"
+          >
+            <span>Contracts</span>
+            <b-badge pill>{{ apiContracts.length }}</b-badge>
+          </b-button>
         </div>
         <div v-if="isLicensesTableVisible">
           <Licenses
             :rows="apiLicenses"
             routePath="/app/explore/"
           ></Licenses>
+        </div>
+        <div v-if="isContractsTableVisible">
+          <Contracts
+            :rows="computedApiContracts"
+            routePath="/app/explore"
+            :isUnsubscibeButtonVisible="true"
+            :isLogsButtonVisible="false"
+            :onNeedsRefreshData="getApiLicenses"
+          ></Contracts>
         </div>
       </div>
     </template>
@@ -158,6 +177,7 @@
   </Modal>
 </template>
 <script>
+import moment from 'moment-timezone';
 import { mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
@@ -168,16 +188,7 @@ export default {
     Modal,
     Icon,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
-  },
-  data() {
-    return {
-      isLicensesTableVisible: true,
-      apiLicenses: [],
-      form: {
-        appId: null,
-        licenseId: null,
-      },
-    };
+    Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {
     ...mapState({
@@ -189,7 +200,29 @@ export default {
       apps: state => state.apps.items,
       apis: state => state.apis.items,
       contractStates: state => state.contractStates.items,
+      resourceTypes: state => state.resourceTypes.items,
+      resources: state => state.resources.items,
+      resourceActions: state => state.resourceActions.items,
+      subjectApps: state => state.subjectApps.items,
     }),
+    computedApiContracts() {
+      const { apiContracts, contractStates } = this;
+      const getContractStateName = (contractStateId) => {
+        const contractState = contractStates
+          .find(contractStateItem => contractStateItem.uuid === contractStateId);
+        return contractState ? contractState.name : contractStateId;
+      };
+      return apiContracts.map(contract => ({
+        ...contract,
+        contractstatename: getContractStateName(contract.contractstateid),
+      }));
+    },
+    computedApps() {
+      const { subjectApps, apps } = this;
+      const userAppsIds = subjectApps.map(item => item.appid);
+      return apps
+      .filter(item => userAppsIds.indexOf(item.uuid) > -1);
+    },
   },
   props: {
     hideHeader: {
@@ -220,7 +253,7 @@ export default {
     size: {
       type: String,
       required: false,
-      default() { return 'md'; },
+      default() { return 'lg'; },
     },
     onClose: {
       type: Function,
@@ -230,6 +263,18 @@ export default {
       type: Object,
       required: false,
     },
+  },
+  data() {
+    return {
+      isLicensesTableVisible: true,
+      isContractsTableVisible: false,
+      apiLicenses: [],
+      apiContracts: [],
+      form: {
+        appId: null,
+        licenseId: null,
+      },
+    };
   },
   methods: {
     getOwnerName(subjectId) {
@@ -248,9 +293,15 @@ export default {
       return apiVisibility.name || apivisibilityid;
     },
     handleToggleLicensesTable() {
+      this.isContractsTableVisible = false;
       this.isLicensesTableVisible = !this.isLicensesTableVisible;
     },
-    getApiLicenses(uuid) {
+    handleToggleContractsTable() {
+      this.isLicensesTableVisible = false;
+      this.isContractsTableVisible = !this.isContractsTableVisible;
+    },
+    getApiLicenses() {
+      const { uuid } = this.api;
       api.getExploreApiLicenses(uuid)
       .then((response) => {
         if (response && response.data) {
@@ -258,39 +309,100 @@ export default {
           this.apiLicenses = this.licenses.filter(item => (
             (apiLicensesIds.indexOf(item.uuid) > -1)
           ));
+          this.getApiContracts(apiLicensesIds);
         }
+      });
+    },
+    async getApiContracts(licensesIds) {
+      Promise
+      .all(licensesIds.map(licenseId => api.getLicenseContracts(licenseId)))
+      .then((values) => {
+        this.apiContracts = values
+        .reduce((acc, val) => (val.data ? [...acc, ...val.data] : acc), []);
       });
     },
     handleSubscribe(evt) {
       evt.preventDefault();
+      const accessmanagerid = '6223ebbe-b30f-4976-bcf9-364003142379'; // from config.js
+      const effectivestartdate = new Date();
+      const effectiveenddate = new Date(effectivestartdate);
+      effectiveenddate.setFullYear(effectivestartdate.getFullYear() + 1);
       const { organizationid, uuid } = this.currentUser;
       const { appId, licenseId } = this.form;
       const { apiId } = this.$route.params;
-      const { apps, apis, contractStates } = this;
+      const { apps, apis, contractStates, resourceActions, resources } = this;
       const licenseApp = apps.find(item => item.uuid === appId);
       const licenseApi = apis.find(item => item.uuid === apiId);
-      const desc = `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`;
       const contractstateid = contractStates.find(item => item.name === 'activated').uuid;
-      const subscribe = {
+      const resourceactionid = resourceActions.find(item => item.actionname === 'INVOKE_API').uuid;
+      const resource = resources.find(item => item.resourcerefid === licenseApi.uuid);
+      // permission to post
+      const permission = {
+        accessmanagerid,
+        crudsubjectid: uuid,
+        description: `Subscription of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        effectiveenddate: moment(effectiveenddate),
+        effectivestartdate: moment(effectivestartdate),
+        isactive: true,
+        organizationid,
+        permission: `Subscription of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        resourceactionid,
+        resourceid: resource.uuid,
+        subjectid: licenseApp.uuid,
+      };
+      // accessToken to post
+      const accessToken = {
+        crudsubjectid: uuid,
+        isactive: true,
+        organizationid,
+        resourcerefid: resource.resourcerefid,
+        resourcetypeid: resource.resourcetypeid,
+        subjectpermissionid: null,
+      };
+      // contract to post
+      const contract = {
         apiid: apiId,
         contractstateid,
         crudsubjectid: uuid,
-        description: desc,
+        description: `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
         environment: 'LIVE',
         isrestrictedtosubsetofapi: false,
         licenseid: licenseId,
-        name: desc,
+        name: `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
         organizationid,
         status: 'inforce',
         subjectid: appId,
-        subjectpermissionid: '5a513b54-fa27-4230-a3e6-784f329fede7',
+        subjectpermissionid: null,
       };
-      console.log([subscribe]);
+      // POST permission
+      api.postPermissions([permission])
+      .then((response) => {
+        if (response && response.data && response.data.length > 0) {
+          const subjectpermissionid = response.data[0].uuid;
+          // POST accessToken
+          api.postResourceAccessTokens([{
+            ...accessToken,
+            subjectpermissionid,
+          }])
+          .then(() => {
+            // POST contract
+            api.postContracts([{
+              ...contract,
+              subjectpermissionid,
+            }])
+            .then(() => {
+              // GET component data
+              this.getApiLicenses();
+              this.isLicensesTableVisible = false;
+              this.isContractsTableVisible = true;
+            });
+          });
+        }
+      });
     },
   },
   mounted() {
-    const { uuid } = this.api;
-    this.getApiLicenses(uuid);
+    this.getApiLicenses();
   },
 };
 </script>
@@ -299,7 +411,7 @@ export default {
 .licenses-container {
   border: 1px solid silver;
   border-radius: .3rem;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 
   .licenses-header-container {
     padding: .5rem 1rem;

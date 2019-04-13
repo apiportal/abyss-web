@@ -4,8 +4,8 @@
       v-if="arePermissionsLoaded"
       title="Are you sure?"
       :text="`${permission.permission} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteAdministerPermissionModalClose"
-      :onConfirm="handleDeleteAdministerPermissionModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -19,10 +19,10 @@ export default {
   },
   methods: {
     ...mapActions('permissions', ['deletePermissions']),
-    handleDeleteAdministerPermissionModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/administer-permissions/${this.page}`);
     },
-    handleDeleteAdministerPermissionModalConfirm() {
+    handleModalConfirm() {
       const { deletePermissions, permission } = this;
       deletePermissions({ ...permission }).then(() => {
         this.$router.push(`/app/administer-permissions/${this.page}`);

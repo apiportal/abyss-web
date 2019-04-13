@@ -41,8 +41,10 @@
     </div>
     <div class="page-content">
       <Apis
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-apis/businesses/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -80,7 +82,6 @@ export default {
       businessApis: state => state.businessApis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      businesses: state => state.businesses.items,
       proxies: state => state.proxies.items,
     }),
     tableRows() {
@@ -121,15 +122,6 @@ export default {
         sortByKey,
         sortByKeyType,
         sortDirection,
-      });
-    },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
       });
     },
   },

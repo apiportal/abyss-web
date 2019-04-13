@@ -38,6 +38,10 @@
           <th></th>
         </tr>
       </thead>
+      <TBodyLoading
+        v-if="isLoading && rows.length === 0"
+        :cols="5"
+      />
       <TbodyCollapsible
         v-for="(item, index) in tableRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"

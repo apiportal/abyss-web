@@ -17,6 +17,7 @@
       </h5>
     </template>
     <template>
+      {{store.state.currentPage.rootPath}}
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>

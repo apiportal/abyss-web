@@ -43,6 +43,10 @@ export default {
       this.$router.push(this.routePath);
     },
     handleModalUpdate() {
+      // this.getOrganizationsOfUser();
+      // this.$store.dispatch('users/getUsers', {
+      //   refresh: true,
+      // });
       this.$router.push(this.routePath);
     },
     getOrganizationsOfUser() {

@@ -26,7 +26,6 @@ import { mapState } from 'vuex';
 export default {
   computed: {
     ...mapState({
-      isLoading: state => state.traffic.isLoading,
       currentUser: state => state.user,
       // subjectDirectories: state => state.subjectDirectories.items,
       // subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,

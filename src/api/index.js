@@ -379,6 +379,12 @@ export default {
   getApiLicensesRefs() {
     return axios.get('/abyss/oapi/api-licenses/');
   },
+  postApiLicensesRefs(license) {
+    return axios.post('/abyss/oapi/api-licenses/', license);
+  },
+  deleteApiLicensesRefs(uuid) {
+    return axios.delete(`/abyss/oapi/api-licenses/${uuid}`);
+  },
   getLicenses() {
     return axios.get('/abyss/oapi/licenses/');
   },

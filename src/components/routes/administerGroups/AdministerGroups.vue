@@ -99,7 +99,7 @@
           </tr>
         </thead>
         <TBodyLoading
-          v-if="isLoading && totalRows.length === 0"
+          v-if="isLoading && tableRows.length === 0"
           :cols="5"
         />
         <TbodyCollapsible
@@ -156,10 +156,10 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination 
         size="md"
-        :total-rows="totalRows.length"
+        :total-rows="tableRows.length"
         v-model="page" 
         :per-page="itemsPerPage"
         align="center"
@@ -208,7 +208,7 @@ export default {
         .filter(item => item.subjectid === currentUser.uuid);
       return organizationSubjects;
     },
-    totalRows() {
+    tableRows() {
       const { subjectDirectories, organizations, groups, users } = this;
       const getDirectoryName = (subjectdirectoryid) => {
         const directory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
@@ -268,10 +268,10 @@ export default {
       });
     },
     paginatedRows() {
-      const { totalRows, itemsPerPage, page } = this;
+      const { tableRows, itemsPerPage, page } = this;
       const { paginateArray } = Helpers;
       return paginateArray({
-        array: totalRows,
+        array: tableRows,
         itemsPerPage,
         page,
       });

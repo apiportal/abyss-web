@@ -110,15 +110,6 @@ export default {
         sortDirection,
       });
     },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
   },
   data() {
     return {

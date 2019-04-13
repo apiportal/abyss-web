@@ -4,8 +4,8 @@
       v-if="isAccessManagersLoaded"
       title="Are you sure?"
       :text="`${accessManager.accessmanagername} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteAccessManagerModalClose"
-      :onConfirm="handleDeleteAccessManagerModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -20,10 +20,7 @@ export default {
   },
   methods: {
     ...mapActions('accessManagers', ['deleteAccessManagers']),
-    handleDeleteAccessManagerModalClose() {
-      this.$router.push(`/app/access-managers/${this.page}`);
-    },
-    handleDeleteAccessManagerModalConfirm() {
+    handleDeleteModalClose() {
       this.$router.push(`/app/access-managers/${this.page}`);
     },
     handleModalConfirm() {

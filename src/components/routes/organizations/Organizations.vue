@@ -89,7 +89,6 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,

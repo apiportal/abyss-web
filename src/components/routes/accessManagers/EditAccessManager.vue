@@ -7,8 +7,8 @@
         isOrganizationsLoaded
       "
       role="edit"
-      :onClose="handleEditAccessManagerModalClose"
-      :onUpdate="handleEditAccessManagerModalUpdate"
+      :onClose="handleModalClose"
+      :onUpdate="handleModalUpdate"
       :accessManager="accessManagers.find(item => item.uuid === accessManagerId)"
       :accessManagerTypes="accessManagerTypes"
       :organizations="organizations"
@@ -25,10 +25,10 @@ export default {
     EditAccessManagerModal,
   },
   methods: {
-    handleEditAccessManagerModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/access-managers/${this.page}`);
     },
-    handleEditAccessManagerModalUpdate() {
+    handleModalUpdate() {
       this.$router.push(`/app/access-managers/${this.page}`);
     },
   },

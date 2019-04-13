@@ -4,8 +4,8 @@
       v-if="areLicensesLoaded"
       title="Are you sure?"
       :text="`${license.name} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteLicensesModalClose"
-      :onConfirm="handleDeleteLicensesModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -26,10 +26,10 @@ export default {
   },
   methods: {
     ...mapActions('licenses', ['deleteLicenses']),
-    handleDeleteLicensesModalClose() {
+    handleModalClose() {
       this.$router.push(this.routePath);
     },
-    handleDeleteLicensesModalConfirm() {
+    handleModalConfirm() {
       const { deleteLicenses, license } = this;
       deleteLicenses({ ...license }).then(() => {
         this.$router.push(this.routePath);

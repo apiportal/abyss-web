@@ -52,7 +52,7 @@
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(licenseItem, licenseIndex) in sortedRows" v-bind:key="licenseIndex"
+        v-for="(licenseItem, licenseIndex) in paginatedRows" v-bind:key="licenseIndex"
         :isCollapsed="collapsedRows.indexOf(licenseItem.uuid) > -1"
         :level="2"
       >
@@ -142,12 +142,22 @@ export default {
       required: false,
       default() { return 'policies'; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
-    sortedRows() {
+    tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
@@ -158,6 +168,15 @@ export default {
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },

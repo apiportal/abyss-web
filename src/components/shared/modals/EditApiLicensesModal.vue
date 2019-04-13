@@ -166,9 +166,9 @@ export default {
         // organizationid: this.currentUser.props.organizationid,
         organizationid: proxy.organizationid,
         crudsubjectid: this.currentUser.props.uuid,
-        subjectid: license.uuid,
-        subjectproxyid: proxy.uuid,
-        subjectdirectoryid: proxy.subjectdirectoryid,
+        licenseid: license.uuid,
+        apiid: proxy.uuid,
+        isactive: true,
       }));
       if (this.licensesToDelete.length) {
         console.log('licensesToDelete', this.licensesToDelete); // eslint-disable-line

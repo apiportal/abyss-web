@@ -61,10 +61,6 @@ export default {
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    // console.log(this.policies, this.policyTypes, this.subjectLicenses);
-    // console.log(this.license);
-    // console.log(this.licenseId);
-    // console.log(this.subjectLicenses.find(item => item.uuid === this.licenseId));
   },
 };
 </script>

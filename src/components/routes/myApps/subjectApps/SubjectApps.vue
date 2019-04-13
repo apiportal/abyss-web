@@ -39,8 +39,10 @@
     </div>
     <div class="page-content">
       <Apps
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-apps/my-apps/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -157,15 +159,6 @@ export default {
         sortDirection,
       });
     },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
   },
   data() {
     return {
@@ -194,6 +187,9 @@ export default {
         refresh: true,
       });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-apps');
   },
 };
 </script>

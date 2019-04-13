@@ -89,6 +89,12 @@ export default {
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('licenses/getLicenses', {});
+    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('contractStates/getContractStates', {});
+    this.$store.dispatch('resources/getResources', {});
+    this.$store.dispatch('resourceTypes/getResourceTypes', {});
+    this.$store.dispatch('resourceActions/getResourceActions', {});
+    this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
   },
   methods: {
     subStr(i) {

@@ -253,7 +253,7 @@ export default {
     return axios.delete(`/abyss/oapi/subject-permissions/${uuid}`);
   },
   postPermissions(permission) {
-    return axios.post('/abyss/oapi/subject-permissions/', permission);
+    return axios.post('/abyss/oapi/subject-permissions', permission);
   },
   getSubjectPermissions(uuid) {
     return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
@@ -409,5 +409,14 @@ export default {
   // api-licenses
   getExploreApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
+  },
+  postContracts(contracts) {
+    return axios.post('/abyss/oapi/contracts', contracts);
+  },
+  deleteContract(uuid) {
+    return axios.delete(`/abyss/oapi/contracts/${uuid}`);
+  },
+  postResourceAccessTokens(accessTokens) {
+    return axios.post('/abyss/oapi/resource-access-tokens', accessTokens);
   },
 };

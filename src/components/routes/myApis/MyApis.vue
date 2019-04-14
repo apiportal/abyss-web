@@ -75,6 +75,7 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
+    this.$store.dispatch('apis/getApis', {});
   },
 };
 </script>

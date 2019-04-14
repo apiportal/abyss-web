@@ -294,12 +294,19 @@ export default {
   getApis() {
     return axios.get('/abyss/oapi/apis');
   },
+  putApis(api) {
+    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/${uuid}`, rest);
+  },
   getApi(uuid) {
     return axios.get(`/abyss/oapi/apis/${uuid}`);
   },
   getBusinessApis(uuid) {
-    // return axios.get('/abyss/oapi/apis/businesses');
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
+  },
+  putBusinessApi(api) {
+    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
   },
   getProxyApis() {
     return axios.get('/abyss/oapi/apis/proxies');
@@ -418,5 +425,8 @@ export default {
   },
   postResourceAccessTokens(accessTokens) {
     return axios.post('/abyss/oapi/resource-access-tokens', accessTokens);
+  },
+  validateApi(api) {
+    return axios.post('/abyss/oapi/validate-oas', api);
   },
 };

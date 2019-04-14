@@ -53,22 +53,12 @@
               sortByKeyType="string"
             />
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Contracts"
-              sortByKey="contractscount"
-              sortByKeyType="number"
-            />
-          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="7"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(proxyItem, proxyIndex) in tableRows" v-bind:key="proxyIndex"
@@ -91,14 +81,13 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.contractscount }}
-          </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
+
+              <b-dropdown-item :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -110,7 +99,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="7">
+          <td colspan="6">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -127,7 +116,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
@@ -159,7 +147,6 @@ export default {
         array: rows
           .map(item => ({
             ...item,
-            contractscount: item.contracts ? item.contracts.length : 5000,
           })),
         sortByKey,
         sortByKeyType,
@@ -184,24 +171,6 @@ export default {
     };
   },
   methods: {
-    getApiContracts(newRows) {
-      const rows = newRows;
-      for (let i = 0; i < rows.length; i += 1) {
-        api.getApiContracts(rows[i].uuid).then((response) => {
-          if (response && response.data) {
-            rows[i].contracts = response.data;
-          } else {
-            rows[i].contracts = [];
-          }
-        })
-        .catch((error) => {
-          if (error.status === 404) {
-            rows[i].contracts = [];
-          }
-        });
-      }
-      return rows;
-    },
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
     },

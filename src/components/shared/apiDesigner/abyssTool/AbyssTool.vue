@@ -113,6 +113,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1 0 0;
+  overflow: hidden;
 
   .abyss-tool-header-container {
     flex: 40px 0 0;
@@ -120,6 +121,11 @@ export default {
 
     .nav-tabs {
       margin-top: .5rem;
+    }
+
+    .page-tabs {
+      margin-top: -1px;
+      margin-bottom: 0;
     }
   }
 

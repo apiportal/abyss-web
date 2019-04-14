@@ -61,14 +61,44 @@
         />
       </div>
     </div>
+    <div class="api-designer-footer">
+      <div class="row">
+        <div class="col-md-10">
+          <b-alert v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+          <b-alert v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
+        </div>
+        <div class="col-md-1">
+          <b-button
+            variant="link"
+            @click="onClose"
+            data-qa="btnCancel"
+            block
+          >
+            Close
+          </b-button>
+        </div>
+        <div class="col-md-1">
+          <b-button
+            variant="primary"
+            @click="handleSubmit"
+            data-qa="btnSave"
+            block
+          >
+            <Icon icon="save" /> Save
+          </b-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Helpers from '@/helpers';
 import AbyssTool from '@/components/shared/apiDesigner/abyssTool/AbyssTool';
 import Editor from '@/components/shared/Editor';
 import Icon from '@/components/shared/Icon';
+import api from '@/api';
 
 export default {
   components: {
@@ -96,15 +126,27 @@ export default {
       required: false,
       default() { return 'hybrid'; },
     },
+    onClose: {
+      type: Function,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       view: this.initialView,
       apiStates: [(JSON.parse(JSON.stringify(this.api)))],
       apiStateIndex: 0,
+      showNotValidAlert: false,
+      showSavedAlert: false,
     };
   },
   methods: {
+    ...mapActions('businessApis', ['putBusinessApis']),
+    ...mapActions('apis', ['putApis']),
     setView(view) {
       this.view = view;
     },
@@ -136,6 +178,33 @@ export default {
       if (this.apiStateIndex < (this.apiStates.length - 1)) {
         this.apiStateIndex += 1;
       }
+    },
+    handleSubmit() {
+      const { apiStates, apiStateIndex, putApis } = this;
+      const currentApi = apiStates[apiStateIndex];
+      const { openapidocument } = currentApi;
+      // VALIDATE API
+      api.validateApi({ spec: openapidocument })
+      .then(() => {
+        // SAVE API
+        putApis({
+          ...currentApi,
+          apioriginid: currentApi.uuid,
+          apiparentid: currentApi.uuid,
+        })
+        .then(() => {
+          this.showSavedAlert = true;
+          setTimeout(function() { // eslint-disable-line
+            this.showSavedAlert = false;
+          }.bind(this), 3000);
+        });
+      })
+      .catch(() => {
+        this.showNotValidAlert = true;
+        setTimeout(function() { // eslint-disable-line
+          this.showNotValidAlert = false;
+        }.bind(this), 3000);
+      });
     },
   },
 };
@@ -175,6 +244,11 @@ export default {
       display: flex;
       flex: 1 0 0;
     }
+  }
+
+  .api-designer-footer {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
   }
 }
 </style>

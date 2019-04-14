@@ -82,9 +82,10 @@ export default {
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       businesses: state => state.businesses.items,
       proxies: state => state.proxies.items,
+      apis: state => state.apis.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortByKey, sortByKeyType, sortDirection, apis } = this;
       const { sortArrayOfObjects } = Helpers;
       const { businessApis, apiStates, apiVisibilityTypes, proxies } = this;
       const getApiStateName = (apistateid) => {
@@ -97,8 +98,10 @@ export default {
       };
       const getNumberOfProxies = apiUuid =>
         proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      const businessApisIds = businessApis.map(item => item.uuid);
       return sortArrayOfObjects({
-        array: businessApis
+        array: apis
+          .filter(item => businessApisIds.indexOf(item.uuid) > -1)
           .map(item => ({
             ...item,
             apistatename: getApiStateName(item.apistateid),

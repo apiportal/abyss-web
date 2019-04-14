@@ -86,7 +86,12 @@ export default {
       return pathKeys.reduce((pathAccumulator, pathValue) => {
         const pathoperationsObject = paths[pathValue];
         const operationKeys = Object.keys(pathoperationsObject);
-        const pathOperations = operationKeys.reduce((operationAccumulator, operationValue) => (
+        const pathOperations = operationKeys
+        .filter(item => (
+          item !== 'description' &&
+          item !== 'summary'
+        ))
+        .reduce((operationAccumulator, operationValue) => (
           [...operationAccumulator, {
             ...pathoperationsObject[operationValue],
             parentProps: {

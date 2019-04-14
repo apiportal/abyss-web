@@ -295,7 +295,7 @@ export default {
     return axios.get('/abyss/oapi/apis');
   },
   putApis(api) {
-    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    const { uuid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/${uuid}`, rest);
   },
   getApi(uuid) {

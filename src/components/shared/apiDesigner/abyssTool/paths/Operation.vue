@@ -186,18 +186,5 @@ export default {
       border-top: 1px solid #50e3c2;
     }
   }
-
-  &.operation-summary {
-    border: 1px solid #50e3c2;
-    background: rgba(80,227,194,.1);
-
-    .operation-name {
-      background: #50e3c2;
-    }
-
-    .operation-details {
-      border-top: 1px solid #50e3c2;
-    }
-  }
 }
 </style>

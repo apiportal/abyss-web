@@ -189,6 +189,7 @@ export default {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
   },

@@ -163,7 +163,10 @@ export default {
         crudsubjectid: this.currentUser.props.uuid,
         subjectid: user.uuid,
         subjectgroupid: group.uuid,
-        subjectdirectoryid: group.subjectdirectoryid,
+        subjecttypeid: user.subjecttypeid,
+        subjectgrouptypeid: group.subjecttypeid,
+        subjectdirectoryid: user.subjectdirectoryid,
+        isactive: true,
       }));
       if (this.usersToDelete.length) {
         // console.log('usersToDelete', this.usersToDelete);
@@ -179,7 +182,12 @@ export default {
         // console.log('usersToAdd', this.usersToAdd);
         for (let i = 0; i < this.usersToAdd.length; i += 1) {
           postSubjectMemberships([this.usersToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.usersToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.usersToAdd.length - 1) {
               onUpdate();
             }
           });

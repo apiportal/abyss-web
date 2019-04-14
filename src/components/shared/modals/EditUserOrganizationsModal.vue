@@ -211,7 +211,12 @@ export default {
         // console.log('organizationsToAdd', this.organizationsToAdd);
         for (let i = 0; i < this.organizationsToAdd.length; i += 1) {
           postSubjectOrganizations([this.organizationsToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.organizationsToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.organizationsToAdd.length - 1) {
               onUpdate();
             }
           });

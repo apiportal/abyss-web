@@ -83,14 +83,23 @@ export default {
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
     }),
+
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { proxies } = this;
+      // const getContractsCount = (item) => {
+      //   if (item.contracts) {
+      //     return item.contracts.length;
+      //   }
+      //   return 0;
+      // };
+      // const { proxies } = this;
+      // console.log('this.userProxies: ', this.userProxies); // eslint-disable-line
       return sortArrayOfObjects({
-        array: proxies
+        array: this.proxies
           .map(item => ({
             ...item,
+            // contractscount: getContractsCount(item),
           }))
           .filter((item) => {
             const { filterKey } = this;

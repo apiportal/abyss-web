@@ -32,7 +32,7 @@
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
-        <b-badge pill>{{ licenses ? licenses.length : 0 }}</b-badge>
+        <b-badge pill>{{ item.licenses ? item.licenses.length : 0 }}</b-badge>
       </b-button>
       <b-button
         @click="handleToggleContractsTable"
@@ -44,9 +44,9 @@
         <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
     </div>
-    <div v-if="isLicensesTableVisible && licenses.length">
+    <div v-if="isLicensesTableVisible && item.licenses.length">
       <Licenses
-        :rows="licenses"
+        :rows="item.licenses"
         :routePath="routePath"
       ></Licenses>
     </div>
@@ -100,7 +100,7 @@ export default {
     return {
       page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
-      licenses: [],
+      // licenses: [],
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
@@ -155,7 +155,7 @@ export default {
     },
   },
   created() {
-    this.getApiLicenses(this.item.uuid);
+    // this.getApiLicenses(this.item.uuid);
   },
 };
 </script>

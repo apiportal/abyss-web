@@ -116,12 +116,11 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.subjectLicenses.items,
+      proxies: state => state.proxies.items,
     }),
     computedContractApis() {
-      const { contractApis } = this;
-      return contractApis.map(contractApiItem => ({
-        ...contractApiItem,
-      }));
+      const { proxies, item } = this;
+      return proxies.filter(el => el.uuid === item.apiid);
     },
     computedExpiredTokens() {
       const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
@@ -177,7 +176,7 @@ export default {
       });
     },
   },
-  watch: {
+  /* watch: {
     computedContractApis(newVal, oldVal) {
       // console.log(newVal, oldVal);
       const contractApis = newVal;
@@ -207,7 +206,7 @@ export default {
         }
       }
     },
-  },
+  }, */
   created() {
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('users/getUsers', {});

@@ -341,9 +341,6 @@ export default {
   deletePolicyTypes(uuid) {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
   },
-  getAppContracts(uuid) {
-    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
-  },
   // SubjectApps OLD
   /* getSubjectApps(uuid) {
     return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
@@ -414,11 +411,20 @@ export default {
   postAccessTokens(token) {
     return axios.post('/abyss/oapi/resource-access-tokens/', token);
   },
+  getAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
+  },
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
   },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
+  },
+  getSubjectContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/subject/${uuid}`);
+  },
+  getAllContracts() {
+    return axios.get('/abyss/oapi/contracts/');
   },
   getLicenseApis(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);

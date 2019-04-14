@@ -185,7 +185,12 @@ export default {
         // console.log('groupsToAdd', this.groupsToAdd);
         for (let i = 0; i < this.groupsToAdd.length; i += 1) {
           postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.groupsToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.groupsToAdd.length - 1) {
               onUpdate();
             }
           });

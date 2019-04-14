@@ -34,6 +34,11 @@ const actions = {
         } else {
           commit('setApiContracts', { apiId: apiIdsArray[i], contracts: []});
         }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          commit('setApiContracts', { appId: apiIdsArray[i], contracts: [] });
+        }
       });
     }
   },

@@ -184,7 +184,12 @@ export default {
         console.log('licensesToAdd', this.licensesToAdd); // eslint-disable-line
         for (let i = 0; i < this.licensesToAdd.length; i += 1) {
           postApiLicensesRefs([this.licensesToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.licensesToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.licensesToAdd.length - 1) {
               onUpdate();
             }
           });

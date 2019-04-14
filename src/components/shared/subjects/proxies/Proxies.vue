@@ -68,6 +68,16 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
+              text="Licenses"
+              sortByKey="licensescount"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
               text="Owner"
               sortByKey="owner.name"
               sortByKeyType="string"
@@ -105,6 +115,9 @@
             {{ proxyItem.contractscount }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.licensescount }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.owner.name }}
           </td>
           <td class="actions">
@@ -125,7 +138,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="8">
+          <td colspan="9">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -176,10 +189,13 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      users: state => state.users.items,
+      currentUser: state => state.user,
       currentPage: state => state.currentPage,
+      users: state => state.users.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      licenses: state => state.subjectLicenses.items,
+      apiLicenses: state => state.apiLicenses.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows, users,
@@ -201,6 +217,22 @@ export default {
         const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
         return apiVisibility ? apiVisibility.name : apivisibilityid;
       };
+      const getApiLicenses = (id) => {
+        const apiLicensesApis = this.apiLicenses
+        .filter(item => item.apiid === id && !item.isdeleted);
+        const apiLicenses = this.licenses.filter(el =>
+          apiLicensesApis.some(f =>
+            f.licenseid === el.uuid,
+          ),
+        );
+        return apiLicenses;
+      };
+      const getContractsCount = (item) => {
+        if (item.contracts) {
+          return item.contracts.length;
+        }
+        return 0;
+      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
@@ -208,6 +240,9 @@ export default {
             apistatename: getApiStateName(item.apistateid),
             apivisibilityname: getApiVisibilityName(item.apivisibilityid),
             owner: getApiOwner(item),
+            licenses: getApiLicenses(item.uuid),
+            licensescount: getApiLicenses(item.uuid).length,
+            contractscount: getContractsCount(item),
           })),
         sortByKey,
         sortByKeyType,
@@ -240,17 +275,19 @@ export default {
       sortDirection: 'desc',
     };
   },
-  watch: {
-    tableRows(newVal, oldVal) {
-      const contractApis = newVal;
-      if (newVal.length !== oldVal.length) {
-        this.getApiContracts(contractApis);
-      }
-    },
-  },
+  // watch: {
+  //   tableRows(newVal, oldVal) {
+  //     const contractApis = newVal;
+  //     if (newVal.length !== oldVal.length) {
+  //       this.getApiContracts(contractApis);
+  //     }
+  //   },
+  // },
   mounted() {
+    // this.getApiContracts(this.tableRows);
     this.$store.dispatch('users/getUsers', {});
-    this.getApiContracts(this.tableRows);
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('apiLicenses/getApiLicensesRefs', {});
   },
   methods: {
     getApiContracts(newVal) {

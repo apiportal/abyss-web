@@ -19,13 +19,12 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <pre>{{policiesEditable}}</pre>
           <div>
             <Chips
               :chips="computedLicensePolicies"
               :autocompleteOptions="policiesEditable"
-              :onDeleteChip="handleDeleteMembership"
-              :onAddChip="handleAddMembership"
+              :onDeleteChip="handleDeletePolicies"
+              :onAddChip="handleAddPolicies"
               label="License Policies"
             />
           </div>
@@ -182,7 +181,7 @@ export default {
         onUpdate();
       });
     },
-    handleDeleteMembership(index, chip) {
+    handleDeletePolicies(index, chip) {
       const { policiesEditable } = this;
       this.policiesEditable = policiesEditable.map((item) => {
         const isAttached = item.uuid === chip.value ? false : item.isAttached;
@@ -193,7 +192,7 @@ export default {
       });
       this.policyIds();
     },
-    handleAddMembership(chip) {
+    handleAddPolicies(chip) {
       const { policiesEditable } = this;
       this.policiesEditable = policiesEditable.map((item) => {
         const isAttached = item.uuid === chip.value ? true : item.isAttached;

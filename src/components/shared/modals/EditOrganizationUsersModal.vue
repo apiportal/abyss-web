@@ -289,7 +289,12 @@ export default {
         // console.log('usersToAdd', this.usersToAdd);
         for (let i = 0; i < this.usersToAdd.length; i += 1) {
           postSubjectOrganizations([this.usersToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response && i === this.usersToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.usersToAdd.length - 1) {
               onUpdate();
             }
           });

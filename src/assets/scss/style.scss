@@ -118,7 +118,7 @@
     background-color: $bg-sidebar;
     // background-image: linear-gradient(150deg, #2d1582, #19a0ff);
     background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $brand-color);
-    background-repeat: repeat-x
+    background-repeat: repeat-x;
     &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(white, 0.35);
     }
@@ -252,9 +252,9 @@
     justify-content: space-between;
     padding-left: 1rem;
     padding-right: 1rem;
-    span {
-      border-right: 1px solid rgba(white, 0.2);
-    }
+    // span {
+    //   border-right: 1px solid rgba(white, 0.2);
+    // }
   }
   .page-btn-refresh {
     font-size: 2rem;
@@ -286,7 +286,7 @@
       border-bottom: 5px solid transparent;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
-      font-size: 1.2rem;
+      font-size: 1rem;
       &.active {
         color: inherit;
         background-color: transparent;
@@ -311,6 +311,25 @@
     }
   }
 // data table
+  .abyss-table-buttons {
+    border-top: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color-light;
+    padding: 0 1rem;
+    .btn {
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 3px solid transparent;
+      &.active {
+        border-bottom: 3px solid $border-selected;
+      }
+      &:hover {
+        border-bottom: 3px solid $brand-color;
+      }
+      svg {
+        color: $brand-color;
+      }
+    }
+  }
   .table {
     &.abyss-table {
       .abyss-table-content {
@@ -338,25 +357,6 @@
         dd {
           word-break: break-word;
           overflow-wrap: break-word;
-        }
-      }
-      .abyss-table-buttons {
-        border-top: 1px solid $border-color-light;
-        border-bottom: 1px solid $border-color-light;
-        padding: 0 1rem;
-        .btn {
-          text-decoration: none;
-          color: inherit;
-          border-bottom: 3px solid transparent;
-          &.active {
-            border-bottom: 3px solid $border-selected;
-          }
-          &:hover {
-            border-bottom: 3px solid $brand-color;
-          }
-          svg {
-            color: $brand-color;
-          }
         }
       }
       > tbody {

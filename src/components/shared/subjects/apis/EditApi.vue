@@ -1,7 +1,7 @@
 <template>
   <div>
     <EditApiModal
-      v-if="isBusinessApisLoaded"
+      v-if="isApisLoaded"
       role="edit"
       :api="getApi()"
       :onClose="handleModalClose"
@@ -27,8 +27,8 @@ export default {
   },
   computed: {
     ...mapState({
-      businessApis: state => state.businessApis.items,
-      isBusinessApisLoaded: state => state.businessApis.lastUpdatedAt > 0,
+      apis: state => state.apis.items,
+      isApisLoaded: state => state.apis.lastUpdatedAt > 0,
     }),
   },
   data() {
@@ -44,7 +44,7 @@ export default {
       this.$router.push(this.routePath);
     },
     getApi() {
-      return this.businessApis.find(item => item.uuid === this.apiId);
+      return this.apis.find(item => item.uuid === this.apiId);
     },
   },
 };

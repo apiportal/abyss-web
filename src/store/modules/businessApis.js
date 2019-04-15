@@ -26,11 +26,25 @@ const actions = {
       }
     });
   },
+  putBusinessApis: ({ commit }, businessApi) => {
+    return api.putBusinessApi(businessApi).then((response) => {
+      commit('updateBusinessApis', response.data);
+      return response;
+    });
+  },
 };
 
 const mutations = {
   setBusinessApis: (state, businessApis) => {
     state.items = businessApis;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  updateBusinessApis: (state, businessApis) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = businessApis
+        .find(businessApi => businessApi.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

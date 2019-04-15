@@ -39,7 +39,7 @@
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
-        <b-badge pill>{{ item.contractscount }}</b-badge>
+        <b-badge pill>{{ contracts.length }}</b-badge>
       </b-button>
     </div>
     <div v-if="isLicensesTableVisible">
@@ -50,7 +50,7 @@
     </div>
     <div v-if="isContractsTableVisible">
       <Contracts
-        :rows="item.contracts"
+        :rows="contracts"
         :routePath="routePath"
       ></Contracts>
     </div>
@@ -100,17 +100,18 @@ export default {
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
+      contracts: [],
     };
   },
   methods: {
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
     },
-    getApiLicenses(uuid) {
+    getApiLicenses() {
+      const { uuid } = this.item;
       api.getApiLicenses(uuid).then((response) => {
         if (response && response.data) {
           this.licenses = response.data;
-          // console.log(this.licenses);
         }
       })
       .catch((error) => {
@@ -121,10 +122,8 @@ export default {
     },
     handleToggleTokensTable() {
       this.isTokensTableVisible = !this.isTokensTableVisible;
-      // if (this.isTokensTableVisible) {
       this.isLicensesTableVisible = false;
       this.isContractsTableVisible = false;
-      // }
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
@@ -143,15 +142,23 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+    getContracts() {
+      const { uuid } = this.item;
+      api.getApiContracts(uuid).then((response) => {
+        if (response && response.data) {
+          this.contracts = response.data;
+        }
+      });
+    },
   },
   created() {
-    this.getApiLicenses(this.item.uuid);
+    this.getApiLicenses();
+    this.getContracts();
   },
 };
 </script>

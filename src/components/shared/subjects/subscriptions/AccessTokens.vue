@@ -54,8 +54,6 @@
           </td>
           <td class="expire-date" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.expiredate | moment("DD.MM.YYYY HH:mm") }}
-            {{item.subjectpermissionid}} - 
-            {{item.resourcerefid}}
           </td>
           <!--  -->
           <td class="actions">

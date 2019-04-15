@@ -1,6 +1,6 @@
 <template>
   <Modal
-    dialogClass="modal-xl"
+    dialogClass="modal-xxl"
     bodyClass="edit-my-api"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
@@ -21,23 +21,9 @@
         :api="api"
         :height="700"
         :title="api.openapidocument.info.title"
+        :onClose="onClose"
+        :role="role"
       />
-    </template>
-    <template slot="footer">
-      <b-button
-        variant="link"
-        @click="onClose"
-        data-qa="btnCancel"
-      >
-        Cancel
-      </b-button>
-      <b-button
-        variant="primary"
-        @click="onUpdate"
-        data-qa="btnSave"
-      >
-        <Icon icon="save" /> Save
-      </b-button>
     </template>
   </Modal>
 </template>
@@ -62,7 +48,7 @@ export default {
     hideFooter: {
       type: Boolean,
       required: false,
-      default() { return false; },
+      default() { return true; },
     },
     noCloseOnBackdrop: {
       type: Boolean,
@@ -72,7 +58,7 @@ export default {
     noCloseOnEsc: {
       type: Boolean,
       required: false,
-      default() { return false; },
+      default() { return true; },
     },
     hideHeaderClose: {
       type: Boolean,
@@ -101,12 +87,6 @@ export default {
       type: Object,
       required: false,
       default() { return {}; },
-    },
-  },
-  methods: {
-    handleSubmit(evt) {
-      evt.preventDefault();
-      console.log('submitted'); // eslint-disable-line
     },
   },
 };

@@ -199,10 +199,6 @@ export default {
   deleteSubjectMemberships(uuid) {
     return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
   },
-  // getSubjectApps
-  // getSubjectApps(uuid) {
-  //   return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-  // },
   putSubjectApps(subjectapp) {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
     return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
@@ -363,7 +359,8 @@ export default {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
   },
   getSubjectApps(uuid) {
-    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    // return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
   },
   getAppContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/app/${uuid}`);

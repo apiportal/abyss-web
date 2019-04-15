@@ -17,9 +17,9 @@ import SharedByMe from '@/components/routes/myApis/sharedByMe/SharedByMe';
 import SharedWithMe from '@/components/routes/myApis/sharedWithMe/SharedWithMe';
 import MyProxyApis from '@/components/routes/myApis/myProxyApis/MyProxyApis';
 import MySubscriptions from '@/components/routes/myApis/mySubscriptions/MySubscriptions';
-// import Api from '@/components/routes/myApis/api/Api';
 import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
 import EditMyApis from '@/components/routes/myApis/EditMyApis';
+import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
@@ -198,6 +198,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },

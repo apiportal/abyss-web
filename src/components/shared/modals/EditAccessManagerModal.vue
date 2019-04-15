@@ -9,7 +9,6 @@
     :size="size"
     :onClose="onClose"
     data-qa="modalEditAccessManager"
-
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">

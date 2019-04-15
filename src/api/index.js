@@ -411,14 +411,17 @@ export default {
     return axios.get('/abyss/oapi/subjects/roles/');
   },
   putRoles(role) {
-    const { uuid, created, deleted, isdeleted, updated, ...rest } = role;
-    return axios.put(`/abyss/oapi/subjects/roles/${uuid}`, rest);
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = role;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   postRoles(role) {
     return axios.post('/abyss/oapi/subjects/roles/', role);
   },
   deleteRoles(uuid) {
-    return axios.delete(`/abyss/oapi/subjects/roles/${uuid}`);
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
   },
   // invite users
   postInviteUser(referral) {

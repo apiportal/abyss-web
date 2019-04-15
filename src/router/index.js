@@ -46,6 +46,7 @@ import EditAdministerUser from '@/components/routes/administerUsers/EditAdminist
 import EditAdministerUserGroups from '@/components/routes/administerUsers/EditAdministerUserGroups';
 import EditAdministerUserOrganizations from '@/components/routes/administerUsers/EditAdministerUserOrganizations';
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
+import EditAdministerUserRoles from '@/components/routes/administerUsers/EditAdministerUserRoles';
 // Administer Groups Routes Components
 import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
 import AdministerGroupsLogs from '@/components/routes/administerGroups/AdministerGroupsLogs';
@@ -340,6 +341,10 @@ export default new Router({
                 {
                   path: 'delete-user/:id',
                   component: DeleteAdministerUser,
+                },
+                {
+                  path: 'edit-user-roles/:id',
+                  component: EditAdministerUserRoles,
                 },
               ],
             },

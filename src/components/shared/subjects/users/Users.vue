@@ -80,6 +80,7 @@
 
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-user/${item.uuid}`"><Icon icon="edit" /> Edit User</b-dropdown-item>
               <b-dropdown-item data-qa="btnEditGroups" :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditRoles" :to="`${routePath}/edit-user-roles/${item.uuid}`"><Icon icon="user-tag" /> Assign Role to User</b-dropdown-item>
               <b-dropdown-item data-qa="btnEditOrganizations" :to="`${routePath}/edit-user-organizations/${item.uuid}`"><Icon icon="home" /> Edit User Organizations</b-dropdown-item>
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete-user/${item.uuid}`"><Icon icon="trash-alt" /> Delete User</b-dropdown-item>
 

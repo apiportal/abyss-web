@@ -9,12 +9,10 @@
     :size="size"
     :onClose="onClose"
     data-qa="modalEditRole"
-
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
-        <Icon :icon=iconTitle class="name" />
-        {{ role === 'edit' ? 'edit role' : 'New Role' }}
+        {{ role === 'edit' ? 'Edit Role' : 'Add New Role' }}
       </h5>
     </template>
     <template>
@@ -24,47 +22,168 @@
         <div style="padding: 1rem;">
           <b-form-group 
             id="roleNameGroup"
+            label="Role Name:"
+            label-for="roleNameInput"
+            :invalid-feedback="roleNameInvalidFeedback"
+            :state="roleNameState"
           >
-            <label>
-              Name:
-              <span class="text-danger">*</span>
-            </label>
             <b-form-input
               id="roleNameInput"
               type="text"
-              v-model="roleEditable.displayname"
+              v-model="roleEditable.subjectname"
+              placeholder="Role Name"
               :state="roleNameState"
-              placeholder="Name"
+              :formatter="setValidSubjectName"
               required
             >
             </b-form-input>
           </b-form-group>
           <b-form-group 
-            id="roleDescriptionGroup"
+            id="displayNameGroup"
+            label="Display Name:"
+            label-for="displayNameInput"
+            :invalid-feedback="displayNameInvalidFeedback"
+            :state="displayNameState"
           >
-            <label>
-              Description:
-              <span class="text-danger">*</span>
-            </label>
-            <b-form-textarea
-              id="roleDescriptionTextarea"
-              v-model="roleEditable.description"
-              :state="descriptionState"
-              placeholder="Description"
-              :rows="3"
+            <b-form-input
+              id="displayNameInput"
+              type="text"
+              v-model="roleEditable.displayname"
+              placeholder="Display Name"
+              :state="displayNameState"
               required
             >
-            </b-form-textarea>
+            </b-form-input>
           </b-form-group>
           <b-form-group id="roleEnabledGroup">
             <b-form-checkbox
               id="roleEnabledChecks"
-              v-model="roleEditable.isactive"
+              v-model="roleEditable.isactivated"
               :value="true"
               :unchecked-value="false"
             >
               Enabled
             </b-form-checkbox>
+          </b-form-group>
+          
+          <b-form-group 
+            id="urlGroup"
+            label="URL:"
+            label-for="urlInput"
+            :invalid-feedback="urlInvalidFeedback"
+            :state="urlState"
+          >
+            <b-form-input
+              id="urlInput"
+              type="text"
+              v-model="roleEditable.url"
+              placeholder="URL"
+              :state="urlState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group 
+            id="roleOrganizationIdGroup"
+            label="Organization:"
+            label-for="roleOrganizationIdInput"
+            :invalid-feedback="organizationIdInvalidFeedback"
+            :state="organizationIdState"
+          >
+            <b-form-select
+              id="roleOrganizationIdInput"
+              v-model="roleEditable.organizationid" 
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                  disabled: organization.isdeleted,
+                })),
+              ]"
+              :state="organizationIdState"
+            />
+          </b-form-group>
+          <b-form-group 
+            id="roleDirectoryIdGroup"
+            label="Directory:"
+            label-for="roleDirectoryIdInput"
+            :invalid-feedback="subjectDirectoryIdInvalidFeedback"
+            :state="subjectDirectoryIdState"
+          >
+            <b-form-select
+              id="roleDirectoryIdInput"
+              v-model="roleEditable.subjectdirectoryid" 
+              :options="[
+                {
+                  value: null,
+                  text: 'Please select',
+                },
+                ...subjectDirectories.map(subjectDirectory => ({
+                  value: subjectDirectory.uuid,
+                  text: subjectDirectory.directoryname,
+                  disabled: subjectDirectory.isdeleted,
+                })),
+              ]"
+              :state="subjectDirectoryIdState"
+            />
+          </b-form-group>
+
+          <b-form-group 
+            id="effectiveStartDateGroup"
+            label="Effective Start Date:"
+            label-for="effectiveStartDateInput"
+            :invalid-feedback="effectiveStartDateInvalidFeedback"
+            :state="effectiveStartDateState"
+          >
+            <b-form-input
+              id="effectiveStartDateInput"
+              type="date"
+              v-model="effectiveStartDate"
+              placeholder="Effective Start Date"
+              :state="effectiveStartDateState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+          <b-form-group 
+            id="effectiveEndDateGroup"
+            label="Effective End Date:"
+            label-for="effectiveEndDateInput"
+            :invalid-feedback="effectiveEndDateInvalidFeedback"
+            :state="effectiveEndDateState"
+          >
+            <b-form-input
+              id="effectiveEndDateInput"
+              type="date"
+              v-model="effectiveEndDate"
+              placeholder="Effective End Date"
+              :state="effectiveEndDateState"
+              required
+            >
+            </b-form-input>
+          </b-form-group>
+
+          <b-form-group 
+            id="roleDescriptionGroup"
+            label="Description:"
+            label-for="roleDescriptionTextarea"
+            :invalid-feedback="descriptionInvalidFeedback"
+            :state="descriptionState"
+          >
+            <b-form-textarea
+              id="roleDescriptionTextarea"
+              v-model="roleEditable.description"
+              placeholder="Description"
+              :rows="3"
+              :state="descriptionState"
+              required
+            >
+            </b-form-textarea>
           </b-form-group>
         </div>
         <footer class="modal-footer">
@@ -92,13 +211,11 @@
 import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
-import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
 
 export default {
   components: {
     Modal,
     Icon,
-    DynamicForm,
   },
   props: {
     hideHeader: {
@@ -139,112 +256,219 @@ export default {
       type: Function,
       required: true,
     },
+    accessRole: {
+      type: Object,
+      required: false,
+    },
+    subjectDirectories: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    organizations: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    users: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    memberships: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     role: {
       type: String,
       required: false,
       default() { return 'edit'; },
-    },
-    iconTitle: {
-      type: String,
-      required: false,
-    },
-    accessRole: {
-      type: Object,
-      required: false,
     },
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
     }),
-    roleNameState() {
+    effectiveStartDate: {
+      get() {
+        return this.roleEditable.effectivestartdate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.roleEditable.effectivestartdate = date.toISOString();
+      },
+    },
+    effectiveEndDate: {
+      get() {
+        return this.roleEditable.effectiveenddate.substring(0, 10);
+      },
+      set(value) {
+        const date = new Date(value);
+        this.roleEditable.effectiveenddate = date.toISOString();
+      },
+    },
+    displayNameState() {
       const { displayname } = this.roleEditable;
-
-      if (displayname && displayname.length > 0) {
-        return true;
+      const re = /^[0-9A-Za-z_@.-\s]{2,30}$/;
+      return displayname.length > 0
+        && re.test(String(displayname))
+      ;
+    },
+    displayNameInvalidFeedback() {
+      const { displayname } = this.roleEditable;
+      if (displayname.length === 0) {
+        return 'Please enter something';
       }
-
-      return false;
+      return '';
+    },
+    roleNameState() {
+      const { subjectname } = this.roleEditable;
+      const re = /^[0-9a-z_@.-]{2,30}$/;
+      return subjectname.length > 0
+        && re.test(String(subjectname))
+      ;
+    },
+    roleNameInvalidFeedback() {
+      const { subjectname } = this.roleEditable;
+      if (subjectname.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    urlState() {
+      const { url } = this.roleEditable;
+      // const re = /https?:\/\/[^\s]+/;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+      return re.test(String(url));
+      // return url.length > 0
+      //   && document.getElementById('urlInput').validity.valid
+      // ;
+    },
+    urlInvalidFeedback() {
+      const { url } = this.roleEditable;
+      // if (url.length === 0) {
+      // const re = /https?:\/\/[^\s]+/;
+      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+      if (!url || url.length === 0) {
+        return 'Please enter url';
+      // } else if (document.getElementById('urlInput')) {
+      } else if (re.test(String(url))) {
+        return 'Please enter a valid url';
+      }
+      return '';
     },
     descriptionState() {
       const { description } = this.roleEditable;
-
-      if (description && description.length > 0) {
-        return true;
+      return description.length > 0;
+    },
+    descriptionInvalidFeedback() {
+      const { description } = this.roleEditable;
+      if (description.length === 0) {
+        return 'Please enter something';
       }
-
-      return false;
+      return '';
+    },
+    effectiveStartDateState() {
+      const { effectivestartdate } = this.roleEditable;
+      return effectivestartdate.length > 0;
+    },
+    effectiveStartDateInvalidFeedback() {
+      const { effectivestartdate } = this.roleEditable;
+      if (effectivestartdate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    effectiveEndDateState() {
+      const { effectiveenddate } = this.roleEditable;
+      return effectiveenddate.length > 0;
+    },
+    effectiveEndDateInvalidFeedback() {
+      const { effectiveenddate } = this.roleEditable;
+      if (effectiveenddate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    organizationIdState() {
+      const { organizationid } = this.roleEditable;
+      return organizationid !== null;
+    },
+    organizationIdInvalidFeedback() {
+      const { organizationid } = this.roleEditable;
+      if (organizationid === null) {
+        return 'Please select organization';
+      }
+      return '';
+    },
+    subjectDirectoryIdState() {
+      const { subjectdirectoryid } = this.roleEditable;
+      return subjectdirectoryid !== null;
+    },
+    subjectDirectoryIdInvalidFeedback() {
+      const { subjectdirectoryid } = this.roleEditable;
+      if (subjectdirectoryid === null) {
+        return 'Please select directory';
+      }
+      return '';
     },
   },
   data() {
-    const { accessRole } = this;
+    const { accessRole, role } = this;
     return {
       roleEditable: JSON.parse(JSON.stringify(accessRole)),
+      isPasswordInputVisible: (role === 'add'),
     };
   },
   methods: {
-    ...mapActions('accessRole', ['putRoles', 'postRoles']),
+    ...mapActions('roles', ['putRoles', 'postRoles']),
+    setValidSubjectName(value) {
+      return value.replace(/ /g, '').toLowerCase();
+    },
     handleSubmit(evt) {
       evt.preventDefault();
-      const { putRoles, postRoles, roleEditable, onUpdate, role } = this;
-      const { organizationid, crudsubjectid, subjecttypeid, subjectname,
-      firstname, lastname, displayname, email, secondaryemail,
-      effectivestartdate, effectiveenddate, password, picture,
-      subjectdirectoryid, islockedfalse, issandbox, url,
-      isrestrictedtoprocessing, description, distinguishedname,
-      uniqueid, phonebusiness, phonehome, phonemobile, phoneextension,
-      jobtitle, department, company } = roleEditable;
-
-      const accessRoleToUpdate = {
+      const { roleEditable, putRoles, postRoles, onUpdate, role } = this;
+      const { description, url, effectiveenddate, displayname,
+        subjectname, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = roleEditable;
+      let roleToUpdate = {
         ...roleEditable,
-        organizationid: (organizationid === null ? '' : organizationid),
-        crudsubjectid: (crudsubjectid === null ? '' : crudsubjectid),
-        subjecttypeid: (subjecttypeid === null ? '' : subjecttypeid),
-        subjectname: (subjectname === null ? '' : subjectname),
-        firstname: (firstname === null ? '' : firstname),
-        lastname: (lastname === null ? '' : lastname),
-        displayname: (displayname === null ? '' : displayname),
-        email: (email === null ? '' : email),
-        secondaryemail: (secondaryemail === null ? '' : secondaryemail),
-        effectivestartdate: (effectivestartdate === null ?
-          this.$moment.utc().toISOString() : effectivestartdate),
-        effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
-        password: (password === null ? '' : password),
-        picture: (picture === null ? '' : picture),
-        subjectdirectoryid: (subjectdirectoryid === null ? '' : subjectdirectoryid),
-        islockedfalse: (islockedfalse === null ? '' : islockedfalse),
-        issandbox: (issandbox === null ? '' : issandbox),
-        url: (url === null ? '' : url),
-        isrestrictedtoprocessing: (isrestrictedtoprocessing === null ? '' : isrestrictedtoprocessing),
+        firstname: displayname,
+        lastname: displayname,
+        email: `${subjectname}@verapi.com`,
+        secondaryemail: `${subjectname}@verapi.com`,
         description: (description === null ? '' : description),
+        url: (url === null ? '' : url),
+        picture: (picture === null ? '' : picture),
         distinguishedname: (distinguishedname === null ? '' : distinguishedname),
         uniqueid: (uniqueid === null ? '' : uniqueid),
         phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+        phoneextension: (phoneextension === null ? '' : phoneextension),
         phonehome: (phonehome === null ? '' : phonehome),
         phonemobile: (phonemobile === null ? '' : phonemobile),
-        phoneextension: (phoneextension === null ? '' : phoneextension),
         jobtitle: (jobtitle === null ? '' : jobtitle),
         department: (department === null ? '' : department),
         company: (company === null ? '' : company),
+        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
 
       if (role === 'edit') {
-        putRoles({
-          accessRoleToUpdate,
-        }).then((response) => {
+        putRoles(roleToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
         });
       } else if (role === 'add') {
-        // const { currentUser } = this;
-        // const { uuid } = currentUser.props;
-        // const crudsubjectid = uuid;
-        const roleToAdd = [{
-          ...accessRoleToUpdate,
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        roleToUpdate = [{
+          ...roleToUpdate,
           crudsubjectid,
         }];
-        postRoles(roleToAdd).then((response) => {
+        postRoles(roleToUpdate).then((response) => {
           if (response && response.data) {
             onUpdate();
           }
@@ -257,34 +481,8 @@ export default {
 
 <style lang="scss">
 .modal-body {
-  &.edit-access-manager {
+  &.edit-administer-group {
     padding: 0;
   }
-}
-
-.configure-access-manager {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
-
-.name {
-  color: #3b68af;
 }
 </style>

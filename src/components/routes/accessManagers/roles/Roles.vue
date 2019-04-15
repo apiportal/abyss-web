@@ -77,7 +77,7 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                text="Display Name"
+                text="Role Name"
                 sortByKey="displayname"
                 sortByKeyType="string"
                 data-qa="tableHeadName"
@@ -142,7 +142,7 @@
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/roles/${page}/logs/${item.uuid}/role/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/roles/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -208,10 +208,14 @@ export default {
       roleMemberships: state => state.roleMemberships.items,
       organizations: state => state.organizations.items,
       permissions: state => state.permissions.items,
+      resourceTypes: state => state.resourceTypes.items,
+      resources: state => state.resources.items,
+      resourceActions: state => state.resourceActions.items,
       // subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
       const { roles, users, organizations } = this;
+      const { resources, resourceActions, accessManagers, resourceTypes } = this;
       const getUsers = (roleId) => {
         const members = this.roleMemberships.filter(item =>
           !item.isdeleted &&
@@ -227,12 +231,39 @@ export default {
         const permissions = this.permissions.filter(item =>
           !item.isdeleted &&
           item.subjectid === roleId);
-        // const rolePermissions = permissions.filter(el =>
-        //   permissions.some(f =>
-        //     f.subjectid === el.uuid,
-        //   ),
-        // );
-        return permissions;
+        const getOrganizationName = (organizationId) => {
+          const organization = organizations.find(item => item.uuid === organizationId) || {};
+          return organization.name || organizationId;
+        };
+        const getResourceName = (resourceId) => {
+          const resource = resources.find(item => item.uuid === resourceId) || {};
+          return resource.resourcename || resourceId;
+        };
+        const getResourceActions = (resourceActionId) => {
+          const resourceAction = resourceActions.find(item => item.uuid === resourceActionId) || {};
+          return resourceAction.actionname || resourceActionId;
+        };
+        const getAccessManagerName = (accessManagerId) => {
+          const accessManager = accessManagers.find(item => item.uuid === accessManagerId) || {};
+          return accessManager.accessmanagername || accessManagerId;
+        };
+        const getResourceTypeId = (resourceId) => {
+          const resource = resources.find(item => item.uuid === resourceId) || {};
+          return resource.resourcetypeid || resourceId;
+        };
+        const getResourceTypeName = (resourceId) => {
+          const resourceTypeId = getResourceTypeId(resourceId);
+          const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId) || {};
+          return resourceType.type || resourceTypeId;
+        };
+        return permissions.map(item => ({
+          ...item,
+          resourceactionname: getResourceActions(item.resourceactionid),
+          organizationname: getOrganizationName(item.organizationid),
+          resourcename: getResourceName(item.resourceid),
+          accessmanagername: getAccessManagerName(item.accessmanagerid),
+          resourcetypename: getResourceTypeName(item.resourceid),
+        }));
       };
 
       const getOrganizationName = (organizationId) => {
@@ -296,6 +327,9 @@ export default {
     this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('permissions/getPermissions', {});
+    this.$store.dispatch('resources/getResources', {});
+    this.$store.dispatch('resourceTypes/getResourceTypes', {});
+    this.$store.dispatch('resourceActions/getResourceActions', {});
     // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {

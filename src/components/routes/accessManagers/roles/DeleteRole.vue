@@ -4,8 +4,8 @@
       v-if="isRolesLoaded"
       title="Are you sure?"
       :text="`${role.displayname} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteRoleModalClose"
-      :onConfirm="handleDeleteRoleModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -20,11 +20,8 @@ export default {
   },
   methods: {
     ...mapActions('roles', ['deleteRoles']),
-    handleDeleteRoleModalClose() {
-      this.$router.push(`/app/roles/${this.page}`);
-    },
-    handleDeleteRoleModalConfirm() {
-      this.$router.push(`/app/roles/${this.page}`);
+    handleModalClose() {
+      this.$router.push(`/app/administer-groups/${this.page}`);
     },
     handleModalConfirm() {
       const { deleteRoles, role } = this;

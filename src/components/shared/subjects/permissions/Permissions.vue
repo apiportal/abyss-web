@@ -72,7 +72,7 @@
       :cols="7"
     />
       <TbodyCollapsible
-        v-for="(item, index) in paginatedRows" v-bind:key="index"
+        v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :data-qa="`tableRow-${index}`"
       >
@@ -140,7 +140,6 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Permission from '@/components/shared/subjects/permissions/Permission';
-import Helpers from '@/helpers';
 
 export default {
   components: {
@@ -161,157 +160,21 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      accessManagers: state => state.accessManagers.items,
-      organizations: state => state.organizations.items,
-      permissions: state => state.permissions.items,
-      resources: state => state.resources.items,
-      resourceTypes: state => state.resourceTypes.items,
-      resourceActions: state => state.resourceActions.items,
-      subjectTypes: state => state.subjectTypes.items,
     }),
-    tableRows() {
-      const { accessManagers,
-      organizations,
-      permissions,
-      resources,
-      resourceTypes,
-      resourceActions } = this;
-      const getOrganizationName = (organizationId) => {
-        const organization = organizations.find(item => item.uuid === organizationId) || {};
-        return organization.name || organizationId;
-      };
-      const getResourceName = (resourceId) => {
-        const resource = resources.find(item => item.uuid === resourceId) || {};
-        return resource.resourcename || resourceId;
-      };
-      const getResourceActions = (resourceActionId) => {
-        const resourceAction = resourceActions.find(item => item.uuid === resourceActionId) || {};
-        return resourceAction.actionname || resourceActionId;
-      };
-      const getAccessManagerName = (accessManagerId) => {
-        const accessManager = accessManagers.find(item => item.uuid === accessManagerId) || {};
-        return accessManager.accessmanagername || accessManagerId;
-      };
-      const getResourceTypeId = (resourceId) => {
-        const resource = resources.find(item => item.uuid === resourceId) || {};
-        return resource.resourcetypeid || resourceId;
-      };
-      const getResourceTypeName = (resourceId) => {
-        const resourceTypeId = getResourceTypeId(resourceId);
-        const resourceType = resourceTypes.find(item => item.uuid === resourceTypeId) || {};
-        return resourceType.type || resourceTypeId;
-      };
-      const { sortByKey, sortByKeyType, sortDirection } = this;
-      return Helpers.sortArrayOfObjects({
-        array: permissions.map(item => ({
-          ...item,
-          resourceactionname: getResourceActions(item.resourceactionid),
-          organizationname: getOrganizationName(item.organizationid),
-          resourcename: getResourceName(item.resourceid),
-          accessmanagername: getAccessManagerName(item.accessmanagerid),
-          resourcetypename: getResourceTypeName(item.resourceid),
-        }))
-        .filter((item) => {
-          const { filterKey } = this;
-          if (filterKey === '') {
-            return true;
-          }
-          const filterKeyLowerCase = filterKey.toLowerCase();
-          return (
-            (
-              item.permission &&
-              item.permission.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.resourcetypename &&
-              item.resourcetypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.subjectname &&
-              item.subjectname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.subjecttypename &&
-              item.subjecttypename.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.resourceactionname &&
-              item.resourceactionname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.accessmanagername &&
-              item.accessmanagername.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.organizationname &&
-              item.organizationname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            )
-          );
-        }),
-        sortByKey,
-        sortByKeyType,
-        sortDirection,
-      });
-    },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
-  },
-  created() {
-    this.$store.commit('currentPage/setRootPath', 'administer-permissions');
-    this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('resources/getResources', {});
-    this.$store.dispatch('resourceTypes/getResourceTypes', {});
-    this.$store.dispatch('resourceActions/getResourceActions', {});
-    this.$store.dispatch('permissions/getPermissions', {});
-    this.$store.dispatch('accessManagers/getAccessManagers', {});
-    this.$store.dispatch('subjectTypes/getSubjectTypes', {});
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('groups/getGroups', {});
-    this.$store.dispatch('apps/getApps', {});
   },
   data() {
     return {
-      page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'permission',
-      sortByKeyType: 'string',
-      sortDirection: 'desc',
-      filterKey: '',
       collapsedRows: [],
-      itemsPerPage: 20,
     };
   },
   methods: {
-    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
-      this.sortByKey = sortByKey;
-      this.sortByKeyType = sortByKeyType;
-      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    },
-    handleFilterKeyup({ value }) {
-      this.filterKey = value;
-    },
-    handlePageChange(page) {
-      this.$router.push(`/app/administer-permissions/${page}`);
-    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
-    },
-    refreshData() {
-      this.$store.dispatch('permissions/getPermissions', {
-        refresh: true,
-      });
     },
   },
 };

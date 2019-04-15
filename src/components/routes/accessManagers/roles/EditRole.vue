@@ -10,9 +10,9 @@
       iconTitle="edit"
       :onClose="handleEditAccessManagerModalClose"
       :onUpdate="handleEditAccessManagerModalUpdate"
-      :accessManager="accessManagers.find(item => item.uuid === accessManagerId)"
       :accessManagerTypes="accessManagerTypes"
       :organizations="organizations"
+      :accessRole="roles.find(item => item.uuid === roleId)"
     />
   </div>
 </template>
@@ -41,6 +41,7 @@ export default {
       isAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
       isAccessManagerTypesLoaded: state => state.accessManagerTypes.lastUpdatedAt,
       isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
+      roles: state => state.roles.items,
     }),
   },
   data() {

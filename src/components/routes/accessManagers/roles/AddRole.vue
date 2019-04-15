@@ -6,6 +6,7 @@
       :onClose="handleEditRoleModalClose"
       :onUpdate="handleEditRoleModalUpdate"
       :app="getRole()"
+      :accessRole='newAccessRole'
     />
   </div>
 </template>
@@ -32,10 +33,10 @@ export default {
   },
   methods: {
     handleEditRoleModalClose() {
-      this.$router.push(this.routePath);
+      this.$router.push(`/app/roles/${this.page}`);
     },
     handleEditRoleModalUpdate() {
-      this.$router.push(this.routePath);
+      this.$router.push(`/app/roles/${this.page}`);
     },
     getRole() {
       // const now = new Date();
@@ -70,6 +71,16 @@ export default {
       //   company: '',
       // };
     },
+  },
+  data() {
+    return {
+      newAccessRole: {
+        displayname: '',
+        description: '',
+        isactive: true,
+      },
+      page: this.$route.params.page,
+    };
   },
 };
 </script>

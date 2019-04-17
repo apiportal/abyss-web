@@ -126,7 +126,9 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="IdBtnEditApiLİcenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+              <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+
+              <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -155,7 +157,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
@@ -195,6 +196,7 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.subjectLicenses.items,
+      contracts: state => state.userContracts.items,
       apiLicenses: state => state.apiLicenses.items,
     }),
     tableRows() {
@@ -227,11 +229,10 @@ export default {
         );
         return apiLicenses;
       };
-      const getContractsCount = (item) => {
-        if (item.contracts) {
-          return item.contracts.length;
-        }
-        return 0;
+      const getProxyContracts = (id) => {
+        const proxyContracts = this.contracts
+        .filter(item => item.apiid === id && !item.isdeleted);
+        return proxyContracts;
       };
       return sortArrayOfObjects({
         array: rows
@@ -242,7 +243,8 @@ export default {
             owner: getApiOwner(item),
             licenses: getApiLicenses(item.uuid),
             licensescount: getApiLicenses(item.uuid).length,
-            contractscount: getContractsCount(item),
+            contracts: getProxyContracts(item.uuid),
+            contractscount: getProxyContracts(item.uuid).length,
           })),
         sortByKey,
         sortByKeyType,
@@ -275,48 +277,13 @@ export default {
       sortDirection: 'desc',
     };
   },
-  // watch: {
-  //   tableRows(newVal, oldVal) {
-  //     const contractApis = newVal;
-  //     if (newVal.length !== oldVal.length) {
-  //       this.getApiContracts(contractApis);
-  //     }
-  //   },
-  // },
   mounted() {
-    // this.getApiContracts(this.tableRows);
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
     this.$store.dispatch('apiLicenses/getApiLicensesRefs', {});
   },
   methods: {
-    getApiContracts(newVal) {
-      const contractApis = newVal;
-      for (let i = 0; i < contractApis.length; i += 1) {
-        api.getApiContracts(contractApis[i].uuid).then((res) => {
-          if (res && res.data) {
-            contractApis[i].contracts = res.data;
-            contractApis[i].contractscount = res.data.length;
-          }
-        })
-        .catch((error) => {
-          if (error.status === 404) {
-            contractApis[i].contracts = [];
-            contractApis[i].contractscount = 0;
-          }
-        });
-        // api.getResource(contractApis[i].uuid).then((res) => {
-        //   if (res && res.data) {
-        //     contractApis[i].resource = res.data;
-        //   }
-        // })
-        // .catch((error) => {
-        //   if (error.status === 404) {
-        //     contractApis[i].resource = [];
-        //   }
-        // });
-      }
-    },
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
     },

@@ -66,7 +66,7 @@
       </div>
       <div v-if="isApisTableVisible">
         <Proxies
-          :rows="computedContractApis"
+          :rows="contractApis"
           :routePath="routePath"
         ></Proxies>
       </div>
@@ -175,55 +175,24 @@ export default {
         }
       });
     },
-  },
-  /* watch: {
-    computedContractApis(newVal, oldVal) {
-      // console.log(newVal, oldVal);
-      const contractApis = newVal;
-      if (newVal.length !== oldVal.length) {
-        for (let i = 0; i < contractApis.length; i += 1) {
-          api.getApiContracts(contractApis[i].uuid).then((res) => {
-            if (res && res.data) {
-              contractApis[i].contracts = res.data;
-            }
-          })
-          .catch((error) => {
-            if (error.status === 404) {
-              contractApis[i].contracts = [];
-            }
-          });
-          // api.getAccessTokens(this.item.subjectpermissionid).then((res) => {
-          //   if (res && res.data) {
-          //     contractApis[i].accessTokens = res.data;
-          //   }
-          // })
-          // .catch((error) => {
-          //   if (error.status === 404) {
-          //     contractApis[i].accessTokens = [];
-          //   }
-          // });
-          // this.getAccessTokens(contractApis[i]);
+    getContractApi() {
+      api.getApi(this.item.apiid).then((response) => {
+        this.contractApis = response.data;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.contractApis = [];
         }
-      }
+      });
     },
-  }, */
+  },
   created() {
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    // get tokens
     this.getAccessTokens();
-    // get contract api
-    api
-    .getApi(this.item.apiid)
-    .then((response) => {
-      this.contractApis = response.data;
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.contractApis = [];
-      }
-    });
+    this.getContractApi();
   },
 };
 </script>

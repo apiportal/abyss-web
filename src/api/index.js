@@ -239,7 +239,7 @@ export default {
     return axios.delete(`/abyss/oapi/subject-permissions/${uuid}`);
   },
   postPermissions(permission) {
-    return axios.post('/abyss/oapi/subject-permissions/', permission);
+    return axios.post('/abyss/oapi/subject-permissions', permission);
   },
   getSubjectPermissions(uuid) {
     return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
@@ -280,12 +280,19 @@ export default {
   getApis() {
     return axios.get('/abyss/oapi/apis');
   },
+  putApis(api) {
+    const { uuid, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/${uuid}`, rest);
+  },
   getApi(uuid) {
     return axios.get(`/abyss/oapi/apis/${uuid}`);
   },
   getBusinessApis(uuid) {
-    // return axios.get('/abyss/oapi/apis/businesses');
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
+  },
+  putBusinessApi(api) {
+    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
   },
   getProxyApis() {
     return axios.get('/abyss/oapi/apis/proxies');
@@ -420,8 +427,8 @@ export default {
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
   },
-  getSubjectContracts(uuid) {
-    return axios.get(`/abyss/oapi/contracts/subject/${uuid}`);
+  getUserContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/user/${uuid}`);
   },
   getAllContracts() {
     return axios.get('/abyss/oapi/contracts/');
@@ -435,5 +442,17 @@ export default {
   // api-licenses
   getExploreApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
+  },
+  postContracts(contracts) {
+    return axios.post('/abyss/oapi/contracts', contracts);
+  },
+  deleteContract(uuid) {
+    return axios.delete(`/abyss/oapi/contracts/${uuid}`);
+  },
+  postResourceAccessTokens(accessTokens) {
+    return axios.post('/abyss/oapi/resource-access-tokens', accessTokens);
+  },
+  validateApi(api) {
+    return axios.post('/abyss/oapi/validate-oas', api);
   },
 };

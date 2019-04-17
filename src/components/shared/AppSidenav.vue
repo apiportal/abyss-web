@@ -4,7 +4,8 @@
       <label class="text-uppercase">Organization</label>
       <div class="row">
         <b-form-select
-          size="lg"
+          size="md"
+          class="px-3"
           :value="currentUser.organizationid"
           :options="organizationOptions"
           @change="handleOrganizationChange"

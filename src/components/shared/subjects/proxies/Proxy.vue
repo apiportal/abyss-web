@@ -61,7 +61,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
@@ -100,7 +99,6 @@ export default {
     return {
       page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
-      // licenses: [],
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
@@ -109,26 +107,6 @@ export default {
   methods: {
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
-    },
-    getApiLicenses(uuid) {
-      api.getApiLicenses(uuid).then((response) => {
-        if (response && response.data) {
-          this.licenses = response.data;
-          // console.log(this.licenses);
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.licenses = [];
-        }
-      });
-    },
-    handleToggleTokensTable() {
-      this.isTokensTableVisible = !this.isTokensTableVisible;
-      // if (this.isTokensTableVisible) {
-      this.isLicensesTableVisible = false;
-      this.isContractsTableVisible = false;
-      // }
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
@@ -153,9 +131,6 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-  },
-  created() {
-    // this.getApiLicenses(this.item.uuid);
   },
 };
 </script>

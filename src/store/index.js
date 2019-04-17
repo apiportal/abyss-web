@@ -36,6 +36,7 @@ import subjectResources from '@/store/modules/subjectResources';
 import subjectPermissions from '@/store/modules/subjectPermissions';
 import subjectPolicies from '@/store/modules/subjectPolicies';
 import apiLicenses from '@/store/modules/apiLicenses';
+import userContracts from '@/store/modules/userContracts';
 
 Vue.use(Vuex);
 
@@ -77,6 +78,7 @@ export default new Vuex.Store({
     subjectPermissions,
     subjectPolicies,
     apiLicenses,
+    userContracts,
   },
   debug: true,
 });

@@ -49,7 +49,6 @@
   }
   body {
     background-color: $bg-body;
-    // font-family: 'Open Sans';
   }
   .page-link {
     min-width: calc(1.5em + .75rem + 2px);
@@ -119,7 +118,7 @@
     background-color: $bg-sidebar;
     // background-image: linear-gradient(150deg, #2d1582, #19a0ff);
     background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $brand-color);
-    background-repeat: repeat-x
+    background-repeat: repeat-x;
     &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(white, 0.35);
     }
@@ -187,7 +186,7 @@
       // padding: .375rem 0 .375rem 0;
       border-color: darken($bg-sidebar, 0%);
       // color: lighten($bg-sidebar, 50%);
-      font-size: 1.15rem;
+      // font-size: 1.15rem;
       color: lighten($bg-sidebar, 100%);
       border-radius: 0;
       background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff77' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
@@ -285,9 +284,9 @@
     justify-content: space-between;
     padding-left: 1rem;
     padding-right: 1rem;
-    span {
-      border-right: 1px solid rgba(white, 0.2);
-    }
+    // span {
+    //   border-right: 1px solid rgba(white, 0.2);
+    // }
   }
   .page-btn-refresh {
     font-size: 2rem;
@@ -319,7 +318,7 @@
       border-bottom: 5px solid transparent;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
-      font-size: 1.1rem;
+      font-size: 1rem;
       &.active {
         color: inherit;
         background-color: transparent;
@@ -344,6 +343,25 @@
     }
   }
 // data table
+  .abyss-table-buttons {
+    border-top: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color-light;
+    padding: 0 1rem;
+    .btn {
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 3px solid transparent;
+      &.active {
+        border-bottom: 3px solid $border-selected;
+      }
+      &:hover {
+        border-bottom: 3px solid $brand-color;
+      }
+      svg {
+        color: $brand-color;
+      }
+    }
+  }
   .table {
     &.abyss-table {
       .abyss-table-content {
@@ -371,25 +389,6 @@
         dd {
           word-break: break-word;
           overflow-wrap: break-word;
-        }
-      }
-      .abyss-table-buttons {
-        border-top: 1px solid $border-color-light;
-        border-bottom: 1px solid $border-color-light;
-        padding: 0 1rem;
-        .btn {
-          text-decoration: none;
-          color: inherit;
-          border-bottom: 3px solid transparent;
-          &.active {
-            border-bottom: 3px solid $border-selected;
-          }
-          &:hover {
-            border-bottom: 3px solid $brand-color;
-          }
-          svg {
-            color: $brand-color;
-          }
         }
       }
       > tbody {

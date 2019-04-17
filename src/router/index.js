@@ -211,6 +211,10 @@ export default new Router({
                   component: MyApisLogs,
                 },
                 {
+                  path: 'edit-api/:apiId',
+                  component: EditMyApis,
+                },
+                {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
@@ -225,6 +229,10 @@ export default new Router({
                   component: MyApisLogs,
                 },
                 {
+                  path: 'edit-api/:apiId',
+                  component: EditMyApis,
+                },
+                {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
@@ -237,6 +245,10 @@ export default new Router({
                 {
                   path: 'logs/:id/:logType/:logPage',
                   component: MyApisLogs,
+                },
+                {
+                  path: 'edit-api/:apiId',
+                  component: EditMyApis,
                 },
                 {
                   path: 'edit-license/:licenseId',
@@ -255,6 +267,10 @@ export default new Router({
                 {
                   path: 'logs/:id/:logType/:logPage',
                   component: MyApisLogs,
+                },
+                {
+                  path: 'edit-api/:apiId',
+                  component: EditMyApis,
                 },
                 {
                   path: 'edit-license/:licenseId',

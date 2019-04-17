@@ -87,19 +87,10 @@ export default {
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      // const getContractsCount = (item) => {
-      //   if (item.contracts) {
-      //     return item.contracts.length;
-      //   }
-      //   return 0;
-      // };
-      // const { proxies } = this;
-      // console.log('this.userProxies: ', this.userProxies); // eslint-disable-line
       return sortArrayOfObjects({
         array: this.proxies
           .map(item => ({
             ...item,
-            // contractscount: getContractsCount(item),
           }))
           .filter((item) => {
             const { filterKey } = this;

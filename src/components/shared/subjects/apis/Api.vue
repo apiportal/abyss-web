@@ -14,7 +14,6 @@
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
-    <!-- <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`"> -->
     <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">
       <b-button
         @click="handleToggleApiProxiesTable"
@@ -38,8 +37,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -56,7 +53,6 @@ export default {
     },
   },
   components: {
-    TbodyCollapsible,
     Icon,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
@@ -104,27 +100,9 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    getApiLicenses(uuid) {
-      api.getApiLicenses(uuid).then((response) => {
-        if (response && response.data) {
-          this.subscriptions[uuid] = response.data;
-          this.subscriptions.lastUpdated = (new Date()).getTime();
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.subscriptions[uuid] = [];
-        }
-      });
-    },
     handleToggleApiProxiesTable() {
       this.isApiProxiesTableVisible = !this.isApiProxiesTableVisible;
     },
-  },
-  mounted() {
-    // this.proxies
-      // .filter(proxy => proxy.businessapiid === this.item.uuid)
-      // .map(item => this.getApiLicenses(item.uuid));
   },
 };
 </script>

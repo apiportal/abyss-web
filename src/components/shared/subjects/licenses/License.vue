@@ -86,14 +86,12 @@
         :routePath="routePath"
       ></Policies>
     </div>
-    <!-- Proxies -->
     <div v-if="isApisTableVisible && licenseApis.length">
       <Proxies
         :rows="computedLicenseApis"
         :routePath="routePath"
       ></Proxies>
     </div>
-    <!-- Contracts -->
     <div v-if="isContractsTableVisible && licenseContracts.length">
       <Contracts
         :rows="computedLicenseContracts"
@@ -181,26 +179,6 @@ export default {
       }));
     },
   },
-  watch: {
-    computedLicenseApis(newVal, oldVal) {
-      // console.log(newVal, oldVal);
-      const contractApis = newVal;
-      if (newVal.length !== oldVal.length) {
-        for (let i = 0; i < contractApis.length; i += 1) {
-          api.getApiContracts(contractApis[i].uuid).then((res) => {
-            if (res && res.data) {
-              contractApis[i].contracts = res.data;
-            }
-          })
-          .catch((error) => {
-            if (error.status === 404) {
-              contractApis[i].contracts = [];
-            }
-          });
-        }
-      }
-    },
-  },
   data() {
     return {
       collapsedRows: [],
@@ -251,40 +229,38 @@ export default {
         this.isApisTableVisible = false;
       }
     },
-    // handleDeleteModal() {
-    //   const { item, routePath } = this;
-    //   this.$router.push(`${routePath}/delete-license/${item.uuid}`);
-    // },
+    getLicenseContracts() {
+      api.getLicenseContracts(this.item.uuid).then((response) => {
+        if (response) {
+          this.licenseContracts = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.licenseContracts = [];
+        }
+      });
+    },
+    getLicenseApis() {
+      api.getLicenseApis(this.item.uuid).then((response) => {
+        if (response) {
+          this.licenseApis = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.licenseApis = [];
+        }
+      });
+    },
   },
   mounted() {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     // if (this.childComponent === 'contracts') {
-    api
-    .getLicenseContracts(this.item.uuid)
-    .then((response) => {
-      if (response) {
-        this.licenseContracts = response.data;
-      }
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.licenseContracts = [];
-      }
-    });
+    this.getLicenseContracts();
     // } else if (this.childComponent === 'proxies') {
-    api
-    .getLicenseApis(this.item.uuid)
-    .then((response) => {
-      if (response) {
-        this.licenseApis = response.data;
-      }
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.licenseApis = [];
-      }
-    });
+    this.getLicenseApis();
     // }
   },
 };

@@ -43,6 +43,7 @@ export default {
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-licenses');
+    // this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});

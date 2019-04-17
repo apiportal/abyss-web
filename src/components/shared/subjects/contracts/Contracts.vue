@@ -33,11 +33,18 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-header>LOGS</b-dropdown-header>
+              <b-dropdown-item
+                v-if="isUnsubscibeButtonVisible"
+                @click="() => handleDeleteContract(item.uuid)"
+              >
+                Unsubscribe
+              </b-dropdown-item>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`">All</b-dropdown-item>
+              <b-dropdown-header v-if="isLogsButtonVisible">LOGS</b-dropdown-header>
 
-              <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
+
+              <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
@@ -62,6 +69,7 @@
 import Contract from '@/components/shared/subjects/contracts/Contract';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
+import api from '@/api';
 
 export default {
   name: 'Contracts',
@@ -76,15 +84,19 @@ export default {
       required: false,
       default() { return ''; },
     },
-    page: {
-      Type: Number,
+    isUnsubscibeButtonVisible: {
+      type: Boolean,
       required: false,
-      default() { return 1; },
+      default() { return false; },
     },
-    itemsPerPage: {
-      Type: Number,
+    isLogsButtonVisible: {
+      type: Boolean,
       required: false,
-      default() { return 2000; },
+      default() { return true; },
+    },
+    onNeedsRefreshData: {
+      type: Function,
+      required: false,
     },
   },
   components: {
@@ -101,11 +113,15 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    handleDeleteContract(uuid) {
+      api.deleteContract(uuid).then(() => {
+        this.onNeedsRefreshData();
+      });
     },
   },
 };

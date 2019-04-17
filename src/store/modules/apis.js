@@ -26,11 +26,25 @@ const actions = {
       }
     });
   },
+  putApis: ({ commit }, apiToPut) => {
+    return api.putApis(apiToPut).then((response) => {
+      commit('updateApis', response.data);
+      return response;
+    });
+  },
 };
 
 const mutations = {
   setApis: (state, apis) => {
     state.items = apis;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  updateApis: (state, apis) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = apis
+        .find(api => api.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

@@ -12,16 +12,16 @@
     </b-form>
     <ul class="sidenav-links">
       <li>
-        <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome">
-          <span><span class="route-icon"><Icon icon="home" /></span> Home</span>
+        <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome" disabled>
+          <span><span class="route-icon"><Icon icon="home" /></span> Home<span class="soon"> - Soon</span></span>
         </b-link>
 
         <b-link to="/app/explore" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`" data-qa="sideMenuMarketplace">
           <span class="route-icon"><Icon icon="globe" /></span> Marketplace
         </b-link>
 
-        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics">
-          <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics
+        <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics" disabled> 
+          <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics<span class="soon"> - Soon</span>
         </b-link>
 
         <!-- <b-link to="/app/contracts" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`">
@@ -73,7 +73,7 @@
         </b-link> 
 
         <b-link to="/app/identity-managers/1" :class="`${currentPage.rootPath === 'identity-managers' ? 'selected' : ''}`" data-qa="sideMenuIdentityManagers">
-          <span class="route-icon"><Icon icon="users" /></span> Identity Managers
+          <span class="route-icon"><Icon icon="users" /></span> Identity Management
         </b-link> 
 
         <!-- <b-link to="/app/identity-manager-types/1" :class="`${currentPage.rootPath === 'identity-manager-types' ? 'selected' : ''}`">
@@ -81,7 +81,7 @@
         </b-link>  -->
 
         <b-link to="/app/access-managers/1" :class="`${currentPage.rootPath === 'access-managers' ? 'selected' : ''}`" data-qa="sideMenuAccessManagers">
-          <span class="route-icon"><Icon icon="user-tie" /></span> Access Managers
+          <span class="route-icon"><Icon icon="user-tie" /></span> Access Management
         </b-link> 
 
         <!-- <b-link to="/app/access-manager-types/1" :class="`${currentPage.rootPath === 'access-manager-types' ? 'selected' : ''}`">
@@ -156,7 +156,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.soon {
+  font-size: 0.8em;
+  font-style: italic;
+  color:lightcoral;
+}
 .switch-organization {
   label {
     color: silver;

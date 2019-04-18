@@ -186,6 +186,12 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  getAllRoleMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships/user-role/');
+  },
+  getAllGroupRoleMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships/group-role/');
+  },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
   },
@@ -413,6 +419,24 @@ export default {
   getLicenseApis(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
   },
+  // roles
+  getRoles() {
+    return axios.get('/abyss/oapi/subjects/roles/');
+  },
+  putRoles(role) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = role;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  postRoles(role) {
+    return axios.post('/abyss/oapi/subjects/roles/', role);
+  },
+  deleteRoles(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
+  },
+  // invite users
   postInviteUser(referral) {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },
@@ -431,5 +455,14 @@ export default {
   },
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
+  },
+  getPermissionsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
+  },
+  getUsersOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
+  getGroupsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
   },
 };

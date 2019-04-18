@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditPolicyType"
   >
     <template slot="header">
-      <h5 id="IdModalTitle" class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Access Manager Type' : 'Add New Access Manager Type' }}
       </h5>
     </template>
@@ -141,16 +142,17 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            id="IdBtnCancel"
             variant="secondary"
             @click="onClose"
+            data-qa="btnCancel"
+            
           >
             Cancel
           </b-button>
           <b-button
-            id="IdBtnSave"
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>

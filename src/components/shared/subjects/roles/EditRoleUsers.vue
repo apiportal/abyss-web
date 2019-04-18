@@ -72,5 +72,4 @@
       this.$store.dispatch('roles/1', {});
     },
   };
-  
 </script>

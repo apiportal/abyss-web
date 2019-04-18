@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <table class="table abyss-table abyss-table-cards">            
+    <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
           <th class="status">
@@ -78,8 +78,8 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-            <Icon 
-              :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+            <Icon
+              :icon="item.isactive ? 'check-circle' : 'times-circle'"
               :class="item.isactive ? 'text-success' : 'text-danger'"
             />
           </td>

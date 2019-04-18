@@ -189,6 +189,9 @@ export default {
   getAllRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/user-role/');
   },
+  getAllGroupRoleMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships/group-role/');
+  },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
   },

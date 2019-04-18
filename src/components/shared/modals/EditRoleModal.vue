@@ -67,24 +67,6 @@
           </b-form-group>
           
           <b-form-group 
-            id="urlGroup"
-            label="URL:"
-            label-for="urlInput"
-            :invalid-feedback="urlInvalidFeedback"
-            :state="urlState"
-          >
-            <b-form-input
-              id="urlInput"
-              type="text"
-              v-model="roleEditable.url"
-              placeholder="URL"
-              :state="urlState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-
-          <b-form-group 
             id="roleOrganizationIdGroup"
             label="Organization:"
             label-for="roleOrganizationIdInput"
@@ -333,28 +315,6 @@ export default {
       const { subjectname } = this.roleEditable;
       if (subjectname.length === 0) {
         return 'Please enter something';
-      }
-      return '';
-    },
-    urlState() {
-      const { url } = this.roleEditable;
-      // const re = /https?:\/\/[^\s]+/;
-      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-      return re.test(String(url));
-      // return url.length > 0
-      //   && document.getElementById('urlInput').validity.valid
-      // ;
-    },
-    urlInvalidFeedback() {
-      const { url } = this.roleEditable;
-      // if (url.length === 0) {
-      // const re = /https?:\/\/[^\s]+/;
-      const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-      if (!url || url.length === 0) {
-        return 'Please enter url';
-      // } else if (document.getElementById('urlInput')) {
-      } else if (re.test(String(url))) {
-        return 'Please enter a valid url';
       }
       return '';
     },

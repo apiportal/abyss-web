@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -109,8 +109,8 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+              <Icon
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'"
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
@@ -130,8 +130,11 @@
                 </template>
 
                 <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Group Users</b-dropdown-item>
                 <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header></b-dropdown-header>
+
+                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -163,10 +166,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer" v-if="totalRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="totalRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"

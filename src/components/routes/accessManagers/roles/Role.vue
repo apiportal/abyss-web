@@ -19,8 +19,6 @@
         <dd>{{ item.organizationname }}</dd>
         <dt>Directory:</dt>
         <dd>{{ item.directoryname }}</dd>
-        <dt>URL:</dt>
-        <dd>{{ item.url }}</dd>
         <dt>Locked:</dt>
         <dd>{{ item.islocked | booleanToText }}</dd>
       </dl>
@@ -39,11 +37,21 @@
     </div>
     <div class="row abyss-table-buttons">
       <b-button
+        @click="listRolePermissions"
+        size="md"
+        variant="link"
+        :class="{'active': isShowRolePermissions}"
+      >
+        <Icon icon="user-cog" /> Permissions
+        <b-badge pill>{{ item.permissions.length }}</b-badge>
+      </b-button>
+
+      <b-button
         size="md"
         variant="link"
         v-b-tooltip.hover
         title="Users"
-        @click="listRoleUsers" 
+        @click="listRoleUsers"
         :class="{'active': isShowRoleUsers}"
         v-if="item.users.length"
         data-qa="btnRoleUsers"
@@ -51,25 +59,32 @@
         <Icon icon="users" /> Users
         <b-badge pill>{{ item.users.length }}</b-badge>
       </b-button>
+
       <b-button
-        @click="listRolePermissions"
+        @click="listRoleGroups"
         size="md"
         variant="link"
-        :class="{'active': isShowRolePermissions}" 
+        :class="{'active': isShowRoleGroups}"
       >
-        <Icon icon="user-cog" /> Permissions
-        <b-badge pill>{{ item.permissions.length }}</b-badge>
+        <Icon icon="user-friends" /> Groups
+        <b-badge pill>{{ item.groups.length }}</b-badge>
       </b-button>
     </div>
-    <div class="abyss-table-content" v-if="isShowRoleUsers && item.users.length">
+    <div v-if="isShowRolePermissions">
+      <Permissions
+        :rows="item.permissions"
+        :routePath="`/app/roles/${page}`"
+      />
+    </div>
+    <div v-if="isShowRoleUsers">
       <Users
         :rows="item.users"
         :routePath="`/app/roles/${page}`"
       />
     </div>
-    <div v-if="isShowRolePermissions">
-      <Permissions
-        :rows="item.permissions"
+    <div v-if="isShowRoleGroups">
+      <Groups
+        :rows="item.groups"
         :routePath="`/app/roles/${page}`"
       />
     </div>
@@ -82,6 +97,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Users from '@/components/shared/subjects/users/Users';
 import Permissions from '@/components/shared/subjects/permissions/Permissions';
+import Groups from '@/components/shared/subjects/groups/Groups';
 
 export default {
   components: {
@@ -90,6 +106,7 @@ export default {
     TbodyCollapsible,
     Users,
     Permissions,
+    Groups,
   },
   props: {
     item: {
@@ -111,11 +128,17 @@ export default {
       required: false,
       default() { return []; },
     },
+    groups: {
+      Type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   data() {
     return {
       isShowRoleUsers: false,
       isShowRolePermissions: false,
+      isShowRoleGroups: false,
     };
   },
   mounted() {
@@ -129,6 +152,10 @@ export default {
     listRolePermissions() {
       this.isShowRoleUsers = false;
       this.isShowRolePermissions = !this.isShowRolePermissions;
+    },
+    listRoleGroups() {
+      this.isShowRoleGroups = false;
+      this.isShowRoleGroups = !this.isShowRoleGroups;
     },
   },
 };

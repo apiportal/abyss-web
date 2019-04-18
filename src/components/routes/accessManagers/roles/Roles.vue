@@ -32,7 +32,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -117,8 +117,8 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactivated ? 'check-circle' : 'times-circle'" 
+              <Icon
+                :icon="item.isactivated ? 'check-circle' : 'times-circle'"
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
@@ -126,10 +126,10 @@
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}
+              {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm")  }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}
+              {{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm")  }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
@@ -163,10 +163,10 @@
       </table>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -206,15 +206,17 @@ export default {
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
       roleMemberships: state => state.roleMemberships.items,
+      groupRoleMemberships: state => state.groupRoleMemberships.items,
       organizations: state => state.organizations.items,
       permissions: state => state.permissions.items,
       resourceTypes: state => state.resourceTypes.items,
       resources: state => state.resources.items,
       resourceActions: state => state.resourceActions.items,
+      groups: state => state.groups.items,
       // subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
-      const { roles, users, organizations } = this;
+      const { roles, users, organizations, groups } = this;
       const { resources, resourceActions, accessManagers, resourceTypes } = this;
       const getUsers = (roleId) => {
         const members = this.roleMemberships.filter(item =>
@@ -226,6 +228,18 @@ export default {
           ),
         );
         return roleUsers;
+      };
+      const getGroups = (roleId) => {
+        const members = this.groupRoleMemberships.filter(item =>
+          !item.isdeleted &&
+          item.subjectgroupid === roleId);
+        const roleGroups = groups.filter(el =>
+          members.some(f =>
+            f.subjectid === el.uuid,
+          ),
+        );
+        console.log(roleGroups); // eslint-disable-line
+        return roleGroups;
       };
       const getPermissions = (roleId) => {
         const permissions = this.permissions.filter(item =>
@@ -279,6 +293,8 @@ export default {
           userscount: getUsers(item.uuid).length,
           organizationname: getOrganizationName(item.organizationid),
           permissions: getPermissions(item.uuid),
+          groups: getGroups(item.uuid),
+          groupcount: groups.length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -325,11 +341,13 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
+    this.$store.dispatch('groupRoleMemberships/getAllGroupRoleMemberships', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('permissions/getPermissions', {});
     this.$store.dispatch('resources/getResources', {});
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
+    this.$store.dispatch('groups/getGroups', {});
     // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {
@@ -344,14 +362,14 @@ export default {
     };
   },
   methods: {
-    getAllRoleMemberships() {
-      // return api.getRoleMemberships(roleId).then((response) => {
-      //   if (response && response.data) {
-      //     return response.data;
-      //   }
-      //   return [];
-      // });
-    },
+    // getAllRoleMemberships() {
+    //   // return api.getRoleMemberships(roleId).then((response) => {
+    //   //   if (response && response.data) {
+    //   //     return response.data;
+    //   //   }
+    //   //   return [];
+    //   // });
+    // },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;

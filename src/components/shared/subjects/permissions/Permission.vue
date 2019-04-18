@@ -8,22 +8,23 @@
         <dd>{{ permission.description }}</dd>
         <dt>Access Manager:</dt>
         <dd>{{ permission.accessmanagername }}</dd>
-      </dl>
-      <dl class="col">
-        <dt>Subject:</dt>
-        <dd>{{ subject.displayname }}</dd>
-        <dt>Subject Type:</dt>
-        <dd>{{ subjectType.typename }}</dd>
         <dt>Organization:</dt>
         <dd>{{ permission.organizationname }}</dd>
       </dl>
       <dl class="col">
+        <dt>Subject:</dt>
+        <dd>{{ subject.displayname }}</dd>
         <dt>Resource:</dt>
         <dd>{{ permission.resourcename }}</dd>
-        <dt>Resource Type:</dt>
-        <dd>{{ permission.resourcetypename }}</dd>
         <dt>Resource Action:</dt>
         <dd>{{ permission.resourceactionname }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Subject Type:</dt>
+        <dd>{{ subjectType.typename }}</dd>
+        <dt>Resource Type:</dt>
+        <dd>{{ permission.resourcetypename }}</dd>
+
       </dl>
       <dl class="col">
         <dt>Effective Start Date:</dt>

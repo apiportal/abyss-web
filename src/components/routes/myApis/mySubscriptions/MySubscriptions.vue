@@ -40,9 +40,11 @@
       </div>
     </div>
     <div class="page-content">
-      <Subscriptions
-        :rows="paginatedRows"
+      <Proxies
+        :rows="tableRows"
         :routePath="`/app/my-apis/my-subscriptions/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -64,36 +66,38 @@
 <script>
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
-import Subscriptions from '@/components/shared/subjects/subscriptions/Subscriptions';
+import Proxies from '@/components/shared/subjects/proxies/Proxies';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
     InputWithIcon,
-    Subscriptions,
+    Proxies,
     Icon,
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apiSubscriptions: state => state.apiSubscriptions.items,
-      resourceActions: state => state.resourceActions.items,
+      contracts: state => state.userContracts.items,
+      proxies: state => state.proxies.items,
     }),
+    contractRows() {
+      const contracts = this.contracts.filter(item => !item.isdeleted);
+      const contractApis = this.proxies.filter(el =>
+        contracts.some(f =>
+          f.apiid === el.uuid,
+        ),
+      );
+      return contractApis;
+    },
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { contractRows, sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { apiSubscriptions, resourceActions } = this;
-      const getResourceActionName = (resourceActionId) => {
-        const resourceAction = resourceActions.find(item => item.uuid === resourceActionId);
-        return resourceAction ? resourceAction.actionname : resourceActionId;
-      };
       return sortArrayOfObjects({
-        array: apiSubscriptions
-          .filter(item => item.resourceactionid === 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8' && !item.isdeleted)
+        array: contractRows
           .map(item => ({
             ...item,
-            resourceactionname: getResourceActionName(item.resourceactionid),
           }))
           .filter((item) => {
             const { filterKey } = this;
@@ -111,15 +115,6 @@ export default {
         sortByKey,
         sortByKeyType,
         sortDirection,
-      });
-    },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
       });
     },
   },
@@ -142,7 +137,7 @@ export default {
       this.$router.push(`/app/my-apis/my-subscriptions/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('apiSubscriptions/getApiSubscriptions', {
+      this.$store.dispatch('proxies/getProxies', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });

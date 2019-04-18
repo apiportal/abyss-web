@@ -18,7 +18,7 @@
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          <span class="link-text" data-qa="linkMySubscriptions">My Contracted APIs</span> <b-badge pill>{{ myApiSubscriptions.length }}</b-badge>
+          <span class="link-text" data-qa="linkMySubscriptions">My Contracted APIs</span> <b-badge pill>{{ myContractedApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"
@@ -53,10 +53,17 @@ export default {
       apisSharedWithUser: state => state.apisSharedWithUser.items,
       apisSharedByUser: state => state.apisSharedByUser.items,
       proxies: state => state.proxies.items,
+      contracts: state => state.userContracts.items,
       users: state => state.users.items,
     }),
-    myApiSubscriptions() {
-      return this.apiSubscriptions.filter(item => item.resourceactionid === 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8' && !item.isdeleted);
+    myContractedApis() {
+      const contracts = this.contracts.filter(item => !item.isdeleted);
+      const contractApis = this.proxies.filter(el =>
+        contracts.some(f =>
+          f.apiid === el.uuid,
+        ),
+      );
+      return contractApis;
     },
     myBusinessApis() {
       return this.businessApis.filter(item => !item.isproxyapi);
@@ -79,6 +86,7 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
   },
 };
 </script>

@@ -1,39 +1,42 @@
 /* eslint-disable */
 // const getNestedObject = (o, p) => p.split('.').reduce((xs, x) => (xs && xs[x]) ? xs[x] : undefined, o);
-const getNestedObject = (nestedObj, path) => {
-  return path.split('.').reduce((obj, key) =>
-    (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
-  // return path.split('.').reduce((prev, curr) => {
-  //   return prev ? prev[curr] : undefined;
-  // }, nestedObj || this );
-};
+// const getNestedObject = (nestedObj, path) => {
+//   return path.split('.').reduce((obj, key) =>
+//     (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
+//   // return path.split('.').reduce((prev, curr) => {
+//   //   return prev ? prev[curr] : undefined;
+//   // }, nestedObj || this );
+// };
+
+// const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = 'desc' }) => {
+//   if (sortByKeyType === 'string') {
+//     const arr = array.sort((a, b) => {
+//       if (getNestedObject(a, sortByKey).toLowerCase() < getNestedObject(b, sortByKey).toLowerCase()) {
+//         return -1;
+//       } else if (getNestedObject(a, sortByKey).toLowerCase() > getNestedObject(b, sortByKey).toLowerCase()) {
+//         return 1;
+//       }
+//       return 0;
+//     });
+//     return (sortDirection === 'desc' ? arr : arr.reverse());
+//   } else if (sortByKeyType === 'number' || sortByKeyType === 'boolean') {
+//     const arr = array.sort((a, b) => (getNestedObject(a, sortByKey) - getNestedObject(b, sortByKey)));
+//     // const arr = array.sort((a, b) => (a[sortByKey] - b[sortByKey]));
+//     return (sortDirection === 'desc' ? arr : arr.reverse());
+//   }
+//   return array;
+// };
 
 const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = 'desc' }) => {
   if (sortByKeyType === 'string') {
     const arr = array.sort((a, b) => {
-      if (getNestedObject(a, sortByKey).toLowerCase() < getNestedObject(b, sortByKey).toLowerCase()) {
-        return -1;
-      } else if (getNestedObject(a, sortByKey).toLowerCase() > getNestedObject(b, sortByKey).toLowerCase()) {
-        return 1;
-      }
-      return 0;
-    });
-    return (sortDirection === 'desc' ? arr : arr.reverse());
-  } else if (sortByKeyType === 'number' || sortByKeyType === 'boolean') {
-    const arr = array.sort((a, b) => (getNestedObject(a, sortByKey) - getNestedObject(b, sortByKey)));
-    // const arr = array.sort((a, b) => (a[sortByKey] - b[sortByKey]));
-    return (sortDirection === 'desc' ? arr : arr.reverse());
-  }
-  return array;
-};
-
-/* const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = 'desc' }) => {
-  if (sortByKeyType === 'string') {
-    const arr = array.sort((a, b) => {
-      if (a[sortByKey].toLowerCase() < b[sortByKey].toLowerCase()) {
-        return -1;
-      } else if (a[sortByKey].toLowerCase() > b[sortByKey].toLowerCase()) {
-        return 1;
+      if (a[sortByKey] && b[sortByKey]) {
+        if (a[sortByKey].toLowerCase() < b[sortByKey].toLowerCase()) {
+          return -1;
+        } else if (a[sortByKey].toLowerCase() > b[sortByKey].toLowerCase()) {
+          return 1;
+        }
+        return 0;
       }
       return 0;
     });
@@ -43,7 +46,7 @@ const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = '
     return (sortDirection === 'desc' ? arr : arr.reverse());
   }
   return array;
-}; */
+};
 
 const paginateArray = ({ array, itemsPerPage, page }) => {
   const totalItems = array.length;

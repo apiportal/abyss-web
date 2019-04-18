@@ -294,6 +294,9 @@ export default {
     const { uuid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/${uuid}`, rest);
   },
+  postApis(api) {
+    return axios.post('/abyss/oapi/apis/', api);
+  },
   getApi(uuid) {
     return axios.get(`/abyss/oapi/apis/${uuid}`);
   },
@@ -303,6 +306,9 @@ export default {
   putBusinessApi(api) {
     const { uuid, businessapiid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
+  },
+  postBusinessApi(api) {
+    return axios.post('/abyss/oapi/apis/businesses/', api);
   },
   getProxyApis() {
     return axios.get('/abyss/oapi/apis/proxies');

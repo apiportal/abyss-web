@@ -21,12 +21,12 @@
             <b-form-radio v-model="startWith" value="template">Open API 3.0 Template</b-form-radio>
           </div>
           <div class="start-with-option-content" v-if="startWith === 'template'">
-            <b-button variant="primary">Start</b-button>
+            <b-button variant="primary" @click="handleStartWithTemplate">Start</b-button>
           </div>
         </div>
         <div class="start-with-option">
           <div class="start-with-option-header">
-            <b-form-radio v-model="startWith" value="upload">Upload File</b-form-radio>
+            <b-form-radio v-model="startWith" value="upload" :disabled="true">Upload File</b-form-radio>
           </div>
           <div class="start-with-option-content" v-if="startWith === 'upload'">
             <Dropzone
@@ -36,7 +36,7 @@
         </div>
         <div class="start-with-option">
           <div class="start-with-option-header">
-            <b-form-radio v-model="startWith" value="url">Upload from URL </b-form-radio>
+            <b-form-radio v-model="startWith" value="url" :disabled="true">Upload from URL </b-form-radio>
           </div>
           <div class="start-with-option-content" v-if="startWith === 'url'">
             <b-form @submit="handleSubmitStartWithURL">
@@ -55,8 +55,11 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+import moment from 'moment-timezone';
 import Modal from '@/components/shared/modals/Modal';
 import Dropzone from '@/components/shared/Dropzone';
+import Pet3 from '@/assets/pet3.json';
 
 export default {
   components: {
@@ -99,9 +102,17 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapState({
+      currentUser: state => state.user,
+      apiStates: state => state.apiStates.items,
+      visibilityTypes: state => state.apiVisibilityTypes.items,
+    }),
+  },
   data() {
     return {
       isMounted: false,
+      templateObject: Pet3,
       startWith: 'template',
       form: {
         url: '',
@@ -121,9 +132,52 @@ export default {
     };
   },
   methods: {
+    ...mapActions('apis', ['postApis']),
     handleSubmitStartWithURL() {
       const { url } = this.form;
       console.log(url); // eslint-disable-line
+    },
+    handleStartWithTemplate() {
+      const now = new Date();
+      const { templateObject, postApis } = this;
+      const { organizationid, uuid } = this.currentUser;
+      const { apiStates, visibilityTypes } = this;
+      const apistate = apiStates.find(item => item.name === 'Draft');
+      const visibilityType = visibilityTypes.find(item => item.name === 'Private');
+      const api = {
+        apioriginid: '2741ce5d-0fcb-4de3-a517-405c0ceffbbe',
+        apiparentid: '2741ce5d-0fcb-4de3-a517-405c0ceffbbe',
+        apistateid: apistate.uuid,
+        apivisibilityid: visibilityType.uuid,
+        changelog: '',
+        color: '#006699',
+        crudsubjectid: uuid,
+        deployed: moment(now),
+        extendeddocument: {},
+        image: '',
+        isdefaultversion: true,
+        islatestversion: true,
+        islive: false,
+        isproxyapi: false,
+        issandbox: false,
+        languageformat: 1,
+        languagename: 'OpenAPI',
+        languageversion: '3.0.0',
+        openapidocument: templateObject,
+        organizationid,
+        originaldocument: 'openapi: 3.0.0↵servers:↵  - description: SwaggerHu',
+        subjectid: uuid,
+        version: '1.0.0',
+      };
+      postApis([api]).then((response) => {
+        if (response && response.data) {
+          this.$store.dispatch('businessApis/getBusinessApis', {
+            uuid: this.currentUser.uuid,
+            refresh: true,
+          });
+          this.$router.push(`/app/my-apis/businesses/1/edit-api/${response.data[0].uuid}`);
+        }
+      });
     },
   },
   mounted() {

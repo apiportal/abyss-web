@@ -221,6 +221,10 @@ export default new Router({
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
+                },
               ],
             },
             {
@@ -238,6 +242,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },
@@ -257,6 +265,10 @@ export default new Router({
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
+                },
               ],
             },
             {
@@ -274,6 +286,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },

@@ -39,14 +39,14 @@ export default {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
   },
-  watch: {
-    apps(newVal, oldVal) {
-      if (newVal.length !== oldVal.length) {
-        const appIdsArray = newVal.map(item => item.uuid);
-        this.$store.dispatch('apps/getAppContracts', { appIdsArray });
-      }
-    },
-  },
+  // watch: {
+  //   apps(newVal, oldVal) {
+  //     if (newVal.length !== oldVal.length) {
+  //       const appIdsArray = newVal.map(item => item.uuid);
+  //       this.$store.dispatch('apps/getAppContracts', { appIdsArray });
+  //     }
+  //   },
+  // },
   data() {
     return {
     };

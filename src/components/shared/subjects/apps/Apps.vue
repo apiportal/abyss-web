@@ -29,7 +29,7 @@
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               text="Contracts"
-              sortByKey="contractsCount"
+              sortByKey="contractscount"
               sortByKeyType="number"
             />
           </th>
@@ -52,8 +52,7 @@
             {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            <!-- {{ item.contracts ? item.contracts.length : '' }} -->
-            {{ item.contractsCount }}
+            {{ item.contractscount }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -133,17 +132,29 @@ export default {
       default() { return 2000; },
     },
   },
+  mounted() {
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
+  },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
+      contracts: state => state.userContracts.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getAppContracts = (id) => {
+        const appContracts = this.contracts
+        .filter(item => item.subjectid === id && !item.isdeleted);
+        return appContracts;
+      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            contracts: getAppContracts(item.uuid),
+            contractscount: getAppContracts(item.uuid).length,
           })),
         sortByKey,
         sortByKeyType,

@@ -124,12 +124,6 @@ export default {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
-      const getContractsCount = (item) => {
-        if (item.contracts) {
-          return item.contracts.length;
-        }
-        return 0;
-      };
       return sortArrayOfObjects({
         array: userApps
           .filter((item) => {
@@ -151,7 +145,6 @@ export default {
             )
           .map(item => ({
             ...item,
-            contractsCount: getContractsCount(item),
             organizationname: getOrganizationName(item.organizationid),
           })),
         sortByKey,

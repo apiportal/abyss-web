@@ -16,7 +16,7 @@
         :isCollapsed="collapsedRows.indexOf(subscriptionItem.uuid) > -1"
         :level="3"
       >
-        <tr id="IdTableRow" slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${subscriptionItem.isdeleted ? 'is-deleted' : ''}`">
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${subscriptionItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td @click="() => handleCollapseTableRows(subscriptionItem.uuid)">
             {{ subscriptionItem.permission }}
           </td>

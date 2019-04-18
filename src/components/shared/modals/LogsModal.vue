@@ -13,6 +13,7 @@
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
+        <Icon icon="list-alt" />
         {{ title }}
       </h5>
     </template>
@@ -78,15 +79,6 @@
           @change="onPageChange"
         >
         </b-pagination>
-      </div>
-      <div class="float-right">
-        <b-button
-          variant="secondary"
-          @click="onClose"
-          data-qa="btnClose"
-        >
-          Close
-        </b-button>
       </div>
     </template>
   </Modal>

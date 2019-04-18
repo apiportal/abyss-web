@@ -35,6 +35,7 @@
           required
           class="form-control"
           id="username"
+          data-qa="formUsername"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -49,7 +50,7 @@
         <label class="form-label">
           <span class="d-flex justify-content-between align-items-center">
             Password
-            <b-link class="link-muted text-capitalize font-weight-normal" to="forgot-password" tabindex="5">Forgot Password?</b-link>
+            <b-link class="link-muted text-capitalize font-weight-normal" to="forgot-password" tabindex="5" data-qa="linkForgotPassword">Forgot Password?</b-link>
           </span>
         </label>
         <b-form-input
@@ -59,6 +60,7 @@
           :state="passwordState"
           required
           class="form-control"
+          data-qa="formPassword"
         ></b-form-input>
       </b-form-group>
     </div>
@@ -68,11 +70,11 @@
     <div class="row align-items-center mb-5">
       <div class="col-6">
         <span class="small text-muted">Don't have an account? </span>
-        <b-link class="small" to="signup">Signup</b-link>
+        <b-link class="small" to="signup" data-qa="linkSignup">Signup</b-link>
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" >Get Started <Icon v-if="isLoading" icon="spinner" spin /></b-button>
+        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" data-qa="btnGetStarted">Get Started <Icon v-if="isLoading" icon="spinner" spin /></b-button>
       </div>
     </div>
     <!-- End Button -->
@@ -115,16 +117,16 @@ export default {
       return username.length > 0;
     },
     userNameInvalidFeedback() {
-      const { username } = this.formLogin;
-      return (username.length === 0) ? 'Please enter username' : '';
+      // const { username } = this.formLogin;
+      // return (username.length === 0) ? 'Please enter username' : '';
     },
     passwordState() {
       const { password } = this.formLogin;
       return password.length >= 3;
     },
     passwordInvalidFeedback() {
-      const { password } = this.formLogin;
-      return (password.length < 3) ? 'Password must be at least 3 characters.' : '';
+      // const { password } = this.formLogin;
+      // return (password.length < 3) ? 'Password must be at least 3 characters.' : '';
     },
   },
   methods: {

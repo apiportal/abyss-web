@@ -12,6 +12,12 @@
         >
           <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
         </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/roles/1"
+        >
+          <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
+        </b-nav-item>
       </b-nav>
       <div class="row">
         <div class="col">
@@ -213,6 +219,7 @@ export default {
       accessManagers: state => state.accessManagers.items,
       accessManagerTypes: state => state.accessManagerTypes.items,
       organizations: state => state.organizations.items,
+      roles: state => state.roles.items,
     }),
     tableRows() {
       const { accessManagers, accessManagerTypes, organizations } = this;
@@ -267,6 +274,7 @@ export default {
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('roles/getRoles', {});
   },
   data() {
     return {

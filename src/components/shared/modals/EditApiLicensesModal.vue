@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="p-0"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -25,6 +26,7 @@
               :autocompleteOptions="proxyLicensesEditable"
               :onDeleteChip="handleDeleteApiLicense"
               :onAddChip="handleAddApiLicense"
+              :showAddChip="false"
               label="API Licenses"
             />
           </div>

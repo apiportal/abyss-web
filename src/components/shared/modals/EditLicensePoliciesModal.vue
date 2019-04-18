@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-license-policies"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -25,6 +26,7 @@
               :autocompleteOptions="policiesEditable"
               :onDeleteChip="handleDeletePolicies"
               :onAddChip="handleAddPolicies"
+              :showAddChip="false"
               label="License Policies"
             />
           </div>

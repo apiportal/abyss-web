@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user-groups"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -25,6 +26,7 @@
               :autocompleteOptions="groupUsersEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
+              :showAddChip="false"
               label="Group Users"
             />
           </div>

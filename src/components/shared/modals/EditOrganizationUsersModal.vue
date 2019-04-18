@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -25,9 +26,6 @@
             <label>
               Owner:
               <span class="text-danger">*</span>
-              <!-- {{computedOrganizationOwner}}
-              <hr>
-              {{organizationOwner}} -->
             </label>
             <b-form-select
               id="organizationOwnerInput"
@@ -44,27 +42,14 @@
             />
           </b-form-group>
           <div class="form-group">
-            <!-- {{computedOrganizationUsers}} -->
             <Chips
               :chips="computedOrganizationUsers"
               :autocompleteOptions="organizationUsersEditable"
               :onDeleteChip="handleDeleteOrganizationUser"
               :onAddChip="handleAddOrganizationUser"
+              :showAddChip="false"
               label="Organization Users"
             />
-            <!-- <Chips
-              :chips="computedOrganizationUsers"
-              :autocompleteOptions="this.organizationUsersEditable.map((item) => ({
-                text: item.displayname,
-                value: item.uuid,
-                isdeleted: item.isdeleted,
-                isAttached: item.isAttached,
-                color: chipColor(item),
-              }))"
-              :onDeleteChip="handleDeleteOrganizationUser"
-              :onAddChip="handleAddOrganizationUser"
-              label="Organization Users"
-            /> -->
           </div>
         </div>
         <footer class="modal-footer">

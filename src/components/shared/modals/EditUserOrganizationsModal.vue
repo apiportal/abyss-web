@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -25,6 +26,7 @@
               :autocompleteOptions="organizationsEditable"
               :onDeleteChip="handleDeleteUserOrganization"
               :onAddChip="handleAddUserOrganization"
+              :showAddChip="false"
               label="User Organizations"
             />
           </div>

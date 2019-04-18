@@ -35,7 +35,7 @@
           <!-- <b-popover target="addPopover" :show.sync="isAddPopoverVisible"> -->
             <template slot="title">{{ addItemText }}</template>
             <div>
-              <div>
+              <div class="py-2" v-if="showAddChip">
                 <form @submit="handleSubmit">
                   <b-input-group>
                     <input
@@ -52,8 +52,7 @@
                   </b-input-group>
                 </form>
               </div>
-              <hr />
-              <div>
+              <div class="py-1">
                 <b-button
                   v-for="(chip, index) in computedOptions" 
                   v-bind:key="index"
@@ -107,6 +106,11 @@ export default {
       type: String,
       required: false,
       default() { return 'Add Item'; },
+    },
+    showAddChip: {
+      type: Boolean,
+      required: false,
+      default() { return true; },
     },
   },
   computed: {

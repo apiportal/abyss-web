@@ -70,6 +70,9 @@ import RolesLogs from '@/components/routes/accessManagers/roles/RolesLogs';
 import AddRole from '@/components/routes/accessManagers/roles/AddRole';
 import EditRole from '@/components/routes/accessManagers/roles/EditRole';
 import DeleteRole from '@/components/routes/accessManagers/roles/DeleteRole';
+import EditAccessManagersRolePermissions from '@/components/routes/accessManagers/roles/EditAccessManagersRolePermissions';
+import EditAccessManagersRoleUsers from '@/components/routes/accessManagers/roles/EditAccessManagersRoleUsers';
+import EditAccessManagersRoleGroups from '@/components/routes/accessManagers/roles/EditAccessManagersRoleGroups';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
 import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
@@ -450,6 +453,18 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteRole,
+            },
+            {
+              path: 'edit-role-permissions/:id',
+              component: EditAccessManagersRolePermissions,
+            },
+            {
+              path: 'edit-role-users/:id',
+              component: EditAccessManagersRoleUsers,
+            },
+            {
+              path: 'edit-role-groups/:id',
+              component: EditAccessManagersRoleGroups,
             },
           ],
         },

@@ -453,4 +453,13 @@ export default {
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
   },
+  getPermissionsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
+  },
+  getUsersOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
+  getGroupsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
 };

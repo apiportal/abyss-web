@@ -30,7 +30,7 @@ const actions = {
 
 const mutations = {
   setApiSubscriptions: (state, apiSubscriptions) => {
-    state.items = apiSubscriptions.filter(item => item.resourceactionid === 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8');
+    state.items = apiSubscriptions;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

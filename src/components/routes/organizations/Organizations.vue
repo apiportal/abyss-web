@@ -111,7 +111,7 @@ export default {
       };
       const getOrganizationUsers = (organizationId) => {
         const organizationSubjects = subjectOrganizations
-          .filter(item => item.organizationrefid === organizationId);
+          .filter(item => item.organizationrefid === organizationId && !item.isdeleted);
         // return organizationSubjects.map(item => item.subjectid);
         return organizationSubjects;
       };

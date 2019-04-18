@@ -18,7 +18,7 @@
           :active="currentPage.firstChildPath === 'my-subscriptions'"
           to="/app/my-apis/my-subscriptions/1"
         >
-          <span class="link-text" data-qa="linkMySubscriptions">My Contracted APIs</span> <b-badge pill>{{ apiSubscriptions.length }}</b-badge>
+          <span class="link-text" data-qa="linkMySubscriptions">My Contracted APIs</span> <b-badge pill>{{ myApiSubscriptions.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'shared-by-me'"
@@ -55,6 +55,9 @@ export default {
       proxies: state => state.proxies.items,
       users: state => state.users.items,
     }),
+    myApiSubscriptions() {
+      return this.apiSubscriptions.filter(item => item.resourceactionid === 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8' && !item.isdeleted);
+    },
     myBusinessApis() {
       return this.businessApis.filter(item => !item.isproxyapi);
     },

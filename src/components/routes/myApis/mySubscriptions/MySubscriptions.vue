@@ -90,6 +90,7 @@ export default {
       };
       return sortArrayOfObjects({
         array: apiSubscriptions
+          .filter(item => item.resourceactionid === 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8' && !item.isdeleted)
           .map(item => ({
             ...item,
             resourceactionname: getResourceActionName(item.resourceactionid),

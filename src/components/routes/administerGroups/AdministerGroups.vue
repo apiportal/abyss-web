@@ -205,7 +205,7 @@ export default {
     computedOrganizations() {
       const { subjectOrganizations, currentUser } = this;
       const organizationSubjects = subjectOrganizations
-        .filter(item => item.subjectid === currentUser.uuid);
+        .filter(item => item.subjectid === currentUser.uuid && !item.isdeleted);
       return organizationSubjects;
     },
     tableRows() {
@@ -220,7 +220,7 @@ export default {
       };
       const getUsers = (groupId) => {
         const members = this.memberships.filter(item =>
-          item.subjectgroupid === groupId);
+          item.subjectgroupid === groupId && !item.isdeleted);
         const groupUsers = users.filter(el =>
           members.some(f =>
             f.subjectid === el.uuid,

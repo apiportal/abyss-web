@@ -34,15 +34,9 @@ export default {
     computedOrganizations() {
       const { subjectOrganizations, currentUser } = this;
       const organizationSubjects = subjectOrganizations
-        .filter(item => item.subjectid === currentUser.uuid);
+        .filter(item => item.subjectid === currentUser.uuid && !item.isdeleted);
       return organizationSubjects;
     },
-  },
-  created() {
-    // this.$store.commit('currentPage/setRootPath', 'administer-users');
-    // this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
-    // this.$store.dispatch('users/getUsers', {});
-    // this.$store.dispatch('groups/getGroups', {});
   },
 };
 </script>

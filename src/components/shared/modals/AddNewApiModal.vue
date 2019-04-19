@@ -29,9 +29,9 @@
             <b-form-radio v-model="startWith" value="upload" :disabled="true">Upload File</b-form-radio>
           </div>
           <div class="start-with-option-content" v-if="startWith === 'upload'">
-            <Dropzone
+            <!-- <Dropzone
               :options="dropzoneOptions"
-            />
+            /> -->
           </div>
         </div>
         <div class="start-with-option">
@@ -58,13 +58,13 @@
 import { mapState, mapActions } from 'vuex';
 import moment from 'moment-timezone';
 import Modal from '@/components/shared/modals/Modal';
-import Dropzone from '@/components/shared/Dropzone';
+// import Dropzone from '@/components/shared/Dropzone';
 import Pet3 from '@/assets/pet3.json';
 
 export default {
   components: {
     Modal,
-    Dropzone,
+    // Dropzone,
   },
   props: {
     hideHeader: {

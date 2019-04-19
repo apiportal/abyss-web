@@ -64,12 +64,22 @@
               sortByKeyType="number"
             />
           </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="7"
+        :cols="8"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -94,6 +104,9 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.numberofproxies }}
           </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
+          </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
@@ -112,7 +125,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
-          <td colspan="7">
+          <td colspan="8">
             <div class="collapsible-content">
               <Api
                 :item="item"
@@ -196,9 +209,9 @@ export default {
   data() {
     return {
       collapsedRows: [],
-      sortByKey: 'openapidocument.info.title',
+      sortByKey: 'updated',
       sortByKeyType: 'string',
-      sortDirection: 'desc',
+      sortDirection: 'asc',
     };
   },
   methods: {

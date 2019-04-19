@@ -78,6 +78,16 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
+          <th v-if="currentPage.firstChildPath === 'shared-with-me'">
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
               text="Owner"
               sortByKey="owner.name"
               sortByKeyType="string"
@@ -88,7 +98,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="9"
+        :cols="10"
       />
       <TbodyCollapsible
         v-for="(proxyItem, proxyIndex) in paginatedRows" v-bind:key="proxyIndex"
@@ -111,13 +121,16 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
             {{ proxyItem.contractscount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
             {{ proxyItem.licensescount }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
           </td>
           <td class="actions">
@@ -140,7 +153,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="9">
+          <td colspan="10">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -272,9 +285,9 @@ export default {
     return {
       collapsedRows: [],
       proxyRows: [],
-      sortByKey: 'openapidocument.info.title',
+      sortByKey: 'updated',
       sortByKeyType: 'string',
-      sortDirection: 'desc',
+      sortDirection: 'asc',
     };
   },
   mounted() {

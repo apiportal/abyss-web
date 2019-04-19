@@ -101,18 +101,14 @@ export default {
         return organization ? organization.name : organizationId;
       };
       const getSubOrganizations = (organizationId) => {
-      // const getSubOrganizations = (obj) => {
         const subOrganizations = organizations
-          // .filter(item => item.organizationid === obj.uuid
           .filter(item => item.organizationid === organizationId
             && item.organizationid !== item.uuid);
-        // return subOrganizations.map(item => item.uuid);
         return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
         const organizationSubjects = subjectOrganizations
           .filter(item => item.organizationrefid === organizationId && !item.isdeleted);
-        // return organizationSubjects.map(item => item.subjectid);
         return organizationSubjects;
       };
       const getOwner = (organizationId) => {
@@ -131,7 +127,6 @@ export default {
         array: organizations.map(item => ({
           ...item,
           organizationname: getOrganizationName(item.organizationid),
-          // suborganizations: getSubOrganizations(item),
           suborganizations: getSubOrganizations(item.uuid),
           suborganizationscount: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid),
@@ -139,15 +134,13 @@ export default {
           organizationownerid: getOwner(item.uuid).uuid,
           isorganizationowner: Boolean(getOwner(item.uuid)),
         }))
-        // .filter((item) => {
-        //   const { currentUser } = this;
-        //   const { organizationid } = item;
-        //   return (organizationid === currentUser.organizationid);
-        // })
         .filter((item) => {
           const { currentUser } = this;
-          return item.organizationusers.some(f =>
-            f.subjectid === currentUser.uuid,
+          // return item.organizationusers.some(f =>
+          //   f.subjectid === currentUser.uuid,
+          // );
+          return subjectOrganizations.some(f =>
+            f.organizationrefid === item.uuid && f.subjectid === currentUser.uuid,
           );
         })
         .filter((item) => {

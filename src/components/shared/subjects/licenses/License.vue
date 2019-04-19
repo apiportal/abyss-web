@@ -257,6 +257,7 @@ export default {
   mounted() {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     // if (this.childComponent === 'contracts') {
     this.getLicenseContracts();
     // } else if (this.childComponent === 'proxies') {

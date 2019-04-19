@@ -199,7 +199,7 @@
   <!-- Redirect -->
   <Alert
     v-if="redirect"
-    title="Success!"
+    title="Account successfully created!"
     :text="this.res.usermessage"
     :footer="this.res.recommendation"
     variant="primary"

@@ -88,7 +88,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="8"
+        :cols="9"
       />
       <TbodyCollapsible
         v-for="(proxyItem, proxyIndex) in paginatedRows" v-bind:key="proxyIndex"

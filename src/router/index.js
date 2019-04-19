@@ -21,6 +21,7 @@ import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
 import EditMyApis from '@/components/routes/myApis/EditMyApis';
 import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
+import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -274,6 +275,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'edit-api-licenses/:apiId',
+                  component: EditMyApiLicenses,
                 },
                 {
                   path: 'add-new-api',

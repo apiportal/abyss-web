@@ -184,12 +184,16 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      subjectTypes: state => state.subjectTypes.items,
     }),
   },
   data() {
     return {
       collapsedRows: [],
     };
+  },
+  created() {
+    this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   methods: {
     handleCollapseTableRows(itemId) {

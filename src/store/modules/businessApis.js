@@ -32,6 +32,12 @@ const actions = {
       return response;
     });
   },
+  postBusinessApis: ({ commit }, businessApi) => {
+    return api.postBusinessApi(businessApi).then((response) => {
+      // commit('addNewBusinessApis', response.data);
+      return response;
+    });
+  },
 };
 
 const mutations = {

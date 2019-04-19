@@ -95,8 +95,8 @@
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
         :level="1"
       >
-        <tr id="IdTableRow" slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`">
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+        <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">

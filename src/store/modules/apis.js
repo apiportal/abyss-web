@@ -32,6 +32,13 @@ const actions = {
       return response;
     });
   },
+  postApis: ({ commit }, apiToPost) => {
+    return api.postApis(apiToPost).then((response) => {
+      const apis = response.data.map((item) => item.response);
+      commit('addNewApis', apis);
+      return response;
+    });
+  },
 };
 
 const mutations = {
@@ -46,6 +53,12 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  addNewApis: (state, apis) => {
+    state.items = [
+      ...state.items,
+      ...apis,
+    ];
   },
 };
 

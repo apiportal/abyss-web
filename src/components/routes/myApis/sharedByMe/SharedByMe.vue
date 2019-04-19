@@ -25,7 +25,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            :to="`/app/identity-managers/${page}/add-new`"
+            :to="`/app/my-apis/shared-by-me/${page}/add-new-api`"
             v-b-tooltip.hover 
             title="Add"
             variant="primary"

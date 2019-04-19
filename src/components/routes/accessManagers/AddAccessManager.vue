@@ -6,6 +6,7 @@
         isOrganizationsLoaded
       "
       role="add"
+      iconTitle="plus"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :accessManager="accessManager"

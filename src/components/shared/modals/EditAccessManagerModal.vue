@@ -9,11 +9,11 @@
     :size="size"
     :onClose="onClose"
     data-qa="modalEditAccessManager"
-
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
-        {{ role === 'edit' ? 'Edit Access Manager' : 'Add New Access Manager' }}
+        <Icon :icon=iconTitle class="name" />
+        {{ role === 'edit' ? this.accessManagerEditable.accessmanagername : 'New Access Manager' }}
       </h5>
     </template>
     <template>
@@ -229,6 +229,10 @@ export default {
       required: false,
       default() { return 'edit'; },
     },
+    iconTitle: {
+      type: String,
+      required: false,
+    },
   },
   computed: {
     ...mapState({
@@ -368,5 +372,9 @@ export default {
     border-width: 11px;
     margin-left: -11px;
   }
+}
+
+.name {
+  color: #3b68af;
 }
 </style>

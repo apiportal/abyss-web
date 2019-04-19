@@ -9,6 +9,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditUserOrganizations"
   >
     <template slot="header">
       <h5 class="modal-title">

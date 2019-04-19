@@ -186,6 +186,12 @@ export default {
   getSubjectMemberships(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/subject/${uuid}`);
   },
+  getAllRoleMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships/user-role/');
+  },
+  getAllGroupRoleMemberships() {
+    return axios.get('/abyss/oapi/subject-memberships/group-role/');
+  },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
   },
@@ -284,6 +290,9 @@ export default {
     const { uuid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/${uuid}`, rest);
   },
+  postApis(api) {
+    return axios.post('/abyss/oapi/apis/', api);
+  },
   getApi(uuid) {
     return axios.get(`/abyss/oapi/apis/${uuid}`);
   },
@@ -294,11 +303,15 @@ export default {
     const { uuid, businessapiid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
   },
+  postBusinessApi(api) {
+    return axios.post('/abyss/oapi/apis/businesses/', api);
+  },
   getProxyApis() {
     return axios.get('/abyss/oapi/apis/proxies');
   },
   getApiSubscriptions(uuid) {
-    return axios.get(`/abyss/oapi/subject-permissions/my-apis-subscriptions/subject/${uuid}`);
+    // return axios.get(`/abyss/oapi/subject-permissions/my-apis-subscriptions/subject/${uuid}`);
+    return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);
   },
   getApisSharedWithUser(uuid) {
     return axios.get(`/abyss/oapi/apis/sharedwith/subject/${uuid}`);
@@ -363,6 +376,9 @@ export default {
     return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
   }, */
   // SubjectApps NEW
+  getSubjectAppsComposite(uuid) {
+    return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
+  },
   getSubjectApps() {
     return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
@@ -436,6 +452,24 @@ export default {
   getLicenseApis(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
   },
+  // roles
+  getRoles() {
+    return axios.get('/abyss/oapi/subjects/roles/');
+  },
+  putRoles(role) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = role;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  },
+  postRoles(role) {
+    return axios.post('/abyss/oapi/subjects/roles/', role);
+  },
+  deleteRoles(uuid) {
+    return axios.delete(`/abyss/oapi/subjects/${uuid}`);
+  },
+  // invite users
   postInviteUser(referral) {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },
@@ -454,5 +488,14 @@ export default {
   },
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
+  },
+  getPermissionsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
+  },
+  getUsersOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
+  getGroupsOfRole(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
   },
 };

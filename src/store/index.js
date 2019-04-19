@@ -35,8 +35,11 @@ import subjectOrganizations from '@/store/modules/subjectOrganizations';
 import subjectResources from '@/store/modules/subjectResources';
 import subjectPermissions from '@/store/modules/subjectPermissions';
 import subjectPolicies from '@/store/modules/subjectPolicies';
-import apiLicenses from '@/store/modules/apiLicenses';
+import roles from '@/store/modules/roles';
+import roleMemberships from '@/store/modules/roleMemberships';
+import groupRoleMemberships from '@/store/modules/groupRoleMemberships';
 import userContracts from '@/store/modules/userContracts';
+import apiLicenses from '@/store/modules/apiLicenses';
 
 Vue.use(Vuex);
 
@@ -77,8 +80,11 @@ export default new Vuex.Store({
     subjectResources,
     subjectPermissions,
     subjectPolicies,
-    apiLicenses,
+    roles,
+    roleMemberships,
+    groupRoleMemberships,
     userContracts,
+    apiLicenses,
   },
   debug: true,
 });

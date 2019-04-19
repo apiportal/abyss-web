@@ -76,7 +76,7 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
-          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRow-${index}`">
+          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">

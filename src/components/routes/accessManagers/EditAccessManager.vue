@@ -7,6 +7,7 @@
         isOrganizationsLoaded
       "
       role="edit"
+      iconTitle="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :accessManager="accessManagers.find(item => item.uuid === accessManagerId)"

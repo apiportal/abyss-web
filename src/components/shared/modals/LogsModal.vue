@@ -13,11 +13,11 @@
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
+        <Icon icon="list-alt" />
         {{ title }}
       </h5>
     </template>
     <template>
-      {{store.state.currentPage.rootPath}}
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -79,15 +79,6 @@
           @change="onPageChange"
         >
         </b-pagination>
-      </div>
-      <div class="float-right">
-        <b-button
-          variant="secondary"
-          @click="onClose"
-          data-qa="btnClose"
-        >
-          Close
-        </b-button>
       </div>
     </template>
   </Modal>

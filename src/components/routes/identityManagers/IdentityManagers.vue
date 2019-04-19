@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -119,8 +119,8 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+              <Icon
+                :icon="item.isactive ? 'check-circle' : 'times-circle'"
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
@@ -197,10 +197,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"

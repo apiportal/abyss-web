@@ -31,7 +31,9 @@ const actions = {
 
 const mutations = {
   setApisSharedByUser: (state, apisSharedByUser) => {
+    // Remove after api is fixed
     state.items = Helpers.getUnique(apisSharedByUser, 'uuid');
+    // state.items = apisSharedByUser;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

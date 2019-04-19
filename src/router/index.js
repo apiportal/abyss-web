@@ -17,11 +17,10 @@ import SharedByMe from '@/components/routes/myApis/sharedByMe/SharedByMe';
 import SharedWithMe from '@/components/routes/myApis/sharedWithMe/SharedWithMe';
 import MyProxyApis from '@/components/routes/myApis/myProxyApis/MyProxyApis';
 import MySubscriptions from '@/components/routes/myApis/mySubscriptions/MySubscriptions';
-// import Api from '@/components/routes/myApis/api/Api';
 import MyApisLogs from '@/components/routes/myApis/MyApisLogs';
 import EditMyApis from '@/components/routes/myApis/EditMyApis';
+import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
-import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -47,6 +46,7 @@ import EditAdministerUser from '@/components/routes/administerUsers/EditAdminist
 import EditAdministerUserGroups from '@/components/routes/administerUsers/EditAdministerUserGroups';
 import EditAdministerUserOrganizations from '@/components/routes/administerUsers/EditAdministerUserOrganizations';
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
+import EditAdministerUserRoles from '@/components/routes/administerUsers/EditAdministerUserRoles';
 // Administer Groups Routes Components
 import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
 import AdministerGroupsLogs from '@/components/routes/administerGroups/AdministerGroupsLogs';
@@ -64,6 +64,15 @@ import AccessManagersLogs from '@/components/routes/accessManagers/AccessManager
 import AddAccessManager from '@/components/routes/accessManagers/AddAccessManager';
 import EditAccessManager from '@/components/routes/accessManagers/EditAccessManager';
 import DeleteAccessManager from '@/components/routes/accessManagers/DeleteAccessManager';
+// Roles Routes Components
+import Roles from '@/components/routes/accessManagers/roles/Roles';
+import RolesLogs from '@/components/routes/accessManagers/roles/RolesLogs';
+import AddRole from '@/components/routes/accessManagers/roles/AddRole';
+import EditRole from '@/components/routes/accessManagers/roles/EditRole';
+import DeleteRole from '@/components/routes/accessManagers/roles/DeleteRole';
+import EditAccessManagersRolePermissions from '@/components/routes/accessManagers/roles/EditAccessManagersRolePermissions';
+import EditAccessManagersRoleUsers from '@/components/routes/accessManagers/roles/EditAccessManagersRoleUsers';
+import EditAccessManagersRoleGroups from '@/components/routes/accessManagers/roles/EditAccessManagersRoleGroups';
 // Access Manager Types Routes Components
 import AccessManagerTypes from '@/components/routes/accessManagerTypes/AccessManagerTypes';
 import AccessManagerTypesLogs from '@/components/routes/accessManagerTypes/AccessManagerTypesLogs';
@@ -200,6 +209,10 @@ export default new Router({
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
+                },
               ],
             },
             {
@@ -218,6 +231,10 @@ export default new Router({
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
                 },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
+                },
               ],
             },
             {
@@ -235,6 +252,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },
@@ -255,8 +276,8 @@ export default new Router({
                   component: EditMyApisLicense,
                 },
                 {
-                  path: 'edit-api-licenses/:apiId',
-                  component: EditMyApiLicenses,
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },
@@ -275,6 +296,10 @@ export default new Router({
                 {
                   path: 'edit-license/:licenseId',
                   component: EditMyApisLicense,
+                },
+                {
+                  path: 'add-new-api',
+                  component: AddMyApis,
                 },
               ],
             },
@@ -356,6 +381,10 @@ export default new Router({
                   path: 'delete-user/:id',
                   component: DeleteAdministerUser,
                 },
+                {
+                  path: 'edit-user-roles/:id',
+                  component: EditAdministerUserRoles,
+                },
               ],
             },
           ],
@@ -422,6 +451,40 @@ export default new Router({
             {
               path: 'delete/:id',
               component: DeleteAccessManager,
+            },
+          ],
+        },
+        {
+          path: 'roles/:page',
+          component: Roles,
+          children: [
+            {
+              path: 'logs/:id/:logType/:logPage',
+              component: RolesLogs,
+            },
+            {
+              path: 'add-new',
+              component: AddRole,
+            },
+            {
+              path: 'edit/:id',
+              component: EditRole,
+            },
+            {
+              path: 'delete/:id',
+              component: DeleteRole,
+            },
+            {
+              path: 'edit-role-permissions/:id',
+              component: EditAccessManagersRolePermissions,
+            },
+            {
+              path: 'edit-role-users/:id',
+              component: EditAccessManagersRoleUsers,
+            },
+            {
+              path: 'edit-role-groups/:id',
+              component: EditAccessManagersRoleGroups,
             },
           ],
         },

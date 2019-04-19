@@ -183,6 +183,7 @@ export default {
       const { apiStates, apiStateIndex, putApis } = this;
       const currentApi = apiStates[apiStateIndex];
       const { openapidocument } = currentApi;
+      const { businessapiid } = openapidocument;
       // VALIDATE API
       api.validateApi({ spec: openapidocument })
       .then(() => {
@@ -191,6 +192,7 @@ export default {
           ...currentApi,
           apioriginid: currentApi.uuid,
           apiparentid: currentApi.uuid,
+          businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
         })
         .then(() => {
           this.showSavedAlert = true;

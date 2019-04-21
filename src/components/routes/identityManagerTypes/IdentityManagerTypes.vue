@@ -254,7 +254,7 @@ export default {
     },
   },
   created() {
-    this.$store.commit('currentPage/setRootPath', 'identity-managers');
+    this.$store.commit('currentPage/setRootPath', 'identity-manager-types');
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
     this.$store.dispatch('organizations/getOrganizations', {});

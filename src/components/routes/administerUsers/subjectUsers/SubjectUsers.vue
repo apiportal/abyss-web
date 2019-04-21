@@ -134,14 +134,14 @@ export default {
       });
     },
   },
-  // created() {
-  //   this.$store.commit('currentPage/setRootPath', 'administer-users');
-  //   this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
-  //   this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
-  //   this.$store.dispatch('organizations/getOrganizations', {});
-  //   this.$store.dispatch('users/getUsers', {});
-  //   this.$store.dispatch('groups/getGroups', {});
-  // },
+  created() {
+    this.$store.commit('currentPage/setRootPath', 'administer-users');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
+  },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),

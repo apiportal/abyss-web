@@ -59,20 +59,10 @@ export default {
       required: false,
       default() { return {}; },
     },
-    page: {
-      Type: Number,
+    routePath: {
+      type: String,
       required: false,
-      default() { return 1; },
-    },
-    users: {
-      Type: Array,
-      required: false,
-      default() { return []; },
-    },
-    memberships: {
-      Type: Array,
-      required: false,
-      default() { return []; },
+      default() { return ''; },
     },
   },
   computed: {},

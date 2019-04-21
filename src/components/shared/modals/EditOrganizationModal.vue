@@ -67,7 +67,7 @@
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
-                ...organizations.map(organization => ({
+                ...parentOrganizations.map(organization => ({
                   value: organization.uuid,
                   text: organization.name,
                   disabled: organization.isdeleted,
@@ -189,6 +189,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      subjectOrganizations: state => state.subjectOrganizations.items,
     }),
     nameState() {
       const { name } = this.organizationEditable;
@@ -210,6 +211,14 @@ export default {
         return true;
       }
       return false;
+    },
+    parentOrganizations() {
+      const parentOrganizations = this.organizations.filter(item =>
+        this.subjectOrganizations.some(f =>
+          f.organizationrefid === item.uuid && f.subjectid === this.currentUser.uuid,
+        ),
+      );
+      return parentOrganizations;
     },
   },
   data() {

@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 
@@ -58,16 +59,16 @@ export default {
       required: false,
       default() { return {}; },
     },
-    subjectTypes: {
-      type: Array,
+    routePath: {
+      type: String,
       required: false,
-      default() { return []; },
+      default() { return ''; },
     },
-    page: {
-      type: Number,
-      required: false,
-      default() { return 1; },
-    },
+  },
+  computed: {
+    ...mapState({
+      subjectTypes: state => state.subjectTypes.items,
+    }),
   },
   data() {
     return {

@@ -38,6 +38,7 @@ import subjectPolicies from '@/store/modules/subjectPolicies';
 import roles from '@/store/modules/roles';
 import roleMemberships from '@/store/modules/roleMemberships';
 import groupRoleMemberships from '@/store/modules/groupRoleMemberships';
+import userContracts from '@/store/modules/userContracts';
 
 Vue.use(Vuex);
 
@@ -81,6 +82,7 @@ export default new Vuex.Store({
     roles,
     roleMemberships,
     groupRoleMemberships,
+    userContracts,
   },
   debug: true,
 });

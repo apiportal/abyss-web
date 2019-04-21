@@ -6,8 +6,8 @@
         isOrganizationsLoaded
       "
       role="add"
-      :onClose="handleEditIdentityManagerModalClose"
-      :onUpdate="handleEditIdentityManagerModalUpdate"
+      :onClose="handleModalClose"
+      :onUpdate="handleModalUpdate"
       :subjectDirectory="subjectDirectory"
       :subjectDirectoryTypes="subjectDirectoryTypes"
       :organizations="organizations"
@@ -24,10 +24,10 @@ export default {
     EditIdentityManagerModal,
   },
   methods: {
-    handleEditIdentityManagerModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
-    handleEditIdentityManagerModalUpdate() {
+    handleModalUpdate() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
   },

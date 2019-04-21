@@ -99,7 +99,7 @@
           </tr>
         </thead>
         <TBodyLoading
-          v-if="isLoading && totalRows.length === 0"
+          v-if="isLoading && tableRows.length === 0"
           :cols="5"
         />
         <TbodyCollapsible
@@ -148,12 +148,6 @@
           <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
-                <!-- <AdministerGroup
-                  :group="item"
-                  :users="users"
-                  :memberships="memberships"
-                  :page="page"
-                /> -->
                 <AdministerGroup
                   :group="item"
                   :page="page"
@@ -165,10 +159,10 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="page-footer" v-if="totalRows.length > itemsPerPage">
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
       <b-pagination
         size="md"
-        :total-rows="totalRows.length"
+        :total-rows="tableRows.length"
         v-model="page"
         :per-page="itemsPerPage"
         align="center"
@@ -217,7 +211,7 @@ export default {
         .filter(item => item.subjectid === currentUser.uuid);
       return organizationSubjects;
     },
-    totalRows() {
+    tableRows() {
       const { subjectDirectories, organizations, groups, users } = this;
       const getDirectoryName = (subjectdirectoryid) => {
         const directory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
@@ -229,15 +223,13 @@ export default {
       };
       const getUsers = (groupId) => {
         const members = this.memberships.filter(item =>
-          // !item.isdeleted &&
+          !item.isdeleted &&
           item.subjectgroupid === groupId);
-        // console.log('members.length: ', members.length);
         const groupUsers = users.filter(el =>
           members.some(f =>
             f.subjectid === el.uuid,
           ),
         );
-        // console.log('users.length: ', groupUsers.length);
         return groupUsers;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
@@ -280,10 +272,10 @@ export default {
       });
     },
     paginatedRows() {
-      const { totalRows, itemsPerPage, page } = this;
+      const { tableRows, itemsPerPage, page } = this;
       const { paginateArray } = Helpers;
       return paginateArray({
-        array: totalRows,
+        array: tableRows,
         itemsPerPage,
         page,
       });
@@ -297,7 +289,6 @@ export default {
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
-    this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
   },
   data() {
     return {

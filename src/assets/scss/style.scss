@@ -114,9 +114,8 @@
   }
   .app-sidenav-flex {
     flex: 0 0 250px;
-    overflow-y: auto;
+    display: flex;
     background-color: $bg-sidebar;
-    // background-image: linear-gradient(150deg, #2d1582, #19a0ff);
     background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $brand-color);
     background-repeat: repeat-x;
     &:hover::-webkit-scrollbar-thumb {
@@ -134,18 +133,11 @@
   .app-header {
     .logo {
       height: 46px;
-      // max-width: 100%;
     }
     .navbar {
       background-color: #fff;
-      // border-bottom: 1px solid $border-color-light;
-      // box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-      .nav-link {
-        // padding: 1.25rem 1.5rem;
-      }
     }
     .navbar-brand {
-      // background: #400E40;
       background: $bg-sidebar;
       width: 250px;
       padding: .75rem 1.5rem;

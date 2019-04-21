@@ -10,7 +10,7 @@
     :onClose="onClose"
     data-qa="modalEditPermissions"
   >
-      <template slot="header">
+    <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Permission' : 'Add New Permission' }}
       </h5>
@@ -486,9 +486,6 @@ export default {
     return {
       permissionEditable: {
         ...permissionEditable,
-        // effectivestartdate: new Date(permissionEditable.effectivestartdate),
-        // effectiveenddate: permissionEditable.effectiveenddate === null ?
-        //   '' : new Date(permissionEditable.effectiveenddate),
       },
       isConfigureAdministerPermissionVisible: false,
       resourceTypeIdEditable: this.resourceTypeId,

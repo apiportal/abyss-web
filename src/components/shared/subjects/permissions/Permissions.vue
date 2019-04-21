@@ -1,8 +1,8 @@
 <template>
-  <div class="page-content">
+  <div>
     <table class="table abyss-table abyss-table-cards">
       <thead>
-        <tr>
+        <tr> 
           <th class="status">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -68,7 +68,7 @@
         </tr>
       </thead>
     <TBodyLoading
-      v-if="isLoading && tableRows.length === 0"
+      v-if="isLoading && rows.length === 0"
       :cols="7"
     />
       <TbodyCollapsible
@@ -104,12 +104,12 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-permissions/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item data-qa="btnDelete" :to="`/app/administer-permissions/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`/app/administer-permissions/${page}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -121,8 +121,7 @@
             <div class="collapsible-content">
               <Permission
                 :permission="item"
-                :subjectTypes="subjectTypes"
-                :page="page"
+                :routePath="routePath"
               />
             </div>
           </td>
@@ -156,6 +155,11 @@ export default {
       required: false,
       default() { return []; },
     },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
+    },
   },
   computed: {
     ...mapState({
@@ -165,6 +169,9 @@ export default {
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'permission',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
@@ -175,6 +182,9 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    handleSortByClick() {
+      //
     },
   },
 };

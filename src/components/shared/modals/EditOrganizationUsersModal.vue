@@ -25,9 +25,6 @@
             <label>
               Owner:
               <span class="text-danger">*</span>
-              <!-- {{computedOrganizationOwner}}
-              <hr>
-              {{organizationOwner}} -->
             </label>
             <b-form-select
               id="organizationOwnerInput"
@@ -50,21 +47,9 @@
               :autocompleteOptions="organizationUsersEditable"
               :onDeleteChip="handleDeleteOrganizationUser"
               :onAddChip="handleAddOrganizationUser"
+              :showAddChip="false"
               label="Organization Users"
             />
-            <!-- <Chips
-              :chips="computedOrganizationUsers"
-              :autocompleteOptions="this.organizationUsersEditable.map((item) => ({
-                text: item.displayname,
-                value: item.uuid,
-                isdeleted: item.isdeleted,
-                isAttached: item.isAttached,
-                color: chipColor(item),
-              }))"
-              :onDeleteChip="handleDeleteOrganizationUser"
-              :onAddChip="handleAddOrganizationUser"
-              label="Organization Users"
-            /> -->
           </div>
         </div>
         <footer class="modal-footer">
@@ -267,7 +252,6 @@ export default {
       this.usersToAdd = organizationUsersEditable
       .filter(user => !user.organizationuser && user.isAttached)
       .map(user => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: organization.uuid,
         crudsubjectid: this.currentUser.props.uuid,
         subjectid: user.uuid,
@@ -276,20 +260,18 @@ export default {
         isactive: true,
       }));
       if (this.usersToDelete.length) {
-        // console.log('usersToDelete', this.usersToDelete);
         for (let i = 0; i < this.usersToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.usersToDelete[i]).then((response) => {
-            if (response && response.data) {
+            if (response) {
               onUpdate();
             }
           });
         }
       }
       if (this.usersToAdd.length) {
-        // console.log('usersToAdd', this.usersToAdd);
         for (let i = 0; i < this.usersToAdd.length; i += 1) {
           postSubjectOrganizations([this.usersToAdd[i]]).then((response) => {
-            if (response && response.data) {
+            if (response) {
               onUpdate();
             }
           });

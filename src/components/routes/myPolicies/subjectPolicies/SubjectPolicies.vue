@@ -90,7 +90,6 @@ export default {
         array: policies
         .filter((item) => {
           const { filterKey } = this;
-          // if (item.subjectid === currentUser.uuid && !item.isdeleted) {
           if (filterKey === '') {
             return true;
           }
@@ -109,14 +108,11 @@ export default {
               item.policyinstance.info.subType.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
           );
-          // }
-          // return '';
-        },
-          )
-          .map(item => ({
-            ...item,
-            typename: getTypeName(item.typeid),
-          })),
+        })
+        .map(item => ({
+          ...item,
+          typename: getTypeName(item.typeid),
+        })),
         sortByKey,
         sortByKeyType,
         sortDirection,

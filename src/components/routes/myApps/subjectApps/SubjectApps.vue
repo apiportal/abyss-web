@@ -82,7 +82,6 @@ export default {
     }),
     userApps() {
       const subjectAppsIds = this.subjectApps.map(item => item.appid);
-      // return this.apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
       const getSubjectApp = (appId) => {
         const subjectapp = this.subjectApps.find(item => item.appid === appId);
         return subjectapp;
@@ -129,7 +128,6 @@ export default {
         array: userApps
           .filter((item) => {
             const { filterKey } = this;
-            // if (!item.isdeleted) {
             if (filterKey === '') {
               return true;
             }
@@ -140,10 +138,7 @@ export default {
                 item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
               )
             );
-            // }
-            // return '';
-          },
-            )
+          })
           .map(item => ({
             ...item,
             contractsCount: getContractsCount(item),

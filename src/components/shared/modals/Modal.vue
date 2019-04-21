@@ -1,6 +1,7 @@
 <template>
   <b-modal
     :size="size"
+    :scrollable="scrollable"
     :hide-header="hideHeader"
     :hide-footer="hideFooter"
     :no-close-on-backdrop="noCloseOnBackdrop"
@@ -76,6 +77,11 @@ export default {
     hideHeaderClose: {
       type: Boolean,
       required: true,
+    },
+    scrollable: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
     },
     size: {
       type: String,

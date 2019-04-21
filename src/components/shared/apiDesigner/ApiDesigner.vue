@@ -27,6 +27,17 @@
 
         <b-button-group size="sm" class="mr-1">
           <b-button
+            @click="setMode('json')" 
+            :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
+          >JSON</b-button>
+          <b-button
+            @click="setMode('yaml')" 
+            :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
+          >YAML</b-button>
+        </b-button-group>
+
+        <b-button-group size="sm" class="mr-1">
+          <b-button
             @click="handleUndo"
             :disabled="apiStateIndex === 0"
           >
@@ -55,8 +66,9 @@
         :class="`api-designer-editor-container ${ (view === 'editor' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <Editor
-          :value="apiStates[apiStateIndex].openapidocument"
+          :value="editorValue"
           :onChange="handleEditorChange"
+          :mode="mode"
           :debounce="1000"
         />
       </div>
@@ -93,6 +105,7 @@
 </template>
 
 <script>
+import yaml from 'js-yaml';
 import { mapActions } from 'vuex';
 import Helpers from '@/helpers';
 import AbyssTool from '@/components/shared/apiDesigner/abyssTool/AbyssTool';
@@ -142,13 +155,29 @@ export default {
       apiStateIndex: 0,
       showNotValidAlert: false,
       showSavedAlert: false,
+      mode: 'json',
     };
+  },
+  computed: {
+    editorValue() {
+      const { apiStates, apiStateIndex, mode } = this;
+      const { openapidocument } = apiStates[apiStateIndex];
+      if (mode === 'json') {
+        return JSON.stringify(openapidocument, null, '\t');
+      } else if (mode === 'yaml') {
+        return yaml.dump(openapidocument);
+      }
+      return openapidocument;
+    },
   },
   methods: {
     ...mapActions('businessApis', ['putBusinessApis']),
     ...mapActions('apis', ['putApis']),
     setView(view) {
       this.view = view;
+    },
+    setMode(mode) {
+      this.mode = mode;
     },
     handleChange(propAddress, newPropValue, customAction) {
       const { apiStates, apiStateIndex } = this;
@@ -159,11 +188,11 @@ export default {
       this.apiStateIndex += 1;
     },
     handleEditorChange(newValue) {
-      const { apiStates, apiStateIndex } = this;
+      const { apiStates, apiStateIndex, mode } = this;
       const newApiState = {
         ...apiStates[apiStateIndex],
         openapidocument: {
-          ...JSON.parse(newValue),
+          ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
         },
       };
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];

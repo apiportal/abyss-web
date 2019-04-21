@@ -5,15 +5,17 @@
 <script>
 import ace from 'brace';
 import json from 'brace/mode/json'; // eslint-disable-line no-unused-vars
+import yaml from 'brace/mode/yaml'; // eslint-disable-line no-unused-vars
 import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
 
 export default {
   props: {
     value: {
-      type: Object,
-      required: true,
+      type: String,
+      required: false,
+      default() { return ''; },
     },
-    lang: {
+    mode: {
       type: String,
       required: false,
       default() { return 'json'; },
@@ -37,9 +39,12 @@ export default {
       const now = (new Date()).getTime();
       const { updated } = this;
       if (now - updated > 100) { // prevent ping-pong changes
-        this.editor.setValue(JSON.stringify(newValue, null, '\t'));
+        this.editor.setValue(newValue);
         this.editor.clearSelection();
       }
+    },
+    mode(mode) {
+      this.editor.getSession().setMode(`ace/mode/${mode}`);
     },
   },
   data() {
@@ -52,14 +57,14 @@ export default {
     };
   },
   mounted() {
-    const { $el, lang, value, theme } = this;
+    const { $el, mode, value, theme } = this;
     this.editor = ace.edit($el);
     this.editor.$blockScrolling = Infinity;
     // this.editor.setOption('enableEmmet', true);
-    this.editor.getSession().setMode(`ace/mode/${lang}`);
+    this.editor.getSession().setMode(`ace/mode/${mode}`);
     this.editor.setTheme(`ace/theme/${theme}`);
     this.editor.getSession().setTabSize(2);
-    this.editor.setValue(JSON.stringify(value, null, '\t'));
+    this.editor.setValue(value);
     this.editor.clearSelection();
     // editor is ready
     this.isMounted = true;
@@ -91,6 +96,6 @@ export default {
 <style lang="scss">
 .editor {
   flex: 1 0 0;
-  word-spacing: 0 !important;
+  word-spacing: 0 !important; // never ever remove this line
 }
 </style>

@@ -128,7 +128,6 @@ export default {
         array: userApps
           .filter((item) => {
             const { filterKey } = this;
-            // if (!item.isdeleted) {
             if (filterKey === '') {
               return true;
             }
@@ -139,10 +138,7 @@ export default {
                 item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
               )
             );
-            // }
-            // return '';
-          },
-            )
+          })
           .map(item => ({
             ...item,
             organizationname: getOrganizationName(item.organizationid),

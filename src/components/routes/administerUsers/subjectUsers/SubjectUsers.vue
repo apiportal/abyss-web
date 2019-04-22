@@ -76,6 +76,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
@@ -120,6 +121,15 @@ export default {
       });
     },
   },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'users');
+    this.$store.commit('currentPage/setRootPath', 'administer-users');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
+  },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
@@ -143,9 +153,6 @@ export default {
         refresh: true,
       });
     },
-  },
-  created() {
-    this.$store.commit('currentPage/setFirstChildPath', 'users');
   },
 };
 </script>

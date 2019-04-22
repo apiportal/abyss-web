@@ -160,10 +160,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -223,7 +223,8 @@ export default {
       };
       const getUsers = (groupId) => {
         const members = this.memberships.filter(item =>
-          item.subjectgroupid === groupId && !item.isdeleted);
+          !item.isdeleted &&
+          item.subjectgroupid === groupId);
         const groupUsers = users.filter(el =>
           members.some(f =>
             f.subjectid === el.uuid,
@@ -289,8 +290,6 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
-    // eslint-disable-next-line
-    // this.$store.dispatch('subjectMemberships/getSubjectMemberships', { uuid: this.currentUser.uuid });
   },
   data() {
     return {

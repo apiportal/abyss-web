@@ -155,7 +155,7 @@ export default {
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
       const { groupsEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate,
-        currentUser, user } = this;
+      currentUser, user } = this;
       evt.preventDefault();
       this.groupsToDelete = groupsEditable
       .filter(group => group.membership && !group.isAttached)
@@ -163,7 +163,6 @@ export default {
       this.groupsToAdd = groupsEditable
       .filter(group => !group.membership && group.isAttached)
       .map(group => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: group.organizationid,
         crudsubjectid: currentUser.props.uuid,
         subjectid: user.uuid,
@@ -174,7 +173,6 @@ export default {
         isactive: true,
       }));
       if (this.groupsToDelete.length) {
-        // console.log('groupsToDelete', this.groupsToDelete);
         for (let i = 0; i < this.groupsToDelete.length; i += 1) {
           deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
             if (response && i === this.groupsToDelete.length - 1) {
@@ -184,7 +182,6 @@ export default {
         }
       }
       if (this.groupsToAdd.length) {
-        // console.log('groupsToAdd', this.groupsToAdd);
         for (let i = 0; i < this.groupsToAdd.length; i += 1) {
           postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
             if (response && i === this.groupsToAdd.length - 1) {

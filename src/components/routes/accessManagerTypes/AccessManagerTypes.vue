@@ -261,7 +261,7 @@ export default {
     },
   },
   created() {
-    this.$store.commit('currentPage/setRootPath', 'access-managers');
+    this.$store.commit('currentPage/setRootPath', 'access-manager-types');
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('organizations/getOrganizations', {});

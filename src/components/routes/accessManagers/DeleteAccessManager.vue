@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     ...mapActions('accessManagers', ['deleteAccessManagers']),
-    handleDeleteModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/access-managers/${this.page}`);
     },
     handleModalConfirm() {

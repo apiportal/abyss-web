@@ -78,16 +78,16 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete"  :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
                 <b-dropdown-header></b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`${routePath}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnLogsAll"  :to="`/app/administer-groups/${page}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+                <b-dropdown-item data-qa="btnLogsAll"  :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -97,16 +97,9 @@
           <tr slot="footer" class="footer" data-qa="tableFooter">
             <td colspan="5">
               <div class="collapsible-content">
-                <!-- <AdministerGroup
-                  :group="item"
-                  :users="users"
-                  :memberships="memberships"
-                  :page="page"
-                /> -->
                 <Group
                   :group="item"
-                  :subjectTypes="subjectTypes"
-                  :page="page"
+                  :routePath="routePath"
                 />
               </div>
             </td>
@@ -152,6 +145,11 @@ export default {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    routePath: {
+      type: String,
+      required: false,
+      default() { return ''; },
     },
   },
   computed: {

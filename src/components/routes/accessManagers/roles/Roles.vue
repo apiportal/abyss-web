@@ -218,7 +218,7 @@ export default {
       resources: state => state.resources.items,
       resourceActions: state => state.resourceActions.items,
       groups: state => state.groups.items,
-      // subjectTypes: state => state.subjectTypes.items,
+      subjectTypes: state => state.subjectTypes.items,
     }),
     tableRows() {
       const { roles, users, organizations, groups } = this;
@@ -352,7 +352,6 @@ export default {
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('groups/getGroups', {});
-    // this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {
     return {
@@ -366,14 +365,6 @@ export default {
     };
   },
   methods: {
-    // getAllRoleMemberships() {
-    //   // return api.getRoleMemberships(roleId).then((response) => {
-    //   //   if (response && response.data) {
-    //   //     return response.data;
-    //   //   }
-    //   //   return [];
-    //   // });
-    // },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -388,7 +379,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

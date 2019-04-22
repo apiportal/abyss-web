@@ -26,7 +26,11 @@ import { mapState } from 'vuex';
 export default {
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       currentUser: state => state.user,
+      subjectDirectories: state => state.subjectDirectories.items,
+      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
+      organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
@@ -37,6 +41,15 @@ export default {
         .filter(item => item.subjectid === currentUser.uuid && !item.isdeleted);
       return organizationSubjects;
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setRootPath', 'administer-users');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
   },
 };
 </script>

@@ -121,7 +121,6 @@
             <div class="collapsible-content">
               <Permission
                 :permission="item"
-                :subjectTypes="subjectTypes"
                 :routePath="routePath"
               />
             </div>
@@ -161,39 +160,19 @@ export default {
       required: false,
       default() { return ''; },
     },
-    handleSortByClick: {
-      type: Function,
-      required: false,
-    },
-    sortByKey: {
-      type: String,
-      required: false,
-      default() { return 'permission'; },
-    },
-    sortDirection: {
-      type: String,
-      required: false,
-      default() { return 'desc'; },
-    },
-    sortByKeyType: {
-      type: String,
-      required: false,
-      default() { return 'string'; },
-    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      subjectTypes: state => state.subjectTypes.items,
     }),
   },
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'permission',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
-  },
-  created() {
-    this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   methods: {
     handleCollapseTableRows(itemId) {
@@ -203,6 +182,9 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    handleSortByClick() {
+      //
     },
   },
 };

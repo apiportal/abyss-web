@@ -160,7 +160,6 @@ export default {
       this.usersToAdd = groupUsersEditable
       .filter(user => !user.membership && user.isAttached)
       .map(user => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: group.organizationid,
         crudsubjectid: this.currentUser.props.uuid,
         subjectid: user.uuid,
@@ -171,7 +170,6 @@ export default {
         isactive: true,
       }));
       if (this.usersToDelete.length) {
-        // console.log('usersToDelete', this.usersToDelete);
         for (let i = 0; i < this.usersToDelete.length; i += 1) {
           deleteSubjectMemberships(this.usersToDelete[i]).then((response) => {
             if (response && i === this.usersToDelete.length - 1) {
@@ -181,7 +179,6 @@ export default {
         }
       }
       if (this.usersToAdd.length) {
-        // console.log('usersToAdd', this.usersToAdd);
         for (let i = 0; i < this.usersToAdd.length; i += 1) {
           postSubjectMemberships([this.usersToAdd[i]]).then((response) => {
             if (response && i === this.usersToAdd.length - 1) {

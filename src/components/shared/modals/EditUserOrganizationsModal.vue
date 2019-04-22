@@ -192,7 +192,6 @@ export default {
       this.organizationsToAdd = organizationsEditable
       .filter(organization => !organization.userorganization && organization.isAttached)
       .map(organization => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: organization.organizationid,
         crudsubjectid: this.currentUser.props.uuid,
         subjectid: this.user.uuid,
@@ -201,7 +200,6 @@ export default {
         isactive: true,
       }));
       if (this.organizationsToDelete.length) {
-        // console.log('organizationsToDelete', this.organizationsToDelete);
         for (let i = 0; i < this.organizationsToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.organizationsToDelete[i]).then((response) => {
             if (response && i === this.organizationsToDelete.length - 1) {
@@ -211,7 +209,6 @@ export default {
         }
       }
       if (this.organizationsToAdd.length) {
-        // console.log('organizationsToAdd', this.organizationsToAdd);
         for (let i = 0; i < this.organizationsToAdd.length; i += 1) {
           postSubjectOrganizations([this.organizationsToAdd[i]]).then((response) => {
             if (response && i === this.organizationsToAdd.length - 1) {

@@ -73,10 +73,6 @@
 import { mapState } from 'vuex';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
-import SortBy from '@/components/shared/SortBy';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import TBodyLoading from '@/components/shared/TBodyLoading';
-import AdministerPermission from '@/components/routes/administerPermissions/AdministerPermission';
 import Permissions from '@/components/shared/subjects/permissions/Permissions';
 import Helpers from '@/helpers';
 
@@ -84,10 +80,6 @@ export default {
   components: {
     InputWithIcon,
     Icon,
-    SortBy,
-    TbodyCollapsible,
-    TBodyLoading,
-    AdministerPermission,
     Permissions,
   },
   computed: {

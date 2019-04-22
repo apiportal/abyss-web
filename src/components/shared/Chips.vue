@@ -52,7 +52,8 @@
                   </b-input-group>
                 </form>
               </div>
-              <div class="py-1">
+              <hr v-if="showAddChip" />
+              <div class="py-1">>
                 <b-button
                   v-for="(chip, index) in computedOptions" 
                   v-bind:key="index"

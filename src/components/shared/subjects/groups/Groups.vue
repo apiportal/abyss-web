@@ -48,7 +48,7 @@
           </tr>
         </thead>
         <TBodyLoading
-          v-if="isLoading && totalRows.length === 0"
+          v-if="isLoading && rows.length === 0"
           :cols="5"
         />
         <TbodyCollapsible
@@ -106,20 +106,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
-      <router-view></router-view>
     </div>
-      <!-- <div class="page-footer" v-if="totalRows.length > itemsPerPage">
-      <b-pagination
-        size="md"
-        :total-rows="totalRows.length"
-        v-model="page"
-        :per-page="itemsPerPage"
-        align="center"
-        @change="handlePageChange"
-        data-qa="footerPagination"
-      >
-      </b-pagination>
-    </div> -->
 </template>
 
 <script>
@@ -130,6 +117,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Group from '@/components/shared/subjects/groups/Group';
+import Helpers from '@/helpers';
 
 export default {
   components: {
@@ -156,13 +144,34 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
+    sortedRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
   },
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'displayname',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

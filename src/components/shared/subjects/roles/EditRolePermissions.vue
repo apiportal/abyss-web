@@ -69,7 +69,7 @@
     },
     mounted() {
       this.getPermissionsOfRole();
-      this.$store.dispatch('roles/1', {});
+      this.$store.dispatch('roles/getRoles', {});
     },
   };
 </script>

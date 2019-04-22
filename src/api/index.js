@@ -189,8 +189,20 @@ export default {
   getAllRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/user-role/');
   },
+  postRoleMemberships(subjectmemberships) {
+    return axios.post('/abyss/oapi/subject-memberships/user-role/', subjectmemberships);
+  },
+  deleteRoleMemberships() {
+    return axios.delete('/abyss/oapi/subject-memberships/user-role/');
+  },
   getAllGroupRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/group-role/');
+  },
+  postGroupRoleMemberships(subjectmemberships) {
+    return axios.post('/abyss/oapi/subject-memberships/group-role/', subjectmemberships);
+  },
+  deleteGroupRoleMemberships() {
+    return axios.delete('/abyss/oapi/subject-memberships/group-role/');
   },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
@@ -462,9 +474,6 @@ export default {
   },
   getPermissionsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
-  },
-  getUsersOfRole(uuid) {
-    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
   },
   getGroupsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);

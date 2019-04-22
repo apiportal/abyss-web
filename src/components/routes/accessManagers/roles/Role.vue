@@ -21,12 +21,13 @@
         <dd>{{ item.directoryname }}</dd>
         <dt>Locked:</dt>
         <dd>{{ item.islocked | booleanToText }}</dd>
+        <dd>{{ item.uuid }}</dd>
       </dl>
       <dl class="col">
-        <dt>Effective End Date:</dt>
-        <dd>{{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Effective Start Date:</dt>
         <dd>{{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Effective End Date:</dt>
+        <dd>{{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Created:</dt>
         <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt v-if="!item.isdeleted">Updated:</dt>
@@ -147,14 +148,17 @@ export default {
   methods: {
     listRoleUsers() {
       this.isShowRolePermissions = false;
+      this.isShowRoleGroups = false;
       this.isShowRoleUsers = !this.isShowRoleUsers;
     },
     listRolePermissions() {
       this.isShowRoleUsers = false;
+      this.isShowRoleGroups = false;
       this.isShowRolePermissions = !this.isShowRolePermissions;
     },
     listRoleGroups() {
-      this.isShowRoleGroups = false;
+      this.isShowRoleUsers = false;
+      this.isShowRolePermissions = false;
       this.isShowRoleGroups = !this.isShowRoleGroups;
     },
   },

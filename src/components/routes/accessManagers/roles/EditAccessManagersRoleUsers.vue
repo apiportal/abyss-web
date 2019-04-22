@@ -1,7 +1,7 @@
 <template>
   <div>
     <EditRoleUsers
-      :routePath="`/app/roles/1`"
+      :routePath="`/app/roles/${page}`"
     />
   </div>
 </template>

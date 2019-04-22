@@ -197,6 +197,7 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('subjectTypes/getSubjectTypes', {});
   },
   data() {
     return {

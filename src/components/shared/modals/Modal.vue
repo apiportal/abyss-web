@@ -4,6 +4,7 @@
     :scrollable="scrollable"
     :hide-header="hideHeader"
     :hide-footer="hideFooter"
+    :no-enforce-focus="true"
     :no-close-on-backdrop="noCloseOnBackdrop"
     :no-close-on-esc="noCloseOnEsc"
     :hide-header-close="hideHeaderClose"

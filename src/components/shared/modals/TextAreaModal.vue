@@ -12,7 +12,7 @@
       <h5 class="modal-title" data-qa="modalTitle">Legal Agreement</h5>
     </template>
     <template>
-      <p v-html="withBrTags" style="text-align: justify"></p>
+      <p v-html="modifiedText" style="text-align: justify"></p>
     </template>
     <template slot="footer">
       <b-button 
@@ -36,9 +36,11 @@ export default {
     Modal,
   },
   computed: {
-    withBrTags() {
-      const doc = this.item.licensedocument.legal.documentText;
-      return doc.replace(/(\\r)*\\n/g, '<br>');
+    modifiedText() {
+      const { documentText } = this.item.licensedocument.legal;
+      return documentText
+        .replace(/(\\r)*\\n/g, '<br>')
+        .replace(/(https?:\/\/[^\s]+)/g, url => `<a href="${url}">${url}</a>`);
     },
   },
   props: {

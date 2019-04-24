@@ -40,7 +40,7 @@ export default {
       const { documentText } = this.item.licensedocument.legal;
       return documentText
         .replace(/(\\r)*\\n/g, '<br>')
-        .replace(/(https?:\/\/[^\s]+)/g, url => `<a href="${url}">${url}</a>`);
+        .replace(/(https?:\/\/[^\s]+)/g, url => `<a href="${url}" target="_blank">${url}</a>`);
     },
   },
   props: {

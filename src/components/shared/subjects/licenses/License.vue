@@ -27,7 +27,7 @@
       </dl>
       <dl class="col">
         <dt>Link:</dt>
-        <dd><b-link :href="item.licensedocument.legal.link">{{ item.licensedocument.legal.link }}</b-link></dd>
+        <dd><b-link :href="item.licensedocument.legal.link" target="_blank">{{ item.licensedocument.legal.link }}</b-link></dd>
         <b-link
           @click="toggleInformModal"  
         >

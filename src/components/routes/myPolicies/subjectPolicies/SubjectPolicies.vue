@@ -38,6 +38,8 @@
       </div>
     </div>
     <div class="page-content">
+      {{ policies.length }}
+      {{ subjectPolicies.length }}
       <Policies
         :rows="paginatedRows"
         :routePath="`/app/my-policies/my-policies/${page}`"
@@ -74,20 +76,23 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.subjectPolicies.items,
+      subjectPolicies: state => state.subjectPolicies.items,
+      policies: state => state.policies.items,
       policyTypes: state => state.policyTypes.items,
       currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { policies, policyTypes, currentUser } = this;
+      const { subjectPolicies, policyTypes, currentUser, policies } = this;
       const getTypeName = (typeId) => {
         const type = policyTypes.find(policyType => policyType.uuid === typeId);
         return type ? type.name : typeId;
       };
+      const subjectPoliciesIds = subjectPolicies.map(item => item.uuid);
       return sortArrayOfObjects({
         array: policies
+        .filter(item => subjectPoliciesIds.indexOf(item.uuid) > -1)
         .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

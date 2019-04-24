@@ -89,7 +89,7 @@
           </b-form-group>
           <div class="row">
             <div class="col-12">
-              <label for="accessManagerTypeInput">AccessManager Type: <span class="text-danger">*</span></label>
+              <label for="accessManagerTypeInput">Access Manager Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
               <b-form-group 
@@ -161,6 +161,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import Helpers from '@/helpers';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -316,6 +317,14 @@ export default {
     handleAccessManagerTypeChange(newAccessManagerTypeId) {
       this.isConfigureAccessManagerVisible = true;
       this.setAccessManagerConfigurationTemplate({ accessmanagertypeid: newAccessManagerTypeId });
+      const { accessManagerTypes } = this;
+      const accessManagerType = accessManagerTypes
+        .find(item => item.uuid === newAccessManagerTypeId);
+      const formTemplate = JSON.parse(JSON.stringify(accessManagerType.attributetemplate.components.schemas)); // eslint-disable-line
+      const newDirecoryConfiguration = {};
+      const { openApiObjectToFlatObject } = Helpers;
+      openApiObjectToFlatObject(formTemplate, newDirecoryConfiguration);
+      this.handleConfigurationUpdate(newDirecoryConfiguration);
     },
     handleConfigurationUpdate(newDirecoryConfiguration) {
       const { accessManagerEditable } = this;

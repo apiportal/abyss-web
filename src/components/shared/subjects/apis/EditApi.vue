@@ -1,9 +1,9 @@
 <template>
   <div>
     <EditApiModal
-      v-if="isApisLoaded"
+      v-if="api"
       role="edit"
-      :api="getApi()"
+      :api="api"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
     />
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import api from '@/api';
 import EditApiModal from '@/components/shared/modals/EditApiModal';
 
 export default {
@@ -25,15 +25,11 @@ export default {
       default() { return ''; },
     },
   },
-  computed: {
-    ...mapState({
-      apis: state => state.apis.items,
-      isApisLoaded: state => state.apis.lastUpdatedAt > 0,
-    }),
-  },
   data() {
     return {
       apiId: this.$route.params.apiId,
+      isApisLoaded: false,
+      api: null,
     };
   },
   methods: {
@@ -44,8 +40,21 @@ export default {
       this.$router.push(this.routePath);
     },
     getApi() {
-      return this.apis.find(item => item.uuid === this.apiId);
+      api.getApi(this.apiId).then((response) => {
+        this.api = response.data[0];
+        // fake bir id ile response.data > [] dönüyor
+        if (!this.api) {
+          this.$router.push(this.routePath);
+        }
+      })
+      .catch((error) => {
+        console.log('error.status: ', error.status); // eslint-disable-line
+        this.$router.push(this.routePath);
+      });
     },
+  },
+  created() {
+    this.getApi();
   },
 };
 </script>

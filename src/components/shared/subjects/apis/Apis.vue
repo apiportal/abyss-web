@@ -115,6 +115,8 @@
 
               <b-dropdown-item :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
 
+              <b-dropdown-item :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+
               <b-dropdown-header>LOGS</b-dropdown-header>
 
               <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>

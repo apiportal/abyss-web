@@ -26,6 +26,19 @@ const actions = {
       }
     });
   },
+  putProxies: ({ commit }, proxy) => {
+    return api.putProxies(proxy).then((response) => {
+      commit('updateProxies', response.data);
+      return response;
+    });
+  },
+  postProxies: ({ commit }, proxy) => {
+    return api.postProxies(proxy).then((response) => {
+      const proxies = response.data.map((item) => item.response);
+      commit('addNewProxies', proxies);
+      return response;
+    });
+  },
   getApiContracts: ({ commit }, { apiIdsArray }) => {
     for (let i = 0; i < apiIdsArray.length; i += 1) {
       api.getApiContracts(apiIdsArray[i]).then((response) => {
@@ -48,6 +61,20 @@ const mutations = {
   setProxies: (state, proxies) => {
     state.items = proxies;
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  updateProxies: (state, proxies) => {
+    state.items = state.items.map((item) => {
+      const itemShouldUpdate = proxies
+        .find(api => api.uuid === item.uuid);
+      return itemShouldUpdate ? itemShouldUpdate : item;
+    });
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  addNewProxies: (state, proxies) => {
+    state.items = [
+      ...state.items,
+      ...proxies,
+    ];
   },
   setApiContracts: (state, { apiId, contracts }) => {
     state.items = state.items.map(item => {

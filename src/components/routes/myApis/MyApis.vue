@@ -12,7 +12,7 @@
           :active="currentPage.firstChildPath === 'businesses'"
           to="/app/my-apis/businesses/1"
         >
-          <span class="link-text" data-qa="linkMyBusinessApis">My Business APIs</span> <b-badge pill>{{ myBusinessApis.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyBusinessApis">My Business APIs</span> <b-badge pill>{{ businessApis.length }}</b-badge>
         </b-nav-item>
         <b-nav-item
           :active="currentPage.firstChildPath === 'my-subscriptions'"
@@ -65,12 +65,6 @@ export default {
       );
       return contractApis;
     },
-    myBusinessApis() {
-      return this.businessApis.filter(item => !item.isproxyapi);
-    },
-    myProxyApis() {
-      return this.businessApis.filter(item => item.isproxyapi);
-    },
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
@@ -87,7 +81,7 @@ export default {
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('apis/getApis', {});
+    // this.$store.dispatch('apis/getApis', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
   },

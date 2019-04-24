@@ -300,14 +300,21 @@ export default {
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
   },
   putBusinessApi(api) {
-    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    const { uuid, created, deleted, updated, businessapiid, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
   },
   postBusinessApi(api) {
     return axios.post('/abyss/oapi/apis/businesses/', api);
   },
-  getProxyApis() {
-    return axios.get('/abyss/oapi/apis/proxies');
+  getProxies(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
+  },
+  putProxies(api) {
+    const { uuid, created, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/proxies/${uuid}`, rest);
+  },
+  postProxies(api) {
+    return axios.post('/abyss/oapi/apis/proxies/', api);
   },
   getApiSubscriptions(uuid) {
     // return axios.get(`/abyss/oapi/subject-permissions/my-apis-subscriptions/subject/${uuid}`);
@@ -324,9 +331,6 @@ export default {
   },
   getApiVisibilityTypes() {
     return axios.get('/abyss/oapi/api-visibility-types');
-  },
-  getProxies(uuid) {
-    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
   },
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);

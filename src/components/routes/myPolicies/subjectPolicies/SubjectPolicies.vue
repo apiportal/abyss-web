@@ -38,8 +38,6 @@
       </div>
     </div>
     <div class="page-content">
-      {{ policies.length }}
-      {{ subjectPolicies.length }}
       <Policies
         :rows="paginatedRows"
         :routePath="`/app/my-policies/my-policies/${page}`"

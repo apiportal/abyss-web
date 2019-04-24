@@ -17,6 +17,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import moment from 'moment-timezone';
 import EditIdentityManagerModal from '@/components/shared/modals/EditIdentityManagerModal';
 
 export default {
@@ -40,6 +41,7 @@ export default {
     }),
   },
   data() {
+    const now = new Date();
     return {
       subjectDirectory: {
         directoryname: '',
@@ -49,6 +51,8 @@ export default {
         istemplate: false,
         organizationid: null,
         directorytypeid: null,
+        lastsyncronizationduration: 0,
+        lastsyncronizedat: moment(now),
       },
       page: this.$route.params.page,
     };

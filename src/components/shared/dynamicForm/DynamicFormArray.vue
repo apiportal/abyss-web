@@ -39,12 +39,12 @@
       </div>
     </div>
     <div class="form-array-items" v-else>
-        <Chips
-          :autocompleteOptions="items.enum.map(chip => ({ text: chip, value: chip }))"
-          :chips="value.map(chip => ({ text: chip, value: chip }))"
-          :onDeleteChip="handleDeleteChip"
-          :onAddChip="handleAddChip"
-        />
+      <Chips
+        :autocompleteOptions="items.enum ? items.enum.map(chip => ({ text: chip, value: chip })) : []"
+        :chips="value ? value.map(chip => ({ text: chip, value: chip })) : []"
+        :onDeleteChip="handleDeleteChip"
+        :onAddChip="handleAddChip"
+      />
     </div>
   </div>
 </template>
@@ -101,7 +101,7 @@ export default {
     },
     handleAddChip(chip) {
       const { value, propAddress, onChange } = this;
-      onChange(propAddress, [...value, chip.value]);
+      onChange(propAddress, [...(value || []), chip.value]);
     },
     handleAddItemArrayObj() {
       const { value, propAddress, onChange } = this;
@@ -113,7 +113,7 @@ export default {
         newItemArrayObj[propertiesKeys[i]] = properties[propertiesKeys[i]].example;
       }
 
-      onChange(propAddress, [...value, newItemArrayObj]);
+      onChange(propAddress, [...(value || []), newItemArrayObj]);
     },
     handleDeleteItemArrayObject(index) {
       const { value, propAddress, onChange } = this;

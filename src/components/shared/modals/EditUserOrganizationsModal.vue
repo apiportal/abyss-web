@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -201,7 +202,7 @@ export default {
       if (this.organizationsToDelete.length) {
         for (let i = 0; i < this.organizationsToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.organizationsToDelete[i]).then((response) => {
-            if (response) {
+            if (response && i === this.organizationsToDelete.length - 1) {
               onUpdate();
             }
           });
@@ -210,7 +211,12 @@ export default {
       if (this.organizationsToAdd.length) {
         for (let i = 0; i < this.organizationsToAdd.length; i += 1) {
           postSubjectOrganizations([this.organizationsToAdd[i]]).then((response) => {
-            if (response) {
+            if (response && i === this.organizationsToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.organizationsToAdd.length - 1) {
               onUpdate();
             }
           });

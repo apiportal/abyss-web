@@ -211,8 +211,7 @@ export default {
     handleSubmit() {
       const { apiStates, apiStateIndex, putApis } = this;
       const currentApi = apiStates[apiStateIndex];
-      const { openapidocument } = currentApi;
-      const { businessapiid } = openapidocument;
+      const { openapidocument, businessapiid } = currentApi;
       // VALIDATE API
       api.validateApi({ spec: openapidocument })
       .then(() => {

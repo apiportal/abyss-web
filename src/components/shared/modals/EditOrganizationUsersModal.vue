@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -41,7 +42,6 @@
             />
           </b-form-group>
           <div class="form-group">
-            <!-- {{computedOrganizationUsers}} -->
             <Chips
               :chips="computedOrganizationUsers"
               :autocompleteOptions="organizationUsersEditable"
@@ -262,7 +262,7 @@ export default {
       if (this.usersToDelete.length) {
         for (let i = 0; i < this.usersToDelete.length; i += 1) {
           deleteSubjectOrganizations(this.usersToDelete[i]).then((response) => {
-            if (response) {
+            if (response && i === this.usersToDelete.length - 1) {
               onUpdate();
             }
           });
@@ -271,7 +271,12 @@ export default {
       if (this.usersToAdd.length) {
         for (let i = 0; i < this.usersToAdd.length; i += 1) {
           postSubjectOrganizations([this.usersToAdd[i]]).then((response) => {
-            if (response) {
+            if (response && i === this.usersToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.usersToAdd.length - 1) {
               onUpdate();
             }
           });

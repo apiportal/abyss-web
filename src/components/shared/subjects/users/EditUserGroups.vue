@@ -50,7 +50,7 @@ export default {
     getSubjectMemberships() {
       api.getSubjectMemberships(this.userId).then((response) => {
         if (response && response.data) {
-          this.memberships = response.data;
+          this.memberships = response.data.filter(item => !item.isdeleted);
         }
         this.isMembershipsLoaded = true;
       }).catch((error) => {

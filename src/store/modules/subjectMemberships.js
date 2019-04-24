@@ -77,7 +77,7 @@ const mutations = {
         };
       }
       return item;
-    });
+    }).filter(item => !item.isdeleted);
   },
   addNewSubjectMembership: (state, newSubjectMembership) => {
     state.items = [

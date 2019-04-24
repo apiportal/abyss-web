@@ -52,8 +52,10 @@
 
     <div class="page-content">
       <Organizations
-        :rows="paginatedRows"
+        :rows="tableRows.filter(item => item.uuid === item.organizationid)"
         :organizations="tableRows"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
         :routePath="`/app/organizations/${page}`"
       />
     </div>
@@ -87,7 +89,6 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
       users: state => state.users.items,
@@ -100,18 +101,14 @@ export default {
         return organization ? organization.name : organizationId;
       };
       const getSubOrganizations = (organizationId) => {
-      // const getSubOrganizations = (obj) => {
         const subOrganizations = organizations
-          // .filter(item => item.organizationid === obj.uuid
           .filter(item => item.organizationid === organizationId
             && item.organizationid !== item.uuid);
-        // return subOrganizations.map(item => item.uuid);
         return subOrganizations;
       };
       const getOrganizationUsers = (organizationId) => {
         const organizationSubjects = subjectOrganizations
-          .filter(item => item.organizationrefid === organizationId);
-        // return organizationSubjects.map(item => item.subjectid);
+          .filter(item => item.organizationrefid === organizationId && !item.isdeleted);
         return organizationSubjects;
       };
       const getOwner = (organizationId) => {
@@ -130,7 +127,6 @@ export default {
         array: organizations.map(item => ({
           ...item,
           organizationname: getOrganizationName(item.organizationid),
-          // suborganizations: getSubOrganizations(item),
           suborganizations: getSubOrganizations(item.uuid),
           suborganizationscount: getSubOrganizations(item.uuid).length,
           organizationusers: getOrganizationUsers(item.uuid),
@@ -138,15 +134,13 @@ export default {
           organizationownerid: getOwner(item.uuid).uuid,
           isorganizationowner: Boolean(getOwner(item.uuid)),
         }))
-        // .filter((item) => {
-        //   const { currentUser } = this;
-        //   const { organizationid } = item;
-        //   return (organizationid === currentUser.organizationid);
-        // })
         .filter((item) => {
           const { currentUser } = this;
-          return item.organizationusers.some(f =>
-            f.subjectid === currentUser.uuid,
+          // return item.organizationusers.some(f =>
+          //   f.subjectid === currentUser.uuid,
+          // );
+          return subjectOrganizations.some(f =>
+            f.organizationrefid === item.uuid && f.subjectid === currentUser.uuid,
           );
         })
         .filter((item) => {

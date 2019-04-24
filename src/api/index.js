@@ -205,19 +205,6 @@ export default {
   deleteSubjectMemberships(uuid) {
     return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
   },
-  putSubjectApps(subjectapp) {
-    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
-    return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
-    // return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
-  },
-  postSubjectApps(subjectapp) {
-    return axios.post('/abyss/oapi/subject-apps/', subjectapp);
-    // return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
-  },
-  deleteSubjectApps(uuid) {
-    return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
-    // return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
-  },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');
@@ -313,16 +300,24 @@ export default {
     return axios.get(`/abyss/oapi/apis/businesses/subject/${uuid}`);
   },
   putBusinessApi(api) {
-    const { uuid, businessapiid, deleted, updated, ...rest } = api;
+    const { uuid, created, deleted, updated, businessapiid, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/businesses/${uuid}`, rest);
   },
   postBusinessApi(api) {
     return axios.post('/abyss/oapi/apis/businesses/', api);
   },
-  getProxyApis() {
-    return axios.get('/abyss/oapi/apis/proxies');
+  getProxies(uuid) {
+    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
+  },
+  putProxies(api) {
+    const { uuid, created, deleted, updated, ...rest } = api;
+    return axios.put(`/abyss/oapi/apis/proxies/${uuid}`, rest);
+  },
+  postProxies(api) {
+    return axios.post('/abyss/oapi/apis/proxies/', api);
   },
   getApiSubscriptions(uuid) {
+    // return axios.get(`/abyss/oapi/subject-permissions/my-apis-subscriptions/subject/${uuid}`);
     return axios.get(`/abyss/oapi/subject-permissions/api-subscriptions/subject/${uuid}`);
   },
   getApisSharedWithUser(uuid) {
@@ -336,9 +331,6 @@ export default {
   },
   getApiVisibilityTypes() {
     return axios.get('/abyss/oapi/api-visibility-types');
-  },
-  getProxies(uuid) {
-    return axios.get(`/abyss/oapi/apis/proxies/subject/${uuid}`);
   },
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
@@ -373,18 +365,40 @@ export default {
   deletePolicyTypes(uuid) {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
   },
-  getSubjectApps(uuid) {
-    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-    // return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
-    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  // SubjectApps
+  getSubjectAppsComposite(uuid) {
+    return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
   },
-  getAppContracts(uuid) {
-    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
+  getSubjectApps() {
+    // return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
+  putSubjectApps(subjectapp) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
+    // return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
+    return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
+  },
+  postSubjectApps(subjectapp) {
+    // return axios.post('/abyss/oapi/subject-apps/', subjectapp);
+    return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
+  },
+  deleteSubjectApps(uuid) {
+    // return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
+    return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
+  },
+  // licenses
   getSubjectLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
   },
-  // licenses
+  getApiLicensesRefs() {
+    return axios.get('/abyss/oapi/api-licenses/');
+  },
+  postApiLicensesRefs(license) {
+    return axios.post('/abyss/oapi/api-licenses/', license);
+  },
+  deleteApiLicensesRefs(uuid) {
+    return axios.delete(`/abyss/oapi/api-licenses/${uuid}`);
+  },
   getLicenses() {
     return axios.get('/abyss/oapi/licenses/');
   },
@@ -414,11 +428,20 @@ export default {
   postAccessTokens(token) {
     return axios.post('/abyss/oapi/resource-access-tokens/', token);
   },
+  getAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/${uuid}`);
+  },
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
   },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
+  },
+  getUserContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/user/${uuid}`);
+  },
+  getAllContracts() {
+    return axios.get('/abyss/oapi/contracts/');
   },
   getLicenseApis(uuid) {
     return axios.get(`/abyss/oapi/apis/proxies/license/${uuid}`);
@@ -468,20 +491,5 @@ export default {
   },
   getGroupsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
-  },
-  getApiLicensesRefs() {
-    return axios.get('/abyss/oapi/api-licenses/');
-  },
-  postApiLicensesRefs(license) {
-    return axios.post('/abyss/oapi/api-licenses/', license);
-  },
-  deleteApiLicensesRefs(uuid) {
-    return axios.delete(`/abyss/oapi/api-licenses/${uuid}`);
-  },
-  getUserContracts(uuid) {
-    return axios.get(`/abyss/oapi/contracts/user/${uuid}`);
-  },
-  getAllContracts() {
-    return axios.get('/abyss/oapi/contracts/');
   },
 };

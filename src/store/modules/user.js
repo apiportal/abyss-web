@@ -8,6 +8,7 @@ const state = {
   organizationname: null,
   signedIn: false,
   lastUpdatedAt: 0,
+  gatewayUrl: 'https://dev2.apiportal.com/abyss-gw/',
   props: {},
 };
 
@@ -48,6 +49,11 @@ const actions = {
         if (refresh) {
           setTimeout(function() { location.reload(); }, 10);
         }
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setUuid', null);
       }
     });
   },

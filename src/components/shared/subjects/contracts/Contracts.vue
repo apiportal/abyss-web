@@ -44,7 +44,7 @@
 
               <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
 
-              <!-- <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header> -->
+              <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>

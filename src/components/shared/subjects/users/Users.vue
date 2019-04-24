@@ -52,7 +52,7 @@
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(item, index) in sortedRows" v-bind:key="index"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           :data-qa="`tableRow-${index}`"
       >
@@ -81,7 +81,7 @@
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-user/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete-user/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
-              <b-dropdown-header></b-dropdown-header>
+              <b-dropdown-header class="p-0"></b-dropdown-header>
 
               <b-dropdown-item data-qa="btnEditGroups" :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
               <b-dropdown-item data-qa="btnEditRoles" :to="`${routePath}/edit-user-roles/${item.uuid}`"><Icon icon="user-tag" /> Edit User Roles</b-dropdown-item>
@@ -135,6 +135,16 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
@@ -145,7 +155,7 @@ export default {
       users: state => state.users.items,
       groups: state => state.groups.items,
     }),
-    sortedRows() {
+    tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows,
         organizations, subjectDirectories } = this;
       const { sortArrayOfObjects } = Helpers;
@@ -169,11 +179,21 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
     this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
   },

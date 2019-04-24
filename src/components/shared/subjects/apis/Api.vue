@@ -14,7 +14,6 @@
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
-    <!-- <div class="row abyss-table-buttons" v-if="routePath !== `/app/my-apps/my-apps/${page}`"> -->
     <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">
       <b-button
         @click="handleToggleApiProxiesTable"
@@ -38,8 +37,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -56,7 +53,6 @@ export default {
     },
   },
   components: {
-    TbodyCollapsible,
     Icon,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
@@ -69,15 +65,7 @@ export default {
       organizations: state => state.organizations.items,
     }),
     apiProxies() {
-      const { proxies, apiStates, apiVisibilityTypes, organizations } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
+      const { proxies, organizations } = this;
       const getOrganizationName = (organizationid) => {
         const organization = organizations.find(item => item.uuid === organizationid);
         return organization ? organization.name : organizationid;
@@ -86,8 +74,6 @@ export default {
       .filter(proxy => proxy.businessapiid === this.item.uuid)
       .map(item => ({
         ...item,
-        apistatename: getApiStateName(item.apistateid),
-        apivisibilityname: getApiVisibilityName(item.apivisibilityid),
         organizationame: getOrganizationName(item.organizationid),
         subscriptions: this.subscriptions[item.uuid] || [],
         subscriptionsUpdated: this.subscriptions.lastUpdated,
@@ -114,27 +100,9 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    getApiLicenses(uuid) {
-      api.getApiLicenses(uuid).then((response) => {
-        if (response && response.data) {
-          this.subscriptions[uuid] = response.data;
-          this.subscriptions.lastUpdated = (new Date()).getTime();
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.subscriptions[uuid] = [];
-        }
-      });
-    },
     handleToggleApiProxiesTable() {
       this.isApiProxiesTableVisible = !this.isApiProxiesTableVisible;
     },
-  },
-  mounted() {
-    // this.proxies
-      // .filter(proxy => proxy.businessapiid === this.item.uuid)
-      // .map(item => this.getApiLicenses(item.uuid));
   },
 };
 </script>

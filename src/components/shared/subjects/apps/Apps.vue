@@ -30,7 +30,7 @@
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               text="Contracts"
-              sortByKey="contractsCount"
+              sortByKey="contractscount"
               sortByKeyType="number"
             />
           </th>
@@ -42,7 +42,7 @@
         :cols="4"
       />
       <TbodyCollapsible
-        v-for="(item, index) in sortedRows" v-bind:key="index"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
@@ -53,8 +53,7 @@
             {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            <!-- {{ item.contracts ? item.contracts.length : '' }} -->
-            {{ item.contractsCount }}
+            {{ item.contractscount }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
@@ -123,22 +122,53 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
+  },
+  mounted() {
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
+      contracts: state => state.userContracts.items,
     }),
-    sortedRows() {
+    tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getAppContracts = (id) => {
+        const appContracts = this.contracts
+        .filter(item => item.subjectid === id && !item.isdeleted);
+        return appContracts;
+      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            contracts: getAppContracts(item.uuid),
+            contractscount: getAppContracts(item.uuid).length,
           })),
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },

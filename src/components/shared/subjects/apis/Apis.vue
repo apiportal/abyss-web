@@ -64,15 +64,25 @@
               sortByKeyType="number"
             />
           </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="7"
+        :cols="8"
       />
       <TbodyCollapsible
-        v-for="(item, index) in sortedRows" v-bind:key="index"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
@@ -94,6 +104,9 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.numberofproxies }}
           </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
+          </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
@@ -101,6 +114,8 @@
               </template>
 
               <b-dropdown-item :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+
+              <b-dropdown-item :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -112,7 +127,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
-          <td colspan="7">
+          <td colspan="8">
             <div class="collapsible-content">
               <Api
                 :item="item"
@@ -148,12 +163,22 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
-    sortedRows() {
+    tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
@@ -164,6 +189,15 @@ export default {
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },
@@ -177,9 +211,9 @@ export default {
   data() {
     return {
       collapsedRows: [],
-      sortByKey: 'openapidocument.info.title',
+      sortByKey: 'updated',
       sortByKeyType: 'string',
-      sortDirection: 'desc',
+      sortDirection: 'asc',
     };
   },
   methods: {

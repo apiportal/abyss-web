@@ -18,6 +18,8 @@
         <dd>{{ environment(item) }}</dd>
       </dl>
       <dl class="col">
+        <dt>Business API:</dt>
+        <dd>{{ computedBusinessApi }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
@@ -30,7 +32,7 @@
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
-        <b-badge pill>{{ licenses ? licenses.length : 0 }}</b-badge>
+        <b-badge pill>{{ item.licenses ? item.licenses.length : 0 }}</b-badge>
       </b-button>
       <b-button
         @click="handleToggleContractsTable"
@@ -39,18 +41,18 @@
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
-        <b-badge pill>{{ contracts.length }}</b-badge>
+        <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
     </div>
-    <div v-if="isLicensesTableVisible">
+    <div v-if="isLicensesTableVisible && item.licenses.length">
       <Licenses
-        :rows="licenses"
+        :rows="item.licenses"
         :routePath="routePath"
       ></Licenses>
     </div>
-    <div v-if="isContractsTableVisible">
+    <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
-        :rows="contracts"
+        :rows="item.contracts"
         :routePath="routePath"
       ></Contracts>
     </div>
@@ -59,16 +61,17 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
 export default {
   computed: {
     ...mapState({
+      businessApis: state => state.businessApis.items,
     }),
-    tableRows() {
-      return this.licenses;
+    computedBusinessApi() {
+      return this.businessApis.find(business =>
+        business.uuid === this.item.businessapiid).openapidocument.info.title;
     },
   },
   components: {
@@ -96,34 +99,14 @@ export default {
     return {
       page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
-      licenses: [],
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
-      contracts: [],
     };
   },
   methods: {
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
-    },
-    getApiLicenses() {
-      const { uuid } = this.item;
-      api.getApiLicenses(uuid).then((response) => {
-        if (response && response.data) {
-          this.licenses = response.data;
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.licenses = [];
-        }
-      });
-    },
-    handleToggleTokensTable() {
-      this.isTokensTableVisible = !this.isTokensTableVisible;
-      this.isLicensesTableVisible = false;
-      this.isContractsTableVisible = false;
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
@@ -142,23 +125,12 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
+        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    getContracts() {
-      const { uuid } = this.item;
-      api.getApiContracts(uuid).then((response) => {
-        if (response && response.data) {
-          this.contracts = response.data;
-        }
-      });
-    },
-  },
-  created() {
-    this.getApiLicenses();
-    this.getContracts();
   },
 };
 </script>

@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-administer-user-groups"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -26,6 +27,7 @@
               :autocompleteOptions="groupsEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
+              :showAddChip="false"
               label="User Groups"
             />
           </div>
@@ -173,7 +175,7 @@ export default {
       if (this.groupsToDelete.length) {
         for (let i = 0; i < this.groupsToDelete.length; i += 1) {
           deleteSubjectMemberships(this.groupsToDelete[i]).then((response) => {
-            if (response) {
+            if (response && i === this.groupsToDelete.length - 1) {
               onUpdate();
             }
           });
@@ -182,7 +184,12 @@ export default {
       if (this.groupsToAdd.length) {
         for (let i = 0; i < this.groupsToAdd.length; i += 1) {
           postSubjectMemberships([this.groupsToAdd[i]]).then((response) => {
-            if (response) {
+            if (response && i === this.groupsToAdd.length - 1) {
+              onUpdate();
+            }
+          })
+          .catch((error) => {
+            if (error && i === this.groupsToAdd.length - 1) {
               onUpdate();
             }
           });

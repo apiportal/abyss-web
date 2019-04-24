@@ -4,8 +4,8 @@
       v-if="areAppsLoaded"
       title="Are you sure?"
       :text="`${app.subjectname} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteAppsModalClose"
-      :onConfirm="handleDeleteAppsModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -26,10 +26,10 @@ export default {
   },
   methods: {
     ...mapActions('apps', ['deleteApps']),
-    handleDeleteAppsModalClose() {
+    handleModalClose() {
       this.$router.push(this.routePath);
     },
-    handleDeleteAppsModalConfirm() {
+    handleModalConfirm() {
       const { deleteApps, app } = this;
       deleteApps({ ...app }).then(() => {
         this.$router.push(this.routePath);

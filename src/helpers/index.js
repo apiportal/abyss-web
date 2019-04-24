@@ -48,6 +48,14 @@ const sortArrayOfObjects = ({ array, sortByKey, sortByKeyType, sortDirection = '
   return array;
 };
 
+const getUnique = (arr, comp) => {
+  const unique = arr
+    .map(e => e[comp])
+    .map((e, i, final) => final.indexOf(e) === i && i)
+    .filter(e => arr[e]).map(e => arr[e]);
+  return unique;
+};
+
 const paginateArray = ({ array, itemsPerPage, page }) => {
   const totalItems = array.length;
   const startIndex = (itemsPerPage * (page - 1));
@@ -112,6 +120,7 @@ const mergeFlatObjectIntoOpenApiObject = (openApiObject, flatObject, mergedObjec
 
 export default {
   sortArrayOfObjects,
+  getUnique,
   paginateArray,
   objectDeepUpdate,
   openApiObjectToFlatObject,

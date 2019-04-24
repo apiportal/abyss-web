@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="abyss-table-content">
     <table class="table abyss-table abyss-table-cards">
       <thead>
-        <tr> 
+        <tr>
           <th class="status">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -109,7 +109,7 @@
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

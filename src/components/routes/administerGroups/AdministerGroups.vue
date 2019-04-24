@@ -132,7 +132,7 @@
                 <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
                 <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
-                <b-dropdown-header></b-dropdown-header>
+                <b-dropdown-header class="p-0"></b-dropdown-header>
 
                 <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
 
@@ -208,7 +208,7 @@ export default {
     computedOrganizations() {
       const { subjectOrganizations, currentUser } = this;
       const organizationSubjects = subjectOrganizations
-        .filter(item => item.subjectid === currentUser.uuid);
+        .filter(item => item.subjectid === currentUser.uuid && !item.isdeleted);
       return organizationSubjects;
     },
     tableRows() {
@@ -289,6 +289,7 @@ export default {
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
+    this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
   },
   data() {
     return {

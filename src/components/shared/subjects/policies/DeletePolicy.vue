@@ -4,8 +4,8 @@
       v-if="arePoliciesLoaded"
       title="Are you sure?"
       :text="`${policy.name} will be deleted. You can't revert your action.`"
-      :onClose="handleDeletePoliciesModalClose"
-      :onConfirm="handleDeletePoliciesModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
@@ -26,10 +26,10 @@ export default {
   },
   methods: {
     ...mapActions('policies', ['deletePolicies']),
-    handleDeletePoliciesModalClose() {
+    handleModalClose() {
       this.$router.push(this.routePath);
     },
-    handleDeletePoliciesModalConfirm() {
+    handleModalConfirm() {
       const { deletePolicies, policy } = this;
       deletePolicies({ ...policy }).then(() => {
         this.$router.push(this.routePath);
@@ -45,9 +45,6 @@ export default {
       const { policyId, policies } = this;
       return policies.find(item => item.uuid === policyId);
     },
-  },
-  created() {
-    // console.log(this.policies);
   },
   data() {
     return {

@@ -9,45 +9,45 @@ const state = {
 const getters = {};
 
 const actions = {
-  getResources: ({ commit }) => {
+  getApiLicensesRefs: ({ commit }) => {
+  // getApiLicensesRefs: ({ rootState, commit }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getResources()
+    api.getApiLicensesRefs()
+    // api.getApiLicensesRefsByUuid(rootState.user.uuid)
     .then((response) => {
       if (response && response.data) {
-        commit('setResources', response.data);
+        commit('setApiLicensesRefs', response.data);
       }
     })
     .catch((error) => {
       if (error.status === 404) {
-        commit('setResources', []);
+        commit('setApiLicensesRefs', []);
       }
     });
   },
-  putResources: ({ commit }, resource) => {
-    return api.putResources(resource).then((response) => {
-      commit('updateResources', response.data);
+  putApiLicensesRefs: ({ commit }, apilicense) => {
+    return api.putApiLicensesRefs(apilicense).then((response) => {
+      commit('updateApiLicensesRefs', response.data);
       return response;
     });
   },
-  deleteResources: ({ commit }, resource) => {
-    return api.deleteResources(resource.uuid).then((response) => {
-      commit('setResourceDeleted', resource.uuid);
+  deleteApiLicensesRefs: ({ commit }, apilicense) => {
+    return api.deleteApiLicensesRefs(apilicense.uuid).then((response) => {
+      commit('setApilicenseDeleted', apilicense.uuid);
       return response;
     });
   },
-  postResources: ({ commit }, resource) => {
-    return api.postResources(resource).then((response) => {
+  postApiLicensesRefs: ({ commit }, apilicense) => {
+    return api.postApiLicensesRefs(apilicense).then((response) => {
       let error = false;
-
       response.data.map((status) => {
         if (status.error.code !==0) {
           error = true;
-          alert(status.error.usermessage);
         } else {
-          commit('addNewResource', status.response);
+          commit('addApiLicensesRefs', status.response);
         }
       });
       if (error) {
@@ -59,21 +59,21 @@ const actions = {
 };
 
 const mutations = {
-  setResources: (state, resources) => {
-    state.items = resources;
+  setApiLicensesRefs: (state, apilicenses) => {
+    state.items = apilicenses;
     state.lastUpdatedAt = (new Date()).getTime();
   },
-  updateResources: (state, resources) => {
+  updateApiLicensesRefs: (state, apilicenses) => {
     state.items = state.items.map((item) => {
-      const itemShouldUpdate = resources
-        .find(resource => resource.uuid === item.uuid);
+      const itemShouldUpdate = apilicenses
+        .find(apilicense => apilicense.uuid === item.uuid);
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
   },
-  setResourceDeleted: (state, resourceUuid) => {
+  setApilicenseDeleted: (state, apilicenseUuid) => {
     state.items = state.items.map((item) => {
-      if (item.uuid === resourceUuid) {
+      if (item.uuid === apilicenseUuid) {
         return {
           ...item,
           isdeleted: true,
@@ -82,10 +82,10 @@ const mutations = {
       return item;
     });
   },
-  addNewResource: (state, newResource) => {
+  addApiLicensesRefs: (state, newApiLicense) => {
     state.items = [
       ...state.items,
-      newResource,
+      newApiLicense,
     ];
   },
 };

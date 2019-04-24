@@ -134,6 +134,7 @@
 </template>
 
 <script>
+import Helpers from '@/helpers';
 import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
@@ -266,10 +267,6 @@ export default {
     toggleConfigurePolicy() {
       this.isConfigurePolicyVisible = !this.isConfigurePolicyVisible;
     },
-    handleDirectoryTypeChange(newPolicyTypeId) {
-      this.isConfigurePolicyVisible = true;
-      this.setPolicyConfigurationTemplate({ typeid: newPolicyTypeId });
-    },
     setPolicyConfigurationTemplate(newPolicyTypeId) {
       const { typeid } = newPolicyTypeId || this.policyEditable;
       if (typeid) {
@@ -294,6 +291,14 @@ export default {
     handlePolicyTypeChange(newPolicyTypeId) {
       this.isConfigurePolicyVisible = true;
       this.setPolicyConfigurationTemplate({ typeid: newPolicyTypeId });
+      const { policyTypes } = this;
+      const policyType = policyTypes
+        .find(item => item.uuid === newPolicyTypeId);
+      const formTemplate = JSON.parse(JSON.stringify(policyType.template.components.schemas)); // eslint-disable-line
+      const newTypeConfiguration = {};
+      const { openApiObjectToFlatObject } = Helpers;
+      openApiObjectToFlatObject(formTemplate, newTypeConfiguration);
+      this.handleConfigurationUpdate(newTypeConfiguration);
     },
   },
   mounted() {

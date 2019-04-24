@@ -29,8 +29,8 @@ export default {
   computed: {
     ...mapState({
       visibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.subjectLicenses.items,
-      areLicensesLoaded: state => state.subjectLicenses.lastUpdatedAt,
+      licenses: state => state.licenses.items,
+      areLicensesLoaded: state => state.licenses.lastUpdatedAt,
       areVisibilityTypesLoaded: state => state.apiVisibilityTypes.lastUpdatedAt,
     }),
   },

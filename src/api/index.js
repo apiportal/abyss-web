@@ -369,22 +369,22 @@ export default {
   getSubjectAppsComposite(uuid) {
     return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
   },
-  getSubjectApps() {
-    // return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-    return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  getSubjectApps(uuid) {
+    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
   putSubjectApps(subjectapp) {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
-    // return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
-    return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
+    return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
+    // return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
   },
   postSubjectApps(subjectapp) {
-    // return axios.post('/abyss/oapi/subject-apps/', subjectapp);
-    return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
+    return axios.post('/abyss/oapi/subject-apps/', subjectapp);
+    // return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
   },
   deleteSubjectApps(uuid) {
-    // return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
-    return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
+    return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
+    // return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
   },
   // licenses
   getSubjectLicenses(uuid) {

@@ -286,6 +286,9 @@ export default {
   getApis() {
     return axios.get('/abyss/oapi/apis');
   },
+  getAllProxies() {
+    return axios.get('/abyss/oapi/apis/proxies/');
+  },
   putApis(api) {
     const { uuid, deleted, updated, ...rest } = api;
     return axios.put(`/abyss/oapi/apis/${uuid}`, rest);

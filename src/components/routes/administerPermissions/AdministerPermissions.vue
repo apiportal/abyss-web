@@ -91,6 +91,7 @@ export default {
       resources: state => state.resources.items,
       resourceTypes: state => state.resourceTypes.items,
       resourceActions: state => state.resourceActions.items,
+      roles: state => state.roles.items,
     }),
     tableRows() {
       const { accessManagers,
@@ -198,6 +199,7 @@ export default {
     this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('apps/getApps', {});
     this.$store.dispatch('subjectTypes/getSubjectTypes', {});
+    this.$store.dispatch('roles/getRoles', {});
   },
   data() {
     return {

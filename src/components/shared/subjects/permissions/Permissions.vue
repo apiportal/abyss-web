@@ -39,6 +39,16 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
+              text="Resource"
+              sortByKey="resourcename"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
               text="Resource Action"
               sortByKey="resourceactionname"
               sortByKeyType="string"
@@ -49,21 +59,12 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Access Manager"
-              sortByKey="accessmanagername"
+              text="Subject"
+              sortByKey="subject.displayname"
               sortByKeyType="string"
             />
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Organization"
-              sortByKey="organizationname"
-              sortByKeyType="string"
-            />
-          </th>
+
           <th></th>
         </tr>
       </thead>
@@ -89,14 +90,14 @@
           <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.resourcetypename }}
           </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.resourcename }}
+          </td>
           <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.resourceactionname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.accessmanagername }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.organizationname }}
+            {{ item.subjectid }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">

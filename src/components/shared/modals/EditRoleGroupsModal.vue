@@ -118,9 +118,11 @@
     computed: {
       ...mapState({
         currentUser: state => state.user,
+        roleMemberships: state => state.roleMemberships.items,
       }),
       computedMemberships() {
         const { roleGroupsEditable } = this;
+        console.log('computedMemberships-roleGroupsEditable', roleGroupsEditable); //eslint-disable-line 
         return roleGroupsEditable
         .filter(group => group.isAttached)
         .sort((a, b) => b.sortTime - a.sortTime);

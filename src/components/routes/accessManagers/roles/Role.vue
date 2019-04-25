@@ -21,7 +21,6 @@
         <dd>{{ item.directoryname }}</dd>
         <dt>Locked:</dt>
         <dd>{{ item.islocked | booleanToText }}</dd>
-        <dd>{{ item.uuid }}</dd>
       </dl>
       <dl class="col">
         <dt>Effective Start Date:</dt>
@@ -42,19 +41,17 @@
         size="md"
         variant="link"
         :class="{'active': isShowRolePermissions}"
+        data-qa="btnRolePermissions"
       >
         <Icon icon="user-cog" /> Permissions
         <b-badge pill>{{ item.permissions.length }}</b-badge>
       </b-button>
 
       <b-button
+        @click="listRoleUsers"
         size="md"
         variant="link"
-        v-b-tooltip.hover
-        title="Users"
-        @click="listRoleUsers"
         :class="{'active': isShowRoleUsers}"
-        v-if="item.users.length"
         data-qa="btnRoleUsers"
       >
         <Icon icon="users" /> Users
@@ -66,6 +63,7 @@
         size="md"
         variant="link"
         :class="{'active': isShowRoleGroups}"
+        data-qa="btnRoleGroups"
       >
         <Icon icon="user-friends" /> Groups
         <b-badge pill>{{ item.groups.length }}</b-badge>

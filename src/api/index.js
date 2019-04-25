@@ -189,6 +189,9 @@ export default {
   getAllRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/user-role/');
   },
+  getRoleMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/${uuid}`);
+  },
   postRoleMemberships(subjectmemberships) {
     return axios.post('/abyss/oapi/subject-memberships/user-role/', subjectmemberships);
   },
@@ -265,6 +268,9 @@ export default {
   putPermissions(permission) {
     const { uuid, created, deleted, updated, isdeleted, ...rest } = permission;
     return axios.put(`/abyss/oapi/subject-permissions/${uuid}`, rest);
+  },
+  putBulkPermissions(permissions) {
+    return axios.put('/abyss/oapi/subject-permissions/', permissions);
   },
   deletePermissions(uuid) {
     return axios.delete(`/abyss/oapi/subject-permissions/${uuid}`);
@@ -471,9 +477,6 @@ export default {
   },
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
-  },
-  getPermissionsOfRole(uuid) {
-    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
   },
   getGroupsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);

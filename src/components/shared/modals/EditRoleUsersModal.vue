@@ -118,6 +118,7 @@
     computed: {
       ...mapState({
         currentUser: state => state.user,
+        roleMemberships: state => state.roleMemberships.items,
       }),
       computedMemberships() {
         const { roleUsersEditable } = this;

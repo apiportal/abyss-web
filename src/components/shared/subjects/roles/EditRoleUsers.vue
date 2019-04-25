@@ -48,7 +48,7 @@
         this.$router.push(this.routePath);
       },
       getAllRoleMemberships() {
-        api.getAllRoleMemberships(this.selectedRoleId).then((response) => {
+        api.getAllRoleMemberships().then((response) => {
           if (response && response.data) {
             this.memberships = response.data;
           }
@@ -72,6 +72,7 @@
     mounted() {
       this.getAllRoleMemberships();
       this.$store.dispatch('roles/getRoles', {});
+      this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
     },
   };
 </script>

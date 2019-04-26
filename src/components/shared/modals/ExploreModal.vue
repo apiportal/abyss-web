@@ -26,9 +26,9 @@
               <dt>Version</dt>
               <dd>{{ api.version }}</dd>
               <dt>Environment</dt>
-              <dd>Live or Sandbox</dd>
-              <!-- <dt>Owner</dt>
-              <dd>{{ getOwnerName(api.subjectid) }}</dd> -->
+              <dd>{{ getEnvironment(api) }}</dd>
+              <dt>Owner</dt>
+              <dd>{{ getOwnerName(api.subjectid) }}</dd>
             </dl>
           </b-col>
           <b-col md="3">
@@ -98,29 +98,6 @@
                   </b-form-group>
                 </div>
                 <div class="col-md-4">
-                  <b-form-group 
-                    id="selectedLicenseId"
-                    label="Available API Licenses:"
-                    label-for="selectedLicenseIdInput"
-                  >
-                    <b-form-select
-                      id="selectedLicenseIdInput"
-                      v-model="form.licenseId" 
-                      :options="[
-                        {
-                          value: null,
-                          text: 'Please select license',
-                        },
-                        ...apiLicenses.map(license => ({
-                          value: license.uuid,
-                          text: license.name,
-                        })),
-                      ]"
-                      :required="true"
-                    />
-                  </b-form-group>
-                </div>
-                <div class="col-md-4">
                   <b-button type="submit" block variant="primary" style="margin-top: 32px;">
                     Subscribe
                   </b-button>
@@ -152,6 +129,7 @@
         <div v-if="isLicensesTableVisible">
           <Licenses
             :rows="apiLicenses"
+            :licenseIdFromStore="this.licensesMain.licenseId"
             routePath="/app/explore/"
           ></Licenses>
         </div>
@@ -198,6 +176,7 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.licenses.items,
+      licensesMain: state => state.licenses,
       apps: state => state.apps.items,
       apis: state => state.apis.items,
       contractStates: state => state.contractStates.items,
@@ -273,7 +252,6 @@ export default {
       apiContracts: [],
       form: {
         appId: null,
-        licenseId: null,
       },
     };
   },
@@ -301,6 +279,9 @@ export default {
       this.isLicensesTableVisible = false;
       this.isContractsTableVisible = !this.isContractsTableVisible;
     },
+    getEnvironment(item) {
+      return item.islive ? 'Live' : 'Sandbox';
+    },
     getApiLicenses() {
       const { uuid } = this.api;
       api.getExploreApiLicenses(uuid)
@@ -308,7 +289,7 @@ export default {
         if (response && response.data) {
           const apiLicensesIds = response.data.map(item => item.licenseid);
           this.apiLicenses = this.licenses.filter(item => (
-            (apiLicensesIds.indexOf(item.uuid) > -1)
+            (apiLicensesIds.indexOf(item.uuid) > -1) && item.isactive && !item.isdeleted
           ));
           this.getApiContracts(apiLicensesIds);
         }
@@ -330,7 +311,8 @@ export default {
       const effectiveenddate = new Date(effectivestartdate);
       effectiveenddate.setFullYear(effectivestartdate.getFullYear() + 1);
       const { organizationid, uuid } = this.currentUser;
-      const { appId, licenseId } = this.form;
+      const { appId } = this.form;
+      const { licenseId } = this.licensesMain;
       const { apiId } = this.$route.params;
       const { apps, apis, contractStates, resourceActions, resources } = this;
       const licenseApp = apps.find(item => item.uuid === appId);
@@ -397,6 +379,7 @@ export default {
               this.getApiLicenses();
               this.isLicensesTableVisible = false;
               this.isContractsTableVisible = true;
+              this.$store.commit('licenses/setLicenseId', null);
             });
           });
         }

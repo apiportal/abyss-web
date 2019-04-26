@@ -81,6 +81,7 @@ export default {
   mounted() {
     this.$store.dispatch('apis/getApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('apps/getApps', {});

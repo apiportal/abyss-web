@@ -29,6 +29,7 @@ export default {
   methods: {
     handleModalClose() {
       this.$router.push('/app/explore/');
+      this.$store.commit('licenses/setLicenseId', null);
     },
     getCardItem(apiId) {
       return this.apis.find(item => item.uuid === apiId);

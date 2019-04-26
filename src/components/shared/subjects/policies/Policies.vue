@@ -69,7 +69,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ (item.policyinstance && item.policyinstance.info ) ? item.policyinstance.info.subType : '' }}
           </td>
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -86,6 +86,7 @@
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
           <td colspan="5">

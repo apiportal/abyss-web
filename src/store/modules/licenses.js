@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  licenseId: null,
   lastUpdatedAt: 0,
 };
 
@@ -81,6 +82,9 @@ const mutations = {
       }
       return item;
     });
+  },
+  setLicenseId: (state, id) => {
+    state.licenseId = id;
   },
   addNewLicense: (state, newLicense) => {
     state.items = [

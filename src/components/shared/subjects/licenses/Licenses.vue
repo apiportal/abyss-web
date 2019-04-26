@@ -80,7 +80,7 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'contracts'">
             {{ licenseContracts.length }}
           </td> -->
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!licenseItem.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -97,6 +97,17 @@
               <b-dropdown-header><code>{{ licenseItem.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
+          </td>
+          <td class="actions" v-else style="vertical-align: middle !important">
+            <b-form-radio
+            v-model="licenseId"
+            :value="licenseItem.uuid"
+            name="licenses"
+            :state="licenseState"
+            :invalid-feedback="licenseInvalidFeedback"
+            required
+            >
+            </b-form-radio>
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
@@ -142,6 +153,10 @@ export default {
       required: false,
       default() { return 'policies'; },
     },
+    licenseIdFromStore: {
+      type: String,
+      required: false,
+    },
     page: {
       Type: Number,
       required: false,
@@ -179,6 +194,12 @@ export default {
         page,
       });
     },
+    licenseInvalidFeedback() {
+      return !this.licenseId ? 'Please Select' : '';
+    },
+    licenseState() {
+      return Boolean(this.licenseIdFromStore);
+    },
   },
   components: {
     TbodyCollapsible,
@@ -193,6 +214,7 @@ export default {
       sortByKey: 'name',
       sortByKeyType: 'string',
       sortDirection: 'desc',
+      licenseId: this.licenseIdFromStore,
     };
   },
   methods: {
@@ -208,6 +230,11 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+  },
+  watch: {
+    licenseId() {
+      this.$store.commit('licenses/setLicenseId', this.licenseId);
     },
   },
 };

@@ -158,6 +158,7 @@
         <div v-if="isContractsTableVisible">
           <Contracts
             :rows="computedApiContracts"
+            v-if="apiContracts.length > 0"
             routePath="/app/explore"
             :isUnsubscibeButtonVisible="true"
             :isLogsButtonVisible="false"
@@ -319,7 +320,8 @@ export default {
       .then((values) => {
         this.apiContracts = values
         .reduce((acc, val) => (val.data ? [...acc, ...val.data] : acc), []);
-      });
+      })
+      .catch(e => console.error(e.data)); //eslint-disable-line
     },
     handleSubscribe(evt) {
       evt.preventDefault();

@@ -123,7 +123,7 @@
             :class="{'active': isContractsTableVisible}"
           >
             <span>Contracts</span>
-            <b-badge pill>{{ apiContracts.length }}</b-badge>
+            <b-badge pill>{{ computedApiContracts.length }}</b-badge>
           </b-button>
         </div>
         <div v-if="isLicensesTableVisible">
@@ -137,7 +137,7 @@
           <Contracts
             :rows="computedApiContracts"
             v-if="apiContracts.length > 0"
-            routePath="/app/explore"
+            routePath="/app/explore/"
             :isUnsubscibeButtonVisible="true"
             :isLogsButtonVisible="false"
             :onNeedsRefreshData="getApiLicenses"
@@ -172,6 +172,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      currentPage: state => state.currentPage,
       users: state => state.users.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
@@ -187,15 +188,29 @@ export default {
     }),
     computedApiContracts() {
       const { apiContracts, contractStates } = this;
+      const { apis, currentUser } = this;
+      const { rootPath } = this.currentPage;
       const getContractStateName = (contractStateId) => {
         const contractState = contractStates
           .find(contractStateItem => contractStateItem.uuid === contractStateId);
         return contractState ? contractState.name : contractStateId;
       };
-      return apiContracts.map(contract => ({
-        ...contract,
-        contractstatename: getContractStateName(contract.contractstateid),
-      }));
+      const getUserFromApi = (apiId) => {
+        const theApi = apis.find(item => item.uuid === apiId) || {};
+        return theApi.subjectid || apiId;
+      };
+      return apiContracts
+        .map(contract => ({
+          ...contract,
+          contractstatename: getContractStateName(contract.contractstateid),
+          userid: getUserFromApi(contract.apiid),
+        }))
+        .filter((item) => {
+          if (rootPath === 'explore') {
+            return item.userid === currentUser.props.uuid;
+          }
+          return true;
+        });
     },
     computedApps() {
       const { subjectApps, apps } = this;

@@ -72,6 +72,7 @@
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/'"
         @click="handleToggleContractsTable"
         size="md"
         variant="link"

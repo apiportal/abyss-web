@@ -39,29 +39,36 @@ export default {
         ...rest,
       }];
       console.log('proxyToAdd: ', proxyToAdd); // eslint-disable-line
-      postProxies(proxyToAdd).then((responseProxy) => {
-        if (responseProxy && responseProxy.data) {
-          const createdProxy = responseProxy.data[0].response;
+      postProxies(proxyToAdd).then((response) => {
+        if (response && response.data) {
+          const createdApi = response.data[0].response;
+          /* // !!! replace after cascade
+          this.$store.dispatch('proxies/getProxies', {
+            uuid: currentUser.uuid,
+            refresh: true,
+          });
+          this.$router.push(`/app/my-apis/my-proxy-apis/1/edit-api/${createdApi.uuid}`);
+          // !!! */
           const resourceToAdd = [{
-            organizationid: createdProxy.organizationid,
-            crudsubjectid: createdProxy.crudsubjectid,
+            organizationid: createdApi.organizationid,
+            crudsubjectid: createdApi.crudsubjectid,
             resourcetypeid: '505099b4-19da-401c-bd17-8c3a85d89743',
-            resourcename: `${createdProxy.openapidocument.info.title} ${createdProxy.openapidocument.info.version} PROXY API`,
-            description: createdProxy.openapidocument.info.description,
-            resourcerefid: createdProxy.uuid,
+            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} PROXY API`,
+            description: createdApi.openapidocument.info.description,
+            resourcerefid: createdApi.uuid,
             isactive: true,
           }];
           postResources(resourceToAdd).then((responseResource) => {
             if (responseResource && responseResource.data) {
               const createdResource = responseResource.data[0].response;
               const permissionToAdd = [{
-                organizationid: createdProxy.organizationid,
-                crudsubjectid: createdProxy.crudsubjectid,
-                permission: `Ownership of ${createdProxy.name} PROXY API by ${currentUser.props.displayname}`,
-                description: `Ownership of ${createdProxy.name} PROXY API by ${currentUser.props.displayname}`,
+                organizationid: createdApi.organizationid,
+                crudsubjectid: createdApi.crudsubjectid,
+                permission: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                description: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
                 effectivestartdate: this.$moment.utc().toISOString(),
                 effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
-                subjectid: createdProxy.crudsubjectid,
+                subjectid: createdApi.subjectid,
                 resourceid: createdResource.uuid,
                 resourceactionid: 'd5318796-9ad3-4445-892f-27670cda77d6',
                 accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
@@ -69,11 +76,16 @@ export default {
               }];
               postPermissions(permissionToAdd).then((responsePermission) => {
                 if (responsePermission && responsePermission.data) {
-                  this.$router.push(this.routePath);
+                  this.$store.dispatch('proxies/getProxies', {
+                    uuid: currentUser.uuid,
+                    refresh: true,
+                  });
+                  this.$router.push(`/app/my-apis/my-proxy-apis/1/edit-api/${createdApi.uuid}`);
                 }
               });
             }
           });
+          // !!!
         }
       });
     },

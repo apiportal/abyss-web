@@ -81,8 +81,6 @@ export default {
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
   },
 };
 </script>

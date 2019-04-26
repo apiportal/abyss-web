@@ -19,7 +19,7 @@
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
-        <dd>{{ computedBusinessApi }}</dd>
+        <dd>{{ computedBusinessApi[0].openapidocument.info.title }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
@@ -43,6 +43,15 @@
         <span>Contracts</span>
         <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
+      <b-button
+        @click="handleToggleBusinessTable"
+        size="md"
+        variant="link"
+        :class="{'active': isBusinessTableVisible}"
+      >
+        <span>Business API</span>
+        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
+      </b-button>
     </div>
     <div v-if="isLicensesTableVisible && item.licenses.length">
       <Licenses
@@ -55,6 +64,12 @@
         :rows="item.contracts"
         :routePath="routePath"
       ></Contracts>
+    </div>
+    <div v-if="isBusinessTableVisible && computedBusinessApi">
+      <Apis
+        :rows="computedBusinessApi"
+        :routePath="routePath"
+      ></Apis>
     </div>
   </div>
 </template>
@@ -70,8 +85,8 @@ export default {
       businessApis: state => state.businessApis.items,
     }),
     computedBusinessApi() {
-      return this.businessApis.find(business =>
-        business.uuid === this.item.businessapiid).openapidocument.info.title;
+      return this.businessApis.filter(item =>
+        item.uuid === this.item.businessapiid);
     },
   },
   components: {
@@ -79,6 +94,7 @@ export default {
     Icon,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
+    Apis: () => import('@/components/shared/subjects/apis/Apis'),
   },
   props: {
     item: {
@@ -102,6 +118,7 @@ export default {
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
+      isBusinessTableVisible: false,
     };
   },
   methods: {
@@ -113,6 +130,7 @@ export default {
       if (this.isContractsTableVisible) {
         this.isLicensesTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
       }
     },
     handleToggleLicensesTable() {
@@ -120,6 +138,15 @@ export default {
       if (this.isLicensesTableVisible) {
         this.isContractsTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
+      }
+    },
+    handleToggleBusinessTable() {
+      this.isBusinessTableVisible = !this.isBusinessTableVisible;
+      if (this.isBusinessTableVisible) {
+        this.isContractsTableVisible = false;
+        this.isTokensTableVisible = false;
+        this.isLicensesTableVisible = false;
       }
     },
     handleCollapseTableRows(itemId) {

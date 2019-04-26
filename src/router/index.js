@@ -23,6 +23,7 @@ import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import CreateProxy from '@/components/routes/myApis/CreateProxy';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
+import EditMyApisLifeCycle from '@/components/routes/myApis/EditMyApisLifeCycle';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -288,6 +289,10 @@ export default new Router({
                 {
                   path: 'add-new-api',
                   component: AddMyApis,
+                },
+                {
+                  path: 'edit-api-lifecycle/:apiId',
+                  component: EditMyApisLifeCycle,
                 },
               ],
             },

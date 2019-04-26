@@ -14,7 +14,8 @@ const actions = {
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApis()
+    // api.getApis()
+    api.getAllProxies()
     .then((response) => {
       if (response && response.data) {
         commit('setApis', response.data);

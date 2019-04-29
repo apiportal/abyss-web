@@ -18,16 +18,6 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
-            />
-          </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
               sortByKeyType="string"
@@ -110,13 +100,10 @@
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ environment(proxyItem) }}
-          </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apistatename }}
+            {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}

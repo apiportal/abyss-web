@@ -26,6 +26,15 @@
     </div>
     <div class="row abyss-table-buttons">
       <b-button
+        @click="handleToggleBusinessTable"
+        size="md"
+        variant="link"
+        :class="{'active': isBusinessTableVisible}"
+      >
+        <span>Business API</span>
+        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
+      </b-button>
+      <b-button
         @click="handleToggleLicensesTable"
         size="md"
         variant="link"
@@ -42,15 +51,6 @@
       >
         <span>Contracts</span>
         <b-badge pill>{{ item.contractscount }}</b-badge>
-      </b-button>
-      <b-button
-        @click="handleToggleBusinessTable"
-        size="md"
-        variant="link"
-        :class="{'active': isBusinessTableVisible}"
-      >
-        <span>Business API</span>
-        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
       </b-button>
     </div>
     <div v-if="isLicensesTableVisible && item.licenses.length">

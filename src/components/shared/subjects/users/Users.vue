@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Display Name"
+              text="User Name"
               sortByKey="displayname"
               sortByKeyType="string"
               data-qa="tableHeadName"

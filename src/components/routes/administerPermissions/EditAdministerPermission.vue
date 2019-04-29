@@ -11,7 +11,8 @@
         areSubjectTypesLoaded &&
         areUsersLoaded &&
         areGroupsLoaded &&
-        areAppsLoaded
+        areAppsLoaded &&
+        areRolesLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -26,6 +27,7 @@
       :apps="apps"
       :permission="getPermission(permissionId)"
       :resourceTypeId="getResourceTypeIdByPermision(getPermission(permissionId))"
+      :roles="roles"
     />
   </div>
 </template>
@@ -48,6 +50,7 @@ export default {
       users: state => state.users.items,
       groups: state => state.groups.items,
       apps: state => state.apps.items,
+      roles: state => state.roles.items,
       permissions: state => state.permissions.items,
       areAccessManagersLoaded: state => state.accessManagers.lastUpdatedAt,
       areOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
@@ -59,6 +62,7 @@ export default {
       areUsersLoaded: state => state.users.lastUpdatedAt,
       areGroupsLoaded: state => state.groups.lastUpdatedAt,
       areAppsLoaded: state => state.apps.lastUpdatedAt,
+      areRolesLoaded: state => state.roles.lastUpdatedAt,
     }),
   },
   methods: {

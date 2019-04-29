@@ -115,9 +115,6 @@
               <b-button class="mx-2" variant="primary" type="submit">
                 Save
               </b-button>
-              <b-button class="mx-2" variant="secondary">
-                Cancel
-              </b-button>
             </footer>
           </div>
         </b-form>

@@ -55,17 +55,16 @@
             />
           </th>
           <th>
-            <SortBy
+            <!-- <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               text="Subject"
               sortByKey="displayname"
               sortByKeyType="string"
-            />
+            /> -->
           </th>
 
-          <th></th>
         </tr>
       </thead>
     <TBodyLoading
@@ -97,9 +96,9 @@
           <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.resourceactionname }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.subjectid }}
-          </td>
+          </td> -->
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">

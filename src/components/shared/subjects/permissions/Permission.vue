@@ -12,19 +12,18 @@
         <dd>{{ permission.organizationname }}</dd>
       </dl>
       <dl class="col">
+        <dt>Subject Type:</dt>
+        <dd>{{ subjectType.typename }}</dd>
         <dt>Subject:</dt>
         <dd>{{ subject.displayname }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Resource Type:</dt>
+        <dd>{{ permission.resourcetypename }}</dd>
         <dt>Resource:</dt>
         <dd>{{ permission.resourcename }}</dd>
         <dt>Resource Action:</dt>
         <dd>{{ permission.resourceactionname }}</dd>
-      </dl>
-      <dl class="col">
-        <dt>Subject Type:</dt>
-        <dd>{{ subjectType.typename }}</dd>
-        <dt>Resource Type:</dt>
-        <dd>{{ permission.resourcetypename }}</dd>
-
       </dl>
       <dl class="col">
         <dt>Effective Start Date:</dt>

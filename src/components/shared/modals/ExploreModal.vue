@@ -185,10 +185,11 @@ export default {
       resources: state => state.resources.items,
       resourceActions: state => state.resourceActions.items,
       subjectApps: state => state.subjectApps.items,
+      userAppMemberships: state => state.subjectMemberships.userApp,
     }),
     computedApiContracts() {
       const { apiContracts, contractStates } = this;
-      const { apis, currentUser } = this;
+      const { apis, userAppMemberships, currentUser } = this;
       const { rootPath } = this.currentPage;
       const getContractStateName = (contractStateId) => {
         const contractState = contractStates
@@ -199,15 +200,20 @@ export default {
         const theApi = apis.find(item => item.uuid === apiId) || {};
         return theApi.subjectid || apiId;
       };
+      const getUserFromApp = (appId) => {
+        const app = userAppMemberships.find(item => item.subjectgroupid === appId) || {};
+        return app.subjectid || appId;
+      };
       return apiContracts
         .map(contract => ({
           ...contract,
           contractstatename: getContractStateName(contract.contractstateid),
-          userid: getUserFromApi(contract.apiid),
+          userIdFromApi: getUserFromApi(contract.apiid),
+          userIdFromApp: getUserFromApp(contract.subjectid),
         }))
         .filter((item) => {
           if (rootPath === 'explore') {
-            return item.userid === currentUser.props.uuid;
+            return item.userIdFromApi === currentUser.props.uuid || item.userIdFromApp === currentUser.props.uuid; // eslint-disable-line
           }
           return true;
         });
@@ -395,6 +401,10 @@ export default {
               this.isLicensesTableVisible = false;
               this.isContractsTableVisible = true;
               this.$store.commit('licenses/setLicenseId', null);
+              this.$bvToast.toast(`Subscriped to ${contract.name}`, {
+                title: 'Success',
+                autoHideDelay: 5000,
+              });
             });
           });
         }

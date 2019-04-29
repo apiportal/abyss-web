@@ -90,6 +90,7 @@ export default {
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
   },
   methods: {
     subStr(i) {

@@ -205,6 +205,9 @@ export default {
   deleteSubjectMemberships(uuid) {
     return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
   },
+  getUserAppMembership() {
+    return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');

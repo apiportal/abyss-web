@@ -60,7 +60,7 @@
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               text="Subject"
-              sortByKey="subject.displayname"
+              sortByKey="displayname"
               sortByKeyType="string"
             />
           </th>
@@ -76,6 +76,7 @@
         v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :data-qa="`tableRow-${index}`"
+        :subjectId="item.subjectid"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -140,6 +141,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Permission from '@/components/shared/subjects/permissions/Permission';
+import api from '@/api';
 
 export default {
   components: {
@@ -173,6 +175,8 @@ export default {
       sortByKey: 'permission',
       sortByKeyType: 'string',
       sortDirection: 'desc',
+      subject: {},
+      subjectId: '',
     };
   },
   methods: {
@@ -187,6 +191,21 @@ export default {
     handleSortByClick() {
       //
     },
+    getSubject(subjectId) {
+      // const { subjectid } = this.permission;
+      console.log('subjid', subjectId); // eslint-disable-line
+      api.getSubject(subjectId).then((response) => {
+        this.subject = response.data[0];
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.subject = {};
+        }
+      });
+    },
+  },
+  mounted() {
+    // this.getSubject();
   },
 };
 </script>

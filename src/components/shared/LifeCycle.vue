@@ -1,24 +1,13 @@
 <template>
   <div class="life-cycle">
-    <b-button class="btn-life-cycle" disabled>Draft</b-button>
-    <b-button class="btn-life-cycle" variant="outline-success">Staged</b-button>
-    <b-button class="btn-life-cycle" variant="primary">Published</b-button>
-    <b-button class="btn-life-cycle" variant="outline-success">Promoted</b-button>
-    <b-button class="btn-life-cycle" disabled>Demoted</b-button>  
-    <b-button class="btn-life-cycle" variant="outline-success">Deprecated</b-button>
-    <b-button class="btn-life-cycle" variant="outline-success">Retired</b-button>
-    <b-button class="btn-life-cycle" disabled>Archived</b-button>
-
-    <!-- <ul>
-      <li>Draft</li>
-      <li>Staged</li>
-      <li>Published</li>
-      <li>Promoted</li>
-      <li>Demoted</li>
-      <li>Deprecated</li>
-      <li>Retired</li>
-      <li>Archived</li>
-    </ul> -->
+    <b-button class="btn-life-cycle">Draft</b-button>
+    <b-button class="btn-life-cycle">Staged</b-button>
+    <b-button class="btn-life-cycle">Published</b-button>
+    <b-button class="btn-life-cycle">Promoted</b-button>
+    <b-button class="btn-life-cycle">Demoted</b-button>  
+    <b-button class="btn-life-cycle">Deprecated</b-button>
+    <b-button class="btn-life-cycle">Retired</b-button>
+    <b-button class="btn-life-cycle">Archived</b-button>
   </div>
 </template>
 
@@ -36,5 +25,4 @@
 ul {
   list-style: none;
 }
-
 </style>

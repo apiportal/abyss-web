@@ -9,6 +9,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditApiLifeCycle"
   >
     <template slot="header">
       <h5 class="modal-title">
@@ -17,8 +18,9 @@
     </template>
     <template>
       <LifeCycle>
-
+        
       </LifeCycle>
+      {{ computedApiState.name }}
       <b-form
         @submit="handleSubmit"
       >
@@ -44,6 +46,7 @@
 <script>
 import Modal from '@/components/shared/modals/Modal';
 import LifeCycle from '@/components/shared/LifeCycle';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -79,7 +82,7 @@ export default {
     size: {
       type: String,
       required: false,
-      default() { return 'xl'; },
+      default() { return 'md'; },
     },
     onClose: {
       type: Function,
@@ -89,11 +92,24 @@ export default {
       type: Function,
       required: true,
     },
+    proxy: {
+      type: Object,
+      required: false,
+    },
+  },
+  computed: {
+    ...mapState({
+      apiStates: state => state.apiStates.items,
+    }),
+    computedApiState() {
+      const { proxy, apiStates } = this;
+      return apiStates.find(item => item.uuid === proxy.apistateid);
+    },
   },
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      console.log(evt); // eslint-disable-line
+      console.log(this.computedApiState.name); // eslint-disable-line
     },
   },
 };

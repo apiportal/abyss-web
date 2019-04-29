@@ -38,6 +38,7 @@
         roles: state => state.roles.items,
         isRolesLoaded: state => state.roles.lastUpdatedAt,
         isUsersLoaded: state => state.users.lastUpdatedAt,
+        roleMemberships: state => state.roleMemberships.items,
       }),
     },
     methods: {

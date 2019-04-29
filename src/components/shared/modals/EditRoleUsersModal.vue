@@ -128,10 +128,13 @@
       },
     },
     data() {
-      const { users, memberships } = this;
+      const { users, memberships, selectedRole } = this;
       return {
         roleUsersEditable: [...JSON.parse(JSON.stringify(users))].map((user) => {
-          const membership = memberships.find(m => m.subjectid === user.uuid);
+          const membership = memberships.find(m =>
+            m.subjectid === user.uuid &&
+            m.subjectgroupid === selectedRole.uuid,
+          );
           const isAttached = Boolean(membership);
           const sortTime = (new Date()).getTime();
           return {

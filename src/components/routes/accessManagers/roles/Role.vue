@@ -1,9 +1,6 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
-      </dl>
       <dl class="col">
         <dt>Role Name:</dt>
         <dd>{{ item.subjectname }}</dd>
@@ -11,16 +8,14 @@
         <dd>{{ item.displayname }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
-        <dt>Active:</dt>
-        <dd>{{ item.isactivated | booleanToText }}</dd>
       </dl>
       <dl class="col">
         <dt>Organization:</dt>
         <dd>{{ item.organizationname }}</dd>
         <dt>Directory:</dt>
         <dd>{{ item.directoryname }}</dd>
-        <dt>Locked:</dt>
-        <dd>{{ item.islocked | booleanToText }}</dd>
+        <dt>Active:</dt>
+        <dd>{{ item.isactivated | booleanToText }}</dd>
       </dl>
       <dl class="col">
         <dt>Effective Start Date:</dt>

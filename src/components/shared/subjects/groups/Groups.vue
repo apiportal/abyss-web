@@ -117,7 +117,6 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Group from '@/components/shared/subjects/groups/Group';
-import Helpers from '@/helpers';
 
 export default {
   components: {
@@ -144,26 +143,10 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
-    sortedRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
-      const { sortArrayOfObjects } = Helpers;
-      return sortArrayOfObjects({
-        array: rows
-          .map(item => ({
-            ...item,
-          })),
-        sortByKey,
-        sortByKeyType,
-        sortDirection,
-      });
-    },
   },
   data() {
     return {
       collapsedRows: [],
-      sortByKey: 'displayname',
-      sortByKeyType: 'string',
-      sortDirection: 'desc',
     };
   },
   methods: {

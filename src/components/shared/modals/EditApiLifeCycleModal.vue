@@ -13,14 +13,13 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit API Life Cycle
+        Edit API Lifecycle
       </h5>
     </template>
     <template>
-      <LifeCycle>
-        
-      </LifeCycle>
-      {{ computedApiState.name }}
+      <LifeCycle
+        :currentApiState="computedApiState"
+      />
       <b-form
         @submit="handleSubmit"
       >
@@ -109,7 +108,6 @@ export default {
   methods: {
     handleSubmit(evt) {
       evt.preventDefault();
-      console.log(this.computedApiState.name); // eslint-disable-line
     },
   },
 };

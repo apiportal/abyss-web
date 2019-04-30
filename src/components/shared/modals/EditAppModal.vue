@@ -85,7 +85,7 @@
               Is Sandbox
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group
+          <!-- <b-form-group
             id="organizationGroup"
             label="Organization*"
             label-for="organizationInput"
@@ -107,7 +107,7 @@
                 })),
               ]"
             />
-          </b-form-group>
+          </b-form-group> -->
           <b-form-group
             id="directoryGroup"
             label="Directory*"
@@ -238,17 +238,17 @@ export default {
       }
       return '';
     },
-    organizationState() {
-      const { organizationid } = this.appEditable;
-      return organizationid !== null;
-    },
-    organizationInvalidFeedback() {
-      const { organizationid } = this.appEditable;
-      if (organizationid === null) {
-        return 'Please select';
-      }
-      return '';
-    },
+    // organizationState() {
+    //   const { organizationid } = this.appEditable;
+    //   return organizationid !== null;
+    // },
+    // organizationInvalidFeedback() {
+    //   const { organizationid } = this.appEditable;
+    //   if (organizationid === null) {
+    //     return 'Please select';
+    //   }
+    //   return '';
+    // },
     directoryState() {
       const { subjectdirectoryid } = this.appEditable;
       return subjectdirectoryid !== null;

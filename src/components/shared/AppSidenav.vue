@@ -13,17 +13,17 @@
       </b-form>
       <ul class="sidenav-links">
         <li>
-          <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome" disabled>
+          <!-- <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome" disabled>
             <span><span class="route-icon"><Icon icon="home" /></span> Home<span class="soon"> - Soon</span></span>
-          </b-link>
+          </b-link> -->
 
           <b-link to="/app/explore" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`" data-qa="sideMenuMarketplace">
             <span class="route-icon"><Icon icon="globe" /></span> Marketplace
           </b-link>
 
-          <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics" disabled> 
+          <!-- <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics" disabled> 
             <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics<span class="soon"> - Soon</span>
-          </b-link>
+          </b-link> -->
 
           <p>MANAGE</p>
 

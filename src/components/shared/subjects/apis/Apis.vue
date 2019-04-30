@@ -177,14 +177,32 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      proxies: state => state.proxies.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortByKey, sortByKeyType, sortDirection, rows,
+      apiStates, apiVisibilityTypes, proxies } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+      const getNumberOfProxies = apiUuid =>
+        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      // const businessApisIds = businessApis.map(item => item.uuid);
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            apistatename: getApiStateName(item.apistateid),
+            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            numberofproxies: getNumberOfProxies(item.uuid),
           })),
         sortByKey,
         sortByKeyType,

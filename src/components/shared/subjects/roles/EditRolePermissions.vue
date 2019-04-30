@@ -2,14 +2,13 @@
   <div>
     <EditRolePermissionsModal
       v-if="
-        isUsersLoaded &&
+        isRolesLoaded &&
         isRolePermissionsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :user="users.find(item => item.uuid === userId)"
-      :permissions="permissions"
+      :selectedRole="roles.find(item => item.uuid === selectedRoleId)"
       :rolePermissions="rolePermissions"
     />
   </div>
@@ -33,9 +32,9 @@
     },
     computed: {
       ...mapState({
-        users: state => state.users.items,
+        roles: state => state.roles.items,
         permissions: state => state.permissions.items,
-        isUsersLoaded: state => state.users.lastUpdatedAt,
+        isRolesLoaded: state => state.roles.lastUpdatedAt,
       }),
     },
     methods: {
@@ -45,8 +44,9 @@
       handleModalUpdate() {
         this.$router.push(this.routePath);
       },
-      getPermissionsOfRole() {
-        api.getPermissionsOfRole(this.userId).then((response) => {
+      getPermissions() {
+        const { selectedRoleId } = this;
+        api.getSubjectPermissions(selectedRoleId).then((response) => {
           if (response && response.data) {
             this.rolePermissions = response.data;
           }
@@ -61,15 +61,15 @@
     },
     data() {
       return {
-        userId: this.$route.params.id,
+        selectedRoleId: this.$route.params.id,
         page: this.$route.params.page,
         rolePermissions: [],
         isRolePermissionsLoaded: false,
       };
     },
     mounted() {
-      this.getPermissionsOfRole();
-      this.$store.dispatch('roles/1', {});
+      this.getPermissions();
+      this.$store.dispatch('roles/getRoles', {});
     },
   };
 </script>

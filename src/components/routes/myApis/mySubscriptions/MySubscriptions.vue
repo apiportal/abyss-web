@@ -81,10 +81,11 @@ export default {
       currentUser: state => state.user,
       contracts: state => state.userContracts.items,
       proxies: state => state.proxies.items,
+      apis: state => state.apis.items,
     }),
     contractRows() {
       const contracts = this.contracts.filter(item => !item.isdeleted);
-      const contractApis = this.proxies.filter(el =>
+      const contractApis = this.apis.filter(el =>
         contracts.some(f =>
           f.apiid === el.uuid,
         ),

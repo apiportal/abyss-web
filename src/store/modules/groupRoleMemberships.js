@@ -37,6 +37,30 @@ const actions = {
       }
     });
   },
+  deleteGroupRoleMemberships: ({ commit }, membership) => {
+    return api.deleteGroupRoleMemberships(membership.uuid).then((response) => {
+      commit('setGroupRoleMembershipDeleted', membership.uuid);
+      return response;
+    });
+  },
+  postGroupRoleMemberships: ({ commit }, membership) => {
+    return api.postGroupRoleMemberships(membership).then((response) => {
+      let error = false;
+
+      response.data.map((status) => {
+        if (status.error.code !==0) {
+          error = true;
+          alert(status.error.usermessage);
+        } else {
+          commit('addNewGroupRoleMembership', status.response);
+        }
+      });
+      if (error) {
+        return false;
+      }
+      return response;
+    });
+  },
 };
 
 const mutations = {
@@ -44,23 +68,23 @@ const mutations = {
     state.items = groupRoleMemberships;
     state.lastUpdatedAt = (new Date()).getTime();
   },
-  // setRoleMembershipDeleted: (state, membershipUuid) => {
-  //   state.items = state.items.map((item) => {
-  //     if (item.uuid === membershipUuid) {
-  //       return {
-  //         ...item,
-  //         isdeleted: true,
-  //       };
-  //     }
-  //     return item;
-  //   });
-  // },
-  // addNewRoleMembership: (state, newRoleMembership) => {
-  //   state.items = [
-  //     ...state.items,
-  //     newRoleMembership,
-  //   ];
-  // },
+  setGroupRoleMembershipDeleted: (state, membershipUuid) => {
+    state.items = state.items.map((item) => {
+      if (item.uuid === membershipUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    });
+  },
+  addNewGroupRoleMembership: (state, newRoleMembership) => {
+    state.items = [
+      ...state.items,
+      newRoleMembership,
+    ];
+  },
 };
 
 export default {

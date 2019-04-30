@@ -48,7 +48,7 @@
           </tr>
         </thead>
         <TBodyLoading
-          v-if="isLoading && totalRows.length === 0"
+          v-if="isLoading && rows.length === 0"
           :cols="5"
         />
         <TbodyCollapsible
@@ -106,20 +106,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
-      <router-view></router-view>
     </div>
-      <!-- <div class="page-footer" v-if="totalRows.length > itemsPerPage">
-      <b-pagination
-        size="md"
-        :total-rows="totalRows.length"
-        v-model="page"
-        :per-page="itemsPerPage"
-        align="center"
-        @change="handlePageChange"
-        data-qa="footerPagination"
-      >
-      </b-pagination>
-    </div> -->
 </template>
 
 <script>
@@ -163,6 +150,11 @@ export default {
     };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

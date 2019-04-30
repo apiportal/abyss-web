@@ -31,6 +31,7 @@ export default {
       currentUser: state => state.user,
       visibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.licenses.items,
+      subjectLicenses: state => state.subjectLicenses.items,
       areLicensesLoaded: state => state.licenses.lastUpdatedAt,
       areVisibilityTypesLoaded: state => state.apiVisibilityTypes.lastUpdatedAt,
     }),

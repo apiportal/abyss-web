@@ -62,6 +62,7 @@
         <b-badge pill>{{ tableRows.length }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/'"
         @click="handleToggleApisTable"
         size="md"
         variant="link"
@@ -71,13 +72,14 @@
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/'"
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts with this License</span>
-        <b-badge pill>{{ licenseContracts.length }}</b-badge>
+        <b-badge pill>{{ computedLicenseContracts.length }}</b-badge>
       </b-button>
     </div>
     <div v-if="isPoliciesTableVisible">
@@ -92,7 +94,7 @@
         :routePath="routePath"
       ></Proxies>
     </div>
-    <div v-if="isContractsTableVisible && licenseContracts.length">
+    <div v-if="isContractsTableVisible && computedLicenseContracts.length">
       <Contracts
         :rows="computedLicenseContracts"
         :routePath="routePath"
@@ -138,9 +140,11 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      currentPage: state => state.currentPage,
       policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
+      apis: state => state.apis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
@@ -167,16 +171,29 @@ export default {
       }));
     },
     computedLicenseContracts() {
-      const { licenseContracts, contractStates } = this;
+      const { licenseContracts, contractStates, apis } = this;
+      const { currentUser, routePath } = this;
       const getContractStateName = (contractStateId) => {
         const contractState = contractStates
           .find(contractStateItem => contractStateItem.uuid === contractStateId);
         return contractState ? contractState.name : contractStateId;
       };
-      return licenseContracts.map(licenseContractItem => ({
-        ...licenseContractItem,
-        contractstatename: getContractStateName(licenseContractItem.contractstateid),
-      }));
+      const getUserFromApi = (apiId) => {
+        const theApi = apis.find(item => item.uuid === apiId) || {};
+        return theApi.subjectid || apiId;
+      };
+      return licenseContracts
+        .map(licenseContractItem => ({
+          ...licenseContractItem,
+          contractstatename: getContractStateName(licenseContractItem.contractstateid),
+          userid: getUserFromApi(licenseContractItem.apiid),
+        }))
+        .filter((item) => {
+          if (routePath === '/app/explore/') {
+            return item.userid === currentUser.props.uuid;
+          }
+          return true;
+        });
     },
   },
   data() {

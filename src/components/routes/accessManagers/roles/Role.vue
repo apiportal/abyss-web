@@ -1,9 +1,6 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
-      </dl>
       <dl class="col">
         <dt>Role Name:</dt>
         <dd>{{ item.subjectname }}</dd>
@@ -11,22 +8,20 @@
         <dd>{{ item.displayname }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
-        <dt>Active:</dt>
-        <dd>{{ item.isactivated | booleanToText }}</dd>
       </dl>
       <dl class="col">
         <dt>Organization:</dt>
         <dd>{{ item.organizationname }}</dd>
         <dt>Directory:</dt>
         <dd>{{ item.directoryname }}</dd>
-        <dt>Locked:</dt>
-        <dd>{{ item.islocked | booleanToText }}</dd>
+        <dt>Active:</dt>
+        <dd>{{ item.isactivated | booleanToText }}</dd>
       </dl>
       <dl class="col">
-        <dt>Effective End Date:</dt>
-        <dd>{{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Effective Start Date:</dt>
         <dd>{{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Effective End Date:</dt>
+        <dd>{{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Created:</dt>
         <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt v-if="!item.isdeleted">Updated:</dt>
@@ -41,19 +36,17 @@
         size="md"
         variant="link"
         :class="{'active': isShowRolePermissions}"
+        data-qa="btnRolePermissions"
       >
         <Icon icon="user-cog" /> Permissions
         <b-badge pill>{{ item.permissions.length }}</b-badge>
       </b-button>
 
       <b-button
+        @click="listRoleUsers"
         size="md"
         variant="link"
-        v-b-tooltip.hover
-        title="Users"
-        @click="listRoleUsers"
         :class="{'active': isShowRoleUsers}"
-        v-if="item.users.length"
         data-qa="btnRoleUsers"
       >
         <Icon icon="users" /> Users
@@ -65,6 +58,7 @@
         size="md"
         variant="link"
         :class="{'active': isShowRoleGroups}"
+        data-qa="btnRoleGroups"
       >
         <Icon icon="user-friends" /> Groups
         <b-badge pill>{{ item.groups.length }}</b-badge>
@@ -147,14 +141,17 @@ export default {
   methods: {
     listRoleUsers() {
       this.isShowRolePermissions = false;
+      this.isShowRoleGroups = false;
       this.isShowRoleUsers = !this.isShowRoleUsers;
     },
     listRolePermissions() {
       this.isShowRoleUsers = false;
+      this.isShowRoleGroups = false;
       this.isShowRolePermissions = !this.isShowRolePermissions;
     },
     listRoleGroups() {
-      this.isShowRoleGroups = false;
+      this.isShowRoleUsers = false;
+      this.isShowRolePermissions = false;
       this.isShowRoleGroups = !this.isShowRoleGroups;
     },
   },

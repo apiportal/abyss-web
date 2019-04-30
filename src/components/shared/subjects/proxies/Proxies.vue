@@ -18,16 +18,6 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
-            />
-          </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
               sortByKeyType="string"
@@ -110,13 +100,10 @@
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ environment(proxyItem) }}
-          </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apistatename }}
+            {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}
@@ -133,7 +120,7 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
           </td>
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -143,6 +130,8 @@
 
               <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 
+              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+
               <b-dropdown-header>LOGS</b-dropdown-header>
 
               <b-dropdown-item :to="`${routePath}/logs/${proxyItem.uuid}/api/1`">All</b-dropdown-item>
@@ -151,6 +140,7 @@
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
           <td colspan="10">

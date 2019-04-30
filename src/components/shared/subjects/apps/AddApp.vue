@@ -70,7 +70,7 @@ export default {
         isrestrictedtoprocessing: false,
         issandbox: false,
         lastname: '',
-        organizationid: null,
+        organizationid: this.currentUser.props.organizationid,
         password: 'temppassword',
         picture: '',
         secondaryemail: this.currentUser.props.email,

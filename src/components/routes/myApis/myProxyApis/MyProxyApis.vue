@@ -86,28 +86,28 @@ export default {
     }),
 
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortByKey, sortByKeyType, sortDirection, apis, proxies } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { proxies, apiStates, apiVisibilityTypes, apis } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      // const { proxies, apiStates, apiVisibilityTypes } = this;
+      // const getApiStateName = (apistateid) => {
+      //   const apiState = apiStates.find(item => item.uuid === apistateid);
+      //   return apiState ? apiState.name : apistateid;
+      // };
+      // const getApiVisibilityName = (apivisibilityid) => {
+      //   const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+      //   return apiVisibility ? apiVisibility.name : apivisibilityid;
+      // };
+      // const getNumberOfProxies = apiUuid =>
+      //   proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
       const proxiesIds = proxies.map(item => item.uuid);
       return sortArrayOfObjects({
         array: apis
           .filter(item => proxiesIds.indexOf(item.uuid) > -1)
           .map(item => ({
             ...item,
-            apistatename: getApiStateName(item.apistateid),
-            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            numberofproxies: getNumberOfProxies(item.uuid),
+            // apistatename: getApiStateName(item.apistateid),
+            // apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            // numberofproxies: getNumberOfProxies(item.uuid),
           }))
           .filter((item) => {
             const { filterKey } = this;

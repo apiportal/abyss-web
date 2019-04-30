@@ -84,12 +84,11 @@ export default {
     }),
     userApps() {
       // SubjectApps NEW
-      // const subjectAppsIds = this.subjectApps.map(item => item.appid);
-      const subjectAppsIds = this.subjectApps.map(item => item.subjectgroupid);
-      // return this.apps.filter(item => (subjectAppsIds.indexOf(item.uuid) > -1));
+      const subjectAppsIds = this.subjectApps.map(item => item.appid);
+      // const subjectAppsIds = this.subjectApps.map(item => item.subjectgroupid);
       const getSubjectApp = (appId) => {
-        // const subjectapp = this.subjectApps.find(item => item.appid === appId);
-        const subjectapp = this.subjectApps.find(item => item.subjectgroupid === appId);
+        const subjectapp = this.subjectApps.find(item => item.appid === appId);
+        // const subjectapp = this.subjectApps.find(item => item.subjectgroupid === appId);
         return subjectapp;
       };
       const getSubjectPermissions = (resource) => {

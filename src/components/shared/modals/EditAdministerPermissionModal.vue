@@ -178,6 +178,15 @@
             id="subjectInput"
             v-model="permissionEditable.subjectid"
           >
+            <optgroup label="ROLES">
+              <option
+                v-for="(option, index) in roles"
+                v-bind:key="index"
+                :value="option.uuid"
+              >
+                {{ option.displayname }}
+              </option>
+            </optgroup>
             <optgroup label="GROUPS">
               <option
                 v-for="(option, index) in groups"
@@ -196,15 +205,16 @@
                 {{ option.displayname }}
               </option>
             </optgroup>
-            <optgroup label="APPS">
+            <!-- <optgroup label="APPS">
               <option
-                v-for="(option, index) in users"
+                v-for="(option, index) in apps"
                 v-bind:key="index"
                 :value="option.uuid"
               >
                 {{ option.displayname }}
               </option>
-            </optgroup>
+            </optgroup> -->
+
           </b-form-select>
           </b-form-group>
           <b-form-group id="permissionEnabledGroup">
@@ -380,6 +390,11 @@ export default {
       type: String,
       required: false,
     },
+    roles: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
   },
   computed: {
     ...mapState({
@@ -407,77 +422,77 @@ export default {
       const { effectivestartdate } = this.permissionEditable;
       return effectivestartdate.length > 0;
     },
-    effectiveStartDateInvalidFeedback() {
-      const { effectivestartdate } = this.permissionEditable;
-      if (effectivestartdate.length === 0) {
-        return 'Please enter something';
-      }
-      return '';
-    },
+    // effectiveStartDateInvalidFeedback() {
+    //   const { effectivestartdate } = this.permissionEditable;
+    //   if (effectivestartdate.length === 0) {
+    //     return 'Please enter something';
+    //   }
+    //   return '';
+    // },
     effectiveEndDateState() {
       const { effectiveenddate } = this.permissionEditable;
       return effectiveenddate.length > 0;
     },
-    effectiveEndDateInvalidFeedback() {
-      const { effectiveenddate } = this.permissionEditable;
-      if (effectiveenddate.length === 0) {
-        return 'Please enter something';
-      }
-      return '';
-    },
+    // effectiveEndDateInvalidFeedback() {
+    //   const { effectiveenddate } = this.permissionEditable;
+    //   if (effectiveenddate.length === 0) {
+    //     return 'Please enter something';
+    //   }
+    //   return '';
+    // },
     permissionNameState() {
       const { permission } = this.permissionEditable;
       return permission.length > 0;
     },
-    permissionNameInvalidFeedback() {
-      const { permission } = this.permissionEditable;
-      if (permission.length === 0) {
-        return 'Please enter something';
-      }
-      return '';
-    },
+    // permissionNameInvalidFeedback() {
+    //   const { permission } = this.permissionEditable;
+    //   if (permission.length === 0) {
+    //     return 'Please enter something';
+    //   }
+    //   return '';
+    // },
     descriptionState() {
       const { description } = this.permissionEditable;
       return description.length > 0;
     },
-    descriptionInvalidFeedback() {
-      const { description } = this.permissionEditable;
-      if (description.length === 0) {
-        return 'Please enter something';
-      }
-      return '';
-    },
+    // descriptionInvalidFeedback() {
+    //   const { description } = this.permissionEditable;
+    //   if (description.length === 0) {
+    //     return 'Please enter something';
+    //   }
+    //   return '';
+    // },
     organizationIdState() {
       const { organizationid } = this.permissionEditable;
       return organizationid !== null;
     },
-    organizationIdInvalidFeedback() {
-      const { organizationid } = this.permissionEditable;
-      if (organizationid === null) {
-        return 'Please select organization';
-      }
-      return '';
-    },
+    // organizationIdInvalidFeedback() {
+    //   const { organizationid } = this.permissionEditable;
+    //   if (organizationid === null) {
+    //     return 'Please select organization';
+    //   }
+    //   return '';
+    // },
     accessManagerIdState() {
       const { accessmanagerid } = this.permissionEditable;
       return accessmanagerid !== null;
     },
-    accessManagerIdInvalidFeedback() {
-      const { accessmanagerid } = this.permissionEditable;
-      if (accessmanagerid === null) {
-        return 'Please select Access Manager';
-      }
-      return '';
-    },
+    // accessManagerIdInvalidFeedback() {
+    //   const { accessmanagerid } = this.permissionEditable;
+    //   if (accessmanagerid === null) {
+    //     return 'Please select Access Manager';
+    //   }
+    //   return '';
+    // },
     resourceTypeIdState() {
       return this.resourceTypeIdEditable !== null;
     },
-    resourceTypeIdInvalidFeedback() {
-      if (this.resourceTypeIdEditable === null) {
-        return 'Please select Resource Type';
-      }
-      return '';
-    },
+    // resourceTypeIdInvalidFeedback() {
+    //   if (this.resourceTypeIdEditable === null) {
+    //     return 'Please select Resource Type';
+    //   }
+    //   return '';
+    // },
   },
   data() {
     const { permission } = this;

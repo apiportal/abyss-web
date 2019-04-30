@@ -53,7 +53,7 @@
                 </form>
               </div>
               <hr v-if="showAddChip" />
-              <div class="py-1">>
+              <div class="py-1">
                 <b-button
                   v-for="(chip, index) in computedOptions" 
                   v-bind:key="index"

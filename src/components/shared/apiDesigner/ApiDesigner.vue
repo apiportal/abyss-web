@@ -75,28 +75,36 @@
     </div>
     <div class="api-designer-footer">
       <div class="row">
-        <div class="col-md-10">
-          <b-alert v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
-          <b-alert v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
+        <div class="col-md-8">
+          <b-alert class="alert-vivid alert-t-r" v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+          <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
+          <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
+          <b-alert v-model="isVersionChanged" variant="info" dismissible>
+            <strong>VERSION CHANGE DETECTED</strong>
+            You have to save as new API if you change the version.
+          </b-alert>
         </div>
-        <div class="col-md-1">
+        <div class="col">
           <b-button
             variant="link"
             @click="onClose"
+            size="lg"
             data-qa="btnCancel"
             block
           >
             Close
           </b-button>
         </div>
-        <div class="col-md-1">
+        <div class="col">
           <b-button
             variant="primary"
             @click="handleSubmit"
+            size="lg"
             data-qa="btnSave"
             block
           >
-            <Icon icon="save" /> Save
+            <span v-if='isVersionChanged'><Icon icon="plus" /> Create New Version</span>
+            <span v-else><Icon icon="save" /> Save</span>
           </b-button>
         </div>
       </div>
@@ -105,8 +113,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import yaml from 'js-yaml';
-import { mapActions } from 'vuex';
 import Helpers from '@/helpers';
 import AbyssTool from '@/components/shared/apiDesigner/abyssTool/AbyssTool';
 import Editor from '@/components/shared/Editor';
@@ -152,13 +160,20 @@ export default {
     return {
       view: this.initialView,
       apiStates: [(JSON.parse(JSON.stringify(this.api)))],
+      apiVersion: this.api.openapidocument.info.version,
       apiStateIndex: 0,
+      licensesToClone: [],
       showNotValidAlert: false,
       showSavedAlert: false,
+      showCreatedAlert: false,
+      isVersionChanged: false,
       mode: 'json',
     };
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
     editorValue() {
       const { apiStates, apiStateIndex, mode } = this;
       const { openapidocument } = apiStates[apiStateIndex];
@@ -170,9 +185,29 @@ export default {
       return openapidocument;
     },
   },
+  mounted() {
+    this.getApiLicenses();
+  },
   methods: {
     ...mapActions('businessApis', ['putBusinessApis']),
-    ...mapActions('apis', ['putApis']),
+    ...mapActions('apis', ['putApis', 'postApis']),
+    ...mapActions('apiLicenses', ['postApiLicensesRefs']),
+    ...mapActions('resources', ['postResources']),
+    ...mapActions('permissions', ['postPermissions']),
+    getApiLicenses() {
+      if (this.api.isproxyapi) {
+        api.getExploreApiLicenses(this.api.uuid).then((response) => {
+          if (response && response.data) {
+            this.licensesToClone = response.data.filter(item => !item.isdeleted);
+          }
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            this.licensesToClone = [];
+          }
+        });
+      }
+    },
     setView(view) {
       this.view = view;
     },
@@ -183,6 +218,14 @@ export default {
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
+      const versionKey = propAddress.join('.');
+      if (versionKey === 'openapidocument.info.version') {
+        if (this.apiVersion !== newPropValue) {
+          this.isVersionChanged = true;
+        } else {
+          this.isVersionChanged = false;
+        }
+      }
       objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
@@ -195,6 +238,12 @@ export default {
           ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
         },
       };
+      const newVersion = newApiState.openapidocument.info.version;
+      if (this.apiVersion !== newVersion) {
+        this.isVersionChanged = true;
+      } else {
+        this.isVersionChanged = false;
+      }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },
@@ -209,31 +258,189 @@ export default {
       }
     },
     handleSubmit() {
-      const { apiStates, apiStateIndex, putApis } = this;
+      const { apiStates, apiStateIndex, putApis, postApis,
+        postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
       const currentApi = apiStates[apiStateIndex];
       const { openapidocument, businessapiid } = currentApi;
       // VALIDATE API
-      api.validateApi({ spec: openapidocument })
-      .then(() => {
-        // SAVE API
-        putApis({
-          ...currentApi,
-          apioriginid: currentApi.uuid,
-          apiparentid: currentApi.uuid,
-          businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
-        })
-        .then(() => {
-          this.showSavedAlert = true;
-          setTimeout(function() { // eslint-disable-line
-            this.showSavedAlert = false;
-          }.bind(this), 3000);
-        });
+      api.validateApi({ spec: openapidocument }).then(() => {
+        if (this.isVersionChanged) { // CREATE API
+          const apiToCreate = {
+            ...currentApi,
+            version: currentApi.openapidocument.info.version,
+            // apioriginid: currentApi.apioriginid,
+            apioriginid: currentApi.apioriginid !== null ? currentApi.apioriginid : currentApi.uuid,
+            apiparentid: currentApi.uuid,
+            businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
+          };
+          const { uuid, created, updated, deleted, isdeleted, ...rest } = apiToCreate;
+          postApis([{
+            ...rest,
+          }]).then((response) => {
+            if (response && response.data) {
+              const createdApi = response.data[0].response;
+              if (createdApi.isproxyapi) {
+                /* // !!! replace after cascade
+                // licenses
+                if (this.licensesToClone.length) {
+                  const licenses = this.licensesToClone.map(item => ({
+                    organizationid: createdApi.organizationid,
+                    crudsubjectid: createdApi.crudsubjectid,
+                    apiid: createdApi.uuid,
+                    licenseid: item.licenseid,
+                    isactive: true,
+                  }));
+                  for (let i = 0; i < licenses.length; i += 1) {
+                    postApiLicensesRefs([licenses[i]]).then((res) => {
+                      if (res && i === licenses.length - 1) {
+                        this.showCreatedAlert = true;
+                        setTimeout(() => {
+                          this.showCreatedAlert = false;
+                          this.onClose();
+                        }, 3000);
+                      }
+                    })
+                    .catch((error) => {
+                      if (error && i === licenses.length - 1) {
+                        this.onClose();
+                      }
+                    });
+                  }
+                }
+                // licenses
+                // !!! */
+                const resourceProxyToAdd = [{
+                  organizationid: createdApi.organizationid,
+                  crudsubjectid: createdApi.crudsubjectid,
+                  resourcetypeid: '505099b4-19da-401c-bd17-8c3a85d89743',
+                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} PROXY API`,
+                  description: createdApi.openapidocument.info.description,
+                  resourcerefid: createdApi.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceProxyToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdApi.organizationid,
+                      crudsubjectid: createdApi.crudsubjectid,
+                      permission: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdApi.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: 'd5318796-9ad3-4445-892f-27670cda77d6',
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        // licenses
+                        if (this.licensesToClone.length) {
+                          const licenses = this.licensesToClone.map(item => ({
+                            organizationid: createdApi.organizationid,
+                            crudsubjectid: createdApi.crudsubjectid,
+                            apiid: createdApi.uuid,
+                            licenseid: item.licenseid,
+                            isactive: true,
+                          }));
+                          for (let i = 0; i < licenses.length; i += 1) {
+                            postApiLicensesRefs([licenses[i]]).then((res) => {
+                              if (res && i === licenses.length - 1) {
+                                this.showCreatedAlert = true;
+                                setTimeout(() => {
+                                  this.showCreatedAlert = false;
+                                  this.onClose();
+                                }, 3000);
+                              }
+                            })
+                            .catch((error) => {
+                              if (error && i === licenses.length - 1) {
+                                this.onClose();
+                              }
+                            });
+                          }
+                        }
+                        // licenses
+                      }
+                    });
+                  }
+                });
+                // !!!
+              } else {
+                /* // !!! replace after cascade
+                this.showCreatedAlert = true;
+                setTimeout(() => {
+                  this.showCreatedAlert = false;
+                  this.onClose();
+                }, 3000);
+                // !!! */
+                const resourceApiToAdd = [{
+                  organizationid: createdApi.organizationid,
+                  crudsubjectid: createdApi.crudsubjectid,
+                  resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
+                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
+                  description: createdApi.openapidocument.info.description,
+                  resourcerefid: createdApi.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceApiToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdApi.organizationid,
+                      crudsubjectid: createdApi.crudsubjectid,
+                      permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdApi.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        this.showCreatedAlert = true;
+                        setTimeout(() => {
+                          this.showCreatedAlert = false;
+                          this.onClose();
+                        }, 3000);
+                      }
+                    });
+                  }
+                });
+                // !!!
+              }
+            }
+          });
+        } else { // SAVE API
+          const apiToUpdate = {
+            ...currentApi,
+            version: currentApi.openapidocument.info.version,
+            apioriginid: currentApi.uuid,
+            apiparentid: currentApi.uuid,
+            businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
+          };
+          putApis({
+            ...apiToUpdate,
+          })
+          .then(() => {
+            this.showSavedAlert = true;
+            setTimeout(() => {
+              this.showSavedAlert = false;
+            }, 3000);
+          });
+        }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log('error: ', error); // eslint-disable-line
         this.showNotValidAlert = true;
-        setTimeout(function() { // eslint-disable-line
+        setTimeout(() => {
           this.showNotValidAlert = false;
-        }.bind(this), 3000);
+        }, 3000);
       });
     },
   },

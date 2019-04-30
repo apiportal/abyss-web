@@ -18,16 +18,6 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
-            />
-          </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
               sortByKeyType="string"
@@ -110,13 +100,10 @@
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ environment(proxyItem) }}
-          </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apistatename }}
+            {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}
@@ -142,6 +129,8 @@
               <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
 
               <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+
+              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

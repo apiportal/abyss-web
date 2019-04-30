@@ -1,5 +1,5 @@
 <template>
-    <div class="page-content">
+    <div class="abyss-table-content">
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -81,7 +81,7 @@
                 <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
                 <b-dropdown-item data-qa="btnDelete"  :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
-                <b-dropdown-header></b-dropdown-header>
+                <b-dropdown-header class="p-0"></b-dropdown-header>
 
                 <b-dropdown-item data-qa="btnEditGroupUsers" :to="`${routePath}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
 
@@ -147,6 +147,9 @@ export default {
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'displayname',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {

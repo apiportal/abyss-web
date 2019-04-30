@@ -22,8 +22,8 @@
         <div style="padding: 1rem;">
           <div class="form-group">
             <Chips
-              :chips="rolePermissionsEditable.map(item => ({ text: item.permission, value: item.uuid }))"
-              :autocompleteOptions="permissions.map(item => ({ text: item.permission, value: item.uuid }))"
+              :chips="computedRolePermissions"
+              :autocompleteOptions="permissionsEditable"
               :onDeleteChip="handleDeleteRolePermissions"
               :onAddChip="handleAddRolePermissions"
               label="Role Permissions"
@@ -120,82 +120,110 @@ export default {
       currentUser: state => state.user,
       permissions: state => state.permissions.items,
     }),
-    // computedRolePermissions() {
-    //   const { permissionsEditable } = this;
-    //   return permissionsEditable
-    //     .filter(permission => permission.isAttached)
-    //     .sort((a, b) => b.sortTime - a.sortTime);
-    // },
+    computedRolePermissions() {
+      const { permissionsEditable } = this;
+      return permissionsEditable
+        .filter(permission => permission.isAttached)
+        .sort((a, b) => b.sortTime - a.sortTime);
+    },
   },
   data() {
-    const { rolePermissions } = this;
+    const { permissions, rolePermissions } = this;
     return {
-      // permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
-      //   const rolepermission = rolePermissions
-      //     .find(o => o.permissionrefid === this.selectedRole.uuid);
-      //   const isAttached = Boolean(rolepermission);
-      //   const sortTime = (new Date()).getTime();
-      //   return {
-      //     ...permission,
-      //     text: permission.permission,
-      //     value: permission.uuid,
-      //     isAttached,
-      //     rolepermission,
-      //     sortTime,
-      //   };
-      // }),
-      rolePermissionsEditable: JSON.parse(JSON.stringify(rolePermissions)),
+      permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
+        const rolepermission = rolePermissions
+          .find(o => o.permissionrefid === this.selectedRole.uuid);
+        const isAttached = Boolean(rolepermission);
+        const sortTime = (new Date()).getTime();
+        return {
+          ...permission,
+          text: permission.permission,
+          value: permission.uuid,
+          isAttached,
+          rolepermission,
+          sortTime,
+        };
+      }),
       permissionsToAdd: [],
       permissionsToDelete: [],
     };
   },
   methods: {
-    ...mapActions('permissions', ['postPermissions']),
+    ...mapActions('permissions', ['deletePermissions', 'postPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
       const now = new Date();
       const endDate = new Date(now);
       endDate.setFullYear(now.getFullYear() + 1);
-      const { rolePermissionsEditable, selectedRole, currentUser,
-        postPermissions, onUpdate } = this;
-      const rolePermissions = rolePermissionsEditable
-      .map(permission => ({
-        organizationid: permission.organizationid,
-        crudsubjectid: currentUser.props.uuid,
-        permission: permission.permission,
-        description: permission.description,
-        effectivestartdate: moment(now),
-        effectiveenddate: moment(endDate),
-        subjectid: selectedRole.uuid,
-        resourceid: permission.resourceid,
-        resourceactionid: permission.resourceactionid,
-        accessmanagerid: permission.accessmanagerid,
-        isactive: true,
-        // permissionrefid: permission.uuid,
-      }));
-      let rolePermissionsObj = {}; // eslint-disable-line
-      for (let i = 0; i < rolePermissions.length; i += 1) {
-        const { uuid, ...rest } = rolePermissions[i];
-        rolePermissionsObj[uuid] = rest;
+      const { permissionsEditable, selectedRole, currentUser,
+        postPermissions, deletePermissions, onUpdate } = this;
+      this.permissionsToDelete = permissionsEditable
+         .filter(permission => permission.rolepermission && !permission.isAttached)
+        .map(permission => (permission.rolepermission));
+      this.permissionsToAdd = permissionsEditable
+        .filter(permission => !permission.rolepermission && permission.isAttached)
+        .map(permission => ({
+          organizationid: permission.organizationid,
+          crudsubjectid: currentUser.props.uuid,
+          permission: permission.permission,
+          description: permission.description,
+          effectivestartdate: moment(now),
+          effectiveenddate: moment(endDate),
+          subjectid: selectedRole.uuid,
+          resourceid: permission.resourceid,
+          resourceactionid: permission.resourceactionid,
+          accessmanagerid: permission.accessmanagerid,
+          isactive: true,
+          // permissionrefid: permission.uuid,
+        }));
+      if (this.permissionsToDelete.length) {
+        for (let i = 0; i < this.permissionsToDelete.length; i += 1) {
+          deletePermissions(this.permissionsToDelete[i]).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        }
       }
-      postPermissions(rolePermissionsObj).then(() => {
-        onUpdate();
-      });
+      if (this.permissionsToAdd.length) {
+        for (let i = 0; i < this.permissionsToAdd.length; i += 1) {
+          postPermissions(this.permissionsToAdd[i]).then((response) => {
+            if (response && response.data) {
+              onUpdate();
+            }
+          });
+        }
+      }
+      // let rolePermissionsObj = {}; // eslint-disable-line
+      // for (let i = 0; i < rolePermissions.length; i += 1) {
+      //   const { uuid, ...rest } = rolePermissions[i];
+      //   rolePermissionsObj[uuid] = rest;
+      // }
+      // postPermissions(rolePermissionsObj).then(() => {
+      //   onUpdate();
+      // });
     },
     handleDeleteRolePermissions(index, chip) {
-      const { permissions } = this;
-      const permission = permissions.find(item => item.uuid === chip.value);
-      this.rolePermissionsEditable = [
-        ...this.rolePermissionsEditable.filter(item => item.uuid !== permission.uuid),
-      ];
+      const { permissionsEditable } = this;
+      this.permissionsEditable = permissionsEditable.map((item) => {
+        const isAttached = item.uuid === chip.value ? false : item.isAttached;
+        return {
+          ...item,
+          isAttached,
+        };
+      });
     },
     handleAddRolePermissions(chip) {
-      const { permissions } = this;
-      const permission = permissions.find(item => item.uuid === chip.value);
-      this.rolePermissionsEditable = [
-        ...this.rolePermissionsEditable,
-        permission,
-      ];
+      const { permissionsEditable } = this;
+      this.permissionsEditable = permissionsEditable.map((item) => {
+        const isAttached = item.uuid === chip.value ? true : item.isAttached;
+        const sortTime = (new Date()).getTime();
+        return {
+          ...item,
+          isAttached,
+          sortTime,
+        };
+      });
     },
   },
 };

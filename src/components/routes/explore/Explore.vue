@@ -50,7 +50,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apis: state => state.apis.items,
+      apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
       users: state => state.users.items,
     }),
@@ -79,7 +79,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('apis/getApis', {});
+    this.$store.dispatch('exploreApis/getExploreApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('users/getUsers', {});

@@ -45,7 +45,6 @@ const actions = {
       response.data.map((status) => {
         if (status.error.code !==0) {
           error = true;
-          // alert(status.error.policymessage);
         } else {
           commit('addNewPolicy', status.response);
         }
@@ -59,8 +58,8 @@ const actions = {
 };
 
 const mutations = {
-  setPolicies: (state, proxies) => {
-    state.items = proxies;
+  setPolicies: (state, policies) => {
+    state.items = policies;
     state.lastUpdatedAt = (new Date()).getTime();
   },
   updatePolicies: (state, policies) => {
@@ -81,12 +80,14 @@ const mutations = {
       }
       return item;
     });
+    state.lastUpdatedAt = (new Date()).getTime();
   },
   addNewPolicy: (state, newPolicy) => {
     state.items = [
       ...state.items,
       newPolicy,
     ];
+    state.lastUpdatedAt = (new Date()).getTime();
   },
 };
 

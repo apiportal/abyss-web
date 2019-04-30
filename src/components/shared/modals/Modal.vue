@@ -4,6 +4,7 @@
     :scrollable="scrollable"
     :hide-header="hideHeader"
     :hide-footer="hideFooter"
+    :no-enforce-focus="true"
     :no-close-on-backdrop="noCloseOnBackdrop"
     :no-close-on-esc="noCloseOnEsc"
     :hide-header-close="hideHeaderClose"
@@ -33,6 +34,11 @@
 <script>
 export default {
   props: {
+    scrollable: {
+      type: Boolean,
+      required: false,
+      default() { return true; },
+    },
     modalClass: {
       type: [Array, String],
       required: false,
@@ -77,11 +83,6 @@ export default {
     hideHeaderClose: {
       type: Boolean,
       required: true,
-    },
-    scrollable: {
-      type: Boolean,
-      required: false,
-      default() { return false; },
     },
     size: {
       type: String,

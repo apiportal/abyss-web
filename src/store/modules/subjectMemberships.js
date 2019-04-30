@@ -3,6 +3,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  userApp: [],
   lastUpdatedAt: 0,
 };
 
@@ -25,6 +26,18 @@ const actions = {
         commit('setSubjectMemberships', []);
       }
     });
+  },
+  getUserAppMemberships: ({ commit }, {refresh = false }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 && !refresh ) {
+      return false;
+    }
+    api.getUserAppMembership()
+      .then((res) => {
+        if (res && res.data) {
+          commit('setUserAppMemberships', res.data);
+        }
+      });
   },
   getAllSubjectMemberships: ({ commit }, { refresh = false  }) => {
     const { lastUpdatedAt } = state;
@@ -68,6 +81,10 @@ const mutations = {
     state.items = subjectMemberships;
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  setUserAppMemberships: (state, userAppMembership) => {
+    state.userApp = userAppMembership;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
   setSubjectMembershipDeleted: (state, membershipUuid) => {
     state.items = state.items.map((item) => {
       if (item.uuid === membershipUuid) {
@@ -77,7 +94,7 @@ const mutations = {
         };
       }
       return item;
-    });
+    }).filter(item => !item.isdeleted);
   },
   addNewSubjectMembership: (state, newSubjectMembership) => {
     state.items = [

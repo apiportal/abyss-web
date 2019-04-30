@@ -18,11 +18,22 @@
         <dd>{{ environment(item) }}</dd>
       </dl>
       <dl class="col">
+        <dt>Business API:</dt>
+        <dd>{{ computedBusinessApi[0].openapidocument.info.title }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
     <div class="row abyss-table-buttons">
+      <b-button
+        @click="handleToggleBusinessTable"
+        size="md"
+        variant="link"
+        :class="{'active': isBusinessTableVisible}"
+      >
+        <span>Business API</span>
+        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
+      </b-button>
       <b-button
         @click="handleToggleLicensesTable"
         size="md"
@@ -30,7 +41,7 @@
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
-        <b-badge pill>{{ licenses ? licenses.length : 0 }}</b-badge>
+        <b-badge pill>{{ item.licenses ? item.licenses.length : 0 }}</b-badge>
       </b-button>
       <b-button
         @click="handleToggleContractsTable"
@@ -39,36 +50,43 @@
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
-        <b-badge pill>{{ contracts.length }}</b-badge>
+        <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
     </div>
-    <div v-if="isLicensesTableVisible">
+    <div v-if="isLicensesTableVisible && item.licenses.length">
       <Licenses
-        :rows="licenses"
+        :rows="item.licenses"
         :routePath="routePath"
       ></Licenses>
     </div>
-    <div v-if="isContractsTableVisible">
+    <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
-        :rows="contracts"
+        :rows="item.contracts"
         :routePath="routePath"
       ></Contracts>
+    </div>
+    <div v-if="isBusinessTableVisible && computedBusinessApi">
+      <Apis
+        :rows="computedBusinessApi"
+        :routePath="routePath"
+      ></Apis>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 
 export default {
   computed: {
     ...mapState({
+      businessApis: state => state.businessApis.items,
     }),
-    tableRows() {
-      return this.licenses;
+    computedBusinessApi() {
+      return this.businessApis.filter(item =>
+        item.uuid === this.item.businessapiid);
     },
   },
   components: {
@@ -76,6 +94,7 @@ export default {
     Icon,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
+    Apis: () => import('@/components/shared/subjects/apis/Apis'),
   },
   props: {
     item: {
@@ -96,40 +115,22 @@ export default {
     return {
       page: parseInt(this.$route.params.page, 10),
       collapsedRows: [],
-      licenses: [],
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
-      contracts: [],
+      isBusinessTableVisible: false,
     };
   },
   methods: {
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
     },
-    getApiLicenses() {
-      const { uuid } = this.item;
-      api.getApiLicenses(uuid).then((response) => {
-        if (response && response.data) {
-          this.licenses = response.data;
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.licenses = [];
-        }
-      });
-    },
-    handleToggleTokensTable() {
-      this.isTokensTableVisible = !this.isTokensTableVisible;
-      this.isLicensesTableVisible = false;
-      this.isContractsTableVisible = false;
-    },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
       if (this.isContractsTableVisible) {
         this.isLicensesTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
       }
     },
     handleToggleLicensesTable() {
@@ -137,28 +138,26 @@ export default {
       if (this.isLicensesTableVisible) {
         this.isContractsTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
+      }
+    },
+    handleToggleBusinessTable() {
+      this.isBusinessTableVisible = !this.isBusinessTableVisible;
+      if (this.isBusinessTableVisible) {
+        this.isContractsTableVisible = false;
+        this.isTokensTableVisible = false;
+        this.isLicensesTableVisible = false;
       }
     },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
+        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    getContracts() {
-      const { uuid } = this.item;
-      api.getApiContracts(uuid).then((response) => {
-        if (response && response.data) {
-          this.contracts = response.data;
-        }
-      });
-    },
-  },
-  created() {
-    this.getApiLicenses();
-    this.getContracts();
   },
 };
 </script>

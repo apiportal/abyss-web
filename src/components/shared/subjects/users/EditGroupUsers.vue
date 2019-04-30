@@ -50,7 +50,7 @@ export default {
     getGroupMemberships() {
       api.getGroupMemberships(this.groupId).then((response) => {
         if (response && response.data) {
-          this.memberships = response.data;
+          this.memberships = response.data.filter(item => !item.isdeleted);
         }
         this.isMembershipsLoaded = true;
       }).catch((error) => {

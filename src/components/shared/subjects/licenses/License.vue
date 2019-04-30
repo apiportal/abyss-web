@@ -27,7 +27,7 @@
       </dl>
       <dl class="col">
         <dt>Link:</dt>
-        <dd>{{ item.licensedocument.legal.link }}</dd>
+        <dd><b-link :href="item.licensedocument.legal.link" target="_blank">{{ item.licensedocument.legal.link }}</b-link></dd>
         <b-link
           @click="toggleInformModal"  
         >
@@ -62,6 +62,7 @@
         <b-badge pill>{{ tableRows.length }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/'"
         @click="handleToggleApisTable"
         size="md"
         variant="link"
@@ -71,13 +72,14 @@
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/'"
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts with this License</span>
-        <b-badge pill>{{ licenseContracts.length }}</b-badge>
+        <b-badge pill>{{ computedLicenseContracts.length }}</b-badge>
       </b-button>
     </div>
     <div v-if="isPoliciesTableVisible">
@@ -86,15 +88,13 @@
         :routePath="routePath"
       ></Policies>
     </div>
-    <!-- Proxies -->
     <div v-if="isApisTableVisible && licenseApis.length">
       <Proxies
         :rows="computedLicenseApis"
         :routePath="routePath"
       ></Proxies>
     </div>
-    <!-- Contracts -->
-    <div v-if="isContractsTableVisible && licenseContracts.length">
+    <div v-if="isContractsTableVisible && computedLicenseContracts.length">
       <Contracts
         :rows="computedLicenseContracts"
         :routePath="routePath"
@@ -139,9 +139,12 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
+      currentPage: state => state.currentPage,
       policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
+      apis: state => state.apis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
@@ -162,55 +165,35 @@ export default {
       }));
     },
     computedLicenseApis() {
-      const { licenseApis, apiStates, apiVisibilityTypes, proxies } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-      const getNumberOfProxies = apiUuid =>
-        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      const { licenseApis } = this;
       return licenseApis.map(licenseApiItem => ({
         ...licenseApiItem,
-        apistatename: getApiStateName(licenseApiItem.apistateid),
-        apivisibilityname: getApiVisibilityName(licenseApiItem.apivisibilityid),
-        numberofproxies: getNumberOfProxies(licenseApiItem.uuid),
       }));
     },
     computedLicenseContracts() {
-      const { licenseContracts, contractStates } = this;
+      const { licenseContracts, contractStates, apis } = this;
+      const { currentUser, routePath } = this;
       const getContractStateName = (contractStateId) => {
         const contractState = contractStates
           .find(contractStateItem => contractStateItem.uuid === contractStateId);
         return contractState ? contractState.name : contractStateId;
       };
-      return licenseContracts.map(licenseContractItem => ({
-        ...licenseContractItem,
-        contractstatename: getContractStateName(licenseContractItem.contractstateid),
-      }));
-    },
-  },
-  watch: {
-    computedLicenseApis(newVal, oldVal) {
-      // console.log(newVal, oldVal);
-      const contractApis = newVal;
-      if (newVal.length !== oldVal.length) {
-        for (let i = 0; i < contractApis.length; i += 1) {
-          api.getApiContracts(contractApis[i].uuid).then((res) => {
-            if (res && res.data) {
-              contractApis[i].contracts = res.data;
-            }
-          })
-          .catch((error) => {
-            if (error.status === 404) {
-              contractApis[i].contracts = [];
-            }
-          });
-        }
-      }
+      const getUserFromApi = (apiId) => {
+        const theApi = apis.find(item => item.uuid === apiId) || {};
+        return theApi.subjectid || apiId;
+      };
+      return licenseContracts
+        .map(licenseContractItem => ({
+          ...licenseContractItem,
+          contractstatename: getContractStateName(licenseContractItem.contractstateid),
+          userid: getUserFromApi(licenseContractItem.apiid),
+        }))
+        .filter((item) => {
+          if (routePath === '/app/explore/') {
+            return item.userid === currentUser.props.uuid;
+          }
+          return true;
+        });
     },
   },
   data() {
@@ -263,38 +246,39 @@ export default {
         this.isApisTableVisible = false;
       }
     },
-    // handleDeleteModal() {
-    //   const { item, routePath } = this;
-    //   this.$router.push(`${routePath}/delete-license/${item.uuid}`);
-    // },
+    getLicenseContracts() {
+      api.getLicenseContracts(this.item.uuid).then((response) => {
+        if (response) {
+          this.licenseContracts = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.licenseContracts = [];
+        }
+      });
+    },
+    getLicenseApis() {
+      api.getLicenseApis(this.item.uuid).then((response) => {
+        if (response) {
+          this.licenseApis = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.licenseApis = [];
+        }
+      });
+    },
   },
   mounted() {
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     // if (this.childComponent === 'contracts') {
-    api
-    .getLicenseContracts(this.item.uuid)
-    .then((response) => {
-      if (response) {
-        this.licenseContracts = response.data;
-      }
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.licenseContracts = [];
-      }
-    });
+    this.getLicenseContracts();
     // } else if (this.childComponent === 'proxies') {
-    api
-    .getLicenseApis(this.item.uuid)
-    .then((response) => {
-      if (response) {
-        this.licenseApis = response.data;
-      }
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.licenseApis = [];
-      }
-    });
+    this.getLicenseApis();
     // }
   },
 };

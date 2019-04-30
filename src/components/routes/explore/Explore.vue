@@ -1,40 +1,34 @@
 <template>
-  <div
-    class="page-container"
-  >
+  <div class="page-container page-explore">
     <div class="page-content">
-      <div class="row">
+      <div class="row justify-content-center">
         <div
-          class="col-md-3"
+          class="card-container col py-3"
           v-for="(cardItem, index) in cardItems"
           v-bind:key="index"
         >
-          <div>
-            <b-card
-              :img-src="cardItem.image"
-              :img-alt="cardItem.openapidocument.info.title"
-              img-top
-              img-height="40%"
-              class="mb-2"
-              style="height: 20rem;"
-              @click="handleModalOpen(cardItem.uuid)"
-            >
-              <div class="row">
-                <h6 class="col-md">{{ cardItem.openapidocument.info.title }}</h6>
-                <div class="col-">
-                  <small>{{ cardItem.apistatename }}</small>
-                  <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
-                </div>
+          <b-card
+            @click="handleModalOpen(cardItem.uuid)"
+          >
+            <div slot="header" class="mb-0">
+              <div class="thumb-image cursor-pointer" v-if="cardItem.image" :style="{ 'background-image': 'url(' + cardItem.image + ')' }"></div>
+              <div class="thumb-image cursor-pointer" v-if="!cardItem.image" :style="{ 'background-color': cardItem.color }">{{cardItem.openapidocument.info.title.substring(0, 1)}}</div>
+            </div>
+            <div class="clearfixx">
+              <div class="float-right">
+                <small>{{ cardItem.apistatename }}</small>
+                <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
               </div>
-              <div>
-                <small>{{ cardItem.openapidocument.info.version }}</small>
-              </div>
-              <p>{{ cardItem.ownername }}</p>
+              <h6 class="mb-0">{{ cardItem.openapidocument.info.title }}</h6>
               <b-card-text>
-                {{ subStr(cardItem.openapidocument.info.description) }}
+                <div>
+                  <small>{{ cardItem.openapidocument.info.version }}</small>
+                </div>
+                <div class="mt-2">{{ cardItem.ownername }}</div>
+                <div class="card-description">{{ subStr(cardItem.openapidocument.info.description) }}</div>
               </b-card-text>
-            </b-card>
-          </div>
+            </div>
+          </b-card>
         </div>
       </div>
     </div>
@@ -87,6 +81,7 @@ export default {
   mounted() {
     this.$store.dispatch('apis/getApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('apps/getApps', {});
@@ -95,6 +90,7 @@ export default {
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
   },
   methods: {
     subStr(i) {
@@ -112,13 +108,68 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-// .card-text {
-  // width: 100%;
-  // overflow: hidden;
-  // text-overflow: ellipsis;
-  // white-space: nowrap;
-// }
+<style lang="scss">
+.app-header {
+  .navbar-collapse {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
+    height: 70px;
+  }
+}
+.page-explore {
+  .card-container  {
+    width: 320px;
+    flex: 0 0 320px;
+  }
+  .card {
+    width: 100%;
+    border-radius: 0;
+    height: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+    h6 {
+      font-weight: 700;
+    }
+  }
+  .card-header {
+    padding: 0;
+    cursor: pointer;
+    border: 0 none;
+  }
+  .card-body {
+    padding: 1rem;
+  }
+  .thumb-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 4rem;
+    background-color: #177ec1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    &::before {
+      display: block;
+      content: "";
+      padding-top: 56.25%;
+    }
+  }
+  .card-description {
+    font-size: .90rem;
+    line-height: 1.2;
+    margin-top: .5rem;
+  }
+  // .card-text {
+    // width: 100%;
+    // overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
+  // }
+}
 .stateInitial{
   color:#8b8e91
 }

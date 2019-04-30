@@ -333,14 +333,16 @@ export default {
         if (this.userEditable.secondaryemail === this.userEditable.email) {
           return '';
         }
+        console.log('this.userEditable.secondaryemail: ', this.userEditable.secondaryemail); // eslint-disable-line
         return this.userEditable.secondaryemail;
       },
       set(value) {
-        if (value === '') {
+        if (value.length === 0) {
           this.userEditable.secondaryemail = this.userEditable.email;
         } else {
           this.userEditable.secondaryemail = value;
         }
+        console.log('this.userEditable.secondaryemail: ', this.userEditable.secondaryemail); // eslint-disable-line
       },
     },
     firstNameState() {

@@ -27,7 +27,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.environment }}
           </td>
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -44,10 +44,24 @@
 
               <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
 
-              <!-- <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header> -->
+              <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else-if="routePath === '/app/explore/' && isUnsubscibeButtonVisible">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+              <template slot="button-content">
+                <Icon icon="ellipsis-h" />
+              </template>
+              <b-dropdown-item
+                v-if="isUnsubscibeButtonVisible"
+                @click="() => handleDeleteContract(item.uuid)"
+              >
+                Unsubscribe
+              </b-dropdown-item>
+            </b-dropdown>
+          </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="5">

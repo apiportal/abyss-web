@@ -28,9 +28,11 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       visibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.subjectLicenses.items,
-      areLicensesLoaded: state => state.subjectLicenses.lastUpdatedAt,
+      licenses: state => state.licenses.items,
+      subjectLicenses: state => state.subjectLicenses.items,
+      areLicensesLoaded: state => state.licenses.lastUpdatedAt,
       areVisibilityTypesLoaded: state => state.apiVisibilityTypes.lastUpdatedAt,
     }),
   },
@@ -38,6 +40,9 @@ export default {
     return {
       licenseId: this.$route.params.licenseId,
     };
+  },
+  mounted() {
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
   },
   methods: {
     handleModalClose() {

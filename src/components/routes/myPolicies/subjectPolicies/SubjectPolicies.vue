@@ -39,8 +39,10 @@
     </div>
     <div class="page-content">
       <Policies
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-policies/my-policies/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -49,7 +51,7 @@
         size="md"
         :total-rows="tableRows.length"
         v-model="page" 
-        :per-page="20"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
       >
@@ -74,20 +76,23 @@ export default {
   },
   computed: {
     ...mapState({
-      policies: state => state.subjectPolicies.items,
+      subjectPolicies: state => state.subjectPolicies.items,
+      policies: state => state.policies.items,
       policyTypes: state => state.policyTypes.items,
       currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { policies, policyTypes, currentUser } = this;
+      const { subjectPolicies, policyTypes, currentUser, policies } = this;
       const getTypeName = (typeId) => {
         const type = policyTypes.find(policyType => policyType.uuid === typeId);
         return type ? type.name : typeId;
       };
+      const subjectPoliciesIds = subjectPolicies.map(item => item.uuid);
       return sortArrayOfObjects({
         array: policies
+        .filter(item => subjectPoliciesIds.indexOf(item.uuid) > -1)
         .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -118,15 +123,6 @@ export default {
         sortDirection,
       });
     },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
   },
   data() {
     return {
@@ -149,21 +145,15 @@ export default {
     handlePageChange(page) {
       this.$router.push(`/app/my-policies/my-policies/${page}`);
     },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
-        this.collapsedRows = [itemId];
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
-    },
     refreshData() {
       this.$store.dispatch('subjectPolicies/getSubjectPolicies', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-policies');
   },
 };
 </script>

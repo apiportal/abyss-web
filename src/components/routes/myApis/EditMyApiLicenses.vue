@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditLicense
+    <EditApiLicenses
       :routePath="`/app/my-apis/my-proxy-apis/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditLicense from '@/components/shared/subjects/licenses/EditLicense';
+import EditApiLicenses from '@/components/shared/subjects/apis/EditApiLicenses';
 
 export default {
   components: {
-    EditLicense,
+    EditApiLicenses,
   },
   data() {
     return {

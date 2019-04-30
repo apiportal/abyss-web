@@ -80,7 +80,7 @@ const mutations = {
         };
       }
       return item;
-    });
+    }).filter(item => !item.isdeleted);
   },
   addSubjectOrganizations: (state, newSubjectOrganization) => {
     state.items = [

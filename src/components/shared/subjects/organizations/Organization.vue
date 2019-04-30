@@ -85,7 +85,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import api from '@/api';
+// import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Users from '@/components/shared/subjects/users/Users';
 
@@ -174,18 +174,18 @@ export default {
     };
   },
   methods: {
-    getUsersOfOrganizations() {
-      api.getUsersOfOrganizations(this.organization.uuid).then((response) => {
-        if (!this.organizationSubjects.length) {
-          this.organizationSubjects = response.data;
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          this.organizationSubjects = [];
-        }
-      });
-    },
+    // getUsersOfOrganizations() {
+    //   api.getUsersOfOrganizations(this.organization.uuid).then((response) => {
+    //     if (!this.organizationSubjects.length) {
+    //       this.organizationSubjects = response.data.filter(item => !item.isdeleted);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     if (error.status === 404) {
+    //       this.organizationSubjects = [];
+    //     }
+    //   });
+    // },
     listOrganizationUsers() {
       this.isShowOrganizationUsers = !this.isShowOrganizationUsers;
       if (this.isShowOrganizationUsers) {

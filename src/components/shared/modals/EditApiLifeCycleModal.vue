@@ -1,5 +1,7 @@
 <template>
   <Modal
+    bodyClass="p-0"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -7,41 +9,49 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditApiLifeCycle"
   >
     <template slot="header">
-      <h5 class="modal-title" data-qa="modalTitle">Legal Agreement</h5>
+      <h5 class="modal-title">
+        Edit API Life Cycle
+      </h5>
     </template>
     <template>
-      <p v-html="modifiedText" style="text-align: justify"></p>
-    </template>
-    <template slot="footer">
-      <b-button 
-        class="float-right" 
-        variant="primary" 
-        size="sm" 
-        @click="onConfirm"
-        data-qa ="btnConfirm"
+      <LifeCycle>
+        
+      </LifeCycle>
+      {{ computedApiState.name }}
+      <b-form
+        @submit="handleSubmit"
       >
-        OK
-      </b-button>
+        <footer class="modal-footer">
+          <b-button
+            variant="secondary"
+            @click="onClose"
+          >
+            Cancel
+          </b-button>
+          <b-button
+            variant="success"
+            type="submit"
+          >
+            Save
+          </b-button>
+        </footer>
+      </b-form>
     </template>
   </Modal>
 </template>
 
 <script>
 import Modal from '@/components/shared/modals/Modal';
+import LifeCycle from '@/components/shared/LifeCycle';
+import { mapState } from 'vuex';
 
 export default {
   components: {
     Modal,
-  },
-  computed: {
-    modifiedText() {
-      const { documentText } = this.item.licensedocument.legal;
-      return documentText
-        .replace(/(\\r)*\\n/g, '<br>')
-        .replace(/(https?:\/\/[^\s]+)/g, url => `<a href="${url}" target="_blank">${url}</a>`);
-    },
+    LifeCycle,
   },
   props: {
     hideHeader: {
@@ -52,7 +62,7 @@ export default {
     hideFooter: {
       type: Boolean,
       required: false,
-      default() { return false; },
+      default() { return true; },
     },
     noCloseOnBackdrop: {
       type: Boolean,
@@ -76,23 +86,30 @@ export default {
     },
     onClose: {
       type: Function,
-      required: false,
+      required: true,
     },
-    onConfirm: {
+    onUpdate: {
       type: Function,
       required: true,
     },
-    title: {
-      type: String,
-      required: false,
-    },
-    text: {
-      type: String,
-      required: false,
-    },
-    item: {
+    proxy: {
       type: Object,
-      required: true,
+      required: false,
+    },
+  },
+  computed: {
+    ...mapState({
+      apiStates: state => state.apiStates.items,
+    }),
+    computedApiState() {
+      const { proxy, apiStates } = this;
+      return apiStates.find(item => item.uuid === proxy.apistateid);
+    },
+  },
+  methods: {
+    handleSubmit(evt) {
+      evt.preventDefault();
+      console.log(this.computedApiState.name); // eslint-disable-line
     },
   },
 };

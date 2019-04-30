@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="abyss-table-content">
     <table class="table abyss-table abyss-table-cards">
       <thead>
-        <tr> 
+        <tr>
           <th class="status">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -39,32 +39,32 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
+              text="Resource"
+              sortByKey="resourcename"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
               text="Resource Action"
               sortByKey="resourceactionname"
               sortByKeyType="string"
             />
           </th>
           <th>
-            <SortBy
+            <!-- <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Access Manager"
-              sortByKey="accessmanagername"
+              text="Subject"
+              sortByKey="displayname"
               sortByKeyType="string"
-            />
+            /> -->
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Organization"
-              sortByKey="organizationname"
-              sortByKeyType="string"
-            />
-          </th>
-          <th></th>
+
         </tr>
       </thead>
     <TBodyLoading
@@ -75,6 +75,7 @@
         v-for="(item, index) in rows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :data-qa="`tableRow-${index}`"
+        :subjectId="item.subjectid"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
@@ -89,15 +90,15 @@
           <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.resourcetypename }}
           </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.resourcename }}
+          </td>
           <td class="type" @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.resourceactionname }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.accessmanagername }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.organizationname }}
-          </td>
+          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.subjectid }}
+          </td> -->
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
@@ -109,7 +110,7 @@
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/subjectpermission/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -139,6 +140,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Permission from '@/components/shared/subjects/permissions/Permission';
+import api from '@/api';
 
 export default {
   components: {
@@ -172,6 +174,8 @@ export default {
       sortByKey: 'permission',
       sortByKeyType: 'string',
       sortDirection: 'desc',
+      subject: {},
+      subjectId: '',
     };
   },
   methods: {
@@ -186,6 +190,21 @@ export default {
     handleSortByClick() {
       //
     },
+    getSubject(subjectId) {
+      // const { subjectid } = this.permission;
+      console.log('subjid', subjectId); // eslint-disable-line
+      api.getSubject(subjectId).then((response) => {
+        this.subject = response.data[0];
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.subject = {};
+        }
+      });
+    },
+  },
+  mounted() {
+    // this.getSubject();
   },
 };
 </script>

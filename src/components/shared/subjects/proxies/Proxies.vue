@@ -18,16 +18,6 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
-            />
-          </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
               sortByKeyType="string"
@@ -53,15 +43,55 @@
               sortByKeyType="string"
             />
           </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Contracts"
+              sortByKey="contractscount"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Licenses"
+              sortByKey="licensescount"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
+          <th v-if="currentPage.firstChildPath === 'shared-with-me'">
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Owner"
+              sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="10"
       />
       <TbodyCollapsible
-        v-for="(proxyItem, proxyIndex) in tableRows" v-bind:key="proxyIndex"
+        v-for="(proxyItem, proxyIndex) in paginatedRows" v-bind:key="proxyIndex"
         :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
         :level="1"
       >
@@ -70,24 +100,37 @@
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ environment(proxyItem) }}
-          </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apistatename }}
+            {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
             {{ proxyItem.apivisibilityname }}
           </td>
-          <td class="actions">
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
+            {{ proxyItem.contractscount }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
+            {{ proxyItem.licensescount }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
+            {{ proxyItem.owner.name }}
+          </td>
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+
+              <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+
+              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -97,9 +140,10 @@
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
-          <td colspan="6">
+          <td colspan="10">
             <div class="collapsible-content">
               <Proxy
                 :item="proxyItem"
@@ -135,22 +179,88 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
+      currentPage: state => state.currentPage,
+      users: state => state.users.items,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      licenses: state => state.subjectLicenses.items,
+      contracts: state => state.userContracts.items,
+      apiLicenses: state => state.apiLicenses.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortByKey, sortByKeyType, sortDirection, rows, users,
+        apiStates, apiVisibilityTypes } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getApiOwner = (apiItem) => {
+        const apiOwner = users.find(item => item.uuid === apiItem.subjectid);
+        // return apiOwner || {};
+        return {
+          name: apiOwner.displayname,
+          uuid: apiOwner.uuid,
+        };
+      };
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+      const getApiLicenses = (id) => {
+        const apiLicensesApis = this.apiLicenses
+        .filter(item => item.apiid === id && !item.isdeleted);
+        const apiLicenses = this.licenses.filter(el =>
+          apiLicensesApis.some(f =>
+            f.licenseid === el.uuid,
+          ),
+        );
+        return apiLicenses;
+      };
+      const getProxyContracts = (id) => {
+        const proxyContracts = this.contracts
+        .filter(item => item.apiid === id && !item.isdeleted);
+        return proxyContracts;
+      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            apistatename: getApiStateName(item.apistateid),
+            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            owner: getApiOwner(item),
+            licenses: getApiLicenses(item.uuid),
+            licensescount: getApiLicenses(item.uuid).length,
+            contracts: getProxyContracts(item.uuid),
+            contractscount: getProxyContracts(item.uuid).length,
           })),
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },
@@ -165,10 +275,16 @@ export default {
     return {
       collapsedRows: [],
       proxyRows: [],
-      sortByKey: 'openapidocument.info.title',
+      sortByKey: 'updated',
       sortByKeyType: 'string',
-      sortDirection: 'desc',
+      sortDirection: 'asc',
     };
+  },
+  mounted() {
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('apiLicenses/getApiLicensesRefs', {});
   },
   methods: {
     environment(item) {

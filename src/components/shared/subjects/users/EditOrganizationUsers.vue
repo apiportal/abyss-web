@@ -45,10 +45,10 @@ export default {
     handleModalUpdate() {
       this.$router.push(this.routePath);
     },
-    getOrganizationsOfUser() {
+    getUsersOfOrganizations() {
       api.getUsersOfOrganizations(this.organizationId).then((response) => {
         if (response && response.data) {
-          this.organizationUsers = response.data;
+          this.organizationUsers = response.data.filter(item => !item.isdeleted);
         }
         this.isOrganizationUsersLoaded = true;
       })
@@ -69,7 +69,7 @@ export default {
     };
   },
   mounted() {
-    this.getOrganizationsOfUser();
+    this.getUsersOfOrganizations();
     this.$store.dispatch('users/getUsers', {});
   },
 };

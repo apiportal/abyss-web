@@ -158,15 +158,44 @@
   .switch-organization {
     padding-left: 1rem;
     padding-right: 1rem;
-    margin-bottom: .5rem;
+    padding-bottom: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(white, 0.2);
+    label {
+      padding: 1rem 1rem 0.5rem 1rem;
+      margin: 0 -1rem 0 -1rem;
+      font-size: .75rem;
+      color: rgba(white, 0.60);
+      // border-top: 1px solid rgba(white, 0.2);
+      border-bottom: 1px solid rgba(white, 0.2);
+      font-weight: bold;
+      display: block;
+    }
     .custom-select {
-      background-color: transparent;
       // border-color: lighten($bg-sidebar, 40%);
-      border-color: rgba(white, .2);
+      // border-color: rgba(white, .2);
+      // padding: .375rem 1.75rem .375rem 1rem;
+      // padding: .375rem 0 .375rem 0;
+      border-color: darken($bg-sidebar, 0%);
       // color: lighten($bg-sidebar, 50%);
-      color: lighten($bg-sidebar, 40%);
+      // font-size: 1.15rem;
+      color: lighten($bg-sidebar, 100%);
       border-radius: 0;
       background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff77' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+      background-color: darken($bg-sidebar, 0%);
+      options {
+        background-color: darken($bg-sidebar, 0%);
+        color: #fff;
+        font-size: 1rem;
+      }
+      &:focus {
+        border-color:white;
+        color:black;
+        outline: 0;
+        box-shadow: none;
+        background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%2300000077' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+        background-color: white;
+      }
     }
   }
   ul.sidenav-links {
@@ -177,22 +206,25 @@
         padding: 1rem 1rem 0.5rem 1rem;
         margin: 0 0 0.5rem 0;
         font-size: .75rem;
-        color: rgba(white, 0.8);
+        color: rgba(white, 0.60);
         border-bottom: 1px solid rgba(white, 0.2);
         font-weight: bold;
       }
       a {
         display: block;
         position: relative;
-        padding: .5rem .5rem;
+        padding: .5rem .5rem .5rem 0rem;
         color: rgba(white, 0.8);
         text-decoration: none;
+        border-left: 6px solid transparent;
         &:hover {
-          background-color: $brand-color-light;
+          border-color: $brand-color-light;
+          background-color: rgba($brand-color-light, 0.5);
           color: white;
         }
         &.selected {
-          background-color: $brand-color;
+          border-color: $brand-color;
+          background-color: rgba($brand-color, 0.5);
           color: white;
         }
         .route-icon {
@@ -608,4 +640,41 @@
 // custom utilities
   .shadow-sm {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+// alerts
+  .alert-vivid {
+    color: #fff;
+    border-color: transparent;
+    &.alert-primary {
+      background-color: darken(#cce5ff, 40%);
+    }
+    &.alert-secondary {
+      background-color: darken(#e2e3e5, 40%);
+    }
+    &.alert-success {
+      background-color: darken(#d4edda, 40%);
+    }
+    &.alert-info {
+      background-color: darken(#d1ecf1, 40%);
+    }
+    &.alert-warning {
+      background-color: darken(#fff3cd, 50%);
+    }
+    &.alert-danger {
+      background-color: darken(#f8d7da, 40%);
+    }
+    &.alert-dark {
+      background-color: darken(#000000, 40%);
+    }
+  }
+  .alert-t-r {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3000;
+  }
+  .alert-dismissible .close {
+    padding: .75rem 1.25rem;
+    line-height: .5;
+    font-size: 2rem;
   }

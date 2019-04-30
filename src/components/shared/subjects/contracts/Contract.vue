@@ -30,6 +30,14 @@
 
       <div class="row abyss-table-buttons">
         <b-button
+          @click="handleToggleLicensesTable"
+          size="md"
+          variant="link"
+          :class="{'active': isLicensesTableVisible}"
+        >
+          <span>Contract License</span>
+        </b-button>
+        <b-button
           @click="handleToggleApisTable"
           size="md"
           variant="link"
@@ -58,9 +66,15 @@
       </div>
       <div v-if="isApisTableVisible">
         <Proxies
-          :rows="computedContractApis"
+          :rows="contractApis"
           :routePath="routePath"
         ></Proxies>
+      </div>
+      <div v-if="isLicensesTableVisible">
+        <Licenses
+          :rows="computedContractLicenses"
+          :routePath="routePath"
+        ></Licenses>
       </div>
     </div>
   </div>
@@ -71,6 +85,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import AccessTokens from '@/components/shared/subjects/subscriptions/AccessTokens';
+import Licenses from '@/components/shared/subjects/licenses/Licenses';
 
 export default {
   props: {
@@ -92,33 +107,27 @@ export default {
   components: {
     Icon,
     AccessTokens,
+    Licenses,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      licenses: state => state.subjectLicenses.items,
+      proxies: state => state.proxies.items,
     }),
     computedContractApis() {
-      const { contractApis, apiStates, apiVisibilityTypes } = this;
-      const getApiStateName = (apistateid) => {
-        const apiState = apiStates.find(item => item.uuid === apistateid);
-        return apiState ? apiState.name : apistateid;
-      };
-      const getApiVisibilityName = (apivisibilityid) => {
-        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-        return apiVisibility ? apiVisibility.name : apivisibilityid;
-      };
-
-      return contractApis.map(contractApiItem => ({
-        ...contractApiItem,
-        apistatename: getApiStateName(contractApiItem.apistateid),
-        apivisibilityname: getApiVisibilityName(contractApiItem.apivisibilityid),
-      }));
+      const { proxies, item } = this;
+      return proxies.filter(el => el.uuid === item.apiid);
     },
     computedExpiredTokens() {
       const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
       return Boolean(!hasNoActiveToken);
+    },
+    computedContractLicenses() {
+      return this.licenses.filter(license => license.uuid === this.item.licenseid);
     },
   },
   data() {
@@ -126,6 +135,7 @@ export default {
       page: parseInt(this.$route.params.page, 10),
       isApisTableVisible: false,
       isTokensTableVisible: false,
+      isLicensesTableVisible: false,
       accessTokens: [],
       contractApis: [],
     };
@@ -135,11 +145,20 @@ export default {
       this.isTokensTableVisible = !this.isTokensTableVisible;
       if (this.isTokensTableVisible) {
         this.isApisTableVisible = false;
+        this.isLicensesTableVisible = false;
       }
     },
     handleToggleApisTable() {
       this.isApisTableVisible = !this.isApisTableVisible;
       if (this.isApisTableVisible) {
+        this.isTokensTableVisible = false;
+        this.isLicensesTableVisible = false;
+      }
+    },
+    handleToggleLicensesTable() {
+      this.isLicensesTableVisible = !this.isLicensesTableVisible;
+      if (this.isLicensesTableVisible) {
+        this.isApisTableVisible = false;
         this.isTokensTableVisible = false;
       }
     },
@@ -156,52 +175,24 @@ export default {
         }
       });
     },
-  },
-  watch: {
-    computedContractApis(newVal, oldVal) {
-      // console.log(newVal, oldVal);
-      const contractApis = newVal;
-      if (newVal.length !== oldVal.length) {
-        for (let i = 0; i < contractApis.length; i += 1) {
-          api.getApiContracts(contractApis[i].uuid).then((res) => {
-            if (res && res.data) {
-              contractApis[i].contracts = res.data;
-            }
-          })
-          .catch((error) => {
-            if (error.status === 404) {
-              contractApis[i].contracts = [];
-            }
-          });
-          // api.getAccessTokens(this.item.subjectpermissionid).then((res) => {
-          //   if (res && res.data) {
-          //     contractApis[i].accessTokens = res.data;
-          //   }
-          // })
-          // .catch((error) => {
-          //   if (error.status === 404) {
-          //     contractApis[i].accessTokens = [];
-          //   }
-          // });
-          // this.getAccessTokens(contractApis[i]);
+    getContractApi() {
+      api.getApi(this.item.apiid).then((response) => {
+        this.contractApis = response.data;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.contractApis = [];
         }
-      }
+      });
     },
   },
   created() {
-    // get tokens
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     this.getAccessTokens();
-    // get contract api
-    api
-    .getApi(this.item.apiid)
-    .then((response) => {
-      this.contractApis = response.data;
-    })
-    .catch((error) => {
-      if (error.status === 404) {
-        this.contractApis = [];
-      }
-    });
+    this.getContractApi();
   },
 };
 </script>

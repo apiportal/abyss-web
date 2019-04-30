@@ -39,8 +39,10 @@
     </div>
     <div class="page-content">
       <Licenses
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-licenses/my-licenses/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -61,15 +63,15 @@
 
 <script>
 import { mapState } from 'vuex';
-import InputWithIcon from '@/components/shared/InputWithIcon';
 import Licenses from '@/components/shared/subjects/licenses/Licenses';
+import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
-    InputWithIcon,
     Licenses,
+    InputWithIcon,
     Icon,
   },
   computed: {
@@ -80,9 +82,11 @@ export default {
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, subjectLicenses, licenses } = this;
+      // const { sortByKey, sortByKeyType, sortDirection, subjectLicenses } = this;
       const { sortArrayOfObjects } = Helpers;
       const subjectLicensesIds = subjectLicenses.map(item => item.uuid);
       return sortArrayOfObjects({
+        // array: subjectLicenses
         array: licenses
           .filter(item => subjectLicensesIds.indexOf(item.uuid) > -1)
           .filter((item) => {
@@ -125,15 +129,6 @@ export default {
         sortDirection,
       });
     },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
   },
   data() {
     return {
@@ -155,15 +150,6 @@ export default {
     },
     handlePageChange(page) {
       this.$router.push(`/app/my-licenses/my-licenses/${page}`);
-    },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
-        this.collapsedRows = [itemId];
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
     },
     refreshData() {
       this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid, refresh: true });

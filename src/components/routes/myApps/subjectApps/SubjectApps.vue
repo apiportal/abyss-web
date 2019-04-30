@@ -39,8 +39,10 @@
     </div>
     <div class="page-content">
       <Apps
-        :rows="paginatedRows"
+        :rows="tableRows"
         :routePath="`/app/my-apps/my-apps/${page}`"
+        :itemsPerPage="itemsPerPage"
+        :page="page"
       />
       <router-view></router-view>
     </div>
@@ -81,9 +83,12 @@ export default {
       subjectPermissions: state => state.subjectPermissions.items,
     }),
     userApps() {
+      // SubjectApps NEW
       const subjectAppsIds = this.subjectApps.map(item => item.appid);
+      // const subjectAppsIds = this.subjectApps.map(item => item.subjectgroupid);
       const getSubjectApp = (appId) => {
         const subjectapp = this.subjectApps.find(item => item.appid === appId);
+        // const subjectapp = this.subjectApps.find(item => item.subjectgroupid === appId);
         return subjectapp;
       };
       const getSubjectPermissions = (resource) => {
@@ -118,12 +123,6 @@ export default {
         const organization = organizations.find(item => item.uuid === organizationId);
         return organization ? organization.name : organizationId;
       };
-      const getContractsCount = (item) => {
-        if (item.contracts) {
-          return item.contracts.length;
-        }
-        return 0;
-      };
       return sortArrayOfObjects({
         array: userApps
           .filter((item) => {
@@ -141,21 +140,11 @@ export default {
           })
           .map(item => ({
             ...item,
-            contractsCount: getContractsCount(item),
             organizationname: getOrganizationName(item.organizationid),
           })),
         sortByKey,
         sortByKeyType,
         sortDirection,
-      });
-    },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
       });
     },
   },
@@ -178,7 +167,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-apis/businesses/${page}`);
+      this.$router.push(`/app/my-apps/my-apps/${page}`);
     },
     refreshData() {
       this.$store.dispatch('subjectApps/getSubjectApps', {
@@ -186,6 +175,9 @@ export default {
         refresh: true,
       });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-apps');
   },
 };
 </script>

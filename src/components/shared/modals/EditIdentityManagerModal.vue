@@ -187,6 +187,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import Helpers from '@/helpers';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -350,6 +351,14 @@ export default {
     handleDirectoryTypeChange(newDirectoryTypeId) {
       this.isConfigureDirectoryVisible = true;
       this.setDirectoryConfigurationTemplate({ directorytypeid: newDirectoryTypeId });
+      const { subjectDirectoryTypes } = this;
+      const subjectDirectoryType = subjectDirectoryTypes
+        .find(item => item.uuid === newDirectoryTypeId);
+      const formTemplate = JSON.parse(JSON.stringify(subjectDirectoryType.attributetemplate.components.schemas)); // eslint-disable-line
+      const newDirecoryConfiguration = {};
+      const { openApiObjectToFlatObject } = Helpers;
+      openApiObjectToFlatObject(formTemplate, newDirecoryConfiguration);
+      this.handleConfigurationUpdate(newDirecoryConfiguration);
     },
     handleConfigurationUpdate(newDirecoryConfiguration) {
       const { subjectDirectoryEditable } = this;

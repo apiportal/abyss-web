@@ -133,14 +133,16 @@ export default {
   },
   methods: {
     ...mapActions('apis', ['postApis']),
+    ...mapActions('resources', ['postResources']),
+    ...mapActions('permissions', ['postPermissions']),
     handleSubmitStartWithURL() {
       const { url } = this.form;
       console.log(url); // eslint-disable-line
     },
     handleStartWithTemplate() {
       const now = new Date();
-      const { templateObject, postApis } = this;
-      const { organizationid, uuid } = this.currentUser;
+      const { templateObject, postApis, postResources, postPermissions, currentUser } = this;
+      const { organizationid, uuid } = currentUser;
       const { apiStates, visibilityTypes } = this;
       const apistate = apiStates.find(item => item.name === 'Draft');
       const visibilityType = visibilityTypes.find(item => item.name === 'Private');
@@ -171,11 +173,51 @@ export default {
       };
       postApis([api]).then((response) => {
         if (response && response.data) {
+          const createdApi = response.data[0].response;
+          /* // !!! replace after cascade
           this.$store.dispatch('businessApis/getBusinessApis', {
-            uuid: this.currentUser.uuid,
+            uuid: currentUser.uuid,
             refresh: true,
           });
-          this.$router.push(`/app/my-apis/businesses/1/edit-api/${response.data[0].uuid}`);
+          this.$router.push(`/app/my-apis/businesses/1/edit-api/${createdApi.uuid}`);
+          // !!! */
+          const resourceToAdd = [{
+            organizationid: createdApi.organizationid,
+            crudsubjectid: createdApi.crudsubjectid,
+            resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
+            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
+            description: createdApi.openapidocument.info.description,
+            resourcerefid: createdApi.uuid,
+            isactive: true,
+          }];
+          postResources(resourceToAdd).then((responseResource) => {
+            if (responseResource && responseResource.data) {
+              const createdResource = responseResource.data[0].response;
+              const permissionToAdd = [{
+                organizationid: createdApi.organizationid,
+                crudsubjectid: createdApi.crudsubjectid,
+                permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                effectivestartdate: this.$moment.utc().toISOString(),
+                effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                subjectid: createdApi.subjectid,
+                resourceid: createdResource.uuid,
+                resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
+                accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                isactive: true,
+              }];
+              postPermissions(permissionToAdd).then((responsePermission) => {
+                if (responsePermission && responsePermission.data) {
+                  this.$store.dispatch('businessApis/getBusinessApis', {
+                    uuid: currentUser.uuid,
+                    refresh: true,
+                  });
+                  this.$router.push(`/app/my-apis/businesses/1/edit-api/${createdApi.uuid}`);
+                }
+              });
+            }
+          });
+          // !!!
         }
       });
     },

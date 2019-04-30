@@ -52,7 +52,7 @@
         :cols="5"
       />
       <TbodyCollapsible
-        v-for="(item, index) in sortedRows" v-bind:key="index"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :level="3"
       >
@@ -69,7 +69,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ (item.policyinstance && item.policyinstance.info ) ? item.policyinstance.info.subType : '' }}
           </td>
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -86,6 +86,7 @@
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
           <td colspan="5">
@@ -124,13 +125,23 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       organizations: state => state.organizations.items,
     }),
-    sortedRows() {
+    tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
@@ -141,6 +152,15 @@ export default {
         sortByKey,
         sortByKeyType,
         sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
       });
     },
   },

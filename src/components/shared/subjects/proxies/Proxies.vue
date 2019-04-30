@@ -120,7 +120,7 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
           </td>
-          <td class="actions">
+          <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -140,6 +140,7 @@
 
             </b-dropdown>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
           <td colspan="10">

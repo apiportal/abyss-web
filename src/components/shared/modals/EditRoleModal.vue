@@ -300,7 +300,7 @@ export default {
     displayNameInvalidFeedback() {
       const { displayname } = this.roleEditable;
       if (displayname.length === 0) {
-        return 'Please enter something';
+        return 'Please enter display name';
       }
       return '';
     },
@@ -314,7 +314,7 @@ export default {
     roleNameInvalidFeedback() {
       const { subjectname } = this.roleEditable;
       if (subjectname.length === 0) {
-        return 'Please enter something';
+        return 'Please enter role name';
       }
       return '';
     },
@@ -325,7 +325,7 @@ export default {
     descriptionInvalidFeedback() {
       const { description } = this.roleEditable;
       if (description.length === 0) {
-        return 'Please enter something';
+        return 'Please enter description';
       }
       return '';
     },
@@ -336,7 +336,7 @@ export default {
     effectiveStartDateInvalidFeedback() {
       const { effectivestartdate } = this.roleEditable;
       if (effectivestartdate.length === 0) {
-        return 'Please enter something';
+        return 'Please enter start date';
       }
       return '';
     },
@@ -347,7 +347,7 @@ export default {
     effectiveEndDateInvalidFeedback() {
       const { effectiveenddate } = this.roleEditable;
       if (effectiveenddate.length === 0) {
-        return 'Please enter something';
+        return 'Please enter end date';
       }
       return '';
     },

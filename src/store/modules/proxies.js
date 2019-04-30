@@ -39,22 +39,6 @@ const actions = {
       return response;
     });
   },
-  getApiContracts: ({ commit }, { apiIdsArray }) => {
-    for (let i = 0; i < apiIdsArray.length; i += 1) {
-      api.getApiContracts(apiIdsArray[i]).then((response) => {
-        if (response && response.data) {
-          commit('setApiContracts', { apiId: apiIdsArray[i], contracts: response.data});
-        } else {
-          commit('setApiContracts', { apiId: apiIdsArray[i], contracts: []});
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          commit('setApiContracts', { appId: apiIdsArray[i], contracts: [] });
-        }
-      });
-    }
-  },
 };
 
 const mutations = {
@@ -75,19 +59,6 @@ const mutations = {
       ...state.items,
       ...proxies,
     ];
-  },
-  setApiContracts: (state, { apiId, contracts }) => {
-    state.items = state.items.map(item => {
-      if (item.uuid === apiId) {
-        return {
-          ...item,
-          contracts,
-        };
-      } else {
-        return item;
-      }
-    });
-    state.lastUpdatedAt = (new Date()).getTime();
   },
 };
 

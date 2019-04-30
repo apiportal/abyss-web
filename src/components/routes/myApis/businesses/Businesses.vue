@@ -83,17 +83,12 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
-      // apis: state => state.apis.items,
     }),
     tableRows() {
-      // const { sortByKey, sortByKeyType, sortDirection, apis } = this;
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortByKey, sortByKeyType, sortDirection, businessApis } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { businessApis } = this;
       return sortArrayOfObjects({
         array: businessApis
-        // array: apis
-          // .filter(item => businessApisIds.indexOf(item.uuid) > -1)
           .map(item => ({
             ...item,
           }))

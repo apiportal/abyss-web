@@ -294,7 +294,7 @@ export default {
         array: roles.map(item => ({
           ...item,
           users: getUsers(item.uuid),
-          userscount: getUsers(item.uuid).length,
+          userscount: users.length,
           organizationname: getOrganizationName(item.organizationid),
           permissions: getPermissions(item.uuid),
           groups: getGroups(item.uuid),
@@ -352,6 +352,8 @@ export default {
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('groups/getGroups', {});
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {
     return {

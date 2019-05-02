@@ -121,7 +121,7 @@
             {{ proxyItem.owner.name }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>

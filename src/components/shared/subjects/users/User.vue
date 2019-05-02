@@ -65,6 +65,22 @@
         <dd v-if="user.isdeleted">{{ user.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
+    <div class="row abyss-table-buttons">
+      <b-button
+        size="md"
+        variant="link"
+        @click="listUserGroups"
+        :class="{'active': isShowUserGroups}"
+      >
+      <Icon icon="user-friends" /> Groups
+      <b-badge pill>{{ computedMemberships.length }}</b-badge>
+      </b-button>
+    </div>
+    <div class="abyss-table-content" v-if="isShowUserGroups">
+      <Groups
+        :rows="groups"
+      />
+    </div>
   </div>
 </template>
 
@@ -72,6 +88,7 @@
 // import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import Groups from '@/components/shared/subjects/groups/Groups';
 
 export default {
   props: {
@@ -96,6 +113,7 @@ export default {
   },
   components: {
     Icon,
+    Groups,
   },
   computed: {
     secondaryEmail() {
@@ -109,7 +127,9 @@ export default {
       const { memberships, groups } = this;
       return memberships.map((item) => {
         const subjectgroup = groups.find(group => group.uuid === item.subjectgroupid);
+        console.log('subject:::::', subjectgroup); // eslint-disable-line
         return {
+          subjectgroup,
           subjectgroupid: item.subjectgroupid,
           subjectgroupname: subjectgroup ? subjectgroup.displayname : item.subjectgroupid,
         };
@@ -157,12 +177,17 @@ export default {
         }
       });
     },
+    listUserGroups() {
+      this.isShowUserGroups = !this.isShowUserGroups;
+    },
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
       memberships: [],
+      subjectgroup: [],
       userOrganizations: [],
+      isShowUserGroups: false,
     };
   },
 };

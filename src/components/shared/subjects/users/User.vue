@@ -6,12 +6,12 @@
       </dl>
   
       <dl class="col">
+        <dt>User Name:</dt>
+        <dd>{{ user.subjectname }}</dd>
         <dt>First Name:</dt>
         <dd>{{ user.firstname }}</dd>
         <dt>Last Name:</dt>
         <dd>{{ user.lastname }}</dd>
-        <dt>User Name:</dt>
-        <dd>{{ user.subjectname }}</dd>
         <dt>Display Name:</dt>
         <dd>{{ user.displayname }}</dd>
       </dl>

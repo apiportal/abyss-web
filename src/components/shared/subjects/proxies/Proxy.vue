@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Title:</dt>
+        <dt>Proxy Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>

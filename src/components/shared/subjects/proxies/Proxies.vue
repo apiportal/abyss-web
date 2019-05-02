@@ -143,7 +143,7 @@
 
               <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 
-              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Lifecycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

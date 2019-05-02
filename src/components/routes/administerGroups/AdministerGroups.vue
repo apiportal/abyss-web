@@ -1,6 +1,5 @@
 <template>
   <div class="page-container page-groups">
-
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="false" to="/app/organizations/1">
@@ -10,7 +9,7 @@
           <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ groups.length }}</b-badge>
+          <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ tableRows.length }}</b-badge>
         </b-nav-item>
       </b-nav>
       <div class="row">
@@ -204,6 +203,7 @@ export default {
       groups: state => state.groups.items,
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
+      userGroupMemberships: state => state.subjectMemberships.userGroup,
     }),
     computedOrganizations() {
       const { subjectOrganizations, currentUser } = this;
@@ -232,6 +232,10 @@ export default {
         );
         return groupUsers;
       };
+      const getUserFromGroups = (groupId) => {
+        const group = this.userGroupMemberships.find(item => item.subjectgroupid === groupId) || {};
+        return group.subjectid || groupId;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
@@ -241,30 +245,37 @@ export default {
           organizationname: getOrganizationName(item.organizationid),
           users: getUsers(item.uuid),
           userscount: getUsers(item.uuid).length,
+          currentuser: getUserFromGroups(item.uuid),
         })).filter((item) => {
-          const { filterKey } = this;
-          if (filterKey === '') {
-            return true;
+          if (
+            item.currentuser === this.currentUser.props.uuid
+            || item.users.find(i => i.uuid === this.currentUser.props.uuid)
+          ) {
+            const { filterKey } = this;
+            if (filterKey === '') {
+              return true;
+            }
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.firstname &&
+                item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.lastname &&
+                item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.displayname &&
+                item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.email &&
+                item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
           }
-          const filterKeyLowerCase = filterKey.toLowerCase();
-          return (
-            (
-              item.firstname &&
-              item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.lastname &&
-              item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.displayname &&
-              item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.email &&
-              item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            )
-          );
+          return false;
         }),
         sortByKey,
         sortByKeyType,
@@ -290,6 +301,7 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
+    this.$store.dispatch('subjectMemberships/getUserGroupMemberships', {});
   },
   data() {
     return {

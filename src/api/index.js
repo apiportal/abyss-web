@@ -223,6 +223,9 @@ export default {
   getUserAppMembership() {
     return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
+  getUserGroupMembership() {
+    return axios.get('/abyss/oapi/subject-memberships/user-group/');
+  },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');

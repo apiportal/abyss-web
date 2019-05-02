@@ -147,7 +147,7 @@
                 <div class="abyss-table-content">
                   <div class="row">
                     <dl class="col">
-                      <dt>Name:</dt>
+                      <dt>Identity Manager Type Name:</dt>
                       <dd>{{ item.typename }}</dd>
                       <dt>Description:</dt>
                       <dd>{{ item.description }}</dd>

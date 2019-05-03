@@ -179,7 +179,7 @@ export default {
       licenses: state => state.licenses.items,
       licensesMain: state => state.licenses,
       apps: state => state.apps.items,
-      apis: state => state.apis.items,
+      apis: state => state.exploreApis.items,
       contractStates: state => state.contractStates.items,
       resourceTypes: state => state.resourceTypes.items,
       resources: state => state.resources.items,

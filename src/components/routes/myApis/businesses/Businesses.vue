@@ -83,31 +83,14 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
-      apis: state => state.apis.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, apis, businessApis } = this;
+      const { sortByKey, sortByKeyType, sortDirection, businessApis } = this;
       const { sortArrayOfObjects } = Helpers;
-      // const { businessApis, apiStates, apiVisibilityTypes, proxies } = this;
-      // const getApiStateName = (apistateid) => {
-      //   const apiState = apiStates.find(item => item.uuid === apistateid);
-      //   return apiState ? apiState.name : apistateid;
-      // };
-      // const getApiVisibilityName = (apivisibilityid) => {
-      //   const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
-      //   return apiVisibility ? apiVisibility.name : apivisibilityid;
-      // };
-      // const getNumberOfProxies = apiUuid =>
-      //   proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
-      const businessApisIds = businessApis.map(item => item.uuid);
       return sortArrayOfObjects({
-        array: apis
-          .filter(item => businessApisIds.indexOf(item.uuid) > -1)
+        array: businessApis
           .map(item => ({
             ...item,
-            // apistatename: getApiStateName(item.apistateid),
-            // apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            // numberofproxies: getNumberOfProxies(item.uuid),
           }))
           .filter((item) => {
             const { filterKey } = this;

@@ -28,7 +28,7 @@
             {{ item.environment }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
@@ -49,7 +49,7 @@
             </b-dropdown>
           </td>
           <td class="actions" v-else-if="routePath === '/app/explore/' && isUnsubscibeButtonVisible">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>

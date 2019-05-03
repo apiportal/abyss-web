@@ -13,9 +13,9 @@
       <span class="info-header">{{ infoText.name }}</span>
       <hr/>{{ infoText.description + '.' }}
     </b-alert>
-    <div>
-      <p>Active State : {{ currentApiState.name }} <br/>
-      Target State : {{ targetState }}</p>
+    <div class="state-status">
+        <span class="active-state">Active State : {{ currentApiState.name }}</span>
+        <span class="target-state">Target State : {{ targetState }}</span>
     </div>
   </div>
 </template>
@@ -70,5 +70,22 @@ export default {
 .state-description {
   margin-top: 10px;
   height: 200px;
+}
+.state-status {
+  margin: 0 0 10px 20px;
+}
+.active-state {
+  background: #0069d9;
+  color: white;
+  border: 1px solid #007bff;
+  border-radius: .25rem;
+  padding: 5px;
+}
+.target-state {
+  background: #28a745;
+  color: white;
+  border: 1px solid #28a745;
+  border-radius: .25rem;
+  padding: 5px;
 }
 </style>

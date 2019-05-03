@@ -29,6 +29,10 @@ export default {
       type: Object,
       required: false,
     },
+    onStateChange: {
+      type: Function,
+      required: true,
+    },
   },
   computed: {
     ...mapState({
@@ -51,6 +55,7 @@ export default {
     },
     changeState(state) {
       this.targetState = state;
+      this.onStateChange(state);
     },
   },
 };

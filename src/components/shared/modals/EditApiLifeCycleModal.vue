@@ -19,6 +19,7 @@
     <template>
       <LifeCycle
         :currentApiState="computedApiState"
+        :onStateChange="onStateChange"
       />
       <b-form
         @submit="handleSubmit"
@@ -103,6 +104,9 @@ export default {
     computedApiState() {
       const { proxy, apiStates } = this;
       return apiStates.find(item => item.uuid === proxy.apistateid);
+    },
+    onStateChange(newState) {
+      console.log('new state: ', newState); // eslint-disable-line
     },
   },
   methods: {

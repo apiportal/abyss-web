@@ -226,6 +226,16 @@ export default {
   getUserGroupMembership() {
     return axios.get('/abyss/oapi/subject-memberships/user-group/');
   },
+  postUserGroupMembership(userGroupMembership) {
+    return axios.post('/abyss/oapi/subject-memberships/user-group/', userGroupMembership);
+  },
+  putUserGroupMembership(userGroupMembership) {
+    const { uuid, created, updated, deleted, isdeleted, ...rest } = userGroupMembership;
+    return axios.put('/abyss/oapi/subject-memberships/user-group/', rest);
+  },
+  // deleteUserGroupMembership(uuid) {
+  //   return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
+  // },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');

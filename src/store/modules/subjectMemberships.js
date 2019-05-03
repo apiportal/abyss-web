@@ -52,6 +52,30 @@ const actions = {
         }
       });
   },
+  postUserGroupMembership: ({ commit }, membership) => {
+    return api.postUserGroupMembership(membership)
+      .then((response) => {
+        let error = false;
+        response.data.map((status) => {
+          if (status.error.code !==0) {
+            error = true;
+            alert(status.error.usermessage);
+          } else {
+            commit('addNewUserGroupMembership', status.response);
+          }
+        });
+        if (error) {
+          return false;
+        }
+        return response;
+      });
+  },
+  // deleteUserGroupMembership: ({ commit }, membership) => {
+  //   return api.deleteUserGroupMembership(membership.uuid).then((response) => {
+  //     commit('setUserGroupMembershipDeleted', membership.uuid);
+  //     return response;
+  //   });
+  // },
   getAllSubjectMemberships: ({ commit }, { refresh = false  }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 && !refresh ) {
@@ -102,6 +126,23 @@ const mutations = {
     state.userGroup = userGroupMembership;
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  addNewUserGroupMembership: (state, newUserGroupMembership) => {
+    state.userGroup = [
+      ...state.userGroup,
+      newUserGroupMembership,
+    ];
+  },
+  // setUserGroupMembershipDeleted: (state, membershipUuid) => {
+  //   state.userGroup = state.userGroup.map((item) => {
+  //     if (item.uuid === membershipUuid) {
+  //       return {
+  //         ...item,
+  //         isdeleted: true,
+  //       };
+  //     }
+  //     return item;
+  //   }).filter(item => !item.isdeleted);
+  // },
   setSubjectMembershipDeleted: (state, membershipUuid) => {
     state.items = state.items.map((item) => {
       if (item.uuid === membershipUuid) {

@@ -101,8 +101,6 @@
             <div class="collapsible-content">
               <User
                 :user="item"
-                :groups="groups"
-                :organizations="organizations"
                 :routePath="routePath"
               />
             </div>

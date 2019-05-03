@@ -269,7 +269,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('apps', ['putApps', 'postApps']),
+    ...mapActions('userApps', ['putApps', 'postApps']),
     handleSubmit(evt) {
       evt.preventDefault();
       const { appEditable, putApps, postApps, onUpdate, role } = this;

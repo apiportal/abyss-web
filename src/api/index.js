@@ -297,8 +297,12 @@ export default {
   postAppsCascaded(app) {
     return axios.post('/abyss/oapi/subjects/apps/cascaded', app);
   },
-  putAppsCascaded(uuid) {
-    return axios.post(`/abyss/oapi/subjects/apps/cascaded/${uuid}`);
+  putAppsCascaded(app) {
+    const { uuid, created, deleted, isdeleted, updated, contracts,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = app;
+    return axios.post(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
   },
   // SubjectApps > explore
   getSubjectApps(uuid) {
@@ -323,7 +327,7 @@ export default {
     return axios.get('/abyss/oapi/subjects/apps/');
   },
   putApps(subject) {
-    const { uuid, created, deleted, isdeleted, updated,
+    const { uuid, created, deleted, isdeleted, updated, contracts,
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
       lastauthenticatedat, lastfailedloginat, ...rest } = subject;

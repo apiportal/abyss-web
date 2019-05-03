@@ -70,19 +70,6 @@
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
-              <b-dropdown-header v-if="item.subjectapp">
-                <small class="d-block">subjectapp</small>
-                <code>{{ item.subjectapp.uuid }}</code>
-              </b-dropdown-header>
-              <b-dropdown-header v-if="item.resource">
-                <small class="d-block">resource</small>
-                <code>{{ item.resource.uuid }}</code>
-              </b-dropdown-header>
-              <b-dropdown-header v-if="item.resource && item.resource.permission">
-                <small class="d-block">permission</small>
-                <code>{{ item.resource.permission.uuid }}</code>
-              </b-dropdown-header>
-
             </b-dropdown>
           </td>
         </tr>
@@ -133,29 +120,19 @@ export default {
       default() { return 2000; },
     },
   },
-  mounted() {
-    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
-  },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       currentUser: state => state.user,
-      contracts: state => state.userContracts.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;
       const { sortArrayOfObjects } = Helpers;
-      const getAppContracts = (id) => {
-        const appContracts = this.contracts
-        .filter(item => item.subjectid === id && !item.isdeleted);
-        return appContracts;
-      };
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
-            contracts: getAppContracts(item.uuid),
-            contractscount: getAppContracts(item.uuid).length,
+            contractscount: item.contracts.length,
           })),
         sortByKey,
         sortByKeyType,

@@ -306,7 +306,7 @@ export default {
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
-      sortByKey: 'firstname',
+      sortByKey: 'displayname',
       sortByKeyType: 'string',
       sortDirection: 'desc',
       filterKey: '',

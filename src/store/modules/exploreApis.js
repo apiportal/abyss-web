@@ -9,28 +9,28 @@ const state = {
 const getters = {};
 
 const actions = {
-  getApps: ({ commit }) => {
+  getExploreApis: ({ commit }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApps()
+    api.getAllProxies()
     .then((response) => {
       if (response && response.data) {
-        commit('setApps', response.data);
+        commit('setExploreApis', response.data);
       }
     })
     .catch((error) => {
       if (error.status === 404) {
-        commit('setApps', []);
+        commit('setExploreApis', []);
       }
     });
   },
 };
 
 const mutations = {
-  setApps: (state, apps) => {
-    state.items = apps;
+  setExploreApis: (state, apis) => {
+    state.items = apis;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

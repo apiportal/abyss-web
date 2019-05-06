@@ -4,6 +4,7 @@ import api from '@/api';
 const state = {
   items: [],
   userApp: [],
+  userGroup: [],
   lastUpdatedAt: 0,
 };
 
@@ -36,6 +37,18 @@ const actions = {
       .then((res) => {
         if (res && res.data) {
           commit('setUserAppMemberships', res.data);
+        }
+      });
+  },
+  getUserGroupMemberships: ({ commit }, {refresh = false }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 && !refresh ) {
+      return false;
+    }
+    api.getUserGroupMembership()
+      .then((res) => {
+        if (res && res.data) {
+          commit('setUserGroupMemberships', res.data);
         }
       });
   },
@@ -83,6 +96,10 @@ const mutations = {
   },
   setUserAppMemberships: (state, userAppMembership) => {
     state.userApp = userAppMembership;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setUserGroupMemberships: (state, userGroupMembership) => {
+    state.userGroup = userGroupMembership;
     state.lastUpdatedAt = (new Date()).getTime();
   },
   setSubjectMembershipDeleted: (state, membershipUuid) => {

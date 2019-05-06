@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Title:</dt>
+        <dt>Business Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
       </dl>
       <dl class="col">

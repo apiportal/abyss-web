@@ -21,7 +21,7 @@ export default {
   methods: {
     ...mapActions('roles', ['deleteRoles']),
     handleModalClose() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/roles/${this.page}`);
     },
     handleModalConfirm() {
       const { deleteRoles, role } = this;

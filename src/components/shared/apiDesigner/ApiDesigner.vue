@@ -189,8 +189,8 @@ export default {
     this.getApiLicenses();
   },
   methods: {
-    ...mapActions('businessApis', ['putBusinessApis']),
-    ...mapActions('apis', ['putApis', 'postApis']),
+    ...mapActions('businessApis', ['putBusinessApis', 'postBusinessApis']),
+    ...mapActions('proxies', ['putProxies', 'postProxies']),
     ...mapActions('apiLicenses', ['postApiLicensesRefs']),
     ...mapActions('resources', ['postResources']),
     ...mapActions('permissions', ['postPermissions']),
@@ -258,7 +258,8 @@ export default {
       }
     },
     handleSubmit() {
-      const { apiStates, apiStateIndex, putApis, postApis,
+      const { apiStates, apiStateIndex,
+        putBusinessApis, putProxies, postProxies, postBusinessApis,
         postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
       const currentApi = apiStates[apiStateIndex];
       const { openapidocument, businessapiid } = currentApi;
@@ -274,19 +275,19 @@ export default {
             businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
           };
           const { uuid, created, updated, deleted, isdeleted, ...rest } = apiToCreate;
-          postApis([{
-            ...rest,
-          }]).then((response) => {
-            if (response && response.data) {
-              const createdApi = response.data[0].response;
-              if (createdApi.isproxyapi) {
+          if (currentApi.isproxyapi) {
+            postProxies([{
+              ...rest,
+            }]).then((response) => {
+              if (response && response.data) {
+                const createdProxy = response.data[0].response;
                 /* // !!! replace after cascade
                 // licenses
                 if (this.licensesToClone.length) {
                   const licenses = this.licensesToClone.map(item => ({
-                    organizationid: createdApi.organizationid,
-                    crudsubjectid: createdApi.crudsubjectid,
-                    apiid: createdApi.uuid,
+                    organizationid: createdProxy.organizationid,
+                    crudsubjectid: createdProxy.crudsubjectid,
+                    apiid: createdProxy.uuid,
                     licenseid: item.licenseid,
                     isactive: true,
                   }));
@@ -310,25 +311,25 @@ export default {
                 // licenses
                 // !!! */
                 const resourceProxyToAdd = [{
-                  organizationid: createdApi.organizationid,
-                  crudsubjectid: createdApi.crudsubjectid,
+                  organizationid: createdProxy.organizationid,
+                  crudsubjectid: createdProxy.crudsubjectid,
                   resourcetypeid: '505099b4-19da-401c-bd17-8c3a85d89743',
-                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} PROXY API`,
-                  description: createdApi.openapidocument.info.description,
-                  resourcerefid: createdApi.uuid,
+                  resourcename: `${createdProxy.openapidocument.info.title} ${createdProxy.openapidocument.info.version} PROXY API`,
+                  description: createdProxy.openapidocument.info.description,
+                  resourcerefid: createdProxy.uuid,
                   isactive: true,
                 }];
                 postResources(resourceProxyToAdd).then((responseResource) => {
                   if (responseResource && responseResource.data) {
                     const createdResource = responseResource.data[0].response;
                     const permissionToAdd = [{
-                      organizationid: createdApi.organizationid,
-                      crudsubjectid: createdApi.crudsubjectid,
-                      permission: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
-                      description: `Ownership of ${createdApi.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      organizationid: createdProxy.organizationid,
+                      crudsubjectid: createdProxy.crudsubjectid,
+                      permission: `Ownership of ${createdProxy.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdProxy.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
                       effectivestartdate: this.$moment.utc().toISOString(),
                       effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
-                      subjectid: createdApi.subjectid,
+                      subjectid: createdProxy.subjectid,
                       resourceid: createdResource.uuid,
                       resourceactionid: 'd5318796-9ad3-4445-892f-27670cda77d6',
                       accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
@@ -339,9 +340,9 @@ export default {
                         // licenses
                         if (this.licensesToClone.length) {
                           const licenses = this.licensesToClone.map(item => ({
-                            organizationid: createdApi.organizationid,
-                            crudsubjectid: createdApi.crudsubjectid,
-                            apiid: createdApi.uuid,
+                            organizationid: createdProxy.organizationid,
+                            crudsubjectid: createdProxy.crudsubjectid,
+                            apiid: createdProxy.uuid,
                             licenseid: item.licenseid,
                             isactive: true,
                           }));
@@ -368,7 +369,14 @@ export default {
                   }
                 });
                 // !!!
-              } else {
+              }
+            });
+          } else {
+            postBusinessApis([{
+              ...rest,
+            }]).then((response) => {
+              if (response && response.data) {
+                const createdApi = response.data[0].response;
                 /* // !!! replace after cascade
                 this.showCreatedAlert = true;
                 setTimeout(() => {
@@ -414,8 +422,8 @@ export default {
                 });
                 // !!!
               }
-            }
-          });
+            });
+          }
         } else { // SAVE API
           const apiToUpdate = {
             ...currentApi,
@@ -424,15 +432,27 @@ export default {
             apiparentid: currentApi.uuid,
             businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
           };
-          putApis({
-            ...apiToUpdate,
-          })
-          .then(() => {
-            this.showSavedAlert = true;
-            setTimeout(() => {
-              this.showSavedAlert = false;
-            }, 3000);
-          });
+          if (currentApi.isproxyapi) {
+            putProxies({
+              ...apiToUpdate,
+            })
+            .then(() => {
+              this.showSavedAlert = true;
+              setTimeout(() => {
+                this.showSavedAlert = false;
+              }, 3000);
+            });
+          } else {
+            putBusinessApis({
+              ...apiToUpdate,
+            })
+            .then(() => {
+              this.showSavedAlert = true;
+              setTimeout(() => {
+                this.showSavedAlert = false;
+              }, 3000);
+            });
+          }
         }
       })
       .catch((error) => {

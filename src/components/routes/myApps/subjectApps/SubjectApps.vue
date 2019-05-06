@@ -76,45 +76,9 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apps: state => state.apps.items,
-      subjectApps: state => state.subjectApps.items,
+      userApps: state => state.userApps.items,
       organizations: state => state.organizations.items,
-      subjectResources: state => state.subjectResources.items,
-      subjectPermissions: state => state.subjectPermissions.items,
     }),
-    userApps() {
-      // SubjectApps NEW
-      const subjectAppsIds = this.subjectApps.map(item => item.appid);
-      // const subjectAppsIds = this.subjectApps.map(item => item.subjectgroupid);
-      const getSubjectApp = (appId) => {
-        const subjectapp = this.subjectApps.find(item => item.appid === appId);
-        // const subjectapp = this.subjectApps.find(item => item.subjectgroupid === appId);
-        return subjectapp;
-      };
-      const getSubjectPermissions = (resource) => {
-        const subjectpermissions = this.subjectPermissions.find(
-          item => item.resourceid === resource.uuid);
-        return subjectpermissions;
-      };
-      const getSubjectResource = (app) => {
-        const subjectresource = this.subjectResources.find(item => item.resourcerefid === app.uuid);
-        if (subjectresource) {
-          subjectresource.permission = getSubjectPermissions(subjectresource);
-        }
-        return subjectresource;
-      };
-      return this.apps
-        .filter(item => (
-          subjectAppsIds.indexOf(item.uuid) > -1),
-        )
-        .map(item => ({
-          ...item,
-          subjectapp: getSubjectApp(item.uuid),
-          resource: getSubjectResource(item),
-          // permission: getSubjectPermissions(item),
-        }),
-      );
-    },
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
@@ -170,7 +134,7 @@ export default {
       this.$router.push(`/app/my-apps/my-apps/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('subjectApps/getSubjectApps', {
+      this.$store.dispatch('userApps/getApps', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });

@@ -162,7 +162,7 @@
                 <div class="abyss-table-content">
                   <div class="row">
                     <dl class="col">
-                      <dt>Name:</dt>
+                      <dt>Policy Type Name:</dt>
                       <dd>{{ item.name }}</dd>
                       <dt>Organization:</dt>
                       <dd>{{ item.organizationname }}</dd>

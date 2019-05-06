@@ -156,13 +156,13 @@
               {{ item.displayname }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
-              {{ item.permissionscount }}
+              {{ item.permissions.length }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
-              {{ item.userscount }}
+              {{ item.users.length }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
-              {{ item.groupscount }}
+              {{ item.groups.length }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm")  }}
@@ -194,7 +194,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer" data-qa="tableFooter">
-            <td colspan="5">
+            <td colspan="8">
               <div class="collapsible-content">
                 <Role
                   :item="item"
@@ -333,12 +333,9 @@ export default {
         array: roles.map(item => ({
           ...item,
           users: getUsers(item.uuid),
-          userscount: users.length,
           organizationname: getOrganizationName(item.organizationid),
           permissions: getPermissions(item.uuid),
-          permissionscount: this.permissions.length,
           groups: getGroups(item.uuid),
-          groupscount: groups.length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

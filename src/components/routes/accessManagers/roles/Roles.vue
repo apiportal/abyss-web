@@ -88,6 +88,36 @@
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Permissions"
+                sortByKey="permissionscount"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Users"
+                sortByKey="userscount"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Groups"
+                sortByKey="groupscount"
+                sortByKeyType="number"
+              />
+            </th>
+            <th>
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
                 text="Effective Start Date"
                 sortByKey="effectivestartdate"
                 sortByKeyType="string"
@@ -125,11 +155,20 @@
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.displayname }}
             </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
+              {{ item.permissionscount }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
+              {{ item.userscount }}
+            </td>
+            <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
+              {{ item.groupscount }}
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.effectivestartdate | moment("DD.MM.YYYY HH:mm")  }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
-              {{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm")  }}
+              {{ item.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}
             </td>
             <td class="actions">
               <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
@@ -297,8 +336,9 @@ export default {
           userscount: users.length,
           organizationname: getOrganizationName(item.organizationid),
           permissions: getPermissions(item.uuid),
+          permissionscount: this.permissions.length,
           groups: getGroups(item.uuid),
-          groupcount: groups.length,
+          groupscount: groups.length,
         })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

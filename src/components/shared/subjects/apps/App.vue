@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Name:</dt>
+        <dt>App Name:</dt>
         <dd>{{ item.subjectname }}</dd>
         <dt>Url:</dt>
         <dd>{{ item.url }}</dd>

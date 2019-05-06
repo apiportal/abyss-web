@@ -34,7 +34,8 @@ const actions = {
   },
   postBusinessApis: ({ commit }, businessApi) => {
     return api.postBusinessApi(businessApi).then((response) => {
-      // commit('addNewBusinessApis', response.data);
+      const proxies = response.data.map((item) => item.response);
+      commit('addNewBusinessApis', proxies);
       return response;
     });
   },
@@ -52,6 +53,12 @@ const mutations = {
       return itemShouldUpdate ? itemShouldUpdate : item;
     });
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  addNewBusinessApis: (state, businessApis) => {
+    state.items = [
+      ...state.items,
+      ...businessApis,
+    ];
   },
 };
 

@@ -32,11 +32,11 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apps: state => state.apps.items,
+      userApps: state => state.userApps.items,
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
-      isAppsLoaded: state => (state.apps.lastUpdatedAt > 0),
+      isAppsLoaded: state => (state.userApps.lastUpdatedAt > 0),
       isOrganizationsLoaded: state => (state.organizations.lastUpdatedAt > 0),
       isSubjectDirectoriesLoaded: state => (state.subjectDirectories.lastUpdatedAt > 0),
       isSubjectDirectoryTypesLoaded: state => (state.subjectDirectoryTypes.lastUpdatedAt > 0),

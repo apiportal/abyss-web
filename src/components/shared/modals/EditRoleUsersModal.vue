@@ -12,7 +12,7 @@
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit Role Users of {{role.displayname}}
+        Edit Role Users of {{selectedRole.displayname}}
       </h5>
     </template>
     <template>
@@ -20,10 +20,10 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <div class="form-group">
+          <div>
             <Chips
-              :chips="computedRoleUsers"
-              :autocompleteOptions="usersEditable"
+              :chips="computedMemberships"
+              :autocompleteOptions="roleUsersEditable"
               :onDeleteChip="handleDeleteRoleUsers"
               :onAddChip="handleAddRoleUsers"
               label="Role Users"
@@ -100,68 +100,49 @@
         type: Function,
         required: true,
       },
-      user: {
-        type: Object,
-        required: false,
-      },
-      subjectDirectories: {
-        type: Array,
-        required: false,
-        default() { return []; },
-      },
       users: {
         type: Array,
         required: false,
         default() { return []; },
       },
-      role: {
-        type: String,
+      selectedRole: {
+        type: Object,
         required: false,
-        default() { return 'edit'; },
       },
-      rolePermissions: {
+      memberships: {
         type: Array,
         required: false,
         default() { return []; },
-      },
-      title: {
-        type: String,
-        required: false,
-        default() { return ''; },
       },
     },
     computed: {
       ...mapState({
         currentUser: state => state.user,
+        roleMemberships: state => state.roleMemberships.items,
       }),
-      computedRoleUsers() {
-        const { usersEditable, chipColor } = this;
-        return usersEditable
-          .filter(user => user.isAttached)
-          .sort((a, b) => b.sortTime - a.sortTime)
-          .map(user => ({
-            ...user,
-            isAttached: user.isAttached,
-            isowner: user.userrole ? user.userrole.isowner : false,
-            color: chipColor(user),
-          }));
+      computedMemberships() {
+        const { roleUsersEditable } = this;
+        return roleUsersEditable
+        .filter(user => user.isAttached)
+        .sort((a, b) => b.sortTime - a.sortTime);
       },
     },
     data() {
-      const { users, rolePermissions, chipColor } = this;
+      const { users, memberships, selectedRole } = this;
       return {
-        usersEditable: [...JSON.parse(JSON.stringify(users))].map((user) => {
-          const userrole = rolePermissions.find(
-            o => o.userrefid === user.uuid);
-          const isAttached = Boolean(userrole);
+        roleUsersEditable: [...JSON.parse(JSON.stringify(users))].map((user) => {
+          const membership = memberships.find(m =>
+            m.subjectid === user.uuid &&
+            m.subjectgroupid === selectedRole.uuid,
+          );
+          const isAttached = Boolean(membership);
           const sortTime = (new Date()).getTime();
           return {
             ...user,
-            text: user.displayname,
             value: user.uuid,
-            color: chipColor(user),
+            text: user.displayname,
             isAttached,
-            userrole,
+            membership,
             sortTime,
           };
         }),
@@ -170,38 +151,29 @@
       };
     },
     methods: {
-      ...mapActions('subjectOrganizations', ['deleteSubjectOrganizations', 'postSubjectOrganizations']),
-      chipColor(item) {
-        if (item.isAttached && item.userrole && item.userrole.isowner) {
-          return 'btn-success';
-        } else if (!item.isAttached &&
-          item.userrole && item.userrole.isowner) {
-          return 'btn-danger';
-        }
-        return 'btn-secondary';
-      },
+      ...mapActions('roleMemberships', ['deleteRoleMemberships', 'postRoleMemberships']),
       handleSubmit(evt) {
-        const { usersEditable, postSubjectOrganizations,
-          deleteSubjectOrganizations, onUpdate } = this;
+        const { selectedRole, roleUsersEditable, postRoleMemberships,
+          deleteRoleMemberships, onUpdate } = this;
         evt.preventDefault();
-        this.usersToDelete = usersEditable
-          .filter(permission => permission.userrole && !permission.isAttached)
-          .map(permission => (permission.userrole));
-        this.usersToAdd = usersEditable
-          .filter(permission => !permission.userrole && permission.isAttached)
-          .map(permission => ({
-            // organizationid: this.currentUser.props.organizationid,
-            organizationid: permission.organizationid,
+        this.usersToDelete = roleUsersEditable
+          .filter(user => user.membership && !user.isAttached)
+          .map(user => (user.membership));
+        this.usersToAdd = roleUsersEditable
+          .filter(user => !user.membership && user.isAttached)
+          .map(user => ({
+            organizationid: this.currentUser.organizationid,
             crudsubjectid: this.currentUser.props.uuid,
-            subjectid: this.user.uuid,
-            userrefid: this.user.uuid,
-            isowner: false,
+            subjectid: user.uuid,
+            subjectgroupid: selectedRole.uuid,
+            subjecttypeid: user.subjecttypeid,
+            subjectgrouptypeid: selectedRole.subjecttypeid,
+            subjectdirectoryid: user.subjectdirectoryid,
             isactive: true,
           }));
         if (this.usersToDelete.length) {
-          // console.log('usersToDelete', this.usersToDelete);
           for (let i = 0; i < this.usersToDelete.length; i += 1) {
-            deleteSubjectOrganizations(this.usersToDelete[i]).then((response) => {
+            deleteRoleMemberships(this.usersToDelete[i]).then((response) => {
               if (response && response.data) {
                 onUpdate();
               }
@@ -209,9 +181,8 @@
           }
         }
         if (this.usersToAdd.length) {
-          // console.log('usersToAdd', this.usersToAdd);
           for (let i = 0; i < this.usersToAdd.length; i += 1) {
-            postSubjectOrganizations([this.usersToAdd[i]]).then((response) => {
+            postRoleMemberships([this.usersToAdd[i]]).then((response) => {
               if (response && response.data) {
                 onUpdate();
               }
@@ -220,8 +191,8 @@
         }
       },
       handleDeleteRoleUsers(index, chip) {
-        const { usersEditable } = this;
-        this.usersEditable = usersEditable.map((item) => {
+        const { roleUsersEditable } = this;
+        this.roleUsersEditable = roleUsersEditable.map((item) => {
           const isAttached = item.uuid === chip.value ? false : item.isAttached;
           return {
             ...item,
@@ -230,8 +201,8 @@
         });
       },
       handleAddRoleUsers(chip) {
-        const { usersEditable } = this;
-        this.usersEditable = usersEditable.map((item) => {
+        const { roleUsersEditable } = this;
+        this.roleUsersEditable = roleUsersEditable.map((item) => {
           const isAttached = item.uuid === chip.value ? true : item.isAttached;
           const sortTime = (new Date()).getTime();
           return {

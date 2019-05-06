@@ -50,7 +50,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apis: state => state.apis.items,
+      apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
       users: state => state.users.items,
     }),
@@ -65,22 +65,24 @@ export default {
         return user.displayname || subjectId;
       };
       return apis
-        .filter(item => (
-          item.isproxyapi &&
-          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
-          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
-          !item.isdeleted
-        ))
         .map(item => ({
           ...item,
           apistatename: getApiStateName(item.apistateid),
           ownername: getOwnerName(item.subjectid),
-        }));
+        }))
+        .filter(item => (
+          item.apistatename !== 'Removed' &&
+          item.isproxyapi &&
+          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
+          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
+          !item.isdeleted
+        ));
     },
   },
   mounted() {
-    this.$store.dispatch('apis/getApis', {});
+    this.$store.dispatch('exploreApis/getExploreApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('apps/getApps', {});
@@ -89,6 +91,7 @@ export default {
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
     this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
   },
   methods: {
     subStr(i) {

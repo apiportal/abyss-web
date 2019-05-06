@@ -2,15 +2,16 @@
   <div>
     <EditRoleGroupsModal
       v-if="
-        isUsersLoaded &&
-        isRoleGroupsLoaded
+        isRolesLoaded &&
+        isGroupsLoaded &&
+        isMembershipsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :user="users.find(item => item.uuid === userId)"
+      :selectedRole="roles.find(item => item.uuid === selectedRoleId)"
       :groups="groups"
-      :roleGroups="roleGroups"
+      :memberships="memberships"
     />
   </div>
 </template>
@@ -33,9 +34,10 @@
     },
     computed: {
       ...mapState({
-        users: state => state.users.items,
         groups: state => state.groups.items,
-        isUsersLoaded: state => state.users.lastUpdatedAt,
+        roles: state => state.roles.items,
+        isRolesLoaded: state => state.roles.lastUpdatedAt,
+        isGroupsLoaded: state => state.groups.lastUpdatedAt,
       }),
     },
     methods: {
@@ -45,31 +47,32 @@
       handleModalUpdate() {
         this.$router.push(this.routePath);
       },
-      getGroupsOfRole() {
-        api.getGroupsOfRole(this.userId).then((response) => {
+      getAllGroupRoleMemberships() {
+        api.getAllGroupRoleMemberships().then((response) => {
           if (response && response.data) {
-            this.roleGroups = response.data;
+            this.memberships = response.data;
           }
-          this.isRoleGroupsLoaded = true;
+          this.isMembershipsLoaded = true;
         }).catch((error) => {
           if (error.status === 404) {
-            this.roleGroups = [];
-            this.isRoleGroupsLoaded = true;
+            this.memberships = [];
+            this.isMembershipsLoaded = true;
           }
         });
       },
     },
     data() {
       return {
-        userId: this.$route.params.id,
+        selectedRoleId: this.$route.params.id,
         page: this.$route.params.page,
-        roleGroups: [],
-        isRoleGroupsLoaded: false,
+        memberships: [],
+        isMembershipsLoaded: false,
       };
     },
     mounted() {
-      this.getGroupsOfRole();
-      this.$store.dispatch('roles/1', {});
+      this.getAllGroupRoleMemberships();
+      this.$store.dispatch('roles/getRoles', {});
+      this.$store.dispatch('groupRoleMemberships/getAllGroupRoleMemberships', {});
     },
   };
 </script>

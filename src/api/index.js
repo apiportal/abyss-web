@@ -189,8 +189,23 @@ export default {
   getAllRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/user-role/');
   },
+  getRoleMemberships(uuid) {
+    return axios.get(`/abyss/oapi/subject-memberships/${uuid}`);
+  },
+  postRoleMemberships(subjectmemberships) {
+    return axios.post('/abyss/oapi/subject-memberships/user-role/', subjectmemberships);
+  },
+  deleteRoleMemberships() {
+    return axios.delete('/abyss/oapi/subject-memberships/user-role/');
+  },
   getAllGroupRoleMemberships() {
     return axios.get('/abyss/oapi/subject-memberships/group-role/');
+  },
+  postGroupRoleMemberships(subjectmemberships) {
+    return axios.post('/abyss/oapi/subject-memberships/group-role/', subjectmemberships);
+  },
+  deleteGroupRoleMemberships() {
+    return axios.delete('/abyss/oapi/subject-memberships/group-role/');
   },
   getAllSubjectMemberships() {
     return axios.get('/abyss/oapi/subject-memberships');
@@ -204,6 +219,22 @@ export default {
   },
   deleteSubjectMemberships(uuid) {
     return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
+  },
+  getUserAppMembership() {
+    return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  },
+  getUserGroupMembership() {
+    return axios.get('/abyss/oapi/subject-memberships/user-group/');
+  },
+  postUserGroupMembership(userGroupMembership) {
+    return axios.post('/abyss/oapi/subject-memberships/user-group/', userGroupMembership);
+  },
+  putUserGroupMembership(userGroupMembership) {
+    const { uuid, created, updated, deleted, isdeleted, ...rest } = userGroupMembership;
+    return axios.put('/abyss/oapi/subject-memberships/user-group/', rest);
+  },
+  deleteUserGroupMembership(uuid) {
+    return axios.delete(`/abyss/oapi/subject-memberships/group/${uuid}`);
   },
   // resources
   getResources() {
@@ -241,6 +272,9 @@ export default {
     const { uuid, created, deleted, updated, isdeleted, ...rest } = permission;
     return axios.put(`/abyss/oapi/subject-permissions/${uuid}`, rest);
   },
+  putBulkPermissions(permissions) {
+    return axios.put('/abyss/oapi/subject-permissions/', permissions);
+  },
   deletePermissions(uuid) {
     return axios.delete(`/abyss/oapi/subject-permissions/${uuid}`);
   },
@@ -254,15 +288,56 @@ export default {
   getSubjectTypes() {
     return axios.get('/abyss/oapi/subject-types');
   },
+  // subjects > permissions
+  getSubject(uuid) {
+    return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
+  // update subjects
+  /* putSubjects(subject) {
+    const { uuid, created, deleted, isdeleted, updated,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = subject;
+    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
+  }, */
+  // user apps cascaded
+  getUserAppsCascaded(uuid) {
+    return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
+  },
+  postAppsCascaded(app) {
+    return axios.post('/abyss/oapi/subjects/apps/cascaded', app);
+  },
+  putAppsCascaded(app) {
+    const { uuid, created, deleted, isdeleted, updated, contracts,
+      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
+      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
+      lastauthenticatedat, lastfailedloginat, ...rest } = app;
+    return axios.post(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
+  },
+  // SubjectApps > explore
+  getSubjectApps(uuid) {
+    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  },
+  /* putSubjectApps(subjectapp) {
+    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
+    return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
+    // return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
+  },
+  postSubjectApps(subjectapp) {
+    return axios.post('/abyss/oapi/subject-apps/', subjectapp);
+    // return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
+  },
+  deleteSubjectApps(uuid) {
+    return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
+    // return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
+  }, */
   // apps
   getApps() {
     return axios.get('/abyss/oapi/subjects/apps/');
   },
-  getSubject(uuid) {
-    return axios.get(`/abyss/oapi/subjects/${uuid}`);
-  },
   putApps(subject) {
-    const { uuid, created, deleted, isdeleted, updated,
+    const { uuid, created, deleted, isdeleted, updated, contracts,
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
       lastauthenticatedat, lastfailedloginat, ...rest } = subject;
@@ -273,14 +348,6 @@ export default {
   },
   deleteApps(uuid) {
     return axios.delete(`/abyss/oapi/subjects/${uuid}`);
-  },
-  // update subjects
-  putSubjects(subject) {
-    const { uuid, created, deleted, isdeleted, updated,
-      invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
-      totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
-      lastauthenticatedat, lastfailedloginat, ...rest } = subject;
-    return axios.put(`/abyss/oapi/subjects/${uuid}`, rest);
   },
   // my-apis
   getApis() {
@@ -367,27 +434,6 @@ export default {
   },
   deletePolicyTypes(uuid) {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
-  },
-  // SubjectApps
-  getSubjectAppsComposite(uuid) {
-    return axios.get(`/abyss/oapi/subjects/apps/user/${uuid}`);
-  },
-  getSubjectApps(uuid) {
-    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
-  },
-  putSubjectApps(subjectapp) {
-    const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
-    return axios.put(`/abyss/oapi/subject-apps/${uuid}`, rest);
-    // return axios.put(`/abyss/oapi/subject-memberships/user-app/${uuid}`, rest);
-  },
-  postSubjectApps(subjectapp) {
-    return axios.post('/abyss/oapi/subject-apps/', subjectapp);
-    // return axios.post('/abyss/oapi/subject-memberships/user-app/', subjectapp);
-  },
-  deleteSubjectApps(uuid) {
-    return axios.delete(`/abyss/oapi/subject-apps/${uuid}`);
-    // return axios.delete(`/abyss/oapi/subject-memberships/user-app/${uuid}`);
   },
   // licenses
   getSubjectLicenses(uuid) {
@@ -485,12 +531,6 @@ export default {
   },
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
-  },
-  getPermissionsOfRole(uuid) {
-    return axios.get(`/abyss/oapi/subject-permissions/subject/${uuid}`);
-  },
-  getUsersOfRole(uuid) {
-    return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);
   },
   getGroupsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);

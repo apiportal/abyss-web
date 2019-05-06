@@ -32,6 +32,12 @@ const actions = {
       return response;
     });
   },
+  putBulkPermissions: ({ commit }, permissions) => {
+    return api.putBulkPermissions(permissions).then((response) => {
+      commit('updatePermissions', response.data);
+      return response;
+    });
+  },
   deletePermissions: ({ commit }, permission) => {
     return api.deletePermissions(permission.uuid).then((response) => {
       commit('setPermissionDeleted', permission.uuid);

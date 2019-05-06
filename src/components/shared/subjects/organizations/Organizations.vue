@@ -86,7 +86,7 @@
             {{ item.organizationowner }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted && item.isorganizationowner">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted && item.isorganizationowner" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>

@@ -115,7 +115,8 @@ export default {
       currentUser: state => state.user,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.subjectLicenses.items,
+      // licenses: state => state.subjectLicenses.items,
+      licenses: state => state.licenses.items,
       proxies: state => state.proxies.items,
     }),
     computedContractApis() {
@@ -187,7 +188,8 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    // this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('licenses/getLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });

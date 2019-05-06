@@ -1,8 +1,11 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + item.image + ')' }"></dt>
+      </dl>
       <dl class="col">
-        <dt>Title:</dt>
+        <dt>Proxy Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
@@ -19,12 +22,21 @@
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
-        <dd>{{ computedBusinessApi[0].openapidocument.info.title }}</dd>
+        <dd>{{ computedBusinessApiName }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
     <div class="row abyss-table-buttons">
+      <b-button
+        @click="handleToggleBusinessTable"
+        size="md"
+        variant="link"
+        :class="{'active': isBusinessTableVisible}"
+      >
+        <span>Business API</span>
+        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
+      </b-button>
       <b-button
         @click="handleToggleLicensesTable"
         size="md"
@@ -43,15 +55,6 @@
         <span>Contracts</span>
         <b-badge pill>{{ item.contractscount }}</b-badge>
       </b-button>
-      <b-button
-        @click="handleToggleBusinessTable"
-        size="md"
-        variant="link"
-        :class="{'active': isBusinessTableVisible}"
-      >
-        <span>Business API</span>
-        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
-      </b-button>
     </div>
     <div v-if="isLicensesTableVisible && item.licenses.length">
       <Licenses
@@ -65,7 +68,7 @@
         :routePath="routePath"
       ></Contracts>
     </div>
-    <div v-if="isBusinessTableVisible && computedBusinessApi">
+    <div v-if="isBusinessTableVisible && computedBusinessApi.length">
       <Apis
         :rows="computedBusinessApi"
         :routePath="routePath"
@@ -87,6 +90,12 @@ export default {
     computedBusinessApi() {
       return this.businessApis.filter(item =>
         item.uuid === this.item.businessapiid);
+    },
+    computedBusinessApiName() {
+      if (this.computedBusinessApi.length) {
+        return this.computedBusinessApi[0].openapidocument.info.title;
+      }
+      return '';
     },
   },
   components: {

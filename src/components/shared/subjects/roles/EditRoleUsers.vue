@@ -2,15 +2,16 @@
   <div>
     <EditRoleUsersModal
       v-if="
+        isRolesLoaded &&
         isUsersLoaded &&
-        isRoleUsersLoaded
+        isMembershipsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
-      :user="users.find(item => item.uuid === userId)"
+      :selectedRole="roles.find(item => item.uuid === selectedRoleId)"
       :users="users"
-      :roleUsers="roleUsers"
+      :memberships="memberships"
     />
   </div>
 </template>
@@ -34,8 +35,10 @@
     computed: {
       ...mapState({
         users: state => state.users.items,
-        // permissions: state => state.permissions.items,
+        roles: state => state.roles.items,
+        isRolesLoaded: state => state.roles.lastUpdatedAt,
         isUsersLoaded: state => state.users.lastUpdatedAt,
+        roleMemberships: state => state.roleMemberships.items,
       }),
     },
     methods: {
@@ -45,31 +48,32 @@
       handleModalUpdate() {
         this.$router.push(this.routePath);
       },
-      getUsersOfRole() {
-        api.getUsersOfRole(this.userId).then((response) => {
+      getAllRoleMemberships() {
+        api.getAllRoleMemberships().then((response) => {
           if (response && response.data) {
-            this.roleUsers = response.data;
+            this.memberships = response.data;
           }
-          this.isRoleUsersLoaded = true;
+          this.isMembershipsLoaded = true;
         }).catch((error) => {
           if (error.status === 404) {
-            this.roleUsers = [];
-            this.isRoleUsersLoaded = true;
+            this.memberships = [];
+            this.isMembershipsLoaded = true;
           }
         });
       },
     },
     data() {
       return {
-        userId: this.$route.params.id,
+        selectedRoleId: this.$route.params.id,
         page: this.$route.params.page,
-        roleUsers: [],
-        isRoleUsersLoaded: false,
+        memberships: [],
+        isMembershipsLoaded: false,
       };
     },
     mounted() {
-      this.getUsersOfRole();
-      this.$store.dispatch('roles/1', {});
+      this.getAllRoleMemberships();
+      this.$store.dispatch('roles/getRoles', {});
+      this.$store.dispatch('roleMemberships/getAllRoleMemberships', {});
     },
   };
 </script>

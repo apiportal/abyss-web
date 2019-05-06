@@ -40,6 +40,8 @@ import roleMemberships from '@/store/modules/roleMemberships';
 import groupRoleMemberships from '@/store/modules/groupRoleMemberships';
 import userContracts from '@/store/modules/userContracts';
 import apiLicenses from '@/store/modules/apiLicenses';
+import exploreApis from '@/store/modules/exploreApis';
+import userApps from '@/store/modules/userApps';
 
 Vue.use(Vuex);
 
@@ -85,6 +87,8 @@ export default new Vuex.Store({
     groupRoleMemberships,
     userContracts,
     apiLicenses,
+    exploreApis,
+    userApps,
   },
   debug: true,
 });

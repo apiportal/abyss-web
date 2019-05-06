@@ -23,6 +23,7 @@
         :title="api.openapidocument.info.title"
         :onClose="onClose"
         :role="role"
+        :onUpdate="onUpdate"
       />
     </template>
   </Modal>

@@ -65,17 +65,18 @@ export default {
         return user.displayname || subjectId;
       };
       return apis
-        .filter(item => (
-          item.isproxyapi &&
-          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
-          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
-          !item.isdeleted
-        ))
         .map(item => ({
           ...item,
           apistatename: getApiStateName(item.apistateid),
           ownername: getOwnerName(item.subjectid),
-        }));
+        }))
+        .filter(item => (
+          item.apistatename !== 'Removed' &&
+          item.isproxyapi &&
+          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
+          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
+          !item.isdeleted
+        ));
     },
   },
   mounted() {

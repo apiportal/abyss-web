@@ -70,12 +70,12 @@ const actions = {
         return response;
       });
   },
-  // deleteUserGroupMembership: ({ commit }, membership) => {
-  //   return api.deleteUserGroupMembership(membership.uuid).then((response) => {
-  //     commit('setUserGroupMembershipDeleted', membership.uuid);
-  //     return response;
-  //   });
-  // },
+  deleteUserGroupMembership: ({ commit }, membership) => {
+    return api.deleteUserGroupMembership(membership.uuid).then((response) => {
+      commit('setUserGroupMembershipDeleted', membership.uuid);
+      return response;
+    });
+  },
   getAllSubjectMemberships: ({ commit }, { refresh = false  }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 && !refresh ) {
@@ -132,17 +132,17 @@ const mutations = {
       newUserGroupMembership,
     ];
   },
-  // setUserGroupMembershipDeleted: (state, membershipUuid) => {
-  //   state.userGroup = state.userGroup.map((item) => {
-  //     if (item.uuid === membershipUuid) {
-  //       return {
-  //         ...item,
-  //         isdeleted: true,
-  //       };
-  //     }
-  //     return item;
-  //   }).filter(item => !item.isdeleted);
-  // },
+  setUserGroupMembershipDeleted: (state, membershipUuid) => {
+    state.userGroup = state.userGroup.map((item) => {
+      if (item.uuid === membershipUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    }).filter(item => !item.isdeleted);
+  },
   setSubjectMembershipDeleted: (state, membershipUuid) => {
     state.items = state.items.map((item) => {
       if (item.uuid === membershipUuid) {

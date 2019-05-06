@@ -20,18 +20,18 @@ export default {
   },
   methods: {
     ...mapActions('groups', ['deleteGroups']),
-    ...mapActions('subjectMemberships', ['deleteSubjectMemberships']),
+    ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'deleteUserGroupMembership']),
     handleModalClose() {
       this.$router.push(`/app/administer-groups/${this.page}`);
     },
     handleModalConfirm() {
-      const { deleteGroups, deleteSubjectMemberships,
-      group, membership } = this;
+      const { deleteGroups, deleteSubjectMemberships, userGroupMembership,
+      deleteUserGroupMembership, group, membership } = this;
       deleteGroups({ ...group }).then(() => {
         deleteSubjectMemberships({ ...membership }).then(() => {
-          // deleteUserGroupMembership({ ...userGroupMembership }).then(() => {
-          this.$router.push(`/app/administer-groups/${this.page}`);
-          // });
+          deleteUserGroupMembership({ ...userGroupMembership }).then(() => {
+            this.$router.push(`/app/administer-groups/${this.page}`);
+          });
         });
       });
     },
@@ -40,7 +40,7 @@ export default {
     ...mapState({
       groups: state => state.groups.items,
       memberships: state => state.subjectMemberships.items,
-      // userGroupMemberships: state => state.subjectMemberships.userGroup,
+      userGroupMemberships: state => state.subjectMemberships.userGroup,
       isMembershipsLoaded: state => state.subjectMemberships.lastUpdatedAt,
       isGroupsLoaded: state => state.groups.lastUpdatedAt,
     }),
@@ -52,10 +52,10 @@ export default {
       const { groupId, memberships } = this;
       return memberships.find(item => item.subjectgroupid === groupId);
     },
-    // userGroupMembership() {
-    //   const { groupId, userGroupMemberships } = this;
-    //   return userGroupMemberships.find(item => item.subjectgroupid === groupId);
-    // },
+    userGroupMembership() {
+      const { groupId, userGroupMemberships } = this;
+      return userGroupMemberships.find(item => item.subjectgroupid === groupId);
+    },
   },
   data() {
     return {

@@ -233,9 +233,9 @@ export default {
     const { uuid, created, updated, deleted, isdeleted, ...rest } = userGroupMembership;
     return axios.put('/abyss/oapi/subject-memberships/user-group/', rest);
   },
-  // deleteUserGroupMembership(uuid) {
-  //   return axios.delete(`/abyss/oapi/subject-memberships/${uuid}`);
-  // },
+  deleteUserGroupMembership(uuid) {
+    return axios.delete(`/abyss/oapi/subject-memberships/group/${uuid}`);
+  },
   // resources
   getResources() {
     return axios.get('/abyss/oapi/resources');

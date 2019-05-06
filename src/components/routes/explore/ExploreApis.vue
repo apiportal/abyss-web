@@ -20,8 +20,8 @@ export default {
   },
   computed: {
     ...mapState({
-      apis: state => state.apis.items,
-      isApisLoaded: state => state.apis.lastUpdatedAt > 0,
+      apis: state => state.exploreApis.items,
+      isApisLoaded: state => state.exploreApis.lastUpdatedAt > 0,
       licenses: state => state.licenses.items,
       isLicensesLoaded: state => state.licenses.lastUpdatedAt > 0,
     }),

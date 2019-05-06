@@ -56,7 +56,7 @@
             {{ item.contractscount }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>

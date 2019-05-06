@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Name:</dt>
+        <dt>License Name:</dt>
         <dd>{{ item.name }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.licensedocument.info.description }}</dd>
@@ -144,7 +144,7 @@ export default {
       policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
-      apis: state => state.apis.items,
+      apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,

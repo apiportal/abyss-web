@@ -76,16 +76,37 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">
-            <div class="collapsible-content">
-              <b-form-textarea
-                id="textarea1"
-                v-model="item.token"
-                placeholder="Enter something"
-                rows="4"
-                max-rows="6"
-                :disabled="true"
-              />
+          <td colspan="5">           
+            <div class="collapsible-content token-area">
+              <b-input-group>
+                <b-input-group-prepend>
+                  <b-button
+                    variant="light"
+                    @click="isVisible = !isVisible"
+                    data-qa="btnCopyTokenText"
+                  >
+                    <Icon icon="eye" />
+                  </b-button>
+                  <b-button
+                    variant="light"
+                    @click="copyTokenText(item.token)"
+                    data-qa="btnCopyTokenText"
+                  >
+                    <Icon icon="clipboard" />
+                  </b-button>
+                </b-input-group-prepend>
+                <b-form-input
+                  id="textarea1"
+                  class="token-area"
+                  v-model="item.token"
+                  v-if="isVisible"
+                  placeholder="Enter something"
+                  rows="4"
+                  max-rows="6"
+                  :disabled="true"
+                >
+                </b-form-input>
+              </b-input-group>
             </div>
           </td>
         </tr>
@@ -153,6 +174,7 @@ export default {
       sortByKey: 'created',
       sortByKeyType: 'string',
       sortDirection: 'desc',
+      isVisible: false,
     };
   },
   methods: {
@@ -188,6 +210,16 @@ export default {
         }
       });
     },
+    copyTokenText(tokenText) {
+      console.log(tokenText); // eslint-disable-line
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.token-area {
+  font-size: .85em;
+  height: 40px;
+}
+</style>

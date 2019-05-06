@@ -1,6 +1,9 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 150px;" :style="{ 'background-image': 'url(' + item.image + ')' }"></dt>
+      </dl>
       <dl class="col">
         <dt>Business Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>

@@ -81,29 +81,42 @@
               <b-input-group>
                 <b-input-group-prepend>
                   <b-button
+                    v-b-tooltip.hover.left
+                    title="Show/Hide"
                     variant="light"
                     @click="isVisible = !isVisible"
-                    data-qa="btnCopyTokenText"
+                    data-qa="btnToggleTokenText"
                   >
                     <Icon icon="eye" />
                   </b-button>
                   <b-button
+                    v-b-tooltip.hover.left
+                    title="Copy Token"
                     variant="light"
-                    @click="copyTokenText(item.token)"
+                    @click="copyTokenText()"
                     data-qa="btnCopyTokenText"
                   >
-                    <Icon icon="clipboard" />
+                    <Icon icon="copy" />
                   </b-button>
                 </b-input-group-prepend>
                 <b-form-input
                   id="textarea1"
-                  class="token-area"
+                  class="token-area-show"
                   v-model="item.token"
                   v-if="isVisible"
-                  placeholder="Enter something"
                   rows="4"
                   max-rows="6"
-                  :disabled="true"
+                  readonly="readonly"
+                >
+                </b-form-input>
+                <b-form-input
+                  id="textarea2"
+                  class="token-area-hide"
+                  v-if="!isVisible"
+                  placeholder="••••••••••••••••••••••••••••••••••••••••••••••••••"
+                  rows="4"
+                  max-rows="6"
+                  readonly="readonly"
                 >
                 </b-form-input>
               </b-input-group>
@@ -210,16 +223,22 @@ export default {
         }
       });
     },
-    copyTokenText(tokenText) {
-      console.log(tokenText); // eslint-disable-line
+    copyTokenText() {
+      const tokenText = document.getElementById('textarea1');
+      tokenText.select();
+      document.execCommand('copy');
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.token-area {
-  font-size: .85em;
+.token-area-show {
+  font-size: .75em;
+  height: 40px;
+}
+.token-area-hide {
+  font-size: 1.5em;
   height: 40px;
 }
 </style>

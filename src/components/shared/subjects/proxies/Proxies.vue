@@ -126,7 +126,7 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit Proxy API</b-dropdown-item>
 
               <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 

@@ -68,7 +68,7 @@
         variant="link"
         :class="{'active': isApisTableVisible}"
       >
-        <span>Proxies with this License</span>
+        <span>Proxy APIs with this License</span>
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button

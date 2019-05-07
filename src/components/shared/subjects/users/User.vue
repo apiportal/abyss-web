@@ -17,9 +17,23 @@
       </dl>
   
       <dl class="col">
+        <dt>Description:</dt>
+        <dd>{{ user.description }}</dd>
+        <dt>Directory:</dt>
+        <dd>{{ user.directoryname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ user.url }}</dd>
+        <dt>Email:</dt>
+        <dd>{{ user.email }}</dd>
+        <dt>Secondary Email:</dt>
+        <dd>{{ secondaryEmail }}</dd>
+
+      </dl>
+  
+      <dl class="col">
         <dt>Main Organization:</dt>
         <dd>{{ user.organizationname }}</dd>
-        <dt>Organizations:</dt>
+        <dt>Member of Organizations:</dt>
         <dd>
           <span 
             v-for="(organization, index) in computedUserOrganizations"
@@ -28,18 +42,7 @@
             {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
           </span>
         </dd>
-        <dt>Directory:</dt>
-        <dd>{{ user.directoryname }}</dd>
-        <dt>Url:</dt>
-        <dd>{{ user.url }}</dd>
-      </dl>
-  
-      <dl class="col">
-        <dt>Email:</dt>
-        <dd>{{ user.email }}</dd>
-        <dt>Secondary Email:</dt>
-        <dd>{{ secondaryEmail }}</dd>
-        <dt>Groups:</dt>
+        <dt>Member of Groups:</dt>
         <dd>
           <span 
             v-for="(group, index) in userGroups"
@@ -48,8 +51,6 @@
             {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
           </span>
         </dd>
-        <dt>Description:</dt>
-        <dd>{{ user.description }}</dd>
       </dl>
       
       <dl class="col">

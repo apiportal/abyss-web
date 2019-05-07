@@ -164,10 +164,10 @@
                     <dl class="col">
                       <dt>Policy Type Name:</dt>
                       <dd>{{ item.name }}</dd>
-                      <dt>Organization:</dt>
-                      <dd>{{ item.organizationname }}</dd>
                       <dt>Description:</dt>
                       <dd>{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd>{{ item.organizationname }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Type:</dt>

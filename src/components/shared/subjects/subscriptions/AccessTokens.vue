@@ -93,6 +93,7 @@
                     v-b-tooltip.hover.left
                     title="Copy Token"
                     variant="light"
+                    :disabled="!isVisible"
                     @click="copyTokenText()"
                     data-qa="btnCopyTokenText"
                   >
@@ -234,7 +235,7 @@ export default {
 
 <style lang="scss" scoped>
 .token-area-show {
-  font-size: .75em;
+  font-size: .70em;
   height: 40px;
 }
 .token-area-hide {

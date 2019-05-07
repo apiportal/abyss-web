@@ -29,6 +29,36 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
+              text="Policies"
+              sortByKey="policies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Proxies"
+              sortByKey="proxies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Contracts"
+              sortByKey="contracts"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
               sortByKeyType="string"
@@ -64,6 +94,15 @@
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${licenseIndex}`">
             {{ licenseItem.name }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
+            {{ 111 }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
+            {{ 222 }}
+          </td>
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
+            {{ 333 }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
@@ -111,7 +150,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
-          <td colspan="5">
+          <td colspan="8">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"

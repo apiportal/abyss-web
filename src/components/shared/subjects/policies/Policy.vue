@@ -83,7 +83,7 @@
     </div>
     <div v-if="isContractsTableVisible && contractsOfPolicy.length">
       <Contracts
-        :rows="contractsOfPolicy"
+        :rows="computedContractsOfPolicy"
         :routePath="routePath"
       ></Contracts>
     </div>
@@ -98,6 +98,7 @@
 
 <script>
 import api from '@/api';
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
 
 export default {
@@ -165,6 +166,23 @@ export default {
       });
     },
   },
+  computed: {
+    ...mapState({
+      contractStates: state => state.contractStates.items,
+    }),
+    computedContractsOfPolicy() {
+      const { contractStates, contractsOfPolicy } = this;
+      const getContractStateName = (contractStateId) => {
+        const contractState = contractStates
+          .find(contractStateItem => contractStateItem.uuid === contractStateId) || {};
+        return contractState.name || contractStateId;
+      };
+      return contractsOfPolicy.map(item => ({
+        ...item,
+        contractstatename: getContractStateName(item.contractstateid),
+      }));
+    },
+  },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
@@ -182,6 +200,7 @@ export default {
     this.getApisOfPolicy();
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
+    this.$store.dispatch('contractStates/getContractStates', {});
   },
 };
 </script>

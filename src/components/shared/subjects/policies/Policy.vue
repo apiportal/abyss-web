@@ -52,7 +52,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Used by Contracts"
+        title="Used by Licenses"
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
@@ -63,7 +63,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Used by APIs"
+        title="Used by Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
@@ -74,7 +74,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Used by Licenses"
+        title="Used by APIs"
         :class="{'active': isApisTableVisible}"
       >
         <span>APIs</span>

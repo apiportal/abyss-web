@@ -38,6 +38,7 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
   },
 };
 </script>

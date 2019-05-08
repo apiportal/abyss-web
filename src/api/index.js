@@ -461,6 +461,12 @@ export default {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
   },
   // licenses
+  getSubjectLicensesCascaded(uuid) {
+    return axios.get(`/abyss/oapi/licenses/subject/${uuid}/cascaded`);
+  },
+  postSubjectLicensesCascaded(uuid, license) {
+    return axios.post(`/abyss/oapi/licenses/subject/${uuid}/cascaded`, license);
+  },
   getSubjectLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
   },

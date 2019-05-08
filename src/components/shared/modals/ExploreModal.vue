@@ -12,10 +12,10 @@
     <template>
       <div v-if="api">
         <b-row>
-          <b-col md=3>
-            <img :src="api.image" :alt="api.openapidocument.info.title" class="img-thumbnail">
+          <b-col md="3">
+            <Images :uuid="api.uuid" :itext="api.openapidocument.info.title" :color="api.color" type="apis" shape="rectangle"></Images>
           </b-col>
-          <b-col md=3>
+          <b-col md="3">
             <dl>
               <dt>
                 Title
@@ -158,14 +158,16 @@
 <script>
 import moment from 'moment-timezone';
 import { mapState } from 'vuex';
+import api from '@/api';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
-import api from '@/api';
+import Images from '@/components/shared/Images';
 
 export default {
   components: {
     Modal,
     Icon,
+    Images,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },

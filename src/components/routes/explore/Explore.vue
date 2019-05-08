@@ -11,8 +11,7 @@
             @click="handleModalOpen(cardItem.uuid)"
           >
             <div slot="header" class="mb-0">
-              <div class="thumb-image cursor-pointer" v-if="cardItem.image" :style="{ 'background-image': 'url(' + cardItem.image + ')' }"></div>
-              <div class="thumb-image cursor-pointer" v-if="!cardItem.image" :style="{ 'background-color': cardItem.color }">{{cardItem.openapidocument.info.title.substring(0, 1)}}</div>
+              <Images :uuid="cardItem.uuid" :itext="cardItem.openapidocument.info.title" :color="cardItem.color" type="apis" shape="rectangle"></Images>
             </div>
             <div class="clearfixx">
               <div class="float-right">
@@ -39,10 +38,12 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
 
 export default {
   components: {
     Icon,
+    Images,
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'explore');
@@ -138,26 +139,6 @@ export default {
   }
   .card-body {
     padding: 1rem;
-  }
-  .thumb-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 4rem;
-    background-color: #177ec1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    position: relative;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
-    &::before {
-      display: block;
-      content: "";
-      padding-top: 56.25%;
-    }
   }
   .card-description {
     font-size: .90rem;

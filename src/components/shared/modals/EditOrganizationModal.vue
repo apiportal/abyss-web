@@ -20,40 +20,70 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="organizationNameGroup"
-          >
-            <label>
-              Name:
-              <span class="text-danger">*</span>
-            </label>
-            <b-form-input
-              id="organizationNameInput"
-              type="text"
-              v-model="organizationEditable.name"
-              :state="nameState"
-              placeholder="Name"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
-            id="organizationDescriptionGroup"
-          >
-            <label>
-              Description:
-              <span class="text-danger">*</span>
-            </label>
-            <b-form-textarea
-              id="organizationDescriptionTextarea"
-              v-model="organizationEditable.description"
-              :state="descriptionState"
-              placeholder="Description"
-              :rows="3"
-              required
-            >
-            </b-form-textarea>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group 
+                id="organizationNameGroup"
+              >
+                <label>
+                  Name:
+                  <span class="text-danger">*</span>
+                </label>
+                <b-form-input
+                  id="organizationNameInput"
+                  type="text"
+                  v-model="organizationEditable.name"
+                  :state="nameState"
+                  placeholder="Name"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group 
+                id="organizationDescriptionGroup"
+              >
+                <label>
+                  Description:
+                  <span class="text-danger">*</span>
+                </label>
+                <b-form-textarea
+                  id="organizationDescriptionTextarea"
+                  v-model="organizationEditable.description"
+                  :state="descriptionState"
+                  placeholder="Description"
+                  :rows="3"
+                  required
+                >
+                </b-form-textarea>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="item p-0"> 
+                  <img
+                    v-if="organization.picture"
+                    :src="organization.picture" 
+                    :alt="organization.name" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!organization.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="organization.name" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group 
             id="organizationOrganizationIdGroup"
           >
@@ -330,6 +360,10 @@ export default {
         });
       }
     },
+    onFileSelected(event) {
+      console.log('dosya:::', event.target.files[0]); //eslint-disable-line
+      // this.handleSubmit();
+    },
   },
 };
 </script>
@@ -361,5 +395,8 @@ export default {
     border-width: 11px;
     margin-left: -11px;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

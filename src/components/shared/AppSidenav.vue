@@ -37,11 +37,16 @@
 
           <b-link
             to="/app/my-licenses/my-licenses/1"
-            :class="`${(currentPage.rootPath === 'my-licenses' || currentPage.rootPath === 'my-policies' || currentPage.rootPath === 'policy-types') ? 'selected' : ''}`"
-            data-qa="sideMenuMyLicenses"
-          >
+            :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
           </b-link> 
+          
+          <b-link
+            to="/app/my-policies/my-policies/1"
+            :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
+            <span class="route-icon"><Icon icon="atlas" /></span> My Policies
+          </b-link> 
+
 
           <p>ADMIN</p>
           

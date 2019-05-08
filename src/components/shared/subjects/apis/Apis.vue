@@ -113,7 +113,7 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
 

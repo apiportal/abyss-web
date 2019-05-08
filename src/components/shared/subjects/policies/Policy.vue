@@ -4,10 +4,10 @@
       <dl class="col">
         <dt>Policy Name:</dt>
         <dd>{{ item.name }}</dd>
-        <dt>Organization:</dt>
-        <dd>{{ getOrganizationName(item.organizationid) }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
+        <dt>Organization:</dt>
+        <dd>{{ getOrganizationName(item.organizationid) }}</dd>
       </dl>
       <dl class="col" v-if="item.policyinstance && item.policyinstance.info">
         <dt>Type:</dt>

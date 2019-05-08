@@ -3,11 +3,11 @@
     
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
-        <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
+        <!-- <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
           <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
-        </b-nav-item>
+        </b-nav-item> -->
         <b-nav-item :active="false" to="/app/my-policies/my-policies/1">
-          <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
+          <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ subjectPolicies.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true" to="/app/policy-types/1">
           <span class="link-text" data-qa="linkPolicyTypes">Policy Types</span> <b-badge pill>{{ policyTypes.length }}</b-badge>
@@ -164,10 +164,10 @@
                     <dl class="col">
                       <dt>Policy Type Name:</dt>
                       <dd>{{ item.name }}</dd>
-                      <dt>Organization:</dt>
-                      <dd>{{ item.organizationname }}</dd>
                       <dt>Description:</dt>
                       <dd>{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd>{{ item.organizationname }}</dd>
                     </dl>
                     <dl class="col">
                       <dt>Type:</dt>
@@ -232,6 +232,8 @@ export default {
       policies: state => state.policies.items,
       organizations: state => state.organizations.items,
       subjectLicenses: state => state.subjectLicenses.items,
+      subjectPolicies: state => state.subjectPolicies.items,
+
     }),
     tableRows() {
       const { policyTypes, organizations } = this;

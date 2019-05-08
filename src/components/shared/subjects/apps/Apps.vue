@@ -61,12 +61,12 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

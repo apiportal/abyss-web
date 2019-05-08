@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 Verapi Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable */
 import api from '@/api';
 
@@ -52,6 +68,30 @@ const actions = {
         }
       });
   },
+  postUserGroupMembership: ({ commit }, membership) => {
+    return api.postUserGroupMembership(membership)
+      .then((response) => {
+        let error = false;
+        response.data.map((status) => {
+          if (status.error.code !==0) {
+            error = true;
+            alert(status.error.usermessage);
+          } else {
+            commit('addNewUserGroupMembership', status.response);
+          }
+        });
+        if (error) {
+          return false;
+        }
+        return response;
+      });
+  },
+  deleteUserGroupMembership: ({ commit }, membership) => {
+    return api.deleteUserGroupMembership(membership.uuid).then((response) => {
+      commit('setUserGroupMembershipDeleted', membership.uuid);
+      return response;
+    });
+  },
   getAllSubjectMemberships: ({ commit }, { refresh = false  }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 && !refresh ) {
@@ -101,6 +141,23 @@ const mutations = {
   setUserGroupMemberships: (state, userGroupMembership) => {
     state.userGroup = userGroupMembership;
     state.lastUpdatedAt = (new Date()).getTime();
+  },
+  addNewUserGroupMembership: (state, newUserGroupMembership) => {
+    state.userGroup = [
+      ...state.userGroup,
+      newUserGroupMembership,
+    ];
+  },
+  setUserGroupMembershipDeleted: (state, membershipUuid) => {
+    state.userGroup = state.userGroup.map((item) => {
+      if (item.uuid === membershipUuid) {
+        return {
+          ...item,
+          isdeleted: true,
+        };
+      }
+      return item;
+    }).filter(item => !item.isdeleted);
   },
   setSubjectMembershipDeleted: (state, membershipUuid) => {
     state.items = state.items.map((item) => {

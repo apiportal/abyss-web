@@ -1,5 +1,6 @@
 <template>
   <div class="abyss-table-content">
+    <!-- {{ apisOfPolicy }} -->
     <div class="row">
       <dl class="col">
         <dt>Policy Name:</dt>
@@ -94,10 +95,10 @@
       ></Contracts>
     </div>
     <div v-if="isApisTableVisible && apisOfPolicy.length">
-      <Apis
+      <Proxies
         :rows="apisOfPolicy"
         :routePath="routePath"
-      ></Apis>
+      ></Proxies>
     </div>
   </div>
 </template>
@@ -127,7 +128,7 @@ export default {
     Icon,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
-    Apis: () => import('@/components/shared/subjects/apis/Apis'),
+    Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   methods: {
     handleToggleContractsTable() {
@@ -207,6 +208,7 @@ export default {
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('contractStates/getContractStates', {});
+    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

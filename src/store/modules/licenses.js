@@ -50,6 +50,9 @@ const mutations = {
     state.items = licenses;
     state.lastUpdatedAt = (new Date()).getTime();
   },
+  setLicenseId: (state, id) => {
+    state.licenseId = id;
+  },
 };
 
 export default {

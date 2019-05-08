@@ -100,9 +100,6 @@ const mutations = {
       return item;
     });
   },
-  setLicenseId: (state, id) => {
-    state.licenseId = id;
-  },
   addNewLicense: (state, newLicense) => {
     state.items = [
       ...state.items,

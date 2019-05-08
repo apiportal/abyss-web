@@ -20,39 +20,69 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group
-            id="appNameGroup"
-            label="App Name*:"
-            :invalid-feedback="appNameInvalidFeedback"
-            :state="appNameState"
-          >
-            <b-form-input
-              id="appNameInput"
-              type="text"
-              v-model="appEditable.displayname"
-              placeholder="App Name"
-              :state="appNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group
-            id="descriptionGroup"
-            label="Description*:"
-            :invalid-feedback="appDescriptionInvalidFeedback"
-            :state="appDescriptionState"
-          >
-            <b-form-textarea
-              id="descriptionTextarea"
-              type="text"
-              v-model="appEditable.description"
-              placeholder="Description"
-              :state="appDescriptionState"
-              :rows="3"
-              required
-            >
-            </b-form-textarea>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group
+                id="appNameGroup"
+                label="App Name*:"
+                :invalid-feedback="appNameInvalidFeedback"
+                :state="appNameState"
+              >
+                <b-form-input
+                  id="appNameInput"
+                  type="text"
+                  v-model="appEditable.displayname"
+                  placeholder="App Name"
+                  :state="appNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group
+                id="descriptionGroup"
+                label="Description*:"
+                :invalid-feedback="appDescriptionInvalidFeedback"
+                :state="appDescriptionState"
+              >
+                <b-form-textarea
+                  id="descriptionTextarea"
+                  type="text"
+                  v-model="appEditable.description"
+                  placeholder="Description"
+                  :state="appDescriptionState"
+                  :rows="3"
+                  required
+                >
+                </b-form-textarea>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="item p-0"> 
+                  <img
+                    v-if="pictureEditable.picture"
+                    :src="pictureEditable.picture" 
+                    :alt="pictureEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!pictureEditable.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="pictureEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group id="appActiveGroup">
             <b-form-checkbox
               id="appActiveCheckbox"
@@ -238,6 +268,9 @@ export default {
       }
       return '';
     },
+    pictureEditable() {
+      return JSON.parse(JSON.stringify(this.app));
+    },
     // organizationState() {
     //   const { organizationid } = this.appEditable;
     //   return organizationid !== null;
@@ -313,6 +346,54 @@ export default {
         });
       }
     },
+    onFileSelected(event) {
+      const { pictureEditable, putApps, postApps, onUpdate, role } = this;
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.pictureEditable.picture = reader.result;
+        const { description, url, secondaryemail,
+        effectivestartdate, effectiveenddate,
+        email, picture, distinguishedname, uniqueid,
+        phonebusiness, phoneextension, phonehome, phonemobile,
+        jobtitle, department, company } = this.pictureEditable;
+        let pictureToUpdate = {
+          ...pictureEditable,
+          description: (description === null ? '' : description),
+          url: (url === null ? '' : url),
+          picture: (picture === null ? '' : picture),
+          distinguishedname: (distinguishedname === null ? '' : distinguishedname),
+          uniqueid: (uniqueid === null ? '' : uniqueid),
+          phonebusiness: (phonebusiness === null ? '' : phonebusiness),
+          phoneextension: (phoneextension === null ? '' : phoneextension),
+          phonehome: (phonehome === null ? '' : phonehome),
+          phonemobile: (phonemobile === null ? '' : phonemobile),
+          jobtitle: (jobtitle === null ? '' : jobtitle),
+          department: (department === null ? '' : department),
+          company: (company === null ? '' : company),
+          effectivestartdate: (effectivestartdate === null ?
+            this.$moment.utc().toISOString() : effectivestartdate),
+          effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
+          secondaryemail: (secondaryemail === null ? email : secondaryemail),
+        };
+        if (role === 'edit') {
+          putApps(pictureToUpdate).then(() => {
+            onUpdate();
+          });
+        } else if (role === 'add') {
+          pictureToUpdate = {
+            ...pictureToUpdate,
+            subjectname: pictureToUpdate.displayname.replace(/ /g, '').toLowerCase(),
+            firstname: pictureToUpdate.displayname,
+            lastname: pictureToUpdate.displayname,
+          };
+          postApps([pictureToUpdate]).then(() => {
+            onUpdate();
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    },
   },
 };
 </script>
@@ -322,5 +403,8 @@ export default {
   &.edit-my-app {
     padding: 0;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

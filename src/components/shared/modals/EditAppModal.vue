@@ -21,7 +21,7 @@
       >
         <div style="padding: 1rem;">
           <b-row align-v="center">
-            <b-col md=9>
+            <b-col md="8">
               <b-form-group
                 id="appNameGroup"
                 label="App Name*:"
@@ -56,8 +56,8 @@
                 </b-form-textarea>
               </b-form-group>
             </b-col>
-            <b-col md=3>
-              <div class="d-flex">
+            <b-col md="4">
+              <div class="d-flex justify-content-center">
                 <div class="item p-0"> 
                   <img
                     v-if="pictureEditable.picture"

@@ -328,7 +328,7 @@ export default {
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
       lastauthenticatedat, lastfailedloginat, ...rest } = app;
-    return axios.post(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
+    return axios.put(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
   },
   // SubjectApps > explore
   getSubjectApps(uuid) {

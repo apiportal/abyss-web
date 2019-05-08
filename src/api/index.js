@@ -402,6 +402,15 @@ export default {
   getPolicies() {
     return axios.get('/abyss/oapi/policies');
   },
+  getLicensesOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/licenses/policy/${uuid}`);
+  },
+  getContractsOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/contracts/policy/${uuid}`);
+  },
+  getApisOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/apis/policy/${uuid}`);
+  },
   putPolicies(policy) {
     const { uuid, created, updated, deleted, isdeleted, ...rest } = policy;
     return axios.put(`/abyss/oapi/policies/${uuid}`, rest);

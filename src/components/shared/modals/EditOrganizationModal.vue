@@ -366,7 +366,6 @@ export default {
       const reader = new FileReader();
       reader.onloadend = () => {
         this.organizationEditable.picture = reader.result;
-        this.handleSubmit();
       };
       reader.readAsDataURL(file);
     },

@@ -87,6 +87,7 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+            <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -149,6 +150,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
 
 export default {
   name: 'Apis',
@@ -225,6 +227,7 @@ export default {
     TBodyLoading,
     Icon,
     SortBy,
+    Images,
   },
   data() {
     return {
@@ -254,3 +257,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

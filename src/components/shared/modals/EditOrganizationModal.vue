@@ -61,9 +61,9 @@
               <div class="d-flex">
                 <div class="item p-0"> 
                   <img
-                    v-if="organization.picture"
-                    :src="organization.picture" 
-                    :alt="organization.name" 
+                    v-if="organizationEditable.picture"
+                    :src="organizationEditable.picture" 
+                    :alt="organizationEditable.name" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 200px;" 
                     v-b-tooltip.hover 
@@ -71,9 +71,9 @@
                     @click="$refs.fileInput.click()"
                   >
                   <img 
-                    v-if="!organization.picture" 
+                    v-if="!organizationEditable.picture" 
                     src="@/assets/avatar.jpg" 
-                    :alt="organization.name" 
+                    :alt="organizationEditable.name" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 200px;" 
                     v-b-tooltip.hover 
@@ -361,8 +361,14 @@ export default {
       }
     },
     onFileSelected(event) {
-      console.log('dosya:::', event.target.files[0]); //eslint-disable-line
-      // this.handleSubmit();
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.organizationEditable.picture = reader.result;
+        this.handleSubmit();
+      };
+      reader.readAsDataURL(file);
     },
   },
 };

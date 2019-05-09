@@ -67,7 +67,7 @@
             />
           </td>
           <td>
-            <Images :uuid="item.uuid" :itext="item.displayname" type="subjects" shape="rectangle"></Images>
+            <Images :uuid="item.uuid" :itext="item.displayname" type="subjects" shape="circle"></Images>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.displayname }}

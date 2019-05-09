@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="rectangle"></Images>
+          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="square" style="height:200px;"></Images>
       </dl>
   
       <dl class="col">

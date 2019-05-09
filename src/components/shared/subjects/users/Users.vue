@@ -13,6 +13,9 @@
               sortByKeyType="boolean"
             />
           </th>
+          <th>
+
+          </th>
             <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -49,7 +52,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -62,6 +65,9 @@
               :icon="item.isactivated ? 'check-circle' : 'times-circle'"
               :class="item.isactivated ? 'text-success' : 'text-danger'"
             />
+          </td>
+          <td>
+            <Images :uuid="item.uuid" :itext="item.displayname" type="subjects" shape="rectangle"></Images>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.displayname }}
@@ -97,7 +103,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <User
                 :user="item"
@@ -120,6 +126,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
 
 export default {
   props: {
@@ -202,6 +209,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Images,
   },
   data() {
     return {

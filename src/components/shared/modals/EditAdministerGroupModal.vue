@@ -62,9 +62,9 @@
               <div class="d-flex">
                 <div class="p-0"> 
                   <img
-                    v-if="group.picture"
-                    :src="group.picture" 
-                    :alt="group.displayname" 
+                    v-if="groupEditable.picture"
+                    :src="groupEditable.picture" 
+                    :alt="groupEditable.displayname" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 175px;" 
                     v-b-tooltip.hover 
@@ -72,9 +72,9 @@
                     @click="$refs.fileInput.click()"
                   >
                   <img 
-                    v-if="!group.picture" 
+                    v-if="!groupEditable.picture" 
                     src="@/assets/avatar.jpg" 
-                    :alt="group.displayname" 
+                    :alt="groupEditable.displayname" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 175px;" 
                     v-b-tooltip.hover 
@@ -530,7 +530,14 @@ export default {
       }
     },
     onFileSelected(event) {
-      console.log('file::::', event.target.files[0]); // eslint-disable-line
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.groupEditable.picture = reader.result;
+        this.handleSubmit();
+      };
+      reader.readAsDataURL(file);
     },
   },
 };

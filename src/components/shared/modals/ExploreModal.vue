@@ -221,10 +221,12 @@ export default {
         });
     },
     computedApps() {
-      const { subjectApps, apps } = this;
-      const userAppsIds = subjectApps.map(item => item.appid);
-      return apps
-      .filter(item => userAppsIds.indexOf(item.uuid) > -1);
+      const { subjectApps, apps, currentUser } = this;
+      return apps.filter(el =>
+        subjectApps.some(f =>
+          f.subjectgroupid === el.uuid && f.subjectid === currentUser.uuid,
+        ),
+      );
     },
   },
   props: {

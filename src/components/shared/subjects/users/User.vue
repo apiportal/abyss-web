@@ -49,7 +49,7 @@
             v-for="(organization, index) in computedUserOrganizations"
             v-bind:key="index"
           >
-            {{ organization.name }}<span v-if="index < computedUserOrganizations.length">,</span>
+            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
           </span>
         </dd>
 
@@ -60,7 +60,7 @@
             v-for="(group, index) in userGroups"
             v-bind:key="index"
           >
-            {{ group.displayname }}<span v-if="index < userGroups.length">,</span>
+            {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
           </span>
         </dd>
       </dl>
@@ -85,7 +85,7 @@
         v-b-tooltip.hover
         title="Groups of User"
         @click="listUserGroups"
-        :class="{'active': ShowUserGroups}"
+        :class="{'active': isShowUserGroups}"
       >
       <Icon icon="user-friends" /> Groups of User
       <b-badge pill>{{ userGroups.length }}</b-badge>

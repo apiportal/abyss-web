@@ -36,6 +36,7 @@ export default {
     },
     handleModalUpdate() {
       this.$router.push(this.routePath);
+      this.$store.commit('proxies/setNextStateId', null);
     },
   },
   data() {
@@ -45,7 +46,7 @@ export default {
     };
   },
   mounted() {
-    // this.$store.dispatch(', {  });
+    // this.$store.dispatch('', {  });
     // this.$store.dispatch('', {});
   },
 };

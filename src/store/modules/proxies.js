@@ -19,6 +19,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  nextStateId: null,
   lastUpdatedAt: 0,
 };
 
@@ -75,6 +76,9 @@ const mutations = {
       ...state.items,
       ...proxies,
     ];
+  },
+  setNextStateId: (state, id) => {
+    state.nextStateId = id;
   },
 };
 

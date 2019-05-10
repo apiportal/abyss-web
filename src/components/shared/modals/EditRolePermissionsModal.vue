@@ -121,24 +121,30 @@ export default {
       permissions: state => state.permissions.items,
     }),
     computedRolePermissions() {
-      const { permissionsEditable } = this;
+      const { permissionsEditable, chipColor } = this;
       return permissionsEditable
         .filter(permission => permission.isAttached)
-        .sort((a, b) => b.sortTime - a.sortTime);
+        .sort((a, b) => b.sortTime - a.sortTime)
+        .map(permission => ({
+          ...permission,
+          isAttached: permission.isAttached,
+          color: chipColor(permission),
+        }));
     },
   },
   data() {
-    const { permissions, rolePermissions } = this;
+    const { permissions, rolePermissions, chipColor } = this;
     return {
       permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
-        const rolepermission = rolePermissions
-          .find(o => o.permissionrefid === this.selectedRole.uuid);
+        const rolepermission = rolePermissions.find(
+          o => o.permissionrefid === this.selectedRole.uuid);
         const isAttached = Boolean(rolepermission);
         const sortTime = (new Date()).getTime();
         return {
           ...permission,
           text: permission.permission,
           value: permission.uuid,
+          color: chipColor(permission),
           isAttached,
           rolepermission,
           sortTime,
@@ -150,6 +156,15 @@ export default {
   },
   methods: {
     ...mapActions('permissions', ['deletePermissions', 'postPermissions']),
+    chipColor(item) {
+      if (item.isAttached && item.rolepermission && item.rolepermission.isowner) {
+        return 'btn-success';
+      } else if (!item.isAttached &&
+        item.rolepermission && item.rolepermission.isowner) {
+        return 'btn-danger';
+      }
+      return 'btn-secondary';
+    },
     handleSubmit(evt) {
       evt.preventDefault();
       const now = new Date();

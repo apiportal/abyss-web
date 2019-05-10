@@ -423,16 +423,19 @@ export default {
   },
   methods: {
     ...mapActions('groups', ['putGroups', 'postGroups']),
+    ...mapActions('subjectMemberships', ['postUserGroupMembership', 'postSubjectMemberships']),
     setValidSubjectName(value) {
       return value.replace(/ /g, '').toLowerCase();
     },
     handleSubmit(evt) {
       evt.preventDefault();
-      const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
+      const { groupEditable, putGroups, postGroups, onUpdate,
+        role, postUserGroupMembership, postSubjectMemberships } = this;
       const { description, url, effectiveenddate, displayname,
         subjectname, picture, distinguishedname, uniqueid,
         phonebusiness, phoneextension, phonehome, phonemobile,
-        jobtitle, department, company } = groupEditable;
+        jobtitle, department, company, subjectdirectoryid,
+        organizationid, subjecttypeid } = groupEditable;
       let groupToUpdate = {
         ...groupEditable,
         firstname: displayname,
@@ -453,6 +456,14 @@ export default {
         company: (company === null ? '' : company),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
+      let membershipToUpdate = {
+        organizationid: (organizationid === null ? '' : organizationid),
+        subjectid: this.currentUser.props.uuid,
+        subjectdirectoryid: (subjectdirectoryid === null ? '' : subjectdirectoryid),
+        subjecttypeid: '21371a15-04f8-445e-a899-006ee11c0e09',
+        subjectgrouptypeid: subjecttypeid,
+        isactive: true,
+      };
 
       if (role === 'edit') {
         putGroups(groupToUpdate).then((response) => {
@@ -470,7 +481,20 @@ export default {
         }];
         postGroups(groupToUpdate).then((response) => {
           if (response && response.data) {
-            onUpdate();
+            membershipToUpdate = [{
+              ...membershipToUpdate,
+              crudsubjectid,
+              subjectgroupid: response.data[0].response.uuid,
+            }];
+            postUserGroupMembership(membershipToUpdate).then((res) => {
+              if (res && res.data) {
+                postSubjectMemberships(membershipToUpdate).then((r) => {
+                  if (r && r.data) {
+                    onUpdate();
+                  }
+                });
+              }
+            });
           }
         });
       }

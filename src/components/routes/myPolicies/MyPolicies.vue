@@ -2,9 +2,9 @@
   <div class="page-container page-my-policies">
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
-        <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
+        <!-- <b-nav-item :active="false" to="/app/my-licenses/my-licenses/1">
           <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
-        </b-nav-item>
+        </b-nav-item> -->
         <b-nav-item :active="true">
           <span class="link-text" data-qa="linkMyPolicies">My Policies</span> <b-badge pill>{{ policies.length }}</b-badge>
         </b-nav-item>
@@ -38,6 +38,7 @@ export default {
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
   },
 };
 </script>

@@ -2,18 +2,18 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-        <dt>Name:</dt>
+        <dt>Organization Name:</dt>
         <dd>{{ organization.name }}</dd>
-        <dt>Parent Organization:</dt>
-        <dd>{{ organization.organizationname }}</dd>
-      </dl>
-      <dl class="col">
-        <dt>Url:</dt>
-        <dd>{{ organization.url }}</dd>
         <dt>Description:</dt>
         <dd>{{ organization.description }}</dd>
       </dl>
-      <dl class="col-1">
+      <dl class="col">
+        <dt>Parent Organization:</dt>
+        <dd>{{ organization.organizationname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ organization.url }}</dd>
+      </dl>
+      <dl class="col-2">
         <dt>Users:</dt>
         <dd>{{ organization.organizationusers ? organization.organizationusers.length : 0 }}</dd>
         <dt>APPs:</dt>

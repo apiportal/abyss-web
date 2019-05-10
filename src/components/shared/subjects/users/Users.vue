@@ -18,7 +18,7 @@
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
-              text="Display Name"
+              text="User Name"
               sortByKey="displayname"
               sortByKeyType="string"
               data-qa="tableHeadName"
@@ -101,8 +101,6 @@
             <div class="collapsible-content">
               <User
                 :user="item"
-                :groups="groups"
-                :organizations="organizations"
                 :routePath="routePath"
               />
             </div>

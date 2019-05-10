@@ -85,10 +85,10 @@ export default {
     }),
 
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortByKey, sortByKeyType, sortDirection, proxies } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
-        array: this.proxies
+        array: proxies
           .map(item => ({
             ...item,
           }))

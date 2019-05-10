@@ -5,7 +5,7 @@
         <b-nav-item :active="currentPage.firstChildPath === 'my-licenses'" to="/app/my-licenses/my-licenses/1">
           <span class="link-text" data-qa="linkMyAllLicenses">My All Licenses</span> <b-badge pill>{{ subjectLicenses.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item
+        <!-- <b-nav-item
           :active="false"
           to="/app/my-policies/my-policies/1"
         >
@@ -13,7 +13,7 @@
         </b-nav-item>
         <b-nav-item :active="false" to="/app/policy-types/1">
           <span class="link-text" data-qa="linkPolicyTypes">Policy Types</span> <b-badge pill>{{ policyTypes.length }}</b-badge>
-        </b-nav-item>
+        </b-nav-item> -->
         <!-- <b-nav-item :active="currentPage.firstChildPath === 'attached-to-apis'" to="/app/my-licenses/attached-to-apis/1">
           <span class="link-text" data-qa="linkMyLicensesAttachedToApis">My Licenses Attached to APIs</span>
         </b-nav-item>
@@ -43,7 +43,6 @@ export default {
   },
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-licenses');
-    // this.$store.dispatch('licenses/getLicenses', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});

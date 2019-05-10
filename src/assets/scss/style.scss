@@ -512,6 +512,7 @@
       td.number {
         width: 54px;
         white-space: nowrap;
+        text-align: center;
       }
       td.type {
         width: 150px;
@@ -640,4 +641,41 @@
 // custom utilities
   .shadow-sm {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+// alerts
+  .alert-vivid {
+    color: #fff;
+    border-color: transparent;
+    &.alert-primary {
+      background-color: darken(#cce5ff, 40%);
+    }
+    &.alert-secondary {
+      background-color: darken(#e2e3e5, 40%);
+    }
+    &.alert-success {
+      background-color: darken(#d4edda, 40%);
+    }
+    &.alert-info {
+      background-color: darken(#d1ecf1, 40%);
+    }
+    &.alert-warning {
+      background-color: darken(#fff3cd, 50%);
+    }
+    &.alert-danger {
+      background-color: darken(#f8d7da, 40%);
+    }
+    &.alert-dark {
+      background-color: darken(#000000, 40%);
+    }
+  }
+  .alert-t-r {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3000;
+  }
+  .alert-dismissible .close {
+    padding: .75rem 1.25rem;
+    line-height: .5;
+    font-size: 2rem;
   }

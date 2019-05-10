@@ -1,5 +1,5 @@
 <template>
-    <div class="page-content">
+    <div class="abyss-table-content">
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
@@ -48,11 +48,11 @@
           </tr>
         </thead>
         <TBodyLoading
-          v-if="isLoading && totalRows.length === 0"
+          v-if="isLoading && rows.length === 0"
           :cols="5"
         />
         <TbodyCollapsible
-          v-for="(item, index) in rows" v-bind:key="index"
+          v-for="(item, index) in tableRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           :data-qa="`tableRow-${index}`"
         >
@@ -81,7 +81,7 @@
                 <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
                 <b-dropdown-item data-qa="btnDelete"  :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
-                <b-dropdown-header></b-dropdown-header>
+                <b-dropdown-header class="p-0"></b-dropdown-header>
 
                 <b-dropdown-item data-qa="btnEditGroupUsers" :to="`${routePath}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
 
@@ -106,20 +106,7 @@
           </tr>
         </TbodyCollapsible>
       </table>
-      <router-view></router-view>
     </div>
-      <!-- <div class="page-footer" v-if="totalRows.length > itemsPerPage">
-      <b-pagination
-        size="md"
-        :total-rows="totalRows.length"
-        v-model="page"
-        :per-page="itemsPerPage"
-        align="center"
-        @change="handlePageChange"
-        data-qa="footerPagination"
-      >
-      </b-pagination>
-    </div> -->
 </template>
 
 <script>
@@ -130,6 +117,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Group from '@/components/shared/subjects/groups/Group';
+import Helpers from '@/helpers';
 
 export default {
   components: {
@@ -155,14 +143,82 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
+      subjectDirectories: state => state.subjectDirectories.items,
+      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
+      organizations: state => state.organizations.items,
+      subjectOrganizations: state => state.subjectOrganizations.items,
+      groups: state => state.groups.items,
+      users: state => state.users.items,
+      memberships: state => state.subjectMemberships.items,
+      userGroupMemberships: state => state.subjectMemberships.userGroup,
     }),
+    tableRows() {
+      const { subjectDirectories, organizations, rows, users } = this;
+      const getDirectoryName = (subjectdirectoryid) => {
+        const directory = subjectDirectories.find(item => item.uuid === subjectdirectoryid);
+        return directory ? directory.directoryname : subjectdirectoryid;
+      };
+      const getOrganizationName = (organizationId) => {
+        const organization = organizations.find(item => item.uuid === organizationId);
+        return organization ? organization.name : organizationId;
+      };
+      const getUsers = (groupId) => {
+        const members = this.memberships.filter(item =>
+          !item.isdeleted &&
+          item.subjectgroupid === groupId);
+        const groupUsers = users.filter(el =>
+          members.some(f =>
+            f.subjectid === el.uuid,
+          ),
+        );
+        return groupUsers;
+      };
+      const getUserFromGroups = (groupId) => {
+        const group = this.userGroupMemberships.find(item => item.subjectgroupid === groupId) || {};
+        return group.subjectid || groupId;
+      };
+      const { sortByKey, sortByKeyType, sortDirection } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows.map(item => ({
+          ...item,
+          directoryname: getDirectoryName(item.subjectdirectoryid),
+          organizationname: getOrganizationName(item.organizationid),
+          users: getUsers(item.uuid),
+          userscount: getUsers(item.uuid).length,
+          currentuser: getUserFromGroups(item.uuid),
+        })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
+  },
+  created() {
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
+    this.$store.dispatch('users/getUsers', {});
+    this.$store.dispatch('groups/getGroups', {});
+    this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
+    this.$store.dispatch('subjectMemberships/getUserGroupMemberships', {});
   },
   data() {
     return {
       collapsedRows: [],
+      sortByKey: 'displayname',
+      sortByKeyType: 'string',
+      sortDirection: 'desc',
     };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {

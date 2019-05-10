@@ -108,18 +108,18 @@
             {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
-              <b-dropdown-item :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
@@ -177,14 +177,32 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      apiStates: state => state.apiStates.items,
+      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
+      proxies: state => state.proxies.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortByKey, sortByKeyType, sortDirection, rows,
+      apiStates, apiVisibilityTypes, proxies } = this;
       const { sortArrayOfObjects } = Helpers;
+      const getApiStateName = (apistateid) => {
+        const apiState = apiStates.find(item => item.uuid === apistateid);
+        return apiState ? apiState.name : apistateid;
+      };
+      const getApiVisibilityName = (apivisibilityid) => {
+        const apiVisibility = apiVisibilityTypes.find(item => item.uuid === apivisibilityid);
+        return apiVisibility ? apiVisibility.name : apivisibilityid;
+      };
+      const getNumberOfProxies = apiUuid =>
+        proxies.filter(proxy => proxy.businessapiid === apiUuid).length;
+      // const businessApisIds = businessApis.map(item => item.uuid);
       return sortArrayOfObjects({
         array: rows
           .map(item => ({
             ...item,
+            apistatename: getApiStateName(item.apistateid),
+            apivisibilityname: getApiVisibilityName(item.apivisibilityid),
+            numberofproxies: getNumberOfProxies(item.uuid),
           })),
         sortByKey,
         sortByKeyType,

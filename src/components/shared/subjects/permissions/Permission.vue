@@ -2,14 +2,14 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-4">
-        <dt>Name:</dt>
+        <dt>Permission Name:</dt>
         <dd>{{ permission.permission }}</dd>
         <dt>Description:</dt>
         <dd>{{ permission.description }}</dd>
-        <dt>Access Manager:</dt>
-        <dd>{{ permission.accessmanagername }}</dd>
         <dt>Organization:</dt>
         <dd>{{ permission.organizationname }}</dd>
+        <dt>Access Manager:</dt>
+        <dd>{{ permission.accessmanagername }}</dd>
       </dl>
       <dl class="col">
         <dt>Subject Type:</dt>

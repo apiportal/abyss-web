@@ -6,50 +6,51 @@
       </dl>
   
       <dl class="col">
+        <dt>User Name:</dt>
+        <dd>{{ user.subjectname }}</dd>
         <dt>First Name:</dt>
         <dd>{{ user.firstname }}</dd>
         <dt>Last Name:</dt>
         <dd>{{ user.lastname }}</dd>
-        <dt>User Name:</dt>
-        <dd>{{ user.subjectname }}</dd>
         <dt>Display Name:</dt>
         <dd>{{ user.displayname }}</dd>
       </dl>
   
       <dl class="col">
+        <dt>Description:</dt>
+        <dd>{{ user.description }}</dd>
+        <dt>Directory:</dt>
+        <dd>{{ user.directoryname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ user.url }}</dd>
+        <dt>Email:</dt>
+        <dd>{{ user.email }}</dd>
+        <dt>Secondary Email:</dt>
+        <dd>{{ secondaryEmail }}</dd>
+
+      </dl>
+  
+      <dl class="col">
         <dt>Main Organization:</dt>
         <dd>{{ user.organizationname }}</dd>
-        <dt>Organizations:</dt>
+        <dt>Member of Organizations:</dt>
         <dd>
           <span 
             v-for="(organization, index) in computedUserOrganizations"
             v-bind:key="index"
           >
-            {{ organization.subjectorganizationname }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
+            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
           </span>
         </dd>
-        <dt>Directory:</dt>
-        <dd>{{ user.directoryname }}</dd>
-        <dt>Url:</dt>
-        <dd>{{ user.url }}</dd>
-      </dl>
-  
-      <dl class="col">
-        <dt>Email:</dt>
-        <dd>{{ user.email }}</dd>
-        <dt>Secondary Email:</dt>
-        <dd>{{ secondaryEmail }}</dd>
-        <dt>Groups:</dt>
+        <dt>Member of Groups:</dt>
         <dd>
           <span 
-            v-for="(membership, index) in computedMemberships"
+            v-for="(group, index) in userGroups"
             v-bind:key="index"
           >
-            {{ membership.subjectgroupname }}<span v-if="index < computedMemberships.length - 1">,</span>
+            {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
           </span>
         </dd>
-        <dt>Description:</dt>
-        <dd>{{ user.description }}</dd>
       </dl>
       
       <dl class="col">
@@ -65,13 +66,31 @@
         <dd v-if="user.isdeleted">{{ user.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
+    <div class="row abyss-table-buttons">
+      <b-button
+        size="md"
+        variant="link"
+        @click="listUserGroups"
+        :class="{'active': isShowUserGroups}"
+      >
+      <Icon icon="user-friends" /> Groups
+      <b-badge pill>{{ userGroups.length }}</b-badge>
+      </b-button>
+    </div>
+    <div v-if="isShowUserGroups">
+      <Groups
+        :rows="userGroups"
+        :routePath="`/app/administer-users/users/${page}`"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-// import { mapState } from 'vuex';
+import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import Groups from '@/components/shared/subjects/groups/Groups';
 
 export default {
   props: {
@@ -84,20 +103,17 @@ export default {
       required: false,
       default() { return ''; },
     },
-    groups: {
-      Type: Array,
-      required: false,
-      default() { return []; },
-    },
-    organizations: {
-      type: Array,
-      required: false,
-    },
   },
   components: {
     Icon,
+    Groups,
   },
   computed: {
+    ...mapState({
+      organizations: state => state.organizations.items,
+      users: state => state.users.items,
+      groups: state => state.groups.items,
+    }),
     secondaryEmail() {
       const { email, secondaryemail } = this.user;
       if (secondaryemail === email) {
@@ -105,11 +121,28 @@ export default {
       }
       return secondaryemail;
     },
-    computedMemberships() {
+    userGroups() {
+      const userGroups = this.groups.filter(item =>
+        this.memberships.some(f =>
+          f.subjectgroupid === item.uuid && f.subjectid === this.user.uuid,
+        ),
+      );
+      return userGroups;
+    },
+    computedUserOrganizations() {
+      const userOrganizations = this.organizations.filter(item =>
+        this.userOrganizations.some(f =>
+          f.organizationrefid === item.uuid && f.subjectid === this.user.uuid,
+        ),
+      );
+      return userOrganizations;
+    },
+    /* computedMemberships() {
       const { memberships, groups } = this;
       return memberships.map((item) => {
         const subjectgroup = groups.find(group => group.uuid === item.subjectgroupid);
         return {
+          subjectgroup,
           subjectgroupid: item.subjectgroupid,
           subjectgroupname: subjectgroup ? subjectgroup.displayname : item.subjectgroupid,
         };
@@ -126,7 +159,7 @@ export default {
           subjectorganization.name : item.organizationrefid,
         };
       });
-    },
+    }, */
   },
   mounted() {
     this.getSubjectMemberships();
@@ -157,12 +190,17 @@ export default {
         }
       });
     },
+    listUserGroups() {
+      this.isShowUserGroups = !this.isShowUserGroups;
+    },
   },
   data() {
     return {
       page: parseInt(this.$route.params.page, 10),
       memberships: [],
+      subjectgroup: [],
       userOrganizations: [],
+      isShowUserGroups: false,
     };
   },
 };

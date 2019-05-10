@@ -1,8 +1,13 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt style="width: 260px;" class="pb-2">
+          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+        </dt>
+      </dl>
       <dl class="col">
-        <dt>Title:</dt>
+        <dt>Proxy Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
@@ -19,12 +24,21 @@
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
-        <dd>{{ computedBusinessApi }}</dd>
+        <dd>{{ computedBusinessApiName }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
     </div>
     <div class="row abyss-table-buttons">
+      <b-button
+        @click="handleToggleBusinessTable"
+        size="md"
+        variant="link"
+        :class="{'active': isBusinessTableVisible}"
+      >
+        <span>Business API</span>
+        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
+      </b-button>
       <b-button
         @click="handleToggleLicensesTable"
         size="md"
@@ -56,6 +70,12 @@
         :routePath="routePath"
       ></Contracts>
     </div>
+    <div v-if="isBusinessTableVisible && computedBusinessApi.length">
+      <Apis
+        :rows="computedBusinessApi"
+        :routePath="routePath"
+      ></Apis>
+    </div>
   </div>
 </template>
 
@@ -63,6 +83,7 @@
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
 
 export default {
   computed: {
@@ -70,15 +91,23 @@ export default {
       businessApis: state => state.businessApis.items,
     }),
     computedBusinessApi() {
-      return this.businessApis.find(business =>
-        business.uuid === this.item.businessapiid).openapidocument.info.title;
+      return this.businessApis.filter(item =>
+        item.uuid === this.item.businessapiid);
+    },
+    computedBusinessApiName() {
+      if (this.computedBusinessApi.length) {
+        return this.computedBusinessApi[0].openapidocument.info.title;
+      }
+      return '';
     },
   },
   components: {
     TbodyCollapsible,
     Icon,
+    Images,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
+    Apis: () => import('@/components/shared/subjects/apis/Apis'),
   },
   props: {
     item: {
@@ -102,6 +131,7 @@ export default {
       isLicensesTableVisible: false,
       isContractsTableVisible: false,
       isTokensTableVisible: false,
+      isBusinessTableVisible: false,
     };
   },
   methods: {
@@ -113,6 +143,7 @@ export default {
       if (this.isContractsTableVisible) {
         this.isLicensesTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
       }
     },
     handleToggleLicensesTable() {
@@ -120,6 +151,15 @@ export default {
       if (this.isLicensesTableVisible) {
         this.isContractsTableVisible = false;
         this.isTokensTableVisible = false;
+        this.isBusinessTableVisible = false;
+      }
+    },
+    handleToggleBusinessTable() {
+      this.isBusinessTableVisible = !this.isBusinessTableVisible;
+      if (this.isBusinessTableVisible) {
+        this.isContractsTableVisible = false;
+        this.isTokensTableVisible = false;
+        this.isLicensesTableVisible = false;
       }
     },
     handleCollapseTableRows(itemId) {

@@ -153,7 +153,7 @@
                 <div class="abyss-table-content">
                   <div class="row">
                     <dl class="col">
-                      <dt>Name:</dt>
+                      <dt>Access Manager Name:</dt>
                       <dd>{{ item.accessmanagername }}</dd>
                       <dt>Type:</dt>
                       <dd>{{ item.accessmanagertypename }}</dd>

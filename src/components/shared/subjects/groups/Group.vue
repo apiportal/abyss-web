@@ -11,24 +11,24 @@
         <dd>{{ group.displayname }}</dd>
         <dt>Description:</dt>
         <dd>{{ group.description }}</dd>
-        <dt>Active:</dt>
-        <dd>{{ group.isactivated | booleanToText }}</dd>
-      </dl>
-      <dl class="col">
         <dt>Organization:</dt>
         <dd>{{ group.organizationname }}</dd>
+      </dl>
+      <dl class="col">
         <dt>Directory:</dt>
         <dd>{{ group.directoryname }}</dd>
         <dt>url:</dt>
         <dd>{{ group.url }}</dd>
+        <dt>Active:</dt>
+        <dd>{{ group.isactivated | booleanToText }}</dd>
         <dt>Locked:</dt>
         <dd>{{ group.islocked | booleanToText }}</dd>
       </dl>
       <dl class="col">
-        <dt>Effective End Date:</dt>
-        <dd>{{ group.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Effective Start Date:</dt>
         <dd>{{ group.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Effective End Date:</dt>
+        <dd>{{ group.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Created:</dt>
         <dd>{{ group.created | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt v-if="!group.isdeleted">Updated:</dt>

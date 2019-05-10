@@ -79,7 +79,7 @@
           <b-form-group id="organizationEnabledGroup">
             <b-form-checkbox
                 id="organizationEnabledChecks"
-                v-model="organization.isactive"
+                v-model="organizationEditable.isactive"
                 :value="true"
                 :unchecked-value="false"
             >
@@ -229,6 +229,9 @@ export default {
   created() { },
   methods: {
     ...mapActions('organizations', ['putOrganizations', 'postOrganizations']),
+    ...mapActions('subjectOrganizations', ['putSubjectOrganizations', 'postSubjectOrganizations']),
+    ...mapActions('resources', ['postResources']),
+    ...mapActions('permissions', ['postPermissions']),
     validateJson(obj) {
       try {
         return JSON.parse(obj);
@@ -240,6 +243,7 @@ export default {
       evt.preventDefault();
       const { putOrganizations,
         postOrganizations,
+        postSubjectOrganizations, postResources, postPermissions,
         organizationEditable,
         onUpdate,
         role } = this;
@@ -262,9 +266,66 @@ export default {
           ...organizationToUpdate,
           crudsubjectid,
         }];
+        console.log('organizationToUpdate: ', organizationToUpdate); // eslint-disable-line
         postOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
+            const createdOrganization = response.data[0].response;
+            /* // !!! replace after cascade
+            // this.$store.dispatch('organization/getOrganizations', {
+              // refresh: true,
+            // });
             onUpdate();
+            // !!! */
+            const userOrganizationToAdd = [{
+              organizationid: createdOrganization.uuid,
+              crudsubjectid: createdOrganization.crudsubjectid,
+              organizationrefid: createdOrganization.uuid,
+              // subjectid: currentUser.uuid,
+              subjectid: createdOrganization.crudsubjectid,
+              isactive: true,
+              isowner: true,
+            }];
+            postSubjectOrganizations(userOrganizationToAdd).then((responseSubjectOrganizations) => {
+              if (responseSubjectOrganizations && responseSubjectOrganizations.data) {
+                const createdUserOrganization = responseSubjectOrganizations.data[0].response;
+                const resourceToAdd = [{
+                  organizationid: createdOrganization.organizationid,
+                  crudsubjectid: createdOrganization.crudsubjectid,
+                  resourcetypeid: '1ea5f7f1-249a-4219-8f86-32d2e8e42b93',
+                  resourcename: `${createdOrganization.name} ORGANIZATON ${createdOrganization.uuid}`,
+                  description: createdOrganization.description,
+                  resourcerefid: createdOrganization.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdOrganization.organizationid,
+                      crudsubjectid: createdOrganization.crudsubjectid,
+                      permission: `Ownership of ${createdOrganization.name} ORGANIZATON by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdOrganization.name} ORGANIZATON by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdUserOrganization.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: '7a2cf490-d8a6-4055-b94b-27d54115ea5f', // ALL_ORGANIZATION_ACTION
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        // this.$store.dispatch('organization/getOrganizations', {
+                        //   refresh: true,
+                        // }); // ??
+                        onUpdate();
+                      }
+                    });
+                  }
+                });
+                // !!!
+              }
+            });
           }
         });
       }

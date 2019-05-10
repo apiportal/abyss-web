@@ -12,7 +12,7 @@
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
-        {{ role === 'edit' ? 'Edit Access Manager Type' : 'Add New Access Manager Type' }}
+        {{ role === 'edit' ? 'Edit Policy Type' : 'Add New Policy Type' }}
       </h5>
     </template>
     <template>

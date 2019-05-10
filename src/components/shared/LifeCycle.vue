@@ -15,7 +15,7 @@
     </b-alert>
     <div class="state-status">
         <span class="active-state">Active State : {{ currentApiState.name }}</span>
-        <span class="target-state">Target State : {{ targetState }}</span>
+        <span class="target-state">Target State : {{ targetApiState.name }}</span>
     </div>
   </div>
 </template>
@@ -29,10 +29,6 @@ export default {
       type: Object,
       required: false,
     },
-    onStateChange: {
-      type: Function,
-      required: true,
-    },
   },
   computed: {
     ...mapState({
@@ -42,7 +38,7 @@ export default {
   data() {
     return {
       infoText: this.currentApiState,
-      targetState: '',
+      targetApiState: '',
       buttonStatus(state) {
         return (this.currentApiState.name === state) ? 'primary' : 'outline-success';
       },
@@ -54,8 +50,9 @@ export default {
       this.infoText = apiStates.find(item => item.name === state);
     },
     changeState(state) {
-      this.targetState = state;
-      this.onStateChange(state);
+      const { apiStates } = this;
+      this.targetApiState = apiStates.find(item => item.name === state);
+      this.$emit('clicked', this.targetApiState);
     },
   },
 };

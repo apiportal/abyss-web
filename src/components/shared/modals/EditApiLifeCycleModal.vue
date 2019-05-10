@@ -19,7 +19,7 @@
     <template>
       <LifeCycle
         :currentApiState="computedApiState"
-        :onStateChange="onStateChange"
+        @clicked="onClickLifeCycle"
       />
       <b-form
         @submit="handleSubmit"
@@ -46,7 +46,7 @@
 <script>
 import Modal from '@/components/shared/modals/Modal';
 import LifeCycle from '@/components/shared/LifeCycle';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   components: {
@@ -105,13 +105,31 @@ export default {
       const { proxy, apiStates } = this;
       return apiStates.find(item => item.uuid === proxy.apistateid);
     },
-    onStateChange(newState) {
-      console.log('new state: ', newState); // eslint-disable-line
-    },
+  },
+  data() {
+    return {
+      readNewState: '',
+      proxyEditable: JSON.parse(JSON.stringify(this.proxy)),
+    };
   },
   methods: {
+    ...mapActions('proxies', ['putProxies']),
     handleSubmit(evt) {
       evt.preventDefault();
+      const { proxyEditable, readNewState, onUpdate, putProxies } = this;
+      // const { apistateid } = proxyEditable;
+      const proxyToUpdate = {
+        ...proxyEditable,
+        apistateid: readNewState.uuid,
+      };
+      putProxies(proxyToUpdate).then((response) => {
+        if (response && response.data) {
+          onUpdate();
+        }
+      });
+    },
+    onClickLifeCycle(value) {
+      this.readNewState = value;
     },
   },
 };

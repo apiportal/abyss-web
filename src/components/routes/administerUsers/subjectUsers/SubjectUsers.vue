@@ -27,6 +27,8 @@
           <b-button
             :to="`/app/administer-users/users/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New User"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

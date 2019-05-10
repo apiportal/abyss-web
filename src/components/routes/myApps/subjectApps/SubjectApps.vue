@@ -27,6 +27,8 @@
           <b-button
             :to="`/app/my-apps/my-apps/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New App"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

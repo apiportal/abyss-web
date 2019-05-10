@@ -33,6 +33,8 @@
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
               variant="primary"
+              v-b-tooltip.hover 
+              title="Add New Permission"
               class="page-btn-add"
               block
               data-qa="btnAddNew"

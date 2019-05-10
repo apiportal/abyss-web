@@ -45,6 +45,8 @@
           <b-button
             :to="`/app/access-manager-types/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Access Manager Type"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

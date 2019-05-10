@@ -9,6 +9,8 @@
           @change="handleOrganizationChange"
           data-qa="sideMenuSwitchOrganization"
           style="width: 100%;"
+          v-b-tooltip.hover 
+          title="Change Organization"
         ></b-form-select>
       </b-form>
       <ul class="sidenav-links">

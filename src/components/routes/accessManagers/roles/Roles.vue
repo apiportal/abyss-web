@@ -47,6 +47,8 @@
           <b-button
             :to="`/app/roles/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Role"
             class="page-btn-add"
             data-qa="btnAddNew"
             block

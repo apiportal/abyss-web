@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/policy-types/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Policy Type"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

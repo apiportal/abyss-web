@@ -15,7 +15,7 @@
     </b-alert>
     <div class="state-status">
         <span class="active-state">Active State : {{ currentApiState.name }}</span>
-        <span class="target-state">Target State : {{ targetApiState.name }}</span>
+        <span class="target-state">Next State : {{ nextApiState.name }}</span>
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       infoText: this.currentApiState,
-      targetApiState: '',
+      nextApiState: '',
       buttonStatus(state) {
         return (this.currentApiState.name === state) ? 'primary' : 'outline-success';
       },
@@ -51,8 +51,8 @@ export default {
     },
     changeState(state) {
       const { apiStates } = this;
-      this.targetApiState = apiStates.find(item => item.name === state);
-      this.$emit('clicked', this.targetApiState);
+      this.nextApiState = apiStates.find(item => item.name === state);
+      this.$store.commit('proxies/setNextStateId', this.nextApiState.uuid);
     },
   },
 };

@@ -100,6 +100,7 @@ export default {
   computed: {
     ...mapState({
       apiStates: state => state.apiStates.items,
+      apiNextState: state => state.proxies.nextStateId,
     }),
     computedApiState() {
       const { proxy, apiStates } = this;
@@ -116,11 +117,10 @@ export default {
     ...mapActions('proxies', ['putProxies']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { proxyEditable, readNewState, onUpdate, putProxies } = this;
-      // const { apistateid } = proxyEditable;
+      const { proxyEditable, onUpdate, putProxies, apiNextState } = this;
       const proxyToUpdate = {
         ...proxyEditable,
-        apistateid: readNewState.uuid,
+        apistateid: apiNextState,
       };
       putProxies(proxyToUpdate).then((response) => {
         if (response && response.data) {

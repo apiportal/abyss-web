@@ -1,12 +1,10 @@
 <template>
   <div>
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb d-flex justify-content-end mb-0" style="background: #036; border-radius: 0px;">
-        <li class="breadcrumb-item mr-5" aria-current="page" style="color: rgba(255, 255, 255, 0.8);">Settings</li>
-      </ol>
+    <nav class="navbar page-navbar d-flex justify-content-end">
+     <h6 class="my-1">Settings</h6>
     </nav>
-    <b-card no-body>
-      <b-tabs card>
+    <div class="page-container">
+      <b-tabs class="tabs-container">
         <b-tab title="Account Activity">
           <ul class="list-group">
           <li class="list-group-item">
@@ -140,7 +138,7 @@
           </ul>
         </b-tab>
       </b-tabs>
-    </b-card>
+    </div>
   </div>
 </template>
 <script>

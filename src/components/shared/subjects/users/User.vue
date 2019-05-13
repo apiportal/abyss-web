@@ -33,6 +33,16 @@
       <dl class="col">
         <dt>Main Organization:</dt>
         <dd>{{ user.organizationname }}</dd>
+        <!-- <dt>Member of Organizations:</dt>
+        <dd> -->
+          <!-- <span 
+            v-for="(organization, index) in computedUserOrganizations"
+            v-bind:key="index"
+          >
+            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
+          </span>
+        </dd> -->
+
         <dt>Member of Organizations:</dt>
         <dd>
           <span 
@@ -42,6 +52,8 @@
             {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
           </span>
         </dd>
+
+
         <dt>Member of Groups:</dt>
         <dd>
           <span 
@@ -70,19 +82,43 @@
       <b-button
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Groups of User"
         @click="listUserGroups"
         :class="{'active': isShowUserGroups}"
       >
-      <Icon icon="user-friends" /> Groups
+      <Icon icon="user-friends" /> Groups of User
       <b-badge pill>{{ userGroups.length }}</b-badge>
       </b-button>
+      
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Organizations of User"
+        @click="listUserOrganizations"
+        :class="{'active': ShowOrganizationsOfUser}"
+      >
+      <Icon icon="user-friends" /> Organizations of User
+      <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
+      </b-button>
+
     </div>
     <div v-if="isShowUserGroups">
       <Groups
         :rows="userGroups"
         :routePath="`/app/administer-users/users/${page}`"
-      />
+      ></Groups>
     </div>
+    <div v-if="isShowUserOrganizations">
+      <Organizations
+        :rows="computedUserOrganizations"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Organizations>
+    </div>
+
+
+
   </div>
 </template>
 
@@ -91,6 +127,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
+import Organizations from '@/components/shared/subjects/organizations/Organizations';
 
 export default {
   props: {
@@ -107,6 +144,7 @@ export default {
   components: {
     Icon,
     Groups,
+    Organizations,
   },
   computed: {
     ...mapState({
@@ -130,8 +168,7 @@ export default {
       return userGroups;
     },
     computedUserOrganizations() {
-      const userOrganizations = this.organizations.filter(item =>
-        this.userOrganizations.some(f =>
+      const userOrganizations = this.organizations.filter(item => this.userOrganizations.some(f =>
           f.organizationrefid === item.uuid && f.subjectid === this.user.uuid,
         ),
       );
@@ -192,6 +229,15 @@ export default {
     },
     listUserGroups() {
       this.isShowUserGroups = !this.isShowUserGroups;
+      if (this.isShowUserGroups) {
+        this.isShowUserOrganizations = false;
+      }
+    },
+    listUserOrganizations() {
+      this.isShowUserOrganizations = !this.isShowUserOrganizations;
+      if (this.isShowUserOrganizations) {
+        this.isShowUserGroups = false;
+      }
     },
   },
   data() {
@@ -201,6 +247,7 @@ export default {
       subjectgroup: [],
       userOrganizations: [],
       isShowUserGroups: false,
+      isShowUserOrganizations: false,
     };
   },
 };

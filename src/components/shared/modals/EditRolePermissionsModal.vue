@@ -145,7 +145,7 @@ export default {
           text: permission.permission,
           value: permission.uuid,
           isAttached,
-          rolePermissions,
+          rolepermission,
           sortTime,
         };
       }),
@@ -192,7 +192,6 @@ export default {
         }
       }
       if (this.permissionsToAdd.length) {
-        console.log('add:::', this.permissionsToAdd); // eslint-disable-line
         for (let i = 0; i < this.permissionsToAdd.length; i += 1) {
           postPermissions(this.permissionsToAdd[i]).then((response) => {
             if (response && response.data) {

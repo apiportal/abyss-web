@@ -20,41 +20,71 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="groupNameGroup"
-            label="Group Name:"
-            label-for="groupNameInput"
-            :invalid-feedback="groupNameInvalidFeedback"
-            :state="groupNameState"
-          >
-            <b-form-input
-              id="groupNameInput"
-              type="text"
-              v-model="groupEditable.subjectname"
-              placeholder="Group Name"
-              :state="groupNameState"
-              :formatter="setValidSubjectName"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
-            id="displayNameGroup"
-            label="Display Name:"
-            label-for="displayNameInput"
-            :invalid-feedback="displayNameInvalidFeedback"
-            :state="displayNameState"
-          >
-            <b-form-input
-              id="displayNameInput"
-              type="text"
-              v-model="groupEditable.displayname"
-              placeholder="Display Name"
-              :state="displayNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group 
+                id="groupNameGroup"
+                label="Group Names:"
+                label-for="groupNameInput"
+                :invalid-feedback="groupNameInvalidFeedback"
+                :state="groupNameState"
+              >
+                <b-form-input
+                  id="groupNameInput"
+                  type="text"
+                  v-model="groupEditable.subjectname"
+                  placeholder="Group Name"
+                  :state="groupNameState"
+                  :formatter="setValidSubjectName"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group 
+                id="displayNameGroup"
+                label="Display Name:"
+                label-for="displayNameInput"
+                :invalid-feedback="displayNameInvalidFeedback"
+                :state="displayNameState"
+              >
+                <b-form-input
+                  id="displayNameInput"
+                  type="text"
+                  v-model="groupEditable.displayname"
+                  placeholder="Display Name"
+                  :state="displayNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="p-0"> 
+                  <img
+                    v-if="groupEditable.picture"
+                    :src="groupEditable.picture" 
+                    :alt="groupEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 175px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!groupEditable.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="groupEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 175px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group id="groupEnabledGroup">
             <b-form-checkbox
               id="groupEnabledChecks"
@@ -499,6 +529,15 @@ export default {
         });
       }
     },
+    onFileSelected(event) {
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.groupEditable.picture = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
   },
 };
 </script>
@@ -508,5 +547,8 @@ export default {
   &.edit-administer-group {
     padding: 0;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

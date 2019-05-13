@@ -60,9 +60,9 @@
               <div class="d-flex justify-content-center">
                 <div class="item p-0"> 
                   <img
-                    v-if="pictureEditable.picture"
-                    :src="pictureEditable.picture" 
-                    :alt="pictureEditable.displayname" 
+                    v-if="appEditable.picture"
+                    :src="appEditable.picture" 
+                    :alt="appEditable.displayname" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 200px;" 
                     v-b-tooltip.hover 
@@ -70,9 +70,9 @@
                     @click="$refs.fileInput.click()"
                   >
                   <img 
-                    v-if="!pictureEditable.picture" 
+                    v-if="!appEditable.picture" 
                     src="@/assets/avatar.jpg" 
-                    :alt="pictureEditable.displayname" 
+                    :alt="appEditable.displayname" 
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
                     style="width: 200px;" 
                     v-b-tooltip.hover 
@@ -268,9 +268,6 @@ export default {
       }
       return '';
     },
-    pictureEditable() {
-      return JSON.parse(JSON.stringify(this.app));
-    },
     // organizationState() {
     //   const { organizationid } = this.appEditable;
     //   return organizationid !== null;
@@ -347,50 +344,11 @@ export default {
       }
     },
     onFileSelected(event) {
-      const { pictureEditable, putApps, postApps, onUpdate, role } = this;
+      event.preventDefault();
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.pictureEditable.picture = reader.result;
-        const { description, url, secondaryemail,
-        effectivestartdate, effectiveenddate,
-        email, picture, distinguishedname, uniqueid,
-        phonebusiness, phoneextension, phonehome, phonemobile,
-        jobtitle, department, company } = this.pictureEditable;
-        let pictureToUpdate = {
-          ...pictureEditable,
-          description: (description === null ? '' : description),
-          url: (url === null ? '' : url),
-          picture: (picture === null ? '' : picture),
-          distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-          uniqueid: (uniqueid === null ? '' : uniqueid),
-          phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-          phoneextension: (phoneextension === null ? '' : phoneextension),
-          phonehome: (phonehome === null ? '' : phonehome),
-          phonemobile: (phonemobile === null ? '' : phonemobile),
-          jobtitle: (jobtitle === null ? '' : jobtitle),
-          department: (department === null ? '' : department),
-          company: (company === null ? '' : company),
-          effectivestartdate: (effectivestartdate === null ?
-            this.$moment.utc().toISOString() : effectivestartdate),
-          effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
-          secondaryemail: (secondaryemail === null ? email : secondaryemail),
-        };
-        if (role === 'edit') {
-          putApps(pictureToUpdate).then(() => {
-            onUpdate();
-          });
-        } else if (role === 'add') {
-          pictureToUpdate = {
-            ...pictureToUpdate,
-            subjectname: pictureToUpdate.displayname.replace(/ /g, '').toLowerCase(),
-            firstname: pictureToUpdate.displayname,
-            lastname: pictureToUpdate.displayname,
-          };
-          postApps([pictureToUpdate]).then(() => {
-            onUpdate();
-          });
-        }
+        this.appEditable.picture = reader.result;
       };
       reader.readAsDataURL(file);
     },

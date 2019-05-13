@@ -37,7 +37,6 @@ export default {
       licenses: state => state.subjectLicenses.items,
       apiLicenses: state => state.apiLicenses.items,
       proxies: state => state.proxies.items,
-      isLicensesLoaded: state => state.licenses.lastUpdatedAt,
       isApiLicensesLoaded: state => state.apiLicenses.lastUpdatedAt,
       isProxiesLoaded: state => state.proxies.lastUpdatedAt,
     }),

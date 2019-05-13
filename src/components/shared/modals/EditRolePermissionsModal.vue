@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="edit-role-permissions"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -26,6 +27,7 @@
               :autocompleteOptions="permissionsEditable"
               :onDeleteChip="handleDeleteRolePermissions"
               :onAddChip="handleAddRolePermissions"
+              :showAddChip="false"
               label="Role Permissions"
             />
           </div>
@@ -109,6 +111,11 @@ export default {
       type: Object,
       required: false,
     },
+    permissions: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     rolePermissions: {
       type: Array,
       required: false,
@@ -118,7 +125,6 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      permissions: state => state.permissions.items,
     }),
     computedRolePermissions() {
       const { permissionsEditable } = this;

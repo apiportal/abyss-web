@@ -78,17 +78,12 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       subjectLicenses: state => state.subjectLicenses.items,
-      licenses: state => state.licenses.items,
     }),
     tableRows() {
-      const { sortByKey, sortByKeyType, sortDirection, subjectLicenses, licenses } = this;
-      // const { sortByKey, sortByKeyType, sortDirection, subjectLicenses } = this;
+      const { sortByKey, sortByKeyType, sortDirection, subjectLicenses } = this;
       const { sortArrayOfObjects } = Helpers;
-      const subjectLicensesIds = subjectLicenses.map(item => item.uuid);
       return sortArrayOfObjects({
-        // array: subjectLicenses
-        array: licenses
-          .filter(item => subjectLicensesIds.indexOf(item.uuid) > -1)
+        array: subjectLicenses
           .filter((item) => {
             const { filterKey } = this;
             if (filterKey === '') {

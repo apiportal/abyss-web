@@ -36,13 +36,14 @@
               <b-dropdown-item
                 v-if="isUnsubscibeButtonVisible"
                 @click="() => handleDeleteContract(item.uuid)"
+                data-qa="btnUnsubscribe"
               >
                 Unsubscribe
               </b-dropdown-item>
 
               <b-dropdown-header v-if="isLogsButtonVisible">LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
 
               <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
 

@@ -168,7 +168,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('licenses', ['putLicenses']),
+    ...mapActions('subjectLicenses', ['putLicenses']),
     policyIds() {
       this.licenseEditable.licensedocument.termsOfService.policyKey =
       this.computedLicensePolicies.map(item => (item.value));

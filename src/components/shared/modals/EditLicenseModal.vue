@@ -627,7 +627,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('licenses', ['putLicenses', 'postLicenses']),
+    ...mapActions('subjectLicenses', ['putLicenses', 'postLicenses']),
     handleSubmit(evt) {
       evt.preventDefault();
       const { licenseEditable, putLicenses, postLicenses, onUpdate, role } = this;

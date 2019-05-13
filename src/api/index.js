@@ -1,3 +1,19 @@
+/*
+ * Copyright 2019 Verapi Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://dev2.apiportal.com';
@@ -312,12 +328,12 @@ export default {
       invalidpasswordattemptcount, ispasswordchangerequired, passwordexpiresat,
       totallogincount, failedlogincount, lastloginat, lastpasswordchangeat,
       lastauthenticatedat, lastfailedloginat, ...rest } = app;
-    return axios.post(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
+    return axios.put(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
   },
   // SubjectApps > explore
-  getSubjectApps(uuid) {
-    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  getSubjectApps() {
+    // return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
   /* putSubjectApps(subjectapp) {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
@@ -412,6 +428,15 @@ export default {
   getPolicies() {
     return axios.get('/abyss/oapi/policies');
   },
+  getLicensesOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/licenses/policy/${uuid}`);
+  },
+  getContractsOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/contracts/policy/${uuid}`);
+  },
+  getApisOfPolicy(uuid) {
+    return axios.get(`/abyss/oapi/apis/policy/${uuid}`);
+  },
   putPolicies(policy) {
     const { uuid, created, updated, deleted, isdeleted, ...rest } = policy;
     return axios.put(`/abyss/oapi/policies/${uuid}`, rest);
@@ -436,6 +461,12 @@ export default {
     return axios.delete(`/abyss/oapi/policy-types/${uuid}`);
   },
   // licenses
+  getSubjectLicensesCascaded(uuid) {
+    return axios.get(`/abyss/oapi/licenses/subject/${uuid}/cascaded`);
+  },
+  postSubjectLicensesCascaded(uuid, license) {
+    return axios.post(`/abyss/oapi/licenses/subject/${uuid}/cascaded`, license);
+  },
   getSubjectLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
   },

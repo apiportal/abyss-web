@@ -28,7 +28,7 @@
             {{ item.environment }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
@@ -36,20 +36,21 @@
               <b-dropdown-item
                 v-if="isUnsubscibeButtonVisible"
                 @click="() => handleDeleteContract(item.uuid)"
+                data-qa="btnUnsubscribe"
               >
                 Unsubscribe
               </b-dropdown-item>
 
               <b-dropdown-header v-if="isLogsButtonVisible">LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
 
               <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
           <td class="actions" v-else-if="routePath === '/app/explore/' && isUnsubscibeButtonVisible">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>

@@ -21,6 +21,22 @@
             <b-form-radio v-model="startWith" value="template">Open API 3.0 Template</b-form-radio>
           </div>
           <div class="start-with-option-content" v-if="startWith === 'template'">
+            <b-form-group
+              id="apiNameGroup"
+              label="API Name*:"
+              :invalid-feedback="apiNameInvalidFeedback"
+              :state="apiNameState"
+            >
+              <b-form-input
+                id="apiNameInput"
+                type="text"
+                v-model="templateObject.info.title"
+                placeholder="API Name"
+                :state="apiNameState"
+                required
+              >
+              </b-form-input>
+            </b-form-group>
             <b-button variant="primary" @click="handleStartWithTemplate">Start</b-button>
           </div>
         </div>
@@ -108,6 +124,17 @@ export default {
       apiStates: state => state.apiStates.items,
       visibilityTypes: state => state.apiVisibilityTypes.items,
     }),
+    apiNameState() {
+      const { title } = this.templateObject.info;
+      return title.length > 0;
+    },
+    apiNameInvalidFeedback() {
+      const { title } = this.templateObject.info;
+      if (title.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
   },
   data() {
     return {
@@ -132,7 +159,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('apis', ['postApis']),
+    ...mapActions('businessApis', ['postBusinessApis']),
     ...mapActions('resources', ['postResources']),
     ...mapActions('permissions', ['postPermissions']),
     handleSubmitStartWithURL() {
@@ -141,7 +168,9 @@ export default {
     },
     handleStartWithTemplate() {
       const now = new Date();
-      const { templateObject, postApis, postResources, postPermissions, currentUser } = this;
+      const { templateObject, postBusinessApis, currentUser,
+        postResources, postPermissions,
+       } = this;
       const { organizationid, uuid } = currentUser;
       const { apiStates, visibilityTypes } = this;
       const apistate = apiStates.find(item => item.name === 'Draft');
@@ -171,7 +200,7 @@ export default {
         subjectid: uuid,
         version: '1.0.0',
       };
-      postApis([api]).then((response) => {
+      postBusinessApis([api]).then((response) => {
         if (response && response.data) {
           const createdApi = response.data[0].response;
           /* // !!! replace after cascade
@@ -185,7 +214,7 @@ export default {
             organizationid: createdApi.organizationid,
             crudsubjectid: createdApi.crudsubjectid,
             resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
-            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
+            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API ${createdApi.uuid}`,
             description: createdApi.openapidocument.info.description,
             resourcerefid: createdApi.uuid,
             isactive: true,

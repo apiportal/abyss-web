@@ -136,7 +136,7 @@ export default {
         .then((response) => {
           const { principalid, sessionid, organizationid, organizationname } = response.data;
           this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname });
-          setTimeout(function () { this.$router.push('/app/dashboard'); }.bind(this), 1000); // eslint-disable-line
+          this.$router.push('/app/explore/');
         })
         .catch((error) => {
           this.isAlertVisible = true;

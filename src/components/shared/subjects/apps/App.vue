@@ -1,17 +1,20 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col">
-        <dt>Name:</dt>
-        <dd>{{ item.subjectname }}</dd>
-        <dt>Url:</dt>
-        <dd>{{ item.url }}</dd>
-        <dt>Description:</dt>
-        <dd>{{ item.description }}</dd>
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
       </dl>
       <dl class="col">
+        <dt>App Name:</dt>
+        <dd>{{ item.subjectname }}</dd>
+        <dt>Description:</dt>
+        <dd>{{ item.description }}</dd>
         <dt>Organization:</dt>
         <dd>{{ getOrganizationName(item.organizationid) }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Url:</dt>
+        <dd>{{ item.url }}</dd>
         <dt>Directory:</dt>
         <dd>{{ getSubjectDirectoryName(item.subjectdirectoryid) }}</dd>
       </dl>

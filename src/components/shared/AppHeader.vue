@@ -57,7 +57,6 @@ export default {
       const { sessionid } = this.user;
       api.deleteSession(sessionid).then(() => {
         this.$store.dispatch('user/resetUser');
-        this.$router.push('/auth/login/');
         setTimeout(function() { location.reload(); }, 10); // eslint-disable-line
       });
     },

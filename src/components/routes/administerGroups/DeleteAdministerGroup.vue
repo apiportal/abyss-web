@@ -1,7 +1,7 @@
 <template>
   <div>
     <ConfirmModal
-      v-if="isGroupsLoaded"
+      v-if="isGroupsLoaded && isMembershipsLoaded"
       title="Are you sure?"
       :text="`${group.displayname} will be deleted. You can't revert your action.`"
       :onClose="handleModalClose"
@@ -20,24 +20,41 @@ export default {
   },
   methods: {
     ...mapActions('groups', ['deleteGroups']),
+    ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'deleteUserGroupMembership']),
     handleModalClose() {
       this.$router.push(`/app/administer-groups/${this.page}`);
     },
     handleModalConfirm() {
-      const { deleteGroups, group } = this;
+      const { deleteGroups, deleteSubjectMemberships, userGroupMembership,
+      deleteUserGroupMembership, group, membership } = this;
       deleteGroups({ ...group }).then(() => {
-        this.$router.push(`/app/administer-groups/${this.page}`);
+        deleteSubjectMemberships({ ...membership }).then(() => {
+          deleteUserGroupMembership({ ...userGroupMembership }).then(() => {
+            this.$router.push(`/app/administer-groups/${this.page}`);
+          });
+        });
       });
     },
   },
   computed: {
     ...mapState({
       groups: state => state.groups.items,
+      memberships: state => state.subjectMemberships.items,
+      userGroupMemberships: state => state.subjectMemberships.userGroup,
+      isMembershipsLoaded: state => state.subjectMemberships.lastUpdatedAt,
       isGroupsLoaded: state => state.groups.lastUpdatedAt,
     }),
     group() {
       const { groupId, groups } = this;
       return groups.find(item => item.uuid === groupId);
+    },
+    membership() {
+      const { groupId, memberships } = this;
+      return memberships.find(item => item.subjectgroupid === groupId);
+    },
+    userGroupMembership() {
+      const { groupId, userGroupMemberships } = this;
+      return userGroupMemberships.find(item => item.subjectgroupid === groupId);
     },
   },
   data() {

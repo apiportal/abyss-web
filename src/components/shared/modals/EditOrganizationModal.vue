@@ -20,40 +20,70 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="organizationNameGroup"
-          >
-            <label>
-              Name:
-              <span class="text-danger">*</span>
-            </label>
-            <b-form-input
-              id="organizationNameInput"
-              type="text"
-              v-model="organizationEditable.name"
-              :state="nameState"
-              placeholder="Name"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
-            id="organizationDescriptionGroup"
-          >
-            <label>
-              Description:
-              <span class="text-danger">*</span>
-            </label>
-            <b-form-textarea
-              id="organizationDescriptionTextarea"
-              v-model="organizationEditable.description"
-              :state="descriptionState"
-              placeholder="Description"
-              :rows="3"
-              required
-            >
-            </b-form-textarea>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group 
+                id="organizationNameGroup"
+              >
+                <label>
+                  Name:
+                  <span class="text-danger">*</span>
+                </label>
+                <b-form-input
+                  id="organizationNameInput"
+                  type="text"
+                  v-model="organizationEditable.name"
+                  :state="nameState"
+                  placeholder="Name"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group 
+                id="organizationDescriptionGroup"
+              >
+                <label>
+                  Description:
+                  <span class="text-danger">*</span>
+                </label>
+                <b-form-textarea
+                  id="organizationDescriptionTextarea"
+                  v-model="organizationEditable.description"
+                  :state="descriptionState"
+                  placeholder="Description"
+                  :rows="3"
+                  required
+                >
+                </b-form-textarea>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="item p-0"> 
+                  <img
+                    v-if="organizationEditable.picture"
+                    :src="organizationEditable.picture" 
+                    :alt="organizationEditable.name" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!organizationEditable.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="organizationEditable.name" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group 
             id="organizationOrganizationIdGroup"
           >
@@ -79,7 +109,7 @@
           <b-form-group id="organizationEnabledGroup">
             <b-form-checkbox
                 id="organizationEnabledChecks"
-                v-model="organization.isactive"
+                v-model="organizationEditable.isactive"
                 :value="true"
                 :unchecked-value="false"
             >
@@ -229,6 +259,9 @@ export default {
   created() { },
   methods: {
     ...mapActions('organizations', ['putOrganizations', 'postOrganizations']),
+    ...mapActions('subjectOrganizations', ['putSubjectOrganizations', 'postSubjectOrganizations']),
+    ...mapActions('resources', ['postResources']),
+    ...mapActions('permissions', ['postPermissions']),
     validateJson(obj) {
       try {
         return JSON.parse(obj);
@@ -240,6 +273,7 @@ export default {
       evt.preventDefault();
       const { putOrganizations,
         postOrganizations,
+        postSubjectOrganizations, postResources, postPermissions,
         organizationEditable,
         onUpdate,
         role } = this;
@@ -262,12 +296,78 @@ export default {
           ...organizationToUpdate,
           crudsubjectid,
         }];
+        console.log('organizationToUpdate: ', organizationToUpdate); // eslint-disable-line
         postOrganizations(organizationToUpdate).then((response) => {
           if (response && response.data) {
+            const createdOrganization = response.data[0].response;
+            /* // !!! replace after cascade
+            // this.$store.dispatch('organization/getOrganizations', {
+              // refresh: true,
+            // });
             onUpdate();
+            // !!! */
+            const userOrganizationToAdd = [{
+              organizationid: createdOrganization.uuid,
+              crudsubjectid: createdOrganization.crudsubjectid,
+              organizationrefid: createdOrganization.uuid,
+              // subjectid: currentUser.uuid,
+              subjectid: createdOrganization.crudsubjectid,
+              isactive: true,
+              isowner: true,
+            }];
+            postSubjectOrganizations(userOrganizationToAdd).then((responseSubjectOrganizations) => {
+              if (responseSubjectOrganizations && responseSubjectOrganizations.data) {
+                const createdUserOrganization = responseSubjectOrganizations.data[0].response;
+                const resourceToAdd = [{
+                  organizationid: createdOrganization.organizationid,
+                  crudsubjectid: createdOrganization.crudsubjectid,
+                  resourcetypeid: '1ea5f7f1-249a-4219-8f86-32d2e8e42b93',
+                  resourcename: `${createdOrganization.name} ORGANIZATON ${createdOrganization.uuid}`,
+                  description: createdOrganization.description,
+                  resourcerefid: createdOrganization.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdOrganization.organizationid,
+                      crudsubjectid: createdOrganization.crudsubjectid,
+                      permission: `Ownership of ${createdOrganization.name} ORGANIZATON by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdOrganization.name} ORGANIZATON by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdUserOrganization.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: '7a2cf490-d8a6-4055-b94b-27d54115ea5f', // ALL_ORGANIZATION_ACTION
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        // this.$store.dispatch('organization/getOrganizations', {
+                        //   refresh: true,
+                        // }); // ??
+                        onUpdate();
+                      }
+                    });
+                  }
+                });
+                // !!!
+              }
+            });
           }
         });
       }
+    },
+    onFileSelected(event) {
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.organizationEditable.picture = reader.result;
+      };
+      reader.readAsDataURL(file);
     },
   },
 };
@@ -300,5 +400,8 @@ export default {
     border-width: 11px;
     margin-left: -11px;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

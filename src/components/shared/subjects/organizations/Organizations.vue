@@ -74,6 +74,7 @@
               :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+            <img class="favimage" :src="item.picture"/>
             {{ item.name }}
           </td>
           <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -86,13 +87,13 @@
             {{ item.organizationowner }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted && item.isorganizationowner">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted && item.isorganizationowner" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item data-qa="IdBtnEditOrganizationUsers" :to="`${routePath}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Organization Users</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditOrganizationUsers" :to="`${routePath}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Organization Users</b-dropdown-item>
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
@@ -220,3 +221,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

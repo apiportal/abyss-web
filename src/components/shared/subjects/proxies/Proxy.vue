@@ -1,8 +1,13 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt style="width: 260px;" class="pb-2">
+          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+        </dt>
+      </dl>
       <dl class="col">
-        <dt>Title:</dt>
+        <dt>Proxy Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
@@ -19,7 +24,7 @@
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
-        <dd>{{ computedBusinessApi[0].openapidocument.info.title }}</dd>
+        <dd>{{ computedBusinessApiName }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
@@ -65,7 +70,7 @@
         :routePath="routePath"
       ></Contracts>
     </div>
-    <div v-if="isBusinessTableVisible && computedBusinessApi">
+    <div v-if="isBusinessTableVisible && computedBusinessApi.length">
       <Apis
         :rows="computedBusinessApi"
         :routePath="routePath"
@@ -78,6 +83,7 @@
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
 
 export default {
   computed: {
@@ -88,10 +94,17 @@ export default {
       return this.businessApis.filter(item =>
         item.uuid === this.item.businessapiid);
     },
+    computedBusinessApiName() {
+      if (this.computedBusinessApi.length) {
+        return this.computedBusinessApi[0].openapidocument.info.title;
+      }
+      return '';
+    },
   },
   components: {
     TbodyCollapsible,
     Icon,
+    Images,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
     Apis: () => import('@/components/shared/subjects/apis/Apis'),

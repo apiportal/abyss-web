@@ -76,16 +76,51 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">
-            <div class="collapsible-content">
-              <b-form-textarea
-                id="textarea1"
-                v-model="item.token"
-                placeholder="Enter something"
-                rows="4"
-                max-rows="6"
-                :disabled="true"
-              />
+          <td colspan="5">           
+            <div class="collapsible-content token-area">
+              <b-input-group>
+                <b-input-group-prepend>
+                  <b-button
+                    v-b-tooltip.hover.left
+                    title="Show/Hide"
+                    variant="light"
+                    @click="isVisible = !isVisible"
+                    data-qa="btnToggleTokenText"
+                  >
+                    <Icon icon="eye" />
+                  </b-button>
+                  <b-button
+                    v-b-tooltip.hover.left
+                    title="Copy Token"
+                    variant="light"
+                    :disabled="!isVisible"
+                    @click="copyTokenText()"
+                    data-qa="btnCopyTokenText"
+                  >
+                    <Icon icon="copy" />
+                  </b-button>
+                </b-input-group-prepend>
+                <b-form-input
+                  id="textarea1"
+                  class="token-area-show"
+                  v-model="item.token"
+                  v-if="isVisible"
+                  rows="4"
+                  max-rows="6"
+                  readonly="readonly"
+                >
+                </b-form-input>
+                <b-form-input
+                  id="textarea2"
+                  class="token-area-hide"
+                  v-if="!isVisible"
+                  placeholder="••••••••••••••••••••••••••••••••••••••••••••••••••"
+                  rows="4"
+                  max-rows="6"
+                  readonly="readonly"
+                >
+                </b-form-input>
+              </b-input-group>
             </div>
           </td>
         </tr>
@@ -153,6 +188,7 @@ export default {
       sortByKey: 'created',
       sortByKeyType: 'string',
       sortDirection: 'desc',
+      isVisible: false,
     };
   },
   methods: {
@@ -188,6 +224,22 @@ export default {
         }
       });
     },
+    copyTokenText() {
+      const tokenText = document.getElementById('textarea1');
+      tokenText.select();
+      document.execCommand('copy');
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.token-area-show {
+  font-size: .70em;
+  height: 40px;
+}
+.token-area-hide {
+  font-size: 1.5em;
+  height: 40px;
+}
+</style>

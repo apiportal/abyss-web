@@ -1,8 +1,25 @@
+/*
+ * Copyright 2019 Verapi Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /* eslint-disable */
 import api from '@/api';
 
 const state = {
   items: [],
+  nextStateId: null,
   lastUpdatedAt: 0,
 };
 
@@ -39,22 +56,6 @@ const actions = {
       return response;
     });
   },
-  getApiContracts: ({ commit }, { apiIdsArray }) => {
-    for (let i = 0; i < apiIdsArray.length; i += 1) {
-      api.getApiContracts(apiIdsArray[i]).then((response) => {
-        if (response && response.data) {
-          commit('setApiContracts', { apiId: apiIdsArray[i], contracts: response.data});
-        } else {
-          commit('setApiContracts', { apiId: apiIdsArray[i], contracts: []});
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          commit('setApiContracts', { appId: apiIdsArray[i], contracts: [] });
-        }
-      });
-    }
-  },
 };
 
 const mutations = {
@@ -76,18 +77,8 @@ const mutations = {
       ...proxies,
     ];
   },
-  setApiContracts: (state, { apiId, contracts }) => {
-    state.items = state.items.map(item => {
-      if (item.uuid === apiId) {
-        return {
-          ...item,
-          contracts,
-        };
-      } else {
-        return item;
-      }
-    });
-    state.lastUpdatedAt = (new Date()).getTime();
+  setNextStateId: (state, id) => {
+    state.nextStateId = id;
   },
 };
 

@@ -1,19 +1,22 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col">
-        <dt>Name:</dt>
-        <dd>{{ organization.name }}</dd>
-        <dt>Parent Organization:</dt>
-        <dd>{{ organization.organizationname }}</dd>
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + organization.picture + ')' }"></dt>
       </dl>
       <dl class="col">
-        <dt>Url:</dt>
-        <dd>{{ organization.url }}</dd>
+        <dt>Organization Name:</dt>
+        <dd>{{ organization.name }}</dd>
         <dt>Description:</dt>
         <dd>{{ organization.description }}</dd>
       </dl>
-      <dl class="col-1">
+      <dl class="col">
+        <dt>Parent Organization:</dt>
+        <dd>{{ organization.organizationname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ organization.url }}</dd>
+      </dl>
+      <dl class="col-2">
         <dt>Users:</dt>
         <dd>{{ organization.organizationusers ? organization.organizationusers.length : 0 }}</dd>
         <dt>APPs:</dt>

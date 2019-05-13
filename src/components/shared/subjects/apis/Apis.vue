@@ -108,18 +108,18 @@
             {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
-              <b-dropdown-item :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 

@@ -25,7 +25,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('apps', ['deleteApps']),
+    ...mapActions('userApps', ['deleteApps']),
     handleModalClose() {
       this.$router.push(this.routePath);
     },
@@ -38,12 +38,12 @@ export default {
   },
   computed: {
     ...mapState({
-      apps: state => state.apps.items,
-      areAppsLoaded: state => state.apps.lastUpdatedAt,
+      userApps: state => state.userApps.items,
+      areAppsLoaded: state => state.userApps.lastUpdatedAt,
     }),
     app() {
-      const { appId, apps } = this;
-      return apps.find(item => item.uuid === appId);
+      const { appId, userApps } = this;
+      return userApps.find(item => item.uuid === appId);
     },
   },
   data() {

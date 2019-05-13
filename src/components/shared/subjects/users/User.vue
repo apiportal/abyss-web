@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
+      <dl class="col">
+          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="square" style="height:200px;"></Images>
       </dl>
   
       <dl class="col">
@@ -127,6 +127,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
+import Images from '@/components/shared/Images';
 import Organizations from '@/components/shared/subjects/organizations/Organizations';
 
 export default {
@@ -144,6 +145,7 @@ export default {
   components: {
     Icon,
     Groups,
+    Images,
     Organizations,
   },
   computed: {

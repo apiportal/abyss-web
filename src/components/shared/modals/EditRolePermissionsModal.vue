@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="p-0"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -26,6 +27,7 @@
               :autocompleteOptions="permissionsEditable"
               :onDeleteChip="handleDeleteRolePermissions"
               :onAddChip="handleAddRolePermissions"
+              :showAddChip="false"
               label="Role Permissions"
             />
           </div>
@@ -135,7 +137,7 @@ export default {
     return {
       permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
         const rolepermission = rolePermissions.find(
-          p => p.permission.subjectid === this.selectedRole.uuid);
+          o => o.permission.subjectid === this.selectedRole.uuid);
         const isAttached = Boolean(rolepermission);
         const sortTime = (new Date()).getTime();
         return {

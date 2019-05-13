@@ -30,9 +30,8 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       visibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.licenses.items,
       subjectLicenses: state => state.subjectLicenses.items,
-      areLicensesLoaded: state => state.licenses.lastUpdatedAt,
+      areLicensesLoaded: state => state.subjectLicenses.lastUpdatedAt,
       areVisibilityTypesLoaded: state => state.apiVisibilityTypes.lastUpdatedAt,
     }),
   },
@@ -52,7 +51,7 @@ export default {
       this.$router.push(this.routePath);
     },
     getLicense(licenseId) {
-      return this.licenses.find(item => item.uuid === licenseId);
+      return this.subjectLicenses.find(item => item.uuid === licenseId);
     },
   },
 };

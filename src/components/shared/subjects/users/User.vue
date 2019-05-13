@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="square" style="height:200px;"></Images>
+          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="circle"></Images>
       </dl>
   
       <dl class="col">
@@ -97,7 +97,7 @@
         v-b-tooltip.hover
         title="Organizations of User"
         @click="listUserOrganizations"
-        :class="{'active': ShowOrganizationsOfUser}"
+        :class="{'active': isShowUserOrganizations}"
       >
       <Icon icon="user-friends" /> Organizations of User
       <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>

@@ -1,17 +1,17 @@
 <template>
   <div>
-    <EditApiLifeCycle
+    <EditBusinessApiLifeCycle
       :routePath="`/app/my-apis/businesses/${page}`"
     />
   </div>
 </template>
 
 <script>
-import EditApiLifeCycle from '@/components/shared/subjects/apis/EditApiLifeCycle';
+import EditBusinessApiLifeCycle from '@/components/shared/subjects/apis/EditBusinessApiLifeCycle';
 
 export default {
   components: {
-    EditApiLifeCycle,
+    EditBusinessApiLifeCycle,
   },
   data() {
     return {

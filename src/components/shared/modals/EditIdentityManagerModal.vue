@@ -159,7 +159,7 @@
             <h6>Configure Directory</h6>
             <DynamicForm
               :formTemplate="directoryConfigurationTemplate"
-              :formData="{ LdapConfiguration: subjectDirectoryEditable.directoryattributes }"
+              :formData="{ configuration: subjectDirectoryEditable.directoryattributes }"
               :onUpdate="handleConfigurationUpdate"
             />
           </div>
@@ -365,7 +365,7 @@ export default {
       this.subjectDirectoryEditable = {
         ...subjectDirectoryEditable,
         directoryattributes: {
-          ...newDirecoryConfiguration.LdapConfiguration,
+          ...newDirecoryConfiguration.configuration,
         },
       };
     },

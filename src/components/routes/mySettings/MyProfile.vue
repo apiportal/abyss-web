@@ -137,11 +137,12 @@
                 :hideFooter="true"
                 :hideHeader="true"
                 :dismissable="true"
+                :variant="this.alertResponse.variant"
               />
               <div class="py-3">
                 <b-form-group>
                   <label class="form-label">
-                    Old Password
+                    Current Password
                   </label>
                   <b-form-input v-model="form.oldpassword" type="password" placeholder="********" required
                     class="form-control"></b-form-input>
@@ -260,6 +261,7 @@ export default {
         message: '',
         moreinfo: '',
         recommendation: '',
+        variant: '',
       },
       form: {
         oldpassword: '',
@@ -403,11 +405,15 @@ export default {
       evt.preventDefault();
       api.putChangePassword(this.user.uuid, this.form)
         .then((response) => {
-          console.log(response); // eslint-disable-line no-console
+          this.isAlertVisible = true;
+          this.alertResponse.message = 'Password Changed Successfully.';
+          this.alertResponse.moreinfo = response.data.usermessage;
+          this.alertResponse.variant = 'success';
         })
         .catch((e) => {
           this.isAlertVisible = true;
           this.alertResponse.message = e.data.usermessage;
+          this.alertResponse.variant = 'danger';
         });
     },
   },

@@ -1,6 +1,9 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + organization.picture + ')' }"></dt>
+      </dl>
       <dl class="col">
         <dt>Organization Name:</dt>
         <dd>{{ organization.name }}</dd>

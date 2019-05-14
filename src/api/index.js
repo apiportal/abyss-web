@@ -331,9 +331,9 @@ export default {
     return axios.put(`/abyss/oapi/subjects/apps/cascaded/${uuid}`, rest);
   },
   // SubjectApps > explore
-  getSubjectApps(uuid) {
-    return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
-    // return axios.get('/abyss/oapi/subject-memberships/user-app/');
+  getSubjectApps() {
+    // return axios.get(`/abyss/oapi/subject-apps/subject/${uuid}`);
+    return axios.get('/abyss/oapi/subject-memberships/user-app/');
   },
   /* putSubjectApps(subjectapp) {
     const { uuid, created, deleted, isdeleted, updated, ...rest } = subjectapp;
@@ -548,6 +548,9 @@ export default {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },
   // api-licenses
+  getExploreApis() {
+    return axios.get('/abyss/oapi/apis/proxies/explore');
+  },
   getExploreApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },

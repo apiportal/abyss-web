@@ -11,20 +11,20 @@
             @click="handleModalOpen(cardItem.uuid)"
           >
             <div slot="header" class="mb-0">
-              <Images :uuid="cardItem.uuid" :itext="cardItem.openapidocument.info.title" :color="cardItem.color" type="apis" shape="rectangle"></Images>
+              <Images :uuid="cardItem.uuid" :itext="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle"></Images>
             </div>
             <div class="clearfixx">
               <div class="float-right">
                 <small>{{ cardItem.apistatename }}</small>
                 <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
               </div>
-              <h6 class="mb-0">{{ cardItem.openapidocument.info.title }}</h6>
+              <h6 class="mb-0">{{ cardItem.apititle }}</h6>
               <b-card-text>
                 <div>
-                  <small>{{ cardItem.openapidocument.info.version }}</small>
+                  <small>{{ cardItem.apiversion }}</small>
                 </div>
-                <div class="mt-2">{{ cardItem.ownername }}</div>
-                <div class="card-description">{{ subStr(cardItem.openapidocument.info.description) }}</div>
+                <div class="mt-2">{{ cardItem.apiowner }}</div>
+                <div class="card-description">{{ subStr(cardItem.apidescription) }}</div>
               </b-card-text>
             </div>
           </b-card>
@@ -53,46 +53,30 @@ export default {
       currentUser: state => state.user,
       apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
-      users: state => state.users.items,
+      // users: state => state.users.items,
     }),
     cardItems() {
-      const { apis, apiStates, users } = this;
+      const { apis, apiStates } = this;
       const getApiStateName = (apistateid) => {
         const apiState = apiStates.find(item => item.uuid === apistateid) || {};
         return apiState.name || apistateid;
       };
-      const getOwnerName = (subjectId) => {
-        const user = users.find(item => item.uuid === subjectId) || {};
-        return user.displayname || subjectId;
-      };
-      return apis
-        .map(item => ({
-          ...item,
-          apistatename: getApiStateName(item.apistateid),
-          ownername: getOwnerName(item.subjectid),
-        }))
-        .filter(item => (
-          item.apistatename !== 'Removed' &&
-          item.isproxyapi &&
-          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
-          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
-          !item.isdeleted
-        ));
+      return apis.map(item => ({
+        ...item,
+        apistatename: getApiStateName(item.apistateid),
+      }));
     },
   },
   mounted() {
     this.$store.dispatch('exploreApis/getExploreApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('licenses/getLicenses', {});
-    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('userApps/getApps', { uuid: this.currentUser.uuid });
     this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('resources/getResources', {});
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
-    this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
+    this.$store.dispatch('resources/getResources', {});
   },
   methods: {
     subStr(i) {

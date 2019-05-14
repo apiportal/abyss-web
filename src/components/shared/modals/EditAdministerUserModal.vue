@@ -20,40 +20,71 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="firstNameGroup"
-            label="First Name*:"
-            label-for="firstNameInput"
-            :invalid-feedback="firstNameInvalidFeedback"
-            :state="firstNameState"
-          >
-            <b-form-input
-              id="firstNameInput"
-              type="text"
-              v-model="userEditable.firstname"
-              placeholder="First Name"
-              :state="firstNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
-            id="lastNameGroup"
-            label="Last Name*:"
-            label-for="lastNameInput"
-            :invalid-feedback="lastNameInvalidFeedback"
-            :state="lastNameState"
-          >
-            <b-form-input
-              id="lastNameInput"
-              type="text"
-              v-model="userEditable.lastname"
-              placeholder="Last Name"
-              :state="lastNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group 
+                id="firstNameGroup"
+                label="First Name*:"
+                label-for="firstNameInput"
+                :invalid-feedback="firstNameInvalidFeedback"
+                :state="firstNameState"
+              >
+                <b-form-input
+                  id="firstNameInput"
+                  type="text"
+                  v-model="userEditable.firstname"
+                  placeholder="First Name"
+                  :state="firstNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group 
+                id="lastNameGroup"
+                label="Last Name*:"
+                label-for="lastNameInput"
+                :invalid-feedback="lastNameInvalidFeedback"
+                :state="lastNameState"
+              >
+                <b-form-input
+                  id="lastNameInput"
+                  type="text"
+                  v-model="userEditable.lastname"
+                  placeholder="Last Name"
+                  :state="lastNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="p-0">
+                  <img
+                    v-if="userEditable.picture"
+                    :src="userEditable.picture"
+                    :alt="userEditable.displayname"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 175px;"
+                    v-b-tooltip.hover
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  />
+                  <img
+                    v-if="!userEditable.picture"
+                    src="@/assets/avatar.jpg"
+                    :alt="userEditable.displayname"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 175px;"
+                    v-b-tooltip.hover
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*" />
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group 
             id="displayNameGroup"
             label="Display Name*:"
@@ -513,6 +544,15 @@ export default {
     togglePasswordVisibility() {
       this.isPasswordVisible = !this.isPasswordVisible;
     },
+    onFileSelected(event) {
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.userEditable.picture = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
   },
 };
 </script>
@@ -522,5 +562,8 @@ export default {
   &.edit-administer-user {
     padding: 0;
   }
+}
+input[type="file"] {
+  display: none;
 }
 </style>

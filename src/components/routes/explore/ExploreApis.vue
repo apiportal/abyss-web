@@ -1,7 +1,7 @@
 <template>
   <div>
     <ExploreModal
-      v-if="isApisLoaded && isLicensesLoaded"
+      v-if="isApisLoaded"
       :onClose="handleModalClose"
       :hideHeader="true"
       :api="getCardItem(apiId)"
@@ -22,8 +22,6 @@ export default {
     ...mapState({
       apis: state => state.exploreApis.items,
       isApisLoaded: state => state.exploreApis.lastUpdatedAt > 0,
-      licenses: state => state.licenses.items,
-      isLicensesLoaded: state => state.licenses.lastUpdatedAt > 0,
     }),
   },
   methods: {

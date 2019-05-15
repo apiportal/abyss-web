@@ -88,7 +88,7 @@
           <b-form-group id="groupEnabledGroup">
             <b-form-checkbox
               id="groupEnabledChecks"
-              v-model="groupEditable.isactivated"
+              v-model="checked"
               :value="true"
               :unchecked-value="false"
             >
@@ -449,6 +449,7 @@ export default {
     return {
       groupEditable: JSON.parse(JSON.stringify(group)),
       isPasswordInputVisible: (role === 'add'),
+      checked: true,
     };
   },
   methods: {

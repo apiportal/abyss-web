@@ -63,7 +63,7 @@ export default {
       const { inputValue, required } = this;
 
       if (required) {
-        return inputValue.length > 0;
+        return inputValue.toString().length > 0;
       }
 
       return true;

@@ -11,21 +11,20 @@
             @click="handleModalOpen(cardItem.uuid)"
           >
             <div slot="header" class="mb-0">
-              <div class="thumb-image cursor-pointer" v-if="cardItem.image" :style="{ 'background-image': 'url(' + cardItem.image + ')' }"></div>
-              <div class="thumb-image cursor-pointer" v-if="!cardItem.image" :style="{ 'background-color': cardItem.color }">{{cardItem.openapidocument.info.title.substring(0, 1)}}</div>
+              <Images :uuid="cardItem.uuid" :itext="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle"></Images>
             </div>
             <div class="clearfixx">
               <div class="float-right">
                 <small>{{ cardItem.apistatename }}</small>
                 <Icon icon="circle" :class="`state${cardItem.apistatename}`"/>
               </div>
-              <h6 class="mb-0">{{ cardItem.openapidocument.info.title }}</h6>
+              <h6 class="mb-0">{{ cardItem.apititle }}</h6>
               <b-card-text>
                 <div>
-                  <small>{{ cardItem.openapidocument.info.version }}</small>
+                  <small>{{ cardItem.apiversion }}</small>
                 </div>
-                <div class="mt-2">{{ cardItem.ownername }}</div>
-                <div class="card-description">{{ subStr(cardItem.openapidocument.info.description) }}</div>
+                <div class="mt-2">{{ cardItem.apiowner }}</div>
+                <div class="card-description">{{ subStr(cardItem.apidescription) }}</div>
               </b-card-text>
             </div>
           </b-card>
@@ -39,10 +38,12 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
 
 export default {
   components: {
     Icon,
+    Images,
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'explore');
@@ -52,45 +53,30 @@ export default {
       currentUser: state => state.user,
       apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
-      users: state => state.users.items,
+      // users: state => state.users.items,
     }),
     cardItems() {
-      const { apis, apiStates, users } = this;
+      const { apis, apiStates } = this;
       const getApiStateName = (apistateid) => {
         const apiState = apiStates.find(item => item.uuid === apistateid) || {};
         return apiState.name || apistateid;
       };
-      const getOwnerName = (subjectId) => {
-        const user = users.find(item => item.uuid === subjectId) || {};
-        return user.displayname || subjectId;
-      };
-      return apis
-        .filter(item => (
-          item.isproxyapi &&
-          item.apivisibilityid === 'e63c2874-aa12-433c-9dcf-65c1e8738a14' &&
-          // item.apistateid === '1425993f-f6be-4ca0-84fe-8a83e983ffd9' && // for promoted state
-          !item.isdeleted
-        ))
-        .map(item => ({
-          ...item,
-          apistatename: getApiStateName(item.apistateid),
-          ownername: getOwnerName(item.subjectid),
-        }));
+      return apis.map(item => ({
+        ...item,
+        apistatename: getApiStateName(item.apistateid),
+      }));
     },
   },
   mounted() {
     this.$store.dispatch('exploreApis/getExploreApis', {});
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('licenses/getLicenses', {});
-    this.$store.dispatch('apps/getApps', {});
+    this.$store.dispatch('userApps/getApps', { uuid: this.currentUser.uuid });
     this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('resources/getResources', {});
     this.$store.dispatch('resourceTypes/getResourceTypes', {});
     this.$store.dispatch('resourceActions/getResourceActions', {});
-    this.$store.dispatch('subjectApps/getSubjectApps', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
+    this.$store.dispatch('resources/getResources', {});
   },
   methods: {
     subStr(i) {
@@ -137,26 +123,6 @@ export default {
   }
   .card-body {
     padding: 1rem;
-  }
-  .thumb-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 4rem;
-    background-color: #177ec1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    position: relative;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
-    &::before {
-      display: block;
-      content: "";
-      padding-top: 56.25%;
-    }
   }
   .card-description {
     font-size: .90rem;

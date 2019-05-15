@@ -3,13 +3,15 @@
     <div class="app-sidenav-content">
       <b-form class="switch-organization">
         <label class="text-uppercase font-weight-bold">Organization</label>
-        <b-form-select
-          :value="currentUser.organizationid"
-          :options="organizationOptions"
-          @change="handleOrganizationChange"
-          data-qa="sideMenuSwitchOrganization"
-          style="width: 100%;"
-        ></b-form-select>
+        <div class="row">
+          <b-form-select
+            :value="currentUser.organizationid"
+            :options="organizationOptions"
+            @change="handleOrganizationChange"
+            data-qa="sideMenuSwitchOrganization"
+            style="width: 100%;"
+          ></b-form-select>
+        </div>
       </b-form>
       <ul class="sidenav-links">
         <li>
@@ -37,11 +39,16 @@
 
           <b-link
             to="/app/my-licenses/my-licenses/1"
-            :class="`${(currentPage.rootPath === 'my-licenses' || currentPage.rootPath === 'my-policies' || currentPage.rootPath === 'policy-types') ? 'selected' : ''}`"
-            data-qa="sideMenuMyLicenses"
-          >
+            :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
           </b-link> 
+          
+          <b-link
+            to="/app/my-policies/my-policies/1"
+            :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
+            <span class="route-icon"><Icon icon="atlas" /></span> My Policies
+          </b-link> 
+
 
           <p>ADMIN</p>
           
@@ -156,11 +163,5 @@ export default {
   font-size: 0.8em;
   font-style: italic;
   color:lightcoral;
-}
-.switch-organization {
-  label {
-    color: silver;
-    font-size: .75rem;
-  }
 }
 </style>

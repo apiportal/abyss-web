@@ -71,6 +71,12 @@
     overflow-y: auto;
   }
   .form-control::-webkit-input-placeholder{color:#ccc;opacity:1}.form-control::-moz-placeholder{color:#ccc;opacity:1}.form-control:-ms-input-placeholder{color:#ccc;opacity:1}.form-control::-ms-input-placeholder{color:#ccc;opacity:1}.form-control::placeholder{color:#ccc;opacity:1}
+  .tab-pane:focus {
+    outline: none;
+  }
+  textarea[rows="2"] {
+    height: calc(1.5em + .75rem + 2px);
+  }
   // h1, h2, h3, h4, h5, h6 {
   //   margin-bottom: .5rem;
   //   font-weight: 300;
@@ -251,6 +257,21 @@
     background-color: $bg-body-tint;
     z-index: 1;
   }
+  .page-navbar {
+      border-top: 1px solid $border-color-light;
+      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
+      padding: .5rem 2rem .5rem 2rem;
+      background-color: $bg-body-tint;
+      z-index: 1;
+    }
+  .tabs-container {
+    padding: 0rem 2rem 2rem 2rem;
+    .nav-tabs {
+      box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
+      background-color: $bg-body-tint;
+      margin-bottom: 2rem;
+    }
+  }
   .page-header-nested {
     flex: 50px 0 0;
     padding: 0 2rem 0 2rem;
@@ -297,7 +318,7 @@
       // border-color: $border-color-darker;
     }
   }
-  .page-tabs {
+  .page-tabs ,.nav-tabs {
     margin-bottom: 1rem;
     border-bottom: 1px solid $border-color-light;
     border-top: 1px solid $border-color-light;
@@ -512,6 +533,7 @@
       td.number {
         width: 54px;
         white-space: nowrap;
+        text-align: center;
       }
       td.type {
         width: 150px;

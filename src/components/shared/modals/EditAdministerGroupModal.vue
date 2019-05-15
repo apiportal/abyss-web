@@ -20,41 +20,71 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
-            id="groupNameGroup"
-            label="Group Name:"
-            label-for="groupNameInput"
-            :invalid-feedback="groupNameInvalidFeedback"
-            :state="groupNameState"
-          >
-            <b-form-input
-              id="groupNameInput"
-              type="text"
-              v-model="groupEditable.subjectname"
-              placeholder="Group Name"
-              :state="groupNameState"
-              :formatter="setValidSubjectName"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group 
-            id="displayNameGroup"
-            label="Display Name:"
-            label-for="displayNameInput"
-            :invalid-feedback="displayNameInvalidFeedback"
-            :state="displayNameState"
-          >
-            <b-form-input
-              id="displayNameInput"
-              type="text"
-              v-model="groupEditable.displayname"
-              placeholder="Display Name"
-              :state="displayNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md=9>
+              <b-form-group 
+                id="groupNameGroup"
+                label="Group Names:"
+                label-for="groupNameInput"
+                :invalid-feedback="groupNameInvalidFeedback"
+                :state="groupNameState"
+              >
+                <b-form-input
+                  id="groupNameInput"
+                  type="text"
+                  v-model="groupEditable.subjectname"
+                  placeholder="Group Name"
+                  :state="groupNameState"
+                  :formatter="setValidSubjectName"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group 
+                id="displayNameGroup"
+                label="Display Name:"
+                label-for="displayNameInput"
+                :invalid-feedback="displayNameInvalidFeedback"
+                :state="displayNameState"
+              >
+                <b-form-input
+                  id="displayNameInput"
+                  type="text"
+                  v-model="groupEditable.displayname"
+                  placeholder="Display Name"
+                  :state="displayNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col md=3>
+              <div class="d-flex">
+                <div class="p-0"> 
+                  <img
+                    v-if="groupEditable.picture"
+                    :src="groupEditable.picture" 
+                    :alt="groupEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 175px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!groupEditable.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="groupEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 175px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group id="groupEnabledGroup">
             <b-form-checkbox
               id="groupEnabledChecks"
@@ -423,16 +453,19 @@ export default {
   },
   methods: {
     ...mapActions('groups', ['putGroups', 'postGroups']),
+    ...mapActions('subjectMemberships', ['postUserGroupMembership', 'postSubjectMemberships']),
     setValidSubjectName(value) {
       return value.replace(/ /g, '').toLowerCase();
     },
     handleSubmit(evt) {
       evt.preventDefault();
-      const { groupEditable, putGroups, postGroups, onUpdate, role } = this;
+      const { groupEditable, putGroups, postGroups, onUpdate,
+        role, postUserGroupMembership, postSubjectMemberships } = this;
       const { description, url, effectiveenddate, displayname,
         subjectname, picture, distinguishedname, uniqueid,
         phonebusiness, phoneextension, phonehome, phonemobile,
-        jobtitle, department, company } = groupEditable;
+        jobtitle, department, company, subjectdirectoryid,
+        organizationid, subjecttypeid } = groupEditable;
       let groupToUpdate = {
         ...groupEditable,
         firstname: displayname,
@@ -453,6 +486,14 @@ export default {
         company: (company === null ? '' : company),
         effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
       };
+      let membershipToUpdate = {
+        organizationid: (organizationid === null ? '' : organizationid),
+        subjectid: this.currentUser.props.uuid,
+        subjectdirectoryid: (subjectdirectoryid === null ? '' : subjectdirectoryid),
+        subjecttypeid: '21371a15-04f8-445e-a899-006ee11c0e09',
+        subjectgrouptypeid: subjecttypeid,
+        isactive: true,
+      };
 
       if (role === 'edit') {
         putGroups(groupToUpdate).then((response) => {
@@ -470,10 +511,32 @@ export default {
         }];
         postGroups(groupToUpdate).then((response) => {
           if (response && response.data) {
-            onUpdate();
+            membershipToUpdate = [{
+              ...membershipToUpdate,
+              crudsubjectid,
+              subjectgroupid: response.data[0].response.uuid,
+            }];
+            postUserGroupMembership(membershipToUpdate).then((res) => {
+              if (res && res.data) {
+                postSubjectMemberships(membershipToUpdate).then((r) => {
+                  if (r && r.data) {
+                    onUpdate();
+                  }
+                });
+              }
+            });
           }
         });
       }
+    },
+    onFileSelected(event) {
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.groupEditable.picture = reader.result;
+      };
+      reader.readAsDataURL(file);
     },
   },
 };
@@ -484,5 +547,8 @@ export default {
   &.edit-administer-group {
     padding: 0;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

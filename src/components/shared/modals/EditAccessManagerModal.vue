@@ -133,7 +133,7 @@
             <h6>Configure Access Manager</h6>
             <DynamicForm
               :formTemplate="accessManagerConfigurationTemplate"
-              :formData="{ AccessManagerConfiguration: accessManagerEditable.accessmanagerattributes }"
+              :formData="{ configuration: accessManagerEditable.accessmanagerattributes }"
               :onUpdate="handleConfigurationUpdate"
             />
           </div>
@@ -331,7 +331,7 @@ export default {
       this.accessManagerEditable = {
         ...accessManagerEditable,
         accessmanagerattributes: {
-          ...newDirecoryConfiguration.AccessManagerConfiguration,
+          ...newDirecoryConfiguration.configuration,
         },
       };
     },

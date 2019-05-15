@@ -97,6 +97,7 @@
       >
         <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
+            <Images :uuid="proxyItem.uuid" :itext="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -126,15 +127,15 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="IdBtnEditApi" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit Proxy API</b-dropdown-item>
 
-              <b-dropdown-item data-qa="IdBtnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 
-              <b-dropdown-item data-qa="IdBtnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item :to="`${routePath}/logs/${proxyItem.uuid}/api/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${proxyItem.uuid}/api/1`">All</b-dropdown-item>
 
               <b-dropdown-header><code>{{ proxyItem.uuid }}</code></b-dropdown-header>
 
@@ -166,6 +167,7 @@ import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
 
 export default {
   props: {
@@ -270,6 +272,7 @@ export default {
     Icon,
     SortBy,
     Proxy,
+    Images,
   },
   data() {
     return {
@@ -307,3 +310,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

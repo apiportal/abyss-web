@@ -25,7 +25,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('licenses', ['deleteLicenses']),
+    ...mapActions('subjectLicenses', ['deleteLicenses']),
     handleModalClose() {
       this.$router.push(this.routePath);
     },

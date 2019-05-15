@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + user.picture + ')' }"></dt>
+      <dl class="col">
+          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="circle"></Images>
       </dl>
   
       <dl class="col">
@@ -17,9 +17,33 @@
       </dl>
   
       <dl class="col">
+        <dt>Description:</dt>
+        <dd>{{ user.description }}</dd>
+        <dt>Directory:</dt>
+        <dd>{{ user.directoryname }}</dd>
+        <dt>Url:</dt>
+        <dd>{{ user.url }}</dd>
+        <dt>Email:</dt>
+        <dd>{{ user.email }}</dd>
+        <dt>Secondary Email:</dt>
+        <dd>{{ secondaryEmail }}</dd>
+
+      </dl>
+  
+      <dl class="col">
         <dt>Main Organization:</dt>
         <dd>{{ user.organizationname }}</dd>
-        <dt>Organizations:</dt>
+        <!-- <dt>Member of Organizations:</dt>
+        <dd> -->
+          <!-- <span 
+            v-for="(organization, index) in computedUserOrganizations"
+            v-bind:key="index"
+          >
+            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
+          </span>
+        </dd> -->
+
+        <dt>Member of Organizations:</dt>
         <dd>
           <span 
             v-for="(organization, index) in computedUserOrganizations"
@@ -28,18 +52,9 @@
             {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
           </span>
         </dd>
-        <dt>Directory:</dt>
-        <dd>{{ user.directoryname }}</dd>
-        <dt>Url:</dt>
-        <dd>{{ user.url }}</dd>
-      </dl>
-  
-      <dl class="col">
-        <dt>Email:</dt>
-        <dd>{{ user.email }}</dd>
-        <dt>Secondary Email:</dt>
-        <dd>{{ secondaryEmail }}</dd>
-        <dt>Groups:</dt>
+
+
+        <dt>Member of Groups:</dt>
         <dd>
           <span 
             v-for="(group, index) in userGroups"
@@ -48,8 +63,6 @@
             {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
           </span>
         </dd>
-        <dt>Description:</dt>
-        <dd>{{ user.description }}</dd>
       </dl>
       
       <dl class="col">
@@ -69,19 +82,43 @@
       <b-button
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Groups of User"
         @click="listUserGroups"
         :class="{'active': isShowUserGroups}"
       >
-      <Icon icon="user-friends" /> Groups
+      <Icon icon="user-friends" /> Groups of User
       <b-badge pill>{{ userGroups.length }}</b-badge>
       </b-button>
+      
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Organizations of User"
+        @click="listUserOrganizations"
+        :class="{'active': isShowUserOrganizations}"
+      >
+      <Icon icon="user-friends" /> Organizations of User
+      <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
+      </b-button>
+
     </div>
     <div v-if="isShowUserGroups">
       <Groups
         :rows="userGroups"
         :routePath="`/app/administer-users/users/${page}`"
-      />
+      ></Groups>
     </div>
+    <div v-if="isShowUserOrganizations">
+      <Organizations
+        :rows="computedUserOrganizations"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Organizations>
+    </div>
+
+
+
   </div>
 </template>
 
@@ -90,6 +127,8 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
+import Images from '@/components/shared/Images';
+import Organizations from '@/components/shared/subjects/organizations/Organizations';
 
 export default {
   props: {
@@ -106,6 +145,8 @@ export default {
   components: {
     Icon,
     Groups,
+    Images,
+    Organizations,
   },
   computed: {
     ...mapState({
@@ -129,8 +170,7 @@ export default {
       return userGroups;
     },
     computedUserOrganizations() {
-      const userOrganizations = this.organizations.filter(item =>
-        this.userOrganizations.some(f =>
+      const userOrganizations = this.organizations.filter(item => this.userOrganizations.some(f =>
           f.organizationrefid === item.uuid && f.subjectid === this.user.uuid,
         ),
       );
@@ -191,6 +231,15 @@ export default {
     },
     listUserGroups() {
       this.isShowUserGroups = !this.isShowUserGroups;
+      if (this.isShowUserGroups) {
+        this.isShowUserOrganizations = false;
+      }
+    },
+    listUserOrganizations() {
+      this.isShowUserOrganizations = !this.isShowUserOrganizations;
+      if (this.isShowUserOrganizations) {
+        this.isShowUserGroups = false;
+      }
     },
   },
   data() {
@@ -200,6 +249,7 @@ export default {
       subjectgroup: [],
       userOrganizations: [],
       isShowUserGroups: false,
+      isShowUserOrganizations: false,
     };
   },
 };

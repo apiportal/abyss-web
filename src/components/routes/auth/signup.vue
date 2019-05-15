@@ -109,6 +109,7 @@
           type="password"
           placeholder="********"
           :state="passwordState"
+          autocomplete="new-password"
           required
           data-qa="formPassword"
         ></b-form-input>

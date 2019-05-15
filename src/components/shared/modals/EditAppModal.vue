@@ -20,39 +20,69 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group
-            id="appNameGroup"
-            label="App Name*:"
-            :invalid-feedback="appNameInvalidFeedback"
-            :state="appNameState"
-          >
-            <b-form-input
-              id="appNameInput"
-              type="text"
-              v-model="appEditable.displayname"
-              placeholder="App Name"
-              :state="appNameState"
-              required
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group
-            id="descriptionGroup"
-            label="Description*:"
-            :invalid-feedback="appDescriptionInvalidFeedback"
-            :state="appDescriptionState"
-          >
-            <b-form-textarea
-              id="descriptionTextarea"
-              type="text"
-              v-model="appEditable.description"
-              placeholder="Description"
-              :state="appDescriptionState"
-              :rows="3"
-              required
-            >
-            </b-form-textarea>
-          </b-form-group>
+          <b-row align-v="center">
+            <b-col md="8">
+              <b-form-group
+                id="appNameGroup"
+                label="App Name*:"
+                :invalid-feedback="appNameInvalidFeedback"
+                :state="appNameState"
+              >
+                <b-form-input
+                  id="appNameInput"
+                  type="text"
+                  v-model="appEditable.displayname"
+                  placeholder="App Name"
+                  :state="appNameState"
+                  required
+                >
+                </b-form-input>
+              </b-form-group>
+              <b-form-group
+                id="descriptionGroup"
+                label="Description*:"
+                :invalid-feedback="appDescriptionInvalidFeedback"
+                :state="appDescriptionState"
+              >
+                <b-form-textarea
+                  id="descriptionTextarea"
+                  type="text"
+                  v-model="appEditable.description"
+                  placeholder="Description"
+                  :state="appDescriptionState"
+                  :rows="3"
+                  required
+                >
+                </b-form-textarea>
+              </b-form-group>
+            </b-col>
+            <b-col md="4">
+              <div class="d-flex justify-content-center">
+                <div class="item p-0"> 
+                  <img
+                    v-if="appEditable.picture"
+                    :src="appEditable.picture" 
+                    :alt="appEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()"
+                  >
+                  <img 
+                    v-if="!appEditable.picture" 
+                    src="@/assets/avatar.jpg" 
+                    :alt="appEditable.displayname" 
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
+                    style="width: 200px;" 
+                    v-b-tooltip.hover 
+                    title="Click to change picture"
+                    @click="$refs.fileInput.click()" />
+                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
           <b-form-group id="appActiveGroup">
             <b-form-checkbox
               id="appActiveCheckbox"
@@ -313,6 +343,15 @@ export default {
         });
       }
     },
+    onFileSelected(event) {
+      event.preventDefault();
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.appEditable.picture = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
   },
 };
 </script>
@@ -322,5 +361,8 @@ export default {
   &.edit-my-app {
     padding: 0;
   }
+}
+input[type="file"] {
+    display: none;
 }
 </style>

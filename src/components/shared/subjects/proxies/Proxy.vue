@@ -1,6 +1,11 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
+      <dl class="col-auto">
+        <dt style="width: 260px;" class="pb-2">
+          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+        </dt>
+      </dl>
       <dl class="col">
         <dt>Proxy Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
@@ -78,6 +83,7 @@
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
 
 export default {
   computed: {
@@ -98,6 +104,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
+    Images,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
     Apis: () => import('@/components/shared/subjects/apis/Apis'),

@@ -3,13 +3,15 @@
     <EditRolePermissionsModal
       v-if="
         isRolesLoaded &&
-        isRolePermissionsLoaded
+        isRolePermissionsLoaded &&
+        isPermissionsLoaded
       "
       role="edit"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
       :selectedRole="roles.find(item => item.uuid === selectedRoleId)"
       :rolePermissions="rolePermissions"
+      :permissions="permissions"
     />
   </div>
 </template>
@@ -35,6 +37,7 @@
         roles: state => state.roles.items,
         permissions: state => state.permissions.items,
         isRolesLoaded: state => state.roles.lastUpdatedAt,
+        isPermissionsLoaded: state => state.permissions.lastUpdatedAt,
       }),
     },
     methods: {
@@ -70,6 +73,7 @@
     mounted() {
       this.getPermissions();
       this.$store.dispatch('roles/getRoles', {});
+      this.$store.dispatch('permissions/getPermissions', {});
     },
   };
 </script>

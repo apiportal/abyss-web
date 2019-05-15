@@ -114,6 +114,7 @@
               />
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+              <img class="favimage" :src="item.picture"/>
               {{ item.displayname }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -343,3 +344,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

@@ -4,14 +4,14 @@
       v-if="isSubjectDirectoriesLoaded"
       title="Are you sure?"
       :text="`${subjectDirectory.directoryname} will be deleted. You can't revert your action.`"
-      :onClose="handleDeleteIdentityManagerModalClose"
-      :onConfirm="handleDeleteIdentityManagerModalConfirm"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
     />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
@@ -19,11 +19,15 @@ export default {
     ConfirmModal,
   },
   methods: {
-    handleDeleteIdentityManagerModalClose() {
+    ...mapActions('subjectDirectories', ['deleteSubjectDirectories']),
+    handleModalClose() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
-    handleDeleteIdentityManagerModalConfirm() {
-      this.$router.push(`/app/identity-managers/${this.page}`);
+    handleModalConfirm() {
+      const { deleteSubjectDirectories, subjectDirectory } = this;
+      deleteSubjectDirectories({ ...subjectDirectory }).then(() => {
+        this.$router.push(`/app/identity-managers/${this.page}`);
+      });
     },
   },
   computed: {

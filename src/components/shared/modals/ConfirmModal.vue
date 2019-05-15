@@ -7,9 +7,13 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalConfirm"
   >
     <template slot="header">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 class="modal-title" data-qa="modalTitle">
+        <span class="text-danger h3 mr-2"><Icon icon="exclamation-triangle" /> </span>
+        {{ title }}
+      </h5>
     </template>
     <template>
       <div>{{ text }}</div>
@@ -18,14 +22,16 @@
       <b-button
         variant="secondary"
         @click="onClose"
+        data-qa="btnCancel"
       >
         Cancel
       </b-button>
       <b-button
         variant="primary"
         @click="onConfirm"
+        data-qa="btnConfirm"
       >
-        Save
+        {{ confirm }}
       </b-button>
     </template>
   </Modal>
@@ -33,10 +39,12 @@
 
 <script>
 import Modal from '@/components/shared/modals/Modal';
+import Icon from '@/components/shared/Icon';
 
 export default {
   components: {
     Modal,
+    Icon,
   },
   props: {
     hideHeader: {
@@ -84,6 +92,11 @@ export default {
     text: {
       type: String,
       required: false,
+    },
+    confirm: {
+      type: String,
+      required: false,
+      default() { return 'Delete'; },
     },
   },
 };

@@ -1,0 +1,511 @@
+<template>
+  <div class="api-designer-container">
+
+    <div class="api-designer-actions-bar">
+      <b-button-toolbar>
+        <span v-if="title" class="toolbar-title">{{ title }}</span>
+        <b-button-group size="sm" class="mr-1">
+          <b-button
+            @click="setView('abyss')" 
+            :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
+            v-b-tooltip.hover
+            title="Abyss View"
+          ><Icon icon="magic" /></b-button>
+          <b-button
+            @click="setView('hybrid')"
+            :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
+            v-b-tooltip.hover
+            title="Hybrid View"
+          ><Icon icon="columns" /></b-button>
+          <b-button
+            @click="setView('editor')"
+            :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
+            v-b-tooltip.hover
+            title="Editor View"
+          ><Icon icon="code" /></b-button>
+        </b-button-group>
+
+        <b-button-group size="sm" class="mr-1">
+          <b-button
+            @click="setMode('json')" 
+            :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
+          >JSON</b-button>
+          <b-button
+            @click="setMode('yaml')" 
+            :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
+          >YAML</b-button>
+        </b-button-group>
+
+        <b-button-group size="sm" class="mr-1">
+          <b-button
+            @click="handleUndo"
+            :disabled="apiStateIndex === 0"
+          >
+            <Icon icon="undo" />
+          </b-button>
+          <b-button
+            @click="handleRedo"
+            :disabled="apiStateIndex === (apiStates.length - 1)"
+          >
+            <Icon icon="redo" />
+          </b-button>
+        </b-button-group>
+      </b-button-toolbar>
+    </div>
+
+    <div class="api-designer-columns-container" :style="`height: ${height}px`">
+      <div 
+        :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
+      >
+        <AbyssTool
+          :api="apiStates[apiStateIndex]"
+          :onChange="handleChange"
+        />
+      </div>
+      <div
+        :class="`api-designer-editor-container ${ (view === 'editor' || view === 'hybrid') ? '' : 'd-none'}`"
+      >
+        <Editor
+          :value="editorValue"
+          :onChange="handleEditorChange"
+          :mode="mode"
+          :debounce="1000"
+        />
+      </div>
+    </div>
+    <div class="api-designer-footer">
+      <div class="row">
+        <div class="col-md-8">
+          <b-alert class="alert-vivid alert-t-r" v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+          <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
+          <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
+          <b-alert v-model="isVersionChanged" variant="info" dismissible>
+            <strong>VERSION CHANGE DETECTED</strong>
+            You have to save as new API if you change the version.
+          </b-alert>
+        </div>
+        <div class="col">
+          <b-button
+            variant="link"
+            @click="onClose"
+            size="lg"
+            data-qa="btnCancel"
+            block
+          >
+            Close
+          </b-button>
+        </div>
+        <div class="col">
+          <b-button
+            variant="primary"
+            @click="handleSubmit"
+            size="lg"
+            data-qa="btnSave"
+            block
+          >
+            <span v-if='isVersionChanged'><Icon icon="plus" /> Create New Version</span>
+            <span v-else><Icon icon="save" /> Save</span>
+          </b-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapActions } from 'vuex';
+import yaml from 'js-yaml';
+import Helpers from '@/helpers';
+import AbyssTool from '@/components/shared/apiDesigner/abyssTool/AbyssTool';
+import Editor from '@/components/shared/Editor';
+import Icon from '@/components/shared/Icon';
+import api from '@/api';
+
+export default {
+  components: {
+    AbyssTool,
+    Editor,
+    Icon,
+  },
+  props: {
+    api: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    height: {
+      type: Number,
+      required: false,
+      default() { return 500; },
+    },
+    title: {
+      type: String,
+      required: false,
+    },
+    initialView: {
+      type: String,
+      required: false,
+      default() { return 'hybrid'; },
+    },
+    onClose: {
+      type: Function,
+      required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      view: this.initialView,
+      apiStates: [(JSON.parse(JSON.stringify(this.api)))],
+      apiVersion: this.api.openapidocument.info.version,
+      apiStateIndex: 0,
+      licensesToClone: [],
+      showNotValidAlert: false,
+      showSavedAlert: false,
+      showCreatedAlert: false,
+      isVersionChanged: false,
+      mode: 'json',
+    };
+  },
+  computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
+    editorValue() {
+      const { apiStates, apiStateIndex, mode } = this;
+      const { openapidocument } = apiStates[apiStateIndex];
+      if (mode === 'json') {
+        return JSON.stringify(openapidocument, null, '\t');
+      } else if (mode === 'yaml') {
+        return yaml.dump(openapidocument);
+      }
+      return openapidocument;
+    },
+  },
+  mounted() {
+    this.getApiLicenses();
+  },
+  methods: {
+    ...mapActions('businessApis', ['putBusinessApis', 'postBusinessApis']),
+    ...mapActions('proxies', ['putProxies', 'postProxies']),
+    ...mapActions('apiLicenses', ['postApiLicensesRefs']),
+    ...mapActions('resources', ['postResources']),
+    ...mapActions('permissions', ['postPermissions']),
+    getApiLicenses() {
+      if (this.api.isproxyapi) {
+        api.getExploreApiLicenses(this.api.uuid).then((response) => {
+          if (response && response.data) {
+            this.licensesToClone = response.data.filter(item => !item.isdeleted);
+          }
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            this.licensesToClone = [];
+          }
+        });
+      }
+    },
+    setView(view) {
+      this.view = view;
+    },
+    setMode(mode) {
+      this.mode = mode;
+    },
+    handleChange(propAddress, newPropValue, customAction) {
+      const { apiStates, apiStateIndex } = this;
+      const { objectDeepUpdate } = Helpers;
+      let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
+      const versionKey = propAddress.join('.');
+      if (versionKey === 'openapidocument.info.version') {
+        if (this.apiVersion !== newPropValue) {
+          this.isVersionChanged = true;
+        } else {
+          this.isVersionChanged = false;
+        }
+      }
+      objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
+      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
+      this.apiStateIndex += 1;
+    },
+    handleEditorChange(newValue) {
+      const { apiStates, apiStateIndex, mode } = this;
+      const newApiState = {
+        ...apiStates[apiStateIndex],
+        openapidocument: {
+          ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
+        },
+      };
+      const newVersion = newApiState.openapidocument.info.version;
+      if (this.apiVersion !== newVersion) {
+        this.isVersionChanged = true;
+      } else {
+        this.isVersionChanged = false;
+      }
+      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
+      this.apiStateIndex += 1;
+    },
+    handleUndo() {
+      if (this.apiStateIndex > 0) {
+        this.apiStateIndex -= 1;
+      }
+    },
+    handleRedo() {
+      if (this.apiStateIndex < (this.apiStates.length - 1)) {
+        this.apiStateIndex += 1;
+      }
+    },
+    handleSubmit() {
+      const { apiStates, apiStateIndex,
+        putBusinessApis, putProxies, postProxies, postBusinessApis,
+        postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
+      const currentApi = apiStates[apiStateIndex];
+      const { openapidocument, businessapiid } = currentApi;
+      // VALIDATE API
+      api.validateApi({ spec: openapidocument }).then(() => {
+        if (this.isVersionChanged) { // CREATE API
+          const apiToCreate = {
+            ...currentApi,
+            version: currentApi.openapidocument.info.version,
+            // apioriginid: currentApi.apioriginid,
+            apioriginid: currentApi.apioriginid !== null ? currentApi.apioriginid : currentApi.uuid,
+            apiparentid: currentApi.uuid,
+            businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
+          };
+          const { uuid, created, updated, deleted, isdeleted, ...rest } = apiToCreate;
+          if (currentApi.isproxyapi) {
+            postProxies([{
+              ...rest,
+            }]).then((response) => {
+              if (response && response.data) {
+                const createdProxy = response.data[0].response;
+                /* // !!! replace after cascade
+                // licenses
+                if (this.licensesToClone.length) {
+                  const licenses = this.licensesToClone.map(item => ({
+                    organizationid: createdProxy.organizationid,
+                    crudsubjectid: createdProxy.crudsubjectid,
+                    apiid: createdProxy.uuid,
+                    licenseid: item.licenseid,
+                    isactive: true,
+                  }));
+                  for (let i = 0; i < licenses.length; i += 1) {
+                    postApiLicensesRefs([licenses[i]]).then((res) => {
+                      if (res && i === licenses.length - 1) {
+                        this.showCreatedAlert = true;
+                        setTimeout(() => {
+                          this.showCreatedAlert = false;
+                          this.onClose();
+                        }, 3000);
+                      }
+                    })
+                    .catch((error) => {
+                      if (error && i === licenses.length - 1) {
+                        this.onClose();
+                      }
+                    });
+                  }
+                }
+                // licenses
+                // !!! */
+                const resourceProxyToAdd = [{
+                  organizationid: createdProxy.organizationid,
+                  crudsubjectid: createdProxy.crudsubjectid,
+                  resourcetypeid: '505099b4-19da-401c-bd17-8c3a85d89743',
+                  resourcename: `${createdProxy.openapidocument.info.title} ${createdProxy.openapidocument.info.version} PROXY API`,
+                  description: createdProxy.openapidocument.info.description,
+                  resourcerefid: createdProxy.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceProxyToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdProxy.organizationid,
+                      crudsubjectid: createdProxy.crudsubjectid,
+                      permission: `Ownership of ${createdProxy.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdProxy.openapidocument.info.title} PROXY API by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdProxy.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: 'd5318796-9ad3-4445-892f-27670cda77d6',
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        // licenses
+                        if (this.licensesToClone.length) {
+                          const licenses = this.licensesToClone.map(item => ({
+                            organizationid: createdProxy.organizationid,
+                            crudsubjectid: createdProxy.crudsubjectid,
+                            apiid: createdProxy.uuid,
+                            licenseid: item.licenseid,
+                            isactive: true,
+                          }));
+                          for (let i = 0; i < licenses.length; i += 1) {
+                            postApiLicensesRefs([licenses[i]]).then((res) => {
+                              if (res && i === licenses.length - 1) {
+                                this.showCreatedAlert = true;
+                                setTimeout(() => {
+                                  this.showCreatedAlert = false;
+                                  this.onClose();
+                                }, 3000);
+                              }
+                            })
+                            .catch((error) => {
+                              if (error && i === licenses.length - 1) {
+                                this.onClose();
+                              }
+                            });
+                          }
+                        }
+                        // licenses
+                      }
+                    });
+                  }
+                });
+                // !!!
+              }
+            });
+          } else {
+            postBusinessApis([{
+              ...rest,
+            }]).then((response) => {
+              if (response && response.data) {
+                const createdApi = response.data[0].response;
+                /* // !!! replace after cascade
+                this.showCreatedAlert = true;
+                setTimeout(() => {
+                  this.showCreatedAlert = false;
+                  this.onClose();
+                }, 3000);
+                // !!! */
+                const resourceApiToAdd = [{
+                  organizationid: createdApi.organizationid,
+                  crudsubjectid: createdApi.crudsubjectid,
+                  resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
+                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
+                  description: createdApi.openapidocument.info.description,
+                  resourcerefid: createdApi.uuid,
+                  isactive: true,
+                }];
+                postResources(resourceApiToAdd).then((responseResource) => {
+                  if (responseResource && responseResource.data) {
+                    const createdResource = responseResource.data[0].response;
+                    const permissionToAdd = [{
+                      organizationid: createdApi.organizationid,
+                      crudsubjectid: createdApi.crudsubjectid,
+                      permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                      description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                      effectivestartdate: this.$moment.utc().toISOString(),
+                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                      subjectid: createdApi.subjectid,
+                      resourceid: createdResource.uuid,
+                      resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
+                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                      isactive: true,
+                    }];
+                    postPermissions(permissionToAdd).then((responsePermission) => {
+                      if (responsePermission && responsePermission.data) {
+                        this.showCreatedAlert = true;
+                        setTimeout(() => {
+                          this.showCreatedAlert = false;
+                          this.onClose();
+                        }, 3000);
+                      }
+                    });
+                  }
+                });
+                // !!!
+              }
+            });
+          }
+        } else { // SAVE API
+          const apiToUpdate = {
+            ...currentApi,
+            version: currentApi.openapidocument.info.version,
+            apioriginid: currentApi.uuid,
+            apiparentid: currentApi.uuid,
+            businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
+          };
+          if (currentApi.isproxyapi) {
+            putProxies({
+              ...apiToUpdate,
+            })
+            .then(() => {
+              this.showSavedAlert = true;
+              setTimeout(() => {
+                this.showSavedAlert = false;
+              }, 3000);
+            });
+          } else {
+            putBusinessApis({
+              ...apiToUpdate,
+            })
+            .then(() => {
+              this.showSavedAlert = true;
+              setTimeout(() => {
+                this.showSavedAlert = false;
+              }, 3000);
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error); // eslint-disable-line
+        this.showNotValidAlert = true;
+        setTimeout(() => {
+          this.showNotValidAlert = false;
+        }, 3000);
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.api-designer-container {
+  .api-designer-actions-bar {
+    border-bottom: 1px solid #e9ecef; 
+    padding: 1rem;
+
+    .toolbar-title {
+      display: inline-flex;
+      vertical-align: middle;
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-right: 1rem;
+    }
+
+    .btn.btn-secondary.btn-selected {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+  }
+
+  .api-designer-columns-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 0;
+
+    .api-designer-abyss-container {
+      display: flex;
+      flex: 1 0 0;
+    }
+
+    .api-designer-editor-container {
+      display: flex;
+      flex: 1 0 0;
+    }
+  }
+
+  .api-designer-footer {
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+  }
+}
+</style>

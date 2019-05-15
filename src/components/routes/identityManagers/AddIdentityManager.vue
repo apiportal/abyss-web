@@ -6,8 +6,8 @@
         isOrganizationsLoaded
       "
       role="add"
-      :onClose="handleEditIdentityManagerModalClose"
-      :onUpdate="handleEditIdentityManagerModalUpdate"
+      :onClose="handleModalClose"
+      :onUpdate="handleModalUpdate"
       :subjectDirectory="subjectDirectory"
       :subjectDirectoryTypes="subjectDirectoryTypes"
       :organizations="organizations"
@@ -17,6 +17,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import moment from 'moment-timezone';
 import EditIdentityManagerModal from '@/components/shared/modals/EditIdentityManagerModal';
 
 export default {
@@ -24,10 +25,10 @@ export default {
     EditIdentityManagerModal,
   },
   methods: {
-    handleEditIdentityManagerModalClose() {
+    handleModalClose() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
-    handleEditIdentityManagerModalUpdate() {
+    handleModalUpdate() {
       this.$router.push(`/app/identity-managers/${this.page}`);
     },
   },
@@ -40,8 +41,19 @@ export default {
     }),
   },
   data() {
+    const now = new Date();
     return {
-      subjectDirectory: {},
+      subjectDirectory: {
+        directoryname: '',
+        description: '',
+        directorypriorityorder: 1,
+        isactive: true,
+        istemplate: false,
+        organizationid: null,
+        directorytypeid: null,
+        lastsyncronizationduration: 0,
+        lastsyncronizedat: moment(now),
+      },
       page: this.$route.params.page,
     };
   },

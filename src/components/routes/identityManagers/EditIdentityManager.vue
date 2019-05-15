@@ -7,8 +7,8 @@
         isOrganizationsLoaded
       "
       role="edit"
-      :onClose="handleEditIdentityManagerModalClose"
-      :onUpdate="handleEditIdentityManagerModalUpdate"
+      :onClose="handleModalClose"
+      :onUpdate="handleModalUpdate"
       :subjectDirectory="subjectDirectories.find(item => item.uuid === subjectDirectoryId)"
       :subjectDirectoryTypes="subjectDirectoryTypes"
       :organizations="organizations"
@@ -24,14 +24,6 @@ export default {
   components: {
     EditIdentityManagerModal,
   },
-  methods: {
-    handleEditIdentityManagerModalClose() {
-      this.$router.push(`/app/identity-managers/${this.page}`);
-    },
-    handleEditIdentityManagerModalUpdate() {
-      this.$router.push(`/app/identity-managers/${this.page}`);
-    },
-  },
   computed: {
     ...mapState({
       subjectDirectories: state => state.subjectDirectories.items,
@@ -41,6 +33,14 @@ export default {
       isSubjectDirectoryTypesLoaded: state => state.subjectDirectoryTypes.lastUpdatedAt,
       isOrganizationsLoaded: state => state.organizations.lastUpdatedAt,
     }),
+  },
+  methods: {
+    handleModalClose() {
+      this.$router.push(`/app/identity-managers/${this.page}`);
+    },
+    handleModalUpdate() {
+      this.$router.push(`/app/identity-managers/${this.page}`);
+    },
   },
   data() {
     return {

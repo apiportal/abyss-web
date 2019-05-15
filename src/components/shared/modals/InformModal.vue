@@ -7,12 +7,24 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+      data-qa="modalInform"
   >
+    <template slot="header">
+      <h5 class="modal-title" data-qa="modalTitle">{{ title }}</h5>
+    </template>
     <template>
-      <slot></slot>
+      <p v-html="withBrTags" style="text-align: justify"></p>
     </template>
     <template slot="footer">
-      <slot name="footer"></slot>
+      <b-button 
+        class="float-right" 
+        variant="primary" 
+        size="sm" 
+        @click="onConfirm"
+        data-qa="btnConfirm"
+      >
+        OK
+      </b-button>
     </template>
   </Modal>
 </template>
@@ -23,6 +35,12 @@ import Modal from '@/components/shared/modals/Modal';
 export default {
   components: {
     Modal,
+  },
+  computed: {
+    withBrTags() {
+      const doc = this.text;
+      return doc.replace(/(\\r)*\\n/g, '<br>');
+    },
   },
   props: {
     hideHeader: {
@@ -57,6 +75,18 @@ export default {
     },
     onClose: {
       type: Function,
+      required: false,
+    },
+    onConfirm: {
+      type: Function,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: false,
+    },
+    text: {
+      type: String,
       required: false,
     },
   },

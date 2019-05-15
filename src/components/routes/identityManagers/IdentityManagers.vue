@@ -1,86 +1,133 @@
 <template>
-  <div class="identity-managers-container">
-    <div class="identity-managers-header">
+  <div class="page-container page-identity-managers">
+
+    <div class="page-header">
+      <b-nav class="page-tabs" tabs>
+        <b-nav-item :active="true">
+          <span class="link-text" data-qa="linkIdentityManagers">Identity Managers</span>  <b-badge pill>{{ subjectDirectories.length }}</b-badge>
+        </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/identity-manager-types/1"
+        >
+          <span class="link-text" data-qa="linkIdentityManagerTypes">Identity Manager Types</span> <b-badge pill>{{ subjectDirectoryTypes.length }}</b-badge>
+        </b-nav-item>
+      </b-nav>
       <div class="row">
-        <div class="col-md-10">
+        <div class="col">
           <InputWithIcon
             :prepend="{ icon: 'filter' }"
             placeholder="Type to filter"
             :onKeyup="handleFilterKeyup"
+            class="page-filter"
           />
         </div>
-        <div class="col-md-2">
+        <div class="col-auto">
+          <b-button
+            v-b-tooltip.hover
+            title="Refresh"
+            variant="link"
+            class="page-btn-refresh"
+            block
+            @click="refreshData"
+            data-qa="btnRefresh"
+          >
+            <Icon icon="redo" />
+          </b-button>
+        </div>
+        <div class="col-auto">
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
+            class="page-btn-add"
             block
+            data-qa="btnAddNew"
           >
-            Add
+            <span class="btn-text">Add New</span>
+            <Icon icon="plus" />
           </b-button>
         </div>
       </div>
     </div>
-    <div class="identity-managers-content">
-      <table class="table">
+
+    <div class="page-content">
+      <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
-            <th>
-              Status
-            </th>
-            <th>
-              Name
+            <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
-                sortByKey="directoryname"
-                sortByKeyType="string"
+                text="Status"
+                sortByKey="isactive"
+                sortByKeyType="boolean"
               />
             </th>
             <th>
-              Priority Order
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Identity Manager Name"
+                sortByKey="directoryname"
+                sortByKeyType="string"
+                data-qa="tableHeadName"
+              />
+            </th>
+            <th class="text-nowrap">
+              <SortBy
+                :selectedSortByKey="sortByKey"
+                :selectedSortDirection="sortDirection"
+                :onClick="handleSortByClick"
+                text="Priority Order"
                 sortByKey="directorypriorityorder"
                 sortByKeyType="number"
               />
             </th>
             <th>
-              Directory Type
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Directory Type"
                 sortByKey="directorytypename"
                 sortByKeyType="string"
               />
             </th>
             <th>
-              Organization
               <SortBy
                 :selectedSortByKey="sortByKey"
                 :selectedSortDirection="sortDirection"
                 :onClick="handleSortByClick"
+                text="Organization"
                 sortByKey="organizationname"
                 sortByKeyType="string"
               />
             </th>
+            <th></th>
           </tr>
         </thead>
+        <TBodyLoading
+          v-if="isLoading && tableRows.length === 0"
+          :cols="6"
+        />
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
+          :data-qa="`tableRow-${index}`"
         >
-          <tr slot="main">
-            <td @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon :icon="item.isactive ? 'check-circle' : 'times-circle'" />
+          <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
+              <Icon
+                :icon="item.isactive ? 'check-circle' : 'times-circle'"
+                :class="item.isactive ? 'text-success' : 'text-danger'"
+              />
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.directoryname }}
             </td>
-            <td @click="() => handleCollapseTableRows(item.uuid)">
+            <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.directorypriorityorder }}
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -89,29 +136,59 @@
             <td @click="() => handleCollapseTableRows(item.uuid)">
               {{ item.organizationname }}
             </td>
+            <td class="actions">
+              <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
+                <template slot="button-content">
+                  <Icon icon="ellipsis-h" />
+                </template>
+
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+
+                <b-dropdown-header>LOGS</b-dropdown-header>
+
+                <b-dropdown-item data-qa="btnLogsAll" :to="`/app/identity-managers/${page}/logs/${item.uuid}/subjectdirectory/1`">All</b-dropdown-item>
+
+                <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+
+              </b-dropdown>
+            </td>
           </tr>
-          <tr slot="footer">
-            <td colspan="5">
-              {{ item }}
-              <div>
-                <b-button
-                  :to="`/app/identity-managers/${page}/edit/${item.uuid}`"
-                  size="sm"
-                  variant="secondary"
-                  v-b-tooltip.hover
-                  title="Edit"
-                >
-                  <Icon icon="edit" />
-                </b-button>
-                <b-button
-                  :to="`/app/identity-managers/${page}/delete/${item.uuid}`"
-                  size="sm"
-                  variant="danger"
-                  v-b-tooltip.hover
-                  title="Delete"
-                >
-                  <Icon icon="trash-alt" />
-                </b-button>
+          <tr data-qa="tableFooter" slot="footer" class="footer">
+            <td colspan="6">
+              <div class="collapsible-content">
+                <div class="abyss-table-content">
+                  <div class="row">
+                    <dl class="col">
+                      <dt>Identity Manager Name:</dt>
+                      <dd title="Name">{{ item.directoryname }}</dd>
+                      <dt>Description:</dt>
+                      <dd title="Description">{{ item.description }}</dd>
+                      <dt>Organization:</dt>
+                      <dd title="Organization">{{ item.organizationname }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Priority Order:</dt>
+                      <dd>{{ item.directorypriorityorder }}</dd>
+                      <dt>Directory Type:</dt>
+                      <dd>{{ item.directorytypename }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Active:</dt>
+                      <dd>{{ item.isactive | booleanToText }}</dd>
+                      <dt>Template:</dt>
+                      <dd>{{ item.istemplate | booleanToText }}</dd>
+                    </dl>
+                    <dl class="col">
+                      <dt>Created:</dt>
+                      <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="!item.isdeleted">Updated:</dt>
+                      <dd v-if="!item.isdeleted">{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+                      <dt v-if="item.isdeleted">Deleted:</dt>
+                      <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+                    </dl>
+                  </div>
+                </div>
               </div>
             </td>
           </tr>
@@ -119,14 +196,15 @@
       </table>
       <router-view></router-view>
     </div>
-    <div class="identity-managers-footer">
-      <b-pagination 
+    <div class="page-footer" v-if="tableRows.length > itemsPerPage">
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
-        :per-page="10"
+        v-model="page"
+        :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
+        data-qa="footerPagination"
       >
       </b-pagination>
     </div>
@@ -139,6 +217,7 @@ import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
+import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
 
 export default {
@@ -147,9 +226,11 @@ export default {
     Icon,
     SortBy,
     TbodyCollapsible,
+    TBodyLoading,
   },
   computed: {
     ...mapState({
+      isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
       subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
@@ -192,14 +273,21 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
-    this.$store.dispatch('subjectDirectories/getSubjectDirectories');
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes');
-    this.$store.dispatch('organizations/getOrganizations');
-  },
-  mounted() {
-    document.cookie = 'abyss.principal.uuid=32c9c734-11cb-44c9-b06f-0b52e076672d; abyss.login.organization.uuid=9287b7dc-058d-4399-aad0-6fa704decb6b; abyss.login.organization.name=FAIKsOrganization; abyss.session=7afa16aca743d33e5938854819554044';
+    this.$store.commit('currentPage/setRootPath', 'identity-managers');
+    this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
+    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
+    this.$store.dispatch('organizations/getOrganizations', {});
   },
   data() {
     return {
@@ -209,6 +297,7 @@ export default {
       sortDirection: 'desc',
       filterKey: '',
       collapsedRows: [],
+      itemsPerPage: 20,
     };
   },
   methods: {
@@ -226,40 +315,17 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        this.collapsedRows.push(itemId);
+        // this.collapsedRows.push(itemId);
+        this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+    refreshData() {
+      this.$store.dispatch('subjectDirectories/getSubjectDirectories', {
+        refresh: true,
+      });
+    },
   },
 };
 </script>
-
-<style lang="scss">
-.identity-managers-container {
-  display: flex;
-  flex: 1 0 0;
-  flex-direction: column;
-
-  .identity-managers-header {
-    border-bottom: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-  }
-
-  .identity-managers-footer {
-    border-top: 1px solid silver;
-    flex: 50px 0 0;
-    padding: 1rem;
-
-    ul {
-      margin: 0;
-    }
-  }
-
-  .identity-managers-content {
-    flex: 1 0 0;
-    overflow-y: auto;
-  }
-}
-</style>

@@ -1,9 +1,10 @@
 <template>
   <b-link 
     @click="() => onClick({ sortByKey, sortByKeyType, sortDirection: selectedSortDirection })"
-    :class="`${ sortByKey === selectedSortByKey ? 'active' : 'inactive'}`"
   >
-    <Icon :icon="`${ selectedSortDirection === 'desc' ? 'caret-up' : 'caret-down'}`" />
+    <span class="link-text">{{text}}</span>
+    <Icon :icon="`${ selectedSortDirection === 'desc' ? 'caret-up' : 'caret-down'}`"
+    :class="`${ sortByKey === selectedSortByKey ? 'active' : 'inactive'}`" />
   </b-link>
 </template>
 
@@ -27,6 +28,10 @@ export default {
       type: String,
       required: true,
     },
+    text: {
+      type: String,
+      required: false,
+    },
     sortByKeyType: {
       type: String,
       required: true,
@@ -38,9 +43,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.inactive {
-  color: silver;
-}
-</style>

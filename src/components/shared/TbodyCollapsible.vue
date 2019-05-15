@@ -1,5 +1,5 @@
 <template>
-  <tbody class="tbody-collapsible">
+  <tbody :class="`tbody-collapsible ${isCollapsed ? 'tbody-collapsed' : ''} level-${level}`">
     <slot name="main"></slot>
     <slot name="footer" v-if="isCollapsed"></slot>
   </tbody>
@@ -13,18 +13,21 @@ export default {
       required: false,
       default() { return false; },
     },
+    level: {
+      type: Number,
+      required: false,
+      default() { return 0; },
+    },
+  },
+  watch: {
+    // TODO cover component resize possibility
+    isCollapsed(newval) {
+      if (newval) {
+        setTimeout(function() { // eslint-disable-line
+          this.$el.querySelectorAll('.collapsible-content')[0].style.display = 'block';
+        }.bind(this), 100);
+      }
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.tbody-collapsible {
-  & > tr {
-    &:first-child {
-      td {
-        cursor: pointer;
-      }
-    }
-  }
-}
-</style>

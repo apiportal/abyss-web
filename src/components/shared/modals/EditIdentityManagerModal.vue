@@ -8,9 +8,10 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
+    data-qa="modalEditIdentityManager"
   >
     <template slot="header">
-      <h5 class="modal-title">
+      <h5 class="modal-title" data-qa="modalTitle">
         {{ role === 'edit' ? 'Edit Identity Manager' : 'Add New Identity Manager' }}
       </h5>
     </template>
@@ -21,13 +22,16 @@
         <div style="padding: 1rem;">
           <b-form-group 
             id="directoryNameGroup"
-            label="Name:"
-            label-for="directoryNameInput"
           >
+            <label>
+              Name:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-input
               id="directoryNameInput"
               type="text"
               v-model="subjectDirectoryEditable.directoryname"
+              :state="directoryNameState"
               placeholder="Name"
               required
             >
@@ -35,12 +39,15 @@
           </b-form-group>
           <b-form-group 
             id="directoryDescriptionGroup"
-            label="Description:"
-            label-for="directoryDescriptionTextarea"
           >
+            <label>
+              Description:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-textarea
               id="directoryDescriptionTextarea"
               v-model="subjectDirectoryEditable.description"
+              :state="descriptionState"
               placeholder="Description"
               :rows="3"
               required
@@ -49,13 +56,16 @@
           </b-form-group>
           <b-form-group 
             id="directoryPriorityOrderGroup"
-            label="Priority Order:"
-            label-for="directoryPriorityOrderInput"
           >
+            <label>
+              Priority Order:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-input
               id="directoryPriorityOrderInput"
               type="number"
               v-model="subjectDirectoryEditable.directorypriorityorder"
+              :state="directoryPriorityOrderState"
               placeholder="Priority Order"
               required
             >
@@ -83,21 +93,29 @@
           </b-form-group>
           <b-form-group 
             id="directoryOrganizationIdGroup"
-            label="Organization:"
-            label-for="directoryOrganizationIdInput"
           >
+            <label>
+              Organization:
+              <span class="text-danger">*</span>
+            </label>
             <b-form-select
               id="directoryOrganizationIdInput"
               v-model="subjectDirectoryEditable.organizationid" 
-              :options="organizations.map(organization => ({
-                value: organization.uuid,
-                text: organization.name,
-              }))"
+              :state="directoryOrganizationIdState"
+              :options="[
+                { value: null, text: 'Please Select'},
+                ...organizations.map(organization => ({
+                  value: organization.uuid,
+                  text: organization.name,
+                  disabled: organization.isdeleted,
+                }))
+              ]"
+              required
             />
           </b-form-group>
           <div class="row">
             <div class="col-12">
-              <label for="directoryTypeInput">Directory Type:</label>
+              <label for="directoryTypeInput">Directory Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
               <b-form-group 
@@ -106,11 +124,17 @@
                 <b-form-select
                   id="directoryTypeInput"
                   v-model="subjectDirectoryEditable.directorytypeid" 
-                  :options="subjectDirectoryTypes.map(subjectDirectoryType => ({
-                    value: subjectDirectoryType.uuid,
-                    text: subjectDirectoryType.typename,
-                  }))"
-                  @change="handleDirectoryTypeChange"
+                  :state="directoryTypeState"
+                  :options="[
+                    { value: null, text: 'Please Select'},
+                    ...subjectDirectoryTypes.map(subjectDirectoryType => ({
+                      value: subjectDirectoryType.uuid,
+                      text: subjectDirectoryType.typename,
+                      disabled: subjectDirectoryType.isdeleted,
+                    }))
+                  ]"
+                  @change="(val) => handleDirectoryTypeChange(val)"
+                  required
                 />
               </b-form-group>
             </div>
@@ -122,6 +146,7 @@
                 title="Configure Directory"
                 @click="toggleConfigureDirectory"
                 :disabled="!subjectDirectoryEditable.directorytypeid"
+                data-qa="btnConfigure"
               >
                 <Icon icon="cog" />
               </b-button>
@@ -132,171 +157,25 @@
             :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >
             <h6>Configure Directory</h6>
-            <b-form-group 
-              id="directoryLdapUrlGroup"
-              label="Ldap Connection Url - Host and Port:"
-              label-for="directoryLdapUrlInput"
-            >
-              <b-form-input
-                id="directoryLdapUrlInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.url']"
-                placeholder="Ldap Connection Url - Host and Port"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapBaseDnGroup"
-              label="Base DN:"
-              label-for="directoryLdapBaseDnInput"
-            >
-              <b-form-input
-                id="directoryLdapBaseDnInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.basedn']"
-                placeholder="Base DN"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group id="directoryLdapSecureGroup">
-              <b-form-checkbox
-                id="directoryLdapSecureCheck"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.secure']"
-                :value="true"
-                :unchecked-value="false"
-              >
-                Use SSL
-              </b-form-checkbox>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserDnGroup"
-              label="Ldap User DN:"
-              label-for="directoryLdapUserDnInput"
-            >
-              <b-form-input
-                id="directoryLdapUserDnInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.userdn']"
-                placeholder="Ldap User DN"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapPasswordGroup"
-              label="Ldap Password:"
-              label-for="directoryLdapPasswordInput"
-            >
-              <b-form-input
-                id="directoryLdapPasswordInput"
-                type="password"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.password']"
-                placeholder="Ldap Password"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserFilterGroup"
-              label="User Object Filter:"
-              label-for="directoryLdapUserFilterInput"
-            >
-              <b-form-input
-                id="directoryLdapUserObjectFilterInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.filter']"
-                placeholder="User Object Filter"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapReadTimeoutGroup"
-              label="LDAP Read Timeout:"
-              label-for="directoryLdapReadTimeoutInput"
-            >
-              <b-form-input
-                id="directoryLdapReadTimeoutInput"
-                type="number"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.read.timeout']"
-                placeholder="LDAP Read Timeout"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserNameGroup"
-              label="User Name Field Name:"
-              label-for="directoryLdapUserNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.username']"
-                placeholder="User Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserFirstNameGroup"
-              label="User First Name Field Name:"
-              label-for="directoryLdapUserFirstNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserFirstNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.firstname']"
-                placeholder="User First Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserLastNameGroup"
-              label="User Last Name Field Name:"
-              label-for="directoryLdapUserLastNameInput"
-            >
-              <b-form-input
-                id="directoryLdapUserLastNameInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.lastname']"
-                placeholder="User Last Name Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserPasswordGroup"
-              label="User Password Field Name:"
-              label-for="directoryLdapUserPasswordInput"
-            >
-              <b-form-input
-                id="directoryLdapUserPasswordInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.password']"
-                placeholder="User Password Field Name"
-              >
-              </b-form-input>
-            </b-form-group>
-            <b-form-group 
-              id="directoryLdapUserObjectClassGroup"
-              label="User Object Class:"
-              label-for="directoryLdapUserObjectClassInput"
-            >
-              <b-form-input
-                id="directoryLdapUserObjectClassInput"
-                type="text"
-                v-model="subjectDirectoryEditable.directoryattributes['ldap.user.objectclass']"
-                placeholder="User Object Class"
-              >
-              </b-form-input>
-            </b-form-group>
+            <DynamicForm
+              :formTemplate="directoryConfigurationTemplate"
+              :formData="{ configuration: subjectDirectoryEditable.directoryattributes }"
+              :onUpdate="handleConfigurationUpdate"
+            />
           </div>
         </div>
         <footer class="modal-footer">
           <b-button
             variant="secondary"
             @click="onClose"
+            data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
             variant="success"
             type="submit"
+            data-qa="btnSave"
           >
             Save
           </b-button>
@@ -307,14 +186,17 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
+import Helpers from '@/helpers';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
+import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
 
 export default {
   components: {
     Modal,
     Icon,
+    DynamicForm,
   },
   props: {
     hideHeader: {
@@ -375,28 +257,133 @@ export default {
       default() { return 'edit'; },
     },
   },
+  computed: {
+    ...mapState({
+      currentUser: state => state.user,
+    }),
+    directoryNameState() {
+      const { directoryname } = this.subjectDirectoryEditable;
+
+      if (directoryname && directoryname.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    descriptionState() {
+      const { description } = this.subjectDirectoryEditable;
+
+      if (description && description.length > 0) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryPriorityOrderState() {
+      const { directorypriorityorder } = this.subjectDirectoryEditable;
+
+      if (directorypriorityorder) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryOrganizationIdState() {
+      const { organizationid } = this.subjectDirectoryEditable;
+
+      if (organizationid) {
+        return true;
+      }
+
+      return false;
+    },
+    directoryTypeState() {
+      const { directorytypeid } = this.subjectDirectoryEditable;
+
+      if (directorytypeid) {
+        return true;
+      }
+
+      return false;
+    },
+  },
   data() {
     return {
       subjectDirectoryEditable: JSON.parse(JSON.stringify(this.subjectDirectory)),
       isConfigureDirectoryVisible: false,
+      directoryConfigurationTemplate: {},
     };
   },
   methods: {
-    ...mapActions('subjectDirectories', ['putSubjectDirectories']),
+    ...mapActions('subjectDirectories', ['putSubjectDirectories', 'postSubjectDirectories']),
     handleSubmit(evt) {
       evt.preventDefault();
-      this.putSubjectDirectories({
-        ...this.subjectDirectoryEditable,
-        directorypriorityorder: parseInt(this.subjectDirectoryEditable.directorypriorityorder, 10),
-      });
-      this.onUpdate();
+      const { putSubjectDirectories, postSubjectDirectories,
+        subjectDirectoryEditable, onUpdate, role } = this;
+      if (role === 'edit') {
+        putSubjectDirectories({
+          ...subjectDirectoryEditable,
+          directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
+        }).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      } else if (role === 'add') {
+        const { currentUser } = this;
+        const { uuid } = currentUser.props;
+        const crudsubjectid = uuid;
+        const subjectDirectoryToAdd = [{
+          ...subjectDirectoryEditable,
+          crudsubjectid,
+          directorypriorityorder: parseInt(subjectDirectoryEditable.directorypriorityorder, 10),
+        }];
+        postSubjectDirectories(subjectDirectoryToAdd).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
+      }
     },
     toggleConfigureDirectory() {
       this.isConfigureDirectoryVisible = !this.isConfigureDirectoryVisible;
     },
-    handleDirectoryTypeChange() {
+    handleDirectoryTypeChange(newDirectoryTypeId) {
       this.isConfigureDirectoryVisible = true;
+      this.setDirectoryConfigurationTemplate({ directorytypeid: newDirectoryTypeId });
+      const { subjectDirectoryTypes } = this;
+      const subjectDirectoryType = subjectDirectoryTypes
+        .find(item => item.uuid === newDirectoryTypeId);
+      const formTemplate = JSON.parse(JSON.stringify(subjectDirectoryType.attributetemplate.components.schemas)); // eslint-disable-line
+      const newDirecoryConfiguration = {};
+      const { openApiObjectToFlatObject } = Helpers;
+      openApiObjectToFlatObject(formTemplate, newDirecoryConfiguration);
+      this.handleConfigurationUpdate(newDirecoryConfiguration);
     },
+    handleConfigurationUpdate(newDirecoryConfiguration) {
+      const { subjectDirectoryEditable } = this;
+      this.subjectDirectoryEditable = {
+        ...subjectDirectoryEditable,
+        directoryattributes: {
+          ...newDirecoryConfiguration.configuration,
+        },
+      };
+    },
+    setDirectoryConfigurationTemplate(newDirectoryTypeId) {
+      const { directorytypeid } = newDirectoryTypeId || this.subjectDirectoryEditable;
+      if (directorytypeid) {
+        const { subjectDirectoryTypes } = this;
+        this.directoryConfigurationTemplate =
+          subjectDirectoryTypes
+          .find(item => item.uuid === directorytypeid)
+          .attributetemplate
+          .components
+          .schemas;
+      }
+    },
+  },
+  mounted() {
+    this.setDirectoryConfigurationTemplate();
   },
 };
 </script>

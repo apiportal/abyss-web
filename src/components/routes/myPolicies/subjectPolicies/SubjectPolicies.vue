@@ -27,6 +27,8 @@
           <b-button
             :to="`/app/my-policies/my-policies/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Policy"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

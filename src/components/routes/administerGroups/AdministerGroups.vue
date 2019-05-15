@@ -38,6 +38,8 @@
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Group"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

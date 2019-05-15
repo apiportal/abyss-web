@@ -157,9 +157,6 @@ export default {
     ...mapActions('permissions', ['deletePermissions', 'postPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const now = new Date();
-      const end = new Date();
-      const endDate = new Date(end.setFullYear(end.getFullYear() + 50));
       const { permissionsEditable, selectedRole, currentUser,
         postPermissions, deletePermissions, onUpdate } = this;
       this.permissionsToDelete = permissionsEditable
@@ -172,8 +169,8 @@ export default {
           crudsubjectid: currentUser.props.uuid,
           permission: permission.permission,
           description: permission.description,
-          effectivestartdate: now.toISOString(),
-          effectiveenddate: endDate.toISOString(),
+          effectivestartdate: this.$moment.utc().toISOString(),
+          effectiveenddate: this.$moment.utc().add(1, 'years').toISOString(),
           subjectid: selectedRole.uuid,
           resourceid: permission.resourceid,
           resourceactionid: permission.resourceactionid,

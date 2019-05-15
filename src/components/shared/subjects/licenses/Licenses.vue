@@ -98,7 +98,7 @@
 
             </b-dropdown>
           </td>
-          <td class="actions" v-else-if="routePath === '/app/explore/'" style="vertical-align: middle !important">
+          <td class="actions" v-else-if="showSelectLicense" style="vertical-align: middle !important">
             <b-form-radio
             v-model="licenseId"
             :value="licenseItem.uuid"
@@ -153,6 +153,11 @@ export default {
       type: String,
       required: false,
       default() { return 'policies'; },
+    },
+    showSelectLicense: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
     },
     licenseIdFromStore: {
       type: String,

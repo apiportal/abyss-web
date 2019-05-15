@@ -128,6 +128,7 @@
             :rows="api.availablelicenses"
             :licenseIdFromStore="this.licensesMain.licenseId"
             routePath="/app/explore/"
+            :showSelectLicense="true"
           ></Licenses>
         </div>
         <div v-if="isContractsTableVisible">

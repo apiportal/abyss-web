@@ -142,8 +142,8 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Identity Manager</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Identity Manager</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 

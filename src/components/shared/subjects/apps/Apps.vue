@@ -62,8 +62,8 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-app/${item.uuid}`"><Icon icon="edit" /> Edit App</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete App</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

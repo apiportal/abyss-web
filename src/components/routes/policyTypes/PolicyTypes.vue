@@ -229,7 +229,6 @@ export default {
       currentUser: state => state.user,
       isLoading: state => state.traffic.isLoading,
       policyTypes: state => state.policyTypes.items,
-      policies: state => state.policies.items,
       organizations: state => state.organizations.items,
       subjectLicenses: state => state.subjectLicenses.items,
       subjectPolicies: state => state.subjectPolicies.items,
@@ -281,7 +280,6 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'policy-types');
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
-    this.$store.dispatch('policies/getPolicies', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
   },

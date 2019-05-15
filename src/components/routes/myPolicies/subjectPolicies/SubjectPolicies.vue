@@ -76,23 +76,20 @@ export default {
   },
   computed: {
     ...mapState({
-      subjectPolicies: state => state.subjectPolicies.items,
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { subjectPolicies, policyTypes, currentUser, policies } = this;
+      const { policyTypes, currentUser, policies } = this;
       const getTypeName = (typeId) => {
         const type = policyTypes.find(policyType => policyType.uuid === typeId);
         return type ? type.name : typeId;
       };
-      const subjectPoliciesIds = subjectPolicies.map(item => item.uuid);
       return sortArrayOfObjects({
         array: policies
-        .filter(item => subjectPoliciesIds.indexOf(item.uuid) > -1)
         .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {

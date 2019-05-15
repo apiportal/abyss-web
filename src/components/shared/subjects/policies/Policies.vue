@@ -69,7 +69,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ (item.policyinstance && item.policyinstance.info ) ? item.policyinstance.info.subType : '' }}
           </td>
-          <td class="actions" v-if="routePath !== '/app/explore/'">
+          <td class="actions" v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
@@ -139,6 +139,7 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
       organizations: state => state.organizations.items,
     }),
     tableRows() {

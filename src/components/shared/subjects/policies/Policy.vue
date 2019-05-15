@@ -49,6 +49,7 @@
     </div>
     <div class="row abyss-table-buttons">
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleLicensesTable"
         size="md"
         variant="link"
@@ -60,6 +61,7 @@
         <b-badge pill>{{ licensesOfPolicy ? licensesOfPolicy.length : 0 }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
@@ -71,6 +73,7 @@
         <b-badge pill>{{ contractsOfPolicy ? contractsOfPolicy.length : 0 }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleApisTable"
         size="md"
         variant="link"
@@ -175,6 +178,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       contractStates: state => state.contractStates.items,
     }),
     computedContractsOfPolicy() {

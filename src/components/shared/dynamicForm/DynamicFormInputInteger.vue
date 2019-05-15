@@ -8,12 +8,13 @@
     </label>
     <b-form-input
       type="number"
-      v-model="inputValue"
+      v-model.number="inputValue"
       :state="state"
       :placeholder="example.toString()"
       :required="required"
       :disabled="readonly"
       @keyup.native="handleKeyup"
+      @change.native="handleKeyup"
     >
     </b-form-input>
   </b-form-group>

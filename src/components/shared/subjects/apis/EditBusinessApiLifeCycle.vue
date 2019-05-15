@@ -1,7 +1,7 @@
 <template>
   <div>
-    <EditApiLifeCycleModal
-      :proxy="proxies.find(item => item.uuid === proxyId)"
+    <EditBusinessApiLifeCycleModal
+      :businessApi="businessApis.find(item => item.uuid === businessApiId)"
       :onClose="handleModalClose"
       :onUpdate="handleModalUpdate"
     />
@@ -10,11 +10,11 @@
 
 <script>
 import { mapState } from 'vuex';
-import EditApiLifeCycleModal from '@/components/shared/modals/EditApiLifeCycleModal';
+import EditBusinessApiLifeCycleModal from '@/components/shared/modals/EditBusinessApiLifeCycleModal';
 
 export default {
   components: {
-    EditApiLifeCycleModal,
+    EditBusinessApiLifeCycleModal,
   },
   props: {
     routePath: {
@@ -26,22 +26,22 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      proxies: state => state.proxies.items,
+      businessApis: state => state.businessApis.items,
     }),
   },
   methods: {
     handleModalClose() {
       this.$router.push(this.routePath);
-      this.$store.commit('proxies/setNextStateId', null);
+      this.$store.commit('businessApis/setNextStateId', null);
     },
     handleModalUpdate() {
       this.$router.push(this.routePath);
-      this.$store.commit('proxies/setNextStateId', null);
+      this.$store.commit('businessApis/setNextStateId', null);
     },
   },
   data() {
     return {
-      proxyId: this.$route.params.apiId,
+      businessApiId: this.$route.params.apiId,
       page: this.$route.params.page,
     };
   },

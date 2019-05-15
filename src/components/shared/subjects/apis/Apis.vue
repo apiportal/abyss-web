@@ -118,6 +118,8 @@
 
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
 
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${item.uuid}`"><Icon icon="bezier-curve" /> Change API Lifecycle</b-dropdown-item>
+
               <b-dropdown-header>LOGS</b-dropdown-header>
 
               <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>

@@ -107,7 +107,7 @@
           <h5 class="mb-3">Configure Policy</h5>
           <DynamicForm
             :formTemplate="policyConfigurationTemplate"
-            :formData="{ AuthorizationConfiguration: policyEditable.policyInstance }"
+            :formData="{ configuration: policyEditable.policyinstance }"
             :onUpdate="handleConfigurationUpdate"
           />
         </div>
@@ -134,8 +134,8 @@
 </template>
 
 <script>
-import Helpers from '@/helpers';
 import { mapActions, mapState } from 'vuex';
+import Helpers from '@/helpers';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
 import DynamicForm from '@/components/shared/dynamicForm/DynamicForm';
@@ -231,10 +231,8 @@ export default {
     },
   },
   data() {
-    const { policy } = this;
-
     return {
-      policyEditable: JSON.parse(JSON.stringify(policy)),
+      policyEditable: JSON.parse(JSON.stringify(this.policy)),
       isConfigurePolicyVisible: false,
       policyConfigurationTemplate: {},
     };
@@ -256,37 +254,15 @@ export default {
           ...policyEditable,
           crudsubjectid,
         }];
-        postPolicies(policyToUpdate)
-          .then((response) => {
-            if (response && response.data) {
-              onUpdate();
-            }
-          });
+        postPolicies(policyToUpdate).then((response) => {
+          if (response && response.data) {
+            onUpdate();
+          }
+        });
       }
     },
     toggleConfigurePolicy() {
       this.isConfigurePolicyVisible = !this.isConfigurePolicyVisible;
-    },
-    setPolicyConfigurationTemplate(newPolicyTypeId) {
-      const { typeid } = newPolicyTypeId || this.policyEditable;
-      if (typeid) {
-        const { policyTypes } = this;
-        this.policyConfigurationTemplate =
-          policyTypes
-          .find(item => item.uuid === typeid)
-          .template
-          .components
-          .schemas;
-      }
-    },
-    handleConfigurationUpdate(newTypeConfiguration) {
-      const { policyEditable } = this;
-      this.policyEditable = {
-        ...policyEditable,
-        policyInstance: {
-          ...newTypeConfiguration.AuthorizationConfiguration,
-        },
-      };
     },
     handlePolicyTypeChange(newPolicyTypeId) {
       this.isConfigurePolicyVisible = true;
@@ -299,6 +275,27 @@ export default {
       const { openApiObjectToFlatObject } = Helpers;
       openApiObjectToFlatObject(formTemplate, newTypeConfiguration);
       this.handleConfigurationUpdate(newTypeConfiguration);
+    },
+    handleConfigurationUpdate(newTypeConfiguration) {
+      const { policyEditable } = this;
+      this.policyEditable = {
+        ...policyEditable,
+        policyinstance: {
+          ...newTypeConfiguration.configuration,
+        },
+      };
+    },
+    setPolicyConfigurationTemplate(newPolicyTypeId) {
+      const { typeid } = newPolicyTypeId || this.policyEditable;
+      if (typeid) {
+        const { policyTypes } = this;
+        this.policyConfigurationTemplate =
+          policyTypes
+          .find(item => item.uuid === typeid)
+          .template
+          .components
+          .schemas;
+      }
     },
   },
   mounted() {

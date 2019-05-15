@@ -63,6 +63,16 @@
             {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
           </span>
         </dd>
+
+      <dt>Member of Roles:</dt>
+        <dd>
+          <span 
+            v-for="(role, index) in userRoles"
+            v-bind:key="index"
+          >
+            {{ role.displayname }}<span v-if="index < userRoles.length - 1">,</span>
+          </span>
+        </dd>
       </dl>
       
       <dl class="col">
@@ -99,8 +109,20 @@
         @click="listUserOrganizations"
         :class="{'active': isShowUserOrganizations}"
       >
-      <Icon icon="user-friends" /> Organizations of User
+      <Icon icon="sitemap" /> Organizations of User
       <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Roles of User"
+        @click="listUserRoles"
+        :class="{'active': isShowUserRoles}"
+      >
+      <Icon icon="id-card" /> Roles of User
+      <b-badge pill>{{ userRoles.length }}</b-badge>
       </b-button>
 
     </div>
@@ -116,9 +138,9 @@
         :routePath="`/app/administer-users/users/${page}`"
       ></Organizations>
     </div>
-
-
-
+    <div v-if="isShowUserRoles">
+      <p>User roles.</p>
+    </div>
   </div>
 </template>
 
@@ -129,6 +151,7 @@ import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
 import Images from '@/components/shared/Images';
 import Organizations from '@/components/shared/subjects/organizations/Organizations';
+import Role from '@/components/routes/accessManagers/roles/Role';
 
 export default {
   props: {
@@ -147,12 +170,14 @@ export default {
     Groups,
     Images,
     Organizations,
+    Role,
   },
   computed: {
     ...mapState({
       organizations: state => state.organizations.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
+      roles: state => state.roles.items,
     }),
     secondaryEmail() {
       const { email, secondaryemail } = this.user;
@@ -168,6 +193,14 @@ export default {
         ),
       );
       return userGroups;
+    },
+    userRoles() {
+      const userRoles = this.roles.filter(item =>
+        this.memberships.some(r =>
+          r.subjectgroupid === item.uuid && r.subjectid === this.user.uuid,
+        ),
+      );
+      return userRoles;
     },
     computedUserOrganizations() {
       const userOrganizations = this.organizations.filter(item => this.userOrganizations.some(f =>
@@ -233,12 +266,21 @@ export default {
       this.isShowUserGroups = !this.isShowUserGroups;
       if (this.isShowUserGroups) {
         this.isShowUserOrganizations = false;
+        this.isShowUserRoles = false;
       }
     },
     listUserOrganizations() {
       this.isShowUserOrganizations = !this.isShowUserOrganizations;
       if (this.isShowUserOrganizations) {
         this.isShowUserGroups = false;
+        this.isShowUserRoles = false;
+      }
+    },
+    listUserRoles() {
+      this.isShowUserRoles = !this.isShowUserRoles;
+      if (this.isShowUserRoles) {
+        this.isShowUserGroups = false;
+        this.isShowUserOrganizations = false;
       }
     },
   },
@@ -250,7 +292,11 @@ export default {
       userOrganizations: [],
       isShowUserGroups: false,
       isShowUserOrganizations: false,
+      isShowUserRoles: false,
     };
+  },
+  created() {
+    this.$store.dispatch('roles/getRoles', {});
   },
 };
 </script>

@@ -34,12 +34,22 @@
               sortByKeyType="number"
             />
           </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
+              sortByKeyType="string"
+            />
+          </th>
           <th></th>
         </tr>
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="4"
+        :cols="5"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -53,8 +63,11 @@
             <img class="favimage" :src="item.picture"/>
             {{ item.displayname }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
             {{ item.contractscount }}
+          </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
@@ -75,7 +88,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
-          <td colspan="4">
+          <td colspan="5">
             <div class="collapsible-content">
               <App
                 :item="item"

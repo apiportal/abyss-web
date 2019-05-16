@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th class="status">Status</th>
           <th>Contract Name</th>
           <th>State</th>
@@ -14,6 +15,9 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+          <td class="status" @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
+            <Icon :icon=statusIcon(item.status) :class=statusClass(item.status) />
+          </td>
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.status }}
           </td>
@@ -114,6 +118,26 @@ export default {
       api.deleteContract(uuid).then(() => {
         this.onNeedsRefreshData();
       });
+    },
+    statusIcon(status) {
+      if (status === 'draft') {
+        return 'play-circle';
+      } else if (status === 'inforce') {
+        return 'check-circle';
+      } else if (status === 'archived') {
+        return 'stop-circle';
+      }
+      return '';
+    },
+    statusClass(status) {
+      if (status === 'draft') {
+        return 'text-primary';
+      } else if (status === 'inforce') {
+        return 'text-success';
+      } else if (status === 'archived') {
+        return 'text-danger';
+      }
+      return '';
     },
   },
 };

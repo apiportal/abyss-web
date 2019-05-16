@@ -39,6 +39,7 @@ export default {
         typename: '',
         description: '',
         organizationid: null,
+        isactive: true,
         attributetemplate: {},
       },
       page: this.$route.params.page,

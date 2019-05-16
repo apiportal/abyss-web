@@ -54,7 +54,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Used by Licenses"
+        title="Policy Attached Licenses"
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>

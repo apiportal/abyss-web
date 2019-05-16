@@ -43,6 +43,8 @@
         @click="handleToggleBusinessTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Business API of Proxy API"
         :class="{'active': isBusinessTableVisible}"
       >
         <span>Business API</span>
@@ -52,6 +54,8 @@
         @click="handleToggleLicensesTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Attached Licenses"
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
@@ -61,6 +65,8 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Proxy API Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>

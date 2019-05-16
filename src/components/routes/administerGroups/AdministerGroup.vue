@@ -42,7 +42,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Users"
+        title="Group Users"
         @click="listGroupUsers"
         :class="{'active': isShowGroupUsers}"
         v-if="group.users.length"

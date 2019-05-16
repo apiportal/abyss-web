@@ -63,16 +63,6 @@
               sortByKeyType="number"
             />
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Updated"
-              sortByKey="updated"
-              sortByKeyType="string"
-            />
-          </th>
           <th v-if="currentPage.firstChildPath === 'shared-with-me'">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -80,6 +70,16 @@
               :onClick="handleSortByClick"
               text="Owner"
               sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
               sortByKeyType="string"
             />
           </th>
@@ -115,11 +115,11 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
             {{ proxyItem.licensescount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
-          </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted" data-qa="dropDownActions">

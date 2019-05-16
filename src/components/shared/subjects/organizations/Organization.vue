@@ -39,7 +39,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Users"
+        title="Organization Users"
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organization.organizationusers && organization.organizationusers.length"

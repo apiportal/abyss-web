@@ -11,16 +11,16 @@
         <dd>{{ item.openapidocument.info.title }}</dd>
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
-        <dt>Organization:</dt>
-        <dd>{{ item.organizationame }}</dd>
-      </dl>
-      <dl class="col col-md-2">
         <dt>State:</dt>
         <dd>{{ item.apistatename }}</dd>
+      </dl>
+      <dl class="col col-md-2">
         <dt>Visibility:</dt>
         <dd>{{ item.apivisibilityname }}</dd>
         <dt>Environment:</dt>
         <dd>{{ environment(item) }}</dd>
+        <dt>Organization:</dt>
+        <dd>{{ getOrganizationName(item.organizationid) }}</dd>
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
@@ -28,6 +28,15 @@
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
       </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Updated:</dt>
+        <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="item.isdeleted">Deleted:</dt>
+        <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
+
     </div>
     <div class="row abyss-table-buttons">
       <b-button
@@ -89,6 +98,7 @@ export default {
   computed: {
     ...mapState({
       businessApis: state => state.businessApis.items,
+      organizations: state => state.organizations.items,
     }),
     computedBusinessApi() {
       return this.businessApis.filter(item =>
@@ -137,6 +147,11 @@ export default {
   methods: {
     environment(item) {
       return item.islive ? 'Live' : 'Sandbox';
+    },
+    getOrganizationName(organizationId) {
+      const { organizations } = this;
+      const organization = organizations.find(i => i.uuid === organizationId) || {};
+      return organization.name || organizationId;
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;

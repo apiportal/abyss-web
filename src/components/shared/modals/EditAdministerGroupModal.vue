@@ -88,7 +88,7 @@
           <b-form-group id="groupEnabledGroup">
             <b-form-checkbox
               id="groupEnabledChecks"
-              v-model="groupEditable.isactivated"
+              v-model="groupEditable.isactivated"	
               :value="true"
               :unchecked-value="false"
             >

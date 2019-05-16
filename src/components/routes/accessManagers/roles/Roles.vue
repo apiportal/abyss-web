@@ -178,10 +178,10 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/roles/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/roles/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/roles/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Role</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/roles/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Role</b-dropdown-item>
 
-                <b-dropdown-header></b-dropdown-header>
+                <b-dropdown-header class="p-0"></b-dropdown-header>
                 <b-dropdown-item data-qa="btnRolePermissions" :to="`/app/roles/${page}/edit-role-permissions/${item.uuid}`"><Icon icon="user-cog" /> Edit Role Permissions</b-dropdown-item>
                 <b-dropdown-item data-qa="btnRoleUsers" :to="`/app/roles/${page}/edit-role-users/${item.uuid}`"><Icon icon="users" /> Edit Role Users</b-dropdown-item>
                 <b-dropdown-item data-qa="btnRoleGroups" :to="`/app/roles/${page}/edit-role-groups/${item.uuid}`"><Icon icon="user-friends" /> Edit Role Groups</b-dropdown-item>

@@ -6,7 +6,6 @@
           <th class="status">Status</th>
           <th>Contract Name</th>
           <th>State</th>
-          <th>Environment</th>
           <th></th>
         </tr>
       </thead>
@@ -23,9 +22,6 @@
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.contractstatename }}
-          </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
-            {{ item.environment }}
           </td>
           <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">

@@ -7,6 +7,7 @@
           <dd>{{ item.name }}</dd>
           <dt>Description:</dt>
           <dd>{{ item.description }}</dd>
+          {{ item.uuid }}
         </dl>
         <dl class="col">
           <dt>Environment:</dt>
@@ -14,7 +15,7 @@
           <dt>Status:</dt>
           <dd>{{ item.status }}</dd>
           <dt>State:</dt>
-          <dd>{{ state }}</dd>
+          <dd>{{ state }} - {{ item.contractstateid }}</dd>
         </dl>
         <dl class="col">
           <dt>Created:</dt>

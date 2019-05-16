@@ -40,6 +40,12 @@
           </b-link>
 
           <b-link
+            to="/app/my-contracts/my-contracts/1"
+            :class="`${currentPage.rootPath === 'my-contracts' ? 'selected' : ''}`" data-qa="sideMenuMyContracts">
+            <span class="route-icon"><Icon icon="file-signature" /></span> My Contracts
+          </b-link> 
+
+          <b-link
             to="/app/my-licenses/my-licenses/1"
             :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
@@ -50,7 +56,6 @@
             :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="atlas" /></span> My Policies
           </b-link> 
-
 
           <p>ADMIN</p>
           

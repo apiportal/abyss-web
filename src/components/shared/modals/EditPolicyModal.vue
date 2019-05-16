@@ -105,6 +105,11 @@
           :class="`configure-directory ${isConfigurePolicyVisible ? 'd-block' : 'd-none'}`"
         >
           <h5 class="mb-3">Configure Policy</h5>
+          <!-- {{policyInfo}}
+          <hr>
+          {{policyEditable.policyinstance }}
+          <hr>
+          {{policyConfigurationTemplate}} -->
           <DynamicForm
             :formTemplate="policyConfigurationTemplate"
             :formData="{ configuration: policyEditable.policyinstance }"
@@ -235,10 +240,11 @@ export default {
       policyEditable: JSON.parse(JSON.stringify(this.policy)),
       isConfigurePolicyVisible: false,
       policyConfigurationTemplate: {},
+      policyInfo: {},
     };
   },
   methods: {
-    ...mapActions('policies', ['putPolicies', 'postPolicies']),
+    ...mapActions('subjectPolicies', ['putPolicies', 'postPolicies']),
     handleSubmit(evt) {
       evt.preventDefault();
       const { policyEditable, putPolicies, postPolicies, onUpdate, role } = this;
@@ -282,6 +288,10 @@ export default {
         ...policyEditable,
         policyinstance: {
           ...newTypeConfiguration.configuration,
+          info: {
+            type: this.policyInfo['x-type'],
+            subType: this.policyInfo['x-subType'],
+          },
         },
       };
     },
@@ -295,6 +305,11 @@ export default {
           .template
           .components
           .schemas;
+        this.policyInfo =
+          policyTypes
+          .find(item => item.uuid === typeid)
+          .template
+          .info;
       }
     },
   },

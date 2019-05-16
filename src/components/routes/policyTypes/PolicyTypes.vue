@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/policy-types/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Policy Type"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -229,7 +231,7 @@ export default {
       currentUser: state => state.user,
       isLoading: state => state.traffic.isLoading,
       policyTypes: state => state.policyTypes.items,
-      policies: state => state.policies.items,
+      policies: state => state.subjectPolicies.items,
       organizations: state => state.organizations.items,
       subjectLicenses: state => state.subjectLicenses.items,
       subjectPolicies: state => state.subjectPolicies.items,
@@ -281,7 +283,7 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'policy-types');
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
-    this.$store.dispatch('policies/getPolicies', {});
+    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});
   },

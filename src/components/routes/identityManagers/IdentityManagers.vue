@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Identity Manager"
             class="page-btn-add"
             block
             data-qa="btnAddNew"

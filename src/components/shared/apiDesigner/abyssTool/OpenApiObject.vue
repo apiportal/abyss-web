@@ -61,7 +61,7 @@
       <span v-if="type === 'Server Object' && !isMap && !isArray" class="oao-dropdown">
         <b-dropdown variant="link" size="sm" right no-caret>
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteArrayItem">Delete tag</b-dropdown-item>
+          <b-dropdown-item @click="handleDeleteArrayItem">Delete Server</b-dropdown-item>
         </b-dropdown>
       </span>
       <span v-if="type === 'Tag Object' && !isMap && !isArray" class="oao-dropdown">
@@ -74,7 +74,8 @@
         {{ title }} <span style="font-size: .75rem; color: grey;">{{ description }}</span>
       </span>
       <span v-else>
-        {{ item }}
+        <strong>{{ item }}</strong>
+        <small class="text-muted">{{type}} - {{typeHelper}}</small>
       </span>
     </div>
     <div v-if="isCollapsed" class="open-api-object-container">
@@ -158,6 +159,7 @@
             type === 'Request Body Object' ||
             type === 'Parameter Object' ||
             type === 'Callback Object' ||
+            type === 'Schema Object' ||
             type === 'Security Scheme Object'
           "
           style="margin-bottom: 1rem;"
@@ -283,6 +285,16 @@ export default {
     formDataKeys() {
       return Object.keys(this.formData);
     },
+    typeHelper() {
+      if (this.isMapWithRegex) {
+        return 'isMapWithRegex';
+      } else if (this.isMap) {
+        return 'isMap';
+      } else if (this.isArray) {
+        return ('isArray');
+      }
+      return 'isElse';
+    },
   },
   data() {
     return {
@@ -304,6 +316,7 @@ export default {
       }
     },
     addArrayItem(pathArray, currentItems) {
+      console.log('pathArray, currentItems: ', pathArray, currentItems); // eslint-disable-line
       this.onChange(pathArray, [...currentItems, {}]);
     },
     getTitle(type, data) {
@@ -342,32 +355,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.open-api-object {
-  border: 1px solid silver;
-  border-radius: .3rem;
-
-  &.collapsed {
-    border-left: 4px solid #0088CC;
-  }
-
-  .open-api-object-title {
-    padding: .5rem;
-    cursor: pointer;
-  }
-
-  .oao-dropdown {
-    float: right;
-    margin-right: .5rem;
-
-    .btn-sm {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-  }
-}
-
-.open-api-object-container {
-  padding: 1rem;
-  border-top: 1px solid silver;
-}
 </style>

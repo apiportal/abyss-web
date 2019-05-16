@@ -19,7 +19,6 @@
     <template>
       <ApiDesigner
         :api="api"
-        :height="700"
         :title="api.openapidocument.info.title"
         :onClose="onClose"
         :role="role"

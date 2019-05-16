@@ -41,6 +41,7 @@
         v-if="activeTab === 'componentsTags'"
         :openapidocument="api.openapidocument"
         :onChange="onChange"
+        :refs="refs"
       />
       <Information
         v-if="activeTab === 'information'"

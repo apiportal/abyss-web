@@ -327,6 +327,12 @@
     }
   },
   "Operation Object": {
+    "operationId": {
+      "type": "string"
+    },
+    "deprecated": {
+      "type": "boolean"
+    },
     "tags": {
       "type": "string",
       "Array": true
@@ -338,11 +344,9 @@
       "type": "string",
       "Markdown": true
     },
-    "externalDocs": {
-      "type": "External Documentation Object"
-    },
-    "operationId": {
-      "type": "string"
+    "security": {
+      "type": "Security Requirement Object",
+      "Array": true
     },
     "parameters": {
       "type": "Parameter Object",
@@ -357,20 +361,16 @@
       "Required": true,
       "MapWithRegex": true
     },
+    "servers": {
+      "type": "Server Object",
+      "Array": true
+    },
     "callbacks": {
       "type": "Callback Object",
       "Map": true
     },
-    "deprecated": {
-      "type": "boolean"
-    },
-    "security": {
-      "type": "Security Requirement Object",
-      "Array": true
-    },
-    "servers": {
-      "type": "Server Object",
-      "Array": true
+    "externalDocs": {
+      "type": "External Documentation Object"
     }
   },
   "Paths Object": {
@@ -387,6 +387,15 @@
       "type": "string",
       "Markdown": true
     },
+    "servers": {
+      "type": "Server Object"
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Array": true
+    }
+  },
+  "Path Item Object Operations": {
     "get": {
       "type": "Operation Object"
     },
@@ -410,13 +419,6 @@
     },
     "trace": {
       "type": "Operation Object"
-    },
-    "servers": {
-      "type": "Server Object"
-    },
-    "parameters": {
-      "type": "Parameter Object",
-      "Array": true
     }
   },
   "Server Variable Object": {

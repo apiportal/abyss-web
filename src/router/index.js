@@ -162,6 +162,10 @@ export default new Router({
       component: Home,
     },
     {
+      path: '/test/:apiId',
+      component: EditMyApis,
+    },
+    {
       path: '/auth',
       component: AuthLayout,
       children: [

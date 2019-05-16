@@ -80,9 +80,29 @@ const paginateArray = ({ array, itemsPerPage, page }) => {
 };
 
 const objectDeepUpdate = (propPath, value, object, customAction) => {
+  // console.log('propPath.length : ', propPath.length, propPath, value, object, customAction );
+  // console.log('propPath.length : ', propPath.length, object);
   if (propPath.length > 1) {
     if (object[propPath[0]] === undefined) {
       object[propPath[0]] = {}; // eslint-disable-line
+    }
+    if (propPath.length === 2 && customAction === 'renameItem') {
+      const keys = Object.keys(object[propPath[0]]);
+      object[propPath[0]] = keys.reduce((acc, val)=>{
+        if(val === propPath[1]){
+          acc[value] = object[propPath[0]][propPath[1]];
+        } else {
+          acc[val] = object[propPath[0]][val];
+        }
+        return acc;
+      }, {});
+      return true;
+    }
+    if (propPath.length === 2 && customAction === 'addItem') {
+      // console.log('object[propPath[0]]: ', object[propPath[0]]);
+      // console.log('addItem 012: ', propPath[0], propPath[1], propPath[2]);
+      object[propPath[0]][propPath[1]] = value;
+      return true;
     }
     if (propPath.length === 2 && customAction === 'deleteLastItem') {
       delete object[propPath[0]][propPath[1]];

@@ -38,6 +38,7 @@
         >
           <PathItem
             :path="path"
+            :pathObject="paths[path]"
             :operations="operations.filter(item => item.parentProps.path === path)"
             :onChange="onChange"
             :refs="refs"
@@ -89,6 +90,8 @@ export default {
         const pathOperations = operationKeys
         .filter(item => (
           item !== 'description' &&
+          item !== 'servers' &&
+          item !== 'parameters' &&
           item !== 'summary'
         ))
         .reduce((operationAccumulator, operationValue) => (
@@ -103,10 +106,18 @@ export default {
         return [...pathAccumulator, ...pathOperations];
       }, []);
     },
+    // tags() {
+    //   const { operations } = this;
+    //   return operations.reduce((operationAccumulator, operationValue) => {
+    //     const { tags } = operationValue;
+    //     const newTags = tags.filter(tag => (operationAccumulator.indexOf(tag) === -1));
+    //     return [...operationAccumulator, ...newTags];
+    //   }, []);
+    // },
     tags() {
       const { operations } = this;
       return operations.reduce((operationAccumulator, operationValue) => {
-        const { tags } = operationValue;
+        const tags = operationValue.tags || ['default'];
         const newTags = tags.filter(tag => (operationAccumulator.indexOf(tag) === -1));
         return [...operationAccumulator, ...newTags];
       }, []);

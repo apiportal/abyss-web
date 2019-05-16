@@ -53,7 +53,7 @@
       </b-button-toolbar>
     </div>
 
-    <div class="api-designer-columns-container" :style="`height: ${height}px`">
+    <div class="api-designer-columns-container">
       <div 
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
@@ -133,11 +133,6 @@ export default {
       required: false,
       default() { return {}; },
     },
-    height: {
-      type: Number,
-      required: false,
-      default() { return 500; },
-    },
     title: {
       type: String,
       required: false,
@@ -215,6 +210,7 @@ export default {
       this.mode = mode;
     },
     handleChange(propAddress, newPropValue, customAction) {
+      console.log('propAddress, newPropValue, customAction: ', propAddress, newPropValue, customAction); // eslint-disable-line
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
@@ -491,6 +487,7 @@ export default {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
+    height: calc(100vh - 205px);
 
     .api-designer-abyss-container {
       display: flex;

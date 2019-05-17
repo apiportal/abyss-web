@@ -81,7 +81,7 @@ export default {
 <style lang="scss">
 .operation {
   margin-bottom: 1rem;
-  border-radius: .3rem;
+  border-radius: .0rem;
   
   .operation-bar {
     padding: .5rem;
@@ -89,7 +89,7 @@ export default {
     cursor: pointer;
 
     & > .operation-name {
-      border-radius: .3rem;
+      border-radius: .0rem;
       text-transform: uppercase;
       font-weight: bold;
       color: white;
@@ -119,7 +119,7 @@ export default {
   }
 
   .operation-details {
-    padding: .5rem;
+    padding: 1rem;
   }
 
   &.operation-get {
@@ -184,6 +184,45 @@ export default {
 
     .operation-details {
       border-top: 1px solid #50e3c2;
+    }
+  }
+
+  &.operation-options {
+    border: 1px solid #0d5aa7;
+    background: rgba(13,90,167,.1);
+
+    .operation-name {
+      background: #0d5aa7;
+    }
+
+    .operation-details {
+      border-top: 1px solid #0d5aa7;
+    }
+  }
+
+  &.operation-head {
+    border: 1px solid #9012fe;
+    background: rgba(144,18,254,.1);
+
+    .operation-name {
+      background: #9012fe;
+    }
+
+    .operation-details {
+      border-top: 1px solid #9012fe;
+    }
+  }
+
+  &.operation-trace {
+    border: 1px solid #000000;
+    background: rgba(0,0,0,.1);
+
+    .operation-name {
+      background: #000000;
+    }
+
+    .operation-details {
+      border-top: 1px solid #000000;
     }
   }
 }

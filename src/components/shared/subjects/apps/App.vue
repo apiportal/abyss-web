@@ -38,6 +38,8 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="APP Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>

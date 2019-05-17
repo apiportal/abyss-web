@@ -14,7 +14,7 @@
               data-qa="tableHeadName"
             />
           </th>
-          <th>
+          <!-- <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -23,7 +23,7 @@
               sortByKey="islive"
               sortByKeyType="boolean"
             />
-          </th>
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -90,15 +90,15 @@
             <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ item.openapidocument.info.title }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ environment(item) }}
-          </td>
+          </td> -->
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             <Icon icon="circle" :class="`state${item.apistatename}`"/>
-            {{ item.apistatename }}
+            {{ item.apistatename }} - {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.apivisibilityname }}

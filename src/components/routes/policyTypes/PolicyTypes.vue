@@ -146,8 +146,8 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/policy-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/policy-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/policy-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Policy Type</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/policy-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Policy Type</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 

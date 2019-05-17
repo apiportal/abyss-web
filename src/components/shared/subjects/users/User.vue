@@ -43,7 +43,7 @@
           </span>
         </dd> -->
 
-        <dt>Member of Organizations:</dt>
+        <dt>User Organizations:</dt>
         <dd>
           <span 
             v-for="(organization, index) in computedUserOrganizations"
@@ -54,7 +54,7 @@
         </dd>
 
 
-        <dt>Member of Groups:</dt>
+        <dt>User Groups:</dt>
         <dd>
           <span 
             v-for="(group, index) in userGroups"
@@ -83,11 +83,11 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Groups of User"
+        title="User Groups"
         @click="listUserGroups"
         :class="{'active': isShowUserGroups}"
       >
-      <Icon icon="user-friends" /> Groups of User
+      <Icon icon="user-friends" /> User Groups
       <b-badge pill>{{ userGroups.length }}</b-badge>
       </b-button>
       
@@ -95,11 +95,11 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Organizations of User"
+        title="User Organizations"
         @click="listUserOrganizations"
         :class="{'active': isShowUserOrganizations}"
       >
-      <Icon icon="user-friends" /> Organizations of User
+      <Icon icon="user-friends" /> User Organizations
       <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
       </b-button>
 

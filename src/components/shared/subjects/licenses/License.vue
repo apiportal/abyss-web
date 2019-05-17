@@ -56,6 +56,9 @@
         @click="handleTogglePoliciesTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Policies attached to License"
+
         :class="{'active': isPoliciesTableVisible}"
       >
         <span>Policies</span>
@@ -66,9 +69,11 @@
         @click="handleToggleApisTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Proxy APIs using this License"
         :class="{'active': isApisTableVisible}"
       >
-        <span>Proxy APIs with this License</span>
+        <span>Proxy APIs</span>
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
@@ -76,9 +81,11 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Contracts with this License"
         :class="{'active': isContractsTableVisible}"
       >
-        <span>Contracts with this License</span>
+        <span>Contracts</span>
         <b-badge pill>{{ computedLicenseContracts.length }}</b-badge>
       </b-button>
     </div>

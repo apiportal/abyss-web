@@ -7,7 +7,7 @@
         <div 
           v-for="(templateItem, templateIndex) in Object.keys(items.properties)"
           v-bind:key="templateIndex"
-          class="col-md-4"
+          class="col"
         >
           <DynamicFormInputString
             v-if="items.properties[templateItem].type === 'string'"
@@ -26,7 +26,7 @@
             :example="items.properties[templateItem].example"
           />
         </div>
-        <div class="col-md-1">
+        <div class="col-auto">
           <b-button @click="handleDeleteItemArrayObject(valueIndex)" style="margin-top: 32px;">
             <Icon icon="trash-alt" />
           </b-button>

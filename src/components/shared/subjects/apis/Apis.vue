@@ -14,7 +14,7 @@
               data-qa="tableHeadName"
             />
           </th>
-          <th>
+          <!-- <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -23,7 +23,7 @@
               sortByKey="islive"
               sortByKeyType="boolean"
             />
-          </th>
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -87,16 +87,17 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+            <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ item.openapidocument.info.title }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ environment(item) }}
-          </td>
+          </td> -->
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.apistatename }}
+            {{ item.apistatename }} - {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.apivisibilityname }}
@@ -116,6 +117,8 @@
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${item.uuid}`"><Icon icon="bezier-curve" /> Change API Lifecycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -149,6 +152,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
 
 export default {
   name: 'Apis',
@@ -225,6 +229,7 @@ export default {
     TBodyLoading,
     Icon,
     SortBy,
+    Images,
   },
   data() {
     return {
@@ -254,3 +259,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

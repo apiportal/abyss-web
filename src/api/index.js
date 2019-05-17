@@ -548,6 +548,9 @@ export default {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },
   // api-licenses
+  getExploreApis() {
+    return axios.get('/abyss/oapi/apis/proxies/explore');
+  },
   getExploreApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },

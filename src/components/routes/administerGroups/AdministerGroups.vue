@@ -38,6 +38,8 @@
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover 
+            title="Add New Group"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -129,8 +131,8 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Group</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Group</b-dropdown-item>
 
                 <b-dropdown-header class="p-0"></b-dropdown-header>
 

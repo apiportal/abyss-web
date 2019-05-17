@@ -29,6 +29,10 @@ export default {
       type: Object,
       required: false,
     },
+    role: {
+      type: String,
+      required: false,
+    },
   },
   computed: {
     ...mapState({
@@ -50,9 +54,13 @@ export default {
       this.infoText = apiStates.find(item => item.name === state);
     },
     changeState(state) {
-      const { apiStates } = this;
+      const { apiStates, role } = this;
       this.nextApiState = apiStates.find(item => item.name === state);
-      this.$store.commit('proxies/setNextStateId', this.nextApiState.uuid);
+      if (role === 'proxyApi') {
+        this.$store.commit('proxies/setNextStateId', this.nextApiState.uuid);
+      } else if (role === 'businessApi') {
+        this.$store.commit('businessApis/setNextStateId', this.nextApiState.uuid);
+      }
     },
   },
 };

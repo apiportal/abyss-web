@@ -6,7 +6,8 @@
 import ace from 'brace';
 import json from 'brace/mode/json'; // eslint-disable-line no-unused-vars
 import yaml from 'brace/mode/yaml'; // eslint-disable-line no-unused-vars
-import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
+import tomorrowNightEighties from 'brace/theme/tomorrow_night_eighties'; // eslint-disable-line no-unused-vars
+// import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
 
 export default {
   props: {
@@ -23,7 +24,7 @@ export default {
     theme: {
       type: String,
       required: false,
-      default() { return 'eclipse'; },
+      default() { return 'tomorrow_night_eighties'; },
     },
     onChange: {
       type: Function,

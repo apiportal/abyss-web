@@ -9,14 +9,22 @@
       <dl class="col">
         <dt>Business Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
-      </dl>
-      <dl class="col">
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
+        <dt>State:</dt>
+        <dd>{{ item.apistatename }}</dd>     
       </dl>
       <dl class="col">
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Updated:</dt>
+        <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="item.isdeleted">Deleted:</dt>
+        <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
     <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">

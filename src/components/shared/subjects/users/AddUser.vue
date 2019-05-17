@@ -54,6 +54,7 @@ export default {
         lastname: '',
         displayname: '',
         subjectname: '',
+        isactivated: true,
         password: '',
         email: '',
         url: '',

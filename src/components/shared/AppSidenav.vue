@@ -6,6 +6,8 @@
         <div class="row">
           <b-form-select
             :value="currentUser.organizationid"
+            v-b-tooltip.hover 
+            title="Change Organization"
             :options="organizationOptions"
             @change="handleOrganizationChange"
             data-qa="sideMenuSwitchOrganization"

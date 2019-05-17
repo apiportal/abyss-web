@@ -9,7 +9,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
-    data-qa="modalEditProxyApiLifeCycle"
+    data-qa="modalEditBusinessApiLifeCycle"
   >
     <template slot="header">
       <h5 class="modal-title">
@@ -18,7 +18,7 @@
     </template>
     <template>
       <LifeCycle
-        role="proxyApi"
+        role="businessApi"
         :currentApiState="computedApiState"
         @clicked="onClickLifeCycle"
       />
@@ -93,7 +93,7 @@ export default {
       type: Function,
       required: true,
     },
-    proxy: {
+    businessApi: {
       type: Object,
       required: false,
     },
@@ -101,29 +101,29 @@ export default {
   computed: {
     ...mapState({
       apiStates: state => state.apiStates.items,
-      apiNextState: state => state.proxies.nextStateId,
+      apiNextState: state => state.businessApis.nextStateId,
     }),
     computedApiState() {
-      const { proxy, apiStates } = this;
-      return apiStates.find(item => item.uuid === proxy.apistateid);
+      const { businessApi, apiStates } = this;
+      return apiStates.find(item => item.uuid === businessApi.apistateid);
     },
   },
   data() {
     return {
       readNewState: '',
-      proxyEditable: JSON.parse(JSON.stringify(this.proxy)),
+      businessApiEditable: JSON.parse(JSON.stringify(this.businessApi)),
     };
   },
   methods: {
-    ...mapActions('proxies', ['putProxies']),
+    ...mapActions('businessApis', ['putBusinessApis']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { proxyEditable, onUpdate, putProxies, apiNextState } = this;
-      const proxyToUpdate = {
-        ...proxyEditable,
+      const { businessApiEditable, onUpdate, putBusinessApis, apiNextState } = this;
+      const businessApiToUpdate = {
+        ...businessApiEditable,
         apistateid: apiNextState,
       };
-      putProxies(proxyToUpdate).then((response) => {
+      putBusinessApis(businessApiToUpdate).then((response) => {
         if (response && response.data) {
           onUpdate();
         }

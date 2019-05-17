@@ -63,16 +63,6 @@
               sortByKeyType="number"
             />
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Updated"
-              sortByKey="updated"
-              sortByKeyType="string"
-            />
-          </th>
           <th v-if="currentPage.firstChildPath === 'shared-with-me'">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -80,6 +70,16 @@
               :onClick="handleSortByClick"
               text="Owner"
               sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
               sortByKeyType="string"
             />
           </th>
@@ -97,6 +97,7 @@
       >
         <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
+            <Images :uuid="proxyItem.uuid" :itext="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -114,11 +115,11 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
             {{ proxyItem.licensescount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
-          </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted" data-qa="dropDownActions">
@@ -130,7 +131,7 @@
 
               <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
 
-              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Change API Lifecycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -166,6 +167,7 @@ import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
 
 export default {
   props: {
@@ -270,6 +272,7 @@ export default {
     Icon,
     SortBy,
     Proxy,
+    Images,
   },
   data() {
     return {
@@ -307,3 +310,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+</style>

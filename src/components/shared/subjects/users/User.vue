@@ -14,6 +14,8 @@
         <dd>{{ user.lastname }}</dd>
         <dt>Display Name:</dt>
         <dd>{{ user.displayname }}</dd>
+        <dt>Main Organization:</dt>
+        <dd>{{ user.organizationname }}</dd>
       </dl>
   
       <dl class="col">
@@ -31,48 +33,7 @@
       </dl>
   
       <dl class="col">
-        <dt>Main Organization:</dt>
-        <dd>{{ user.organizationname }}</dd>
-        <!-- <dt>Member of Organizations:</dt>
-        <dd> -->
-          <!-- <span 
-            v-for="(organization, index) in computedUserOrganizations"
-            v-bind:key="index"
-          >
-            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
-          </span>
-        </dd> -->
 
-        <dt>Member of Organizations:</dt>
-        <dd>
-          <span 
-            v-for="(organization, index) in computedUserOrganizations"
-            v-bind:key="index"
-          >
-            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
-          </span>
-        </dd>
-
-
-        <dt>Member of Groups:</dt>
-        <dd>
-          <span 
-            v-for="(group, index) in userGroups"
-            v-bind:key="index"
-          >
-            {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
-          </span>
-        </dd>
-
-      <dt>Member of Roles:</dt>
-        <dd>
-          <span 
-            v-for="(role, index) in userRoles"
-            v-bind:key="index"
-          >
-            {{ role.displayname }}<span v-if="index < userRoles.length - 1">,</span>
-          </span>
-        </dd>
       </dl>
       
       <dl class="col">
@@ -93,23 +54,11 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Groups of User"
-        @click="listUserGroups"
-        :class="{'active': isShowUserGroups}"
-      >
-      <Icon icon="user-friends" /> Groups of User
-      <b-badge pill>{{ userGroups.length }}</b-badge>
-      </b-button>
-      
-      <b-button
-        size="md"
-        variant="link"
-        v-b-tooltip.hover
-        title="Organizations of User"
+        title="User Organizations"
         @click="listUserOrganizations"
         :class="{'active': isShowUserOrganizations}"
       >
-      <Icon icon="sitemap" /> Organizations of User
+      <Icon icon="home" /> User Organizations
       <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
       </b-button>
 
@@ -117,26 +66,38 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Roles of User"
+        title="User Groups"
+        @click="listUserGroups"
+        :class="{'active': isShowUserGroups}"
+      >
+      <Icon icon="users" /> User Groups
+      <b-badge pill>{{ userGroups.length }}</b-badge>
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="User Roles"
         @click="listUserRoles"
         :class="{'active': isShowUserRoles}"
       >
-      <Icon icon="id-card" /> Roles of User
+      <Icon icon="id-card" /> User Roles
       <b-badge pill>{{ userRoles.length }}</b-badge>
       </b-button>
 
-    </div>
-    <div v-if="isShowUserGroups">
-      <Groups
-        :rows="userGroups"
-        :routePath="`/app/administer-users/users/${page}`"
-      ></Groups>
     </div>
     <div v-if="isShowUserOrganizations">
       <Organizations
         :rows="computedUserOrganizations"
         :routePath="`/app/administer-users/users/${page}`"
       ></Organizations>
+    </div>
+    <div v-if="isShowUserGroups">
+      <Groups
+        :rows="userGroups"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Groups>
     </div>
     <div v-if="isShowUserRoles">
       <Roles

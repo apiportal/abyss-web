@@ -8,12 +8,13 @@
     </label>
     <b-form-input
       type="number"
-      v-model="inputValue"
+      v-model.number="inputValue"
       :state="state"
       :placeholder="example.toString()"
       :required="required"
       :disabled="readonly"
       @keyup.native="handleKeyup"
+      @change.native="handleKeyup"
     >
     </b-form-input>
   </b-form-group>
@@ -63,7 +64,7 @@ export default {
       const { inputValue, required } = this;
 
       if (required) {
-        return inputValue.length > 0;
+        return inputValue.toString().length > 0;
       }
 
       return true;

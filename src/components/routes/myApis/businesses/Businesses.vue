@@ -27,7 +27,7 @@
           <b-button
             :to="`/app/my-apis/businesses/${page}/add-new-api`"
             v-b-tooltip.hover 
-            title="Add"
+            title="Add New Business API"
             variant="primary"
             class="page-btn-add"
             block

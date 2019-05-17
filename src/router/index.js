@@ -39,7 +39,8 @@ import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import CreateProxy from '@/components/routes/myApis/CreateProxy';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
-import EditMyApisLifeCycle from '@/components/routes/myApis/EditMyApisLifeCycle';
+import EditMyProxyApisLifeCycle from '@/components/routes/myApis/EditMyProxyApisLifeCycle';
+import EditMyBusinessApisLifeCycle from '@/components/routes/myApis/EditMyBusinessApisLifeCycle';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -161,6 +162,10 @@ export default new Router({
       component: Home,
     },
     {
+      path: '/test/:apiId',
+      component: EditMyApis,
+    },
+    {
       path: '/auth',
       component: AuthLayout,
       children: [
@@ -236,6 +241,10 @@ export default new Router({
                   path: 'create-proxy/:apiId',
                   component: CreateProxy,
                 },
+                {
+                  path: 'edit-api-lifecycle/:apiId',
+                  component: EditMyBusinessApisLifeCycle,
+                },
               ],
             },
             {
@@ -308,7 +317,7 @@ export default new Router({
                 },
                 {
                   path: 'edit-api-lifecycle/:apiId',
-                  component: EditMyApisLifeCycle,
+                  component: EditMyProxyApisLifeCycle,
                 },
               ],
             },

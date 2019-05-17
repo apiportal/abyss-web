@@ -77,19 +77,19 @@ export default {
   },
   computed: {
     ...mapState({
-      contracts: state => state.contracts.items,
+      userContracts: state => state.userContracts.items,
       currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { contracts } = this;
+      const { userContracts } = this;
       // const getTypeName = (typeId) => {
       //   const type = policyTypes.find(policyType => policyType.uuid === typeId);
       //   return type ? type.name : typeId;
       // };
       return sortArrayOfObjects({
-        array: contracts
+        array: userContracts
         .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -143,7 +143,7 @@ export default {
       this.$router.push(`/app/my-contracts/my-contracts/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('contracts/getAllContracts', {
+      this.$store.dispatch('userContracts/getUserContracts', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });

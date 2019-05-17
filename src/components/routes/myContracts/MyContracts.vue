@@ -25,11 +25,12 @@ import { mapState } from 'vuex';
 export default {
   computed: {
     ...mapState({
-      contracts: state => state.contracts.items,
+      userContracts: state => state.userContracts.items,
+      currentUser: state => state.user,
     }),
   },
   mounted() {
-    this.$store.dispatch('contracts/getAllContracts', {});
+    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
     this.$store.dispatch('contractStates/getContractStates', {});
   },
 };

@@ -139,7 +139,10 @@
       ></Organizations>
     </div>
     <div v-if="isShowUserRoles">
-      <p>User roles.</p>
+      <Roles
+        :rows="userRoles"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Roles>
     </div>
   </div>
 </template>
@@ -151,7 +154,7 @@ import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
 import Images from '@/components/shared/Images';
 import Organizations from '@/components/shared/subjects/organizations/Organizations';
-import Role from '@/components/routes/accessManagers/roles/Role';
+import Roles from '@/components/shared/subjects/roles/Roles';
 
 export default {
   props: {
@@ -170,7 +173,7 @@ export default {
     Groups,
     Images,
     Organizations,
-    Role,
+    Roles,
   },
   computed: {
     ...mapState({

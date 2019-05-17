@@ -3,7 +3,10 @@
 
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
-          <b-nav-item :active="false">
+          <b-nav-item 
+            :active="false"
+            to="/app/access-managers/1"
+          >
             <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
           </b-nav-item>
           <b-nav-item

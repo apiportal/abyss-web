@@ -25,16 +25,16 @@
               </dd>
               <dt>Version</dt>
               <dd>{{ api.version }}</dd>
-              <dt>Environment</dt>
-              <dd>{{ getEnvironment(api) }}</dd>
+              <dt>State</dt>
+              <dd>{{ getApiStateName(api.apistateid) }}</dd>
               <dt>Owner</dt>
               <dd>{{ api.apiowner }}</dd>
             </dl>
           </b-col>
           <b-col md="3">
             <dl>
-              <dt>State</dt>
-              <dd>{{ getApiStateName(api.apistateid) }}</dd>
+              <dt>Environment</dt>
+              <dd>{{ getEnvironment(api) }}</dd>
               <dt>Visibility</dt>
               <dd>{{ getApiVisibilityName(api.apivisibilityid) }}</dd>
               <dt>License</dt>
@@ -73,6 +73,8 @@
                   <b-form-group 
                     id="selectedAppId"
                     label="My Apps:"
+                    v-b-tooltip.hover
+                    title="My Please select your APP to Subscribe"
                     label-for="selectedAppIdInput"
                   >
                     <b-form-select
@@ -107,6 +109,8 @@
             @click="handleToggleLicensesTable"
             size="md"
             variant="link"
+            v-b-tooltip.hover
+            title="Avaliable Licenses to select"
             :class="{'active': isLicensesTableVisible}"
           >
             <span>Licenses</span>
@@ -116,6 +120,9 @@
             @click="handleToggleContractsTable"
             size="md"
             variant="link"
+            v-b-tooltip.hover
+            :title="`My existing Contracts with ${api.apititle}`"
+
             v-if="isMineApi"
             :class="{'active': isContractsTableVisible}"
           >

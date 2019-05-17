@@ -2,7 +2,11 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
+        <dt class="pb-2">
+          <!-- <img src="https://dev2.apiportal.com/abyss/oapi/subjects/image/644f8124-7b95-49fd-bc4a-1823fc416c84" style="width: 250px;">
+          <Images :uuid="item.uuid" :itext="item.displayname" :color="item.color" type="subjects" shape="rectangle" class="favimage"></Images> -->
+          <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="rectangle" width="200px"></Pictures>
+        </dt>
       </dl>
       <dl class="col">
         <dt>App Name:</dt>
@@ -58,6 +62,8 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -78,6 +84,8 @@ export default {
   },
   components: {
     Icon,
+    Images,
+    Pictures,
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {

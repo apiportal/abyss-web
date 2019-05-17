@@ -13,6 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -59,8 +60,11 @@
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
           </td>
+          <td class="number">
+            <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <img class="favimage" :src="item.picture"/>
+            <!-- <Images :uuid="item.uuid" :itext="item.displayname" :color="item.color" type="subjects" shape="circle" class="favimage"></Images> -->
             {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
@@ -110,6 +114,8 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -169,6 +175,8 @@ export default {
     TBodyLoading,
     SortBy,
     Icon,
+    Images,
+    Pictures,
   },
   data() {
     return {
@@ -196,10 +204,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.favimage {
-  max-width: 35px;
-  height: auto;
-  margin: -7px 10px;
-}
-</style>
+// <style lang="scss" scoped>
+// .favimage {
+//   width: 35px;
+//   height: auto;
+// }
+// </style>

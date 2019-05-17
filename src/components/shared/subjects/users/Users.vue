@@ -89,9 +89,9 @@
 
               <b-dropdown-header class="p-0"></b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnEditGroups" :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
-              <b-dropdown-item data-qa="btnEditRoles" :to="`${routePath}/edit-user-roles/${item.uuid}`"><Icon icon="user-tag" /> Edit User Roles</b-dropdown-item>
               <b-dropdown-item data-qa="btnEditOrganizations" :to="`${routePath}/edit-user-organizations/${item.uuid}`"><Icon icon="home" /> Edit User Organizations</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditGroups" :to="`${routePath}/edit-user-groups/${item.uuid}`"><Icon icon="users" /> Edit User Groups</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditRoles" :to="`${routePath}/edit-user-roles/${item.uuid}`"><Icon icon="id-card" /> Edit User Roles</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 

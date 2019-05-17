@@ -14,6 +14,8 @@
         <dd>{{ user.lastname }}</dd>
         <dt>Display Name:</dt>
         <dd>{{ user.displayname }}</dd>
+        <dt>Main Organization:</dt>
+        <dd>{{ user.organizationname }}</dd>
       </dl>
   
       <dl class="col">
@@ -31,38 +33,7 @@
       </dl>
   
       <dl class="col">
-        <dt>Main Organization:</dt>
-        <dd>{{ user.organizationname }}</dd>
-        <!-- <dt>Member of Organizations:</dt>
-        <dd> -->
-          <!-- <span 
-            v-for="(organization, index) in computedUserOrganizations"
-            v-bind:key="index"
-          >
-            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
-          </span>
-        </dd> -->
 
-        <dt>User Organizations:</dt>
-        <dd>
-          <span 
-            v-for="(organization, index) in computedUserOrganizations"
-            v-bind:key="index"
-          >
-            {{ organization.name }}<span v-if="index < computedUserOrganizations.length - 1">,</span>
-          </span>
-        </dd>
-
-
-        <dt>User Groups:</dt>
-        <dd>
-          <span 
-            v-for="(group, index) in userGroups"
-            v-bind:key="index"
-          >
-            {{ group.displayname }}<span v-if="index < userGroups.length - 1">,</span>
-          </span>
-        </dd>
       </dl>
       
       <dl class="col">
@@ -83,32 +54,38 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="User Groups"
-        @click="listUserGroups"
-        :class="{'active': isShowUserGroups}"
-      >
-      <Icon icon="user-friends" /> User Groups
-      <b-badge pill>{{ userGroups.length }}</b-badge>
-      </b-button>
-      
-      <b-button
-        size="md"
-        variant="link"
-        v-b-tooltip.hover
         title="User Organizations"
         @click="listUserOrganizations"
         :class="{'active': isShowUserOrganizations}"
       >
-      <Icon icon="user-friends" /> User Organizations
+      <Icon icon="home" /> User Organizations
       <b-badge pill>{{ computedUserOrganizations.length }}</b-badge>
       </b-button>
 
-    </div>
-    <div v-if="isShowUserGroups">
-      <Groups
-        :rows="userGroups"
-        :routePath="`/app/administer-users/users/${page}`"
-      ></Groups>
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="User Groups"
+        @click="listUserGroups"
+        :class="{'active': isShowUserGroups}"
+      >
+      <Icon icon="users" /> User Groups
+      <b-badge pill>{{ userGroups.length }}</b-badge>
+      </b-button>
+
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="User Roles"
+        @click="listUserRoles"
+        :class="{'active': isShowUserRoles}"
+      >
+      <Icon icon="id-card" /> User Roles
+      <b-badge pill>{{ userRoles.length }}</b-badge>
+      </b-button>
+
     </div>
     <div v-if="isShowUserOrganizations">
       <Organizations
@@ -116,9 +93,18 @@
         :routePath="`/app/administer-users/users/${page}`"
       ></Organizations>
     </div>
-
-
-
+    <div v-if="isShowUserGroups">
+      <Groups
+        :rows="userGroups"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Groups>
+    </div>
+    <div v-if="isShowUserRoles">
+      <Roles
+        :rows="userRoles"
+        :routePath="`/app/administer-users/users/${page}`"
+      ></Roles>
+    </div>
   </div>
 </template>
 
@@ -129,6 +115,7 @@ import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
 import Images from '@/components/shared/Images';
 import Organizations from '@/components/shared/subjects/organizations/Organizations';
+import Roles from '@/components/shared/subjects/roles/Roles';
 
 export default {
   props: {
@@ -147,12 +134,14 @@ export default {
     Groups,
     Images,
     Organizations,
+    Roles,
   },
   computed: {
     ...mapState({
       organizations: state => state.organizations.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
+      roles: state => state.roles.items,
     }),
     secondaryEmail() {
       const { email, secondaryemail } = this.user;
@@ -168,6 +157,14 @@ export default {
         ),
       );
       return userGroups;
+    },
+    userRoles() {
+      const userRoles = this.roles.filter(item =>
+        this.memberships.some(r =>
+          r.subjectgroupid === item.uuid && r.subjectid === this.user.uuid,
+        ),
+      );
+      return userRoles;
     },
     computedUserOrganizations() {
       const userOrganizations = this.organizations.filter(item => this.userOrganizations.some(f =>
@@ -233,12 +230,21 @@ export default {
       this.isShowUserGroups = !this.isShowUserGroups;
       if (this.isShowUserGroups) {
         this.isShowUserOrganizations = false;
+        this.isShowUserRoles = false;
       }
     },
     listUserOrganizations() {
       this.isShowUserOrganizations = !this.isShowUserOrganizations;
       if (this.isShowUserOrganizations) {
         this.isShowUserGroups = false;
+        this.isShowUserRoles = false;
+      }
+    },
+    listUserRoles() {
+      this.isShowUserRoles = !this.isShowUserRoles;
+      if (this.isShowUserRoles) {
+        this.isShowUserGroups = false;
+        this.isShowUserOrganizations = false;
       }
     },
   },
@@ -250,7 +256,11 @@ export default {
       userOrganizations: [],
       isShowUserGroups: false,
       isShowUserOrganizations: false,
+      isShowUserRoles: false,
     };
+  },
+  created() {
+    this.$store.dispatch('roles/getRoles', {});
   },
 };
 </script>

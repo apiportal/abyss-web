@@ -104,6 +104,7 @@
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            <Icon icon="circle" :class="`state${proxyItem.apistatename}`"/>
             {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -316,5 +317,35 @@ export default {
   max-width: 35px;
   height: auto;
   margin: -7px 10px;
+}
+.stateInitial{
+  color:#8b8e91
+}
+.stateDraft{
+  color:#212121
+}
+.stateStaged{
+  color:#6f42c1
+}
+.statePublished{
+  color:#4cac00
+}
+.statePromoted{
+  color:#db408d
+}
+.stateDemoted{
+  color:#ec7700
+}
+.stateDeprecated{
+  color:#ecb100
+}
+.stateRetired{
+  color:#00bbbb
+}
+.stateArchived{
+  color:#177ec1
+}
+.stateRemoved{
+  color:#161c9a
 }
 </style>

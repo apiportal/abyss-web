@@ -277,10 +277,10 @@ export default {
   color:#6f42c1
 }
 .statePublished{
-  color:#4cac00
+  color:#db408d
 }
 .statePromoted{
-  color:#db408d
+  color:#4cac00
 }
 .stateDemoted{
   color:#ec7700

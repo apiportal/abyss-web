@@ -61,9 +61,6 @@
           >
             <span class="route-icon"><Icon icon="sitemap" /></span> Organizations
           </b-link>
-          <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`" data-qa="sideMenuPermissions">
-            <span class="route-icon"><Icon icon="user-cog" /></span> Permissions
-          </b-link> 
 
           <b-link
             to="/app/identity-managers/1"

@@ -3,8 +3,23 @@
 
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
+          <b-nav-item :active="false">
+            <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
+          </b-nav-item>
+          <b-nav-item
+            :active="false"
+            to="/app/access-manager-types/1"
+          >
+            <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          </b-nav-item>
+          <b-nav-item
+            :active="false"
+            to="/app/roles/1"
+          >
+            <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
+          </b-nav-item>
           <b-nav-item :active="true">
-            <span class="link-text" data-qa="linkAccessManagers">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
+            <span class="link-text" data-qa="linkPermissions">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
         </b-nav>
         <div class="row">
@@ -94,6 +109,7 @@ export default {
       resourceTypes: state => state.resourceTypes.items,
       resourceActions: state => state.resourceActions.items,
       roles: state => state.roles.items,
+      accessManagerTypes: state => state.accessManagerTypes.items,
     }),
     tableRows() {
       const { accessManagers,
@@ -202,6 +218,7 @@ export default {
     this.$store.dispatch('apps/getApps', {});
     this.$store.dispatch('subjectTypes/getSubjectTypes', {});
     this.$store.dispatch('roles/getRoles', {});
+    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
   },
   data() {
     return {

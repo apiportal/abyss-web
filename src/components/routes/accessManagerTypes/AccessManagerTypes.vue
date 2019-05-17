@@ -18,6 +18,12 @@
         >
           <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
         </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/administer-permissions/1"
+        >
+          <span class="link-text" data-qa="linkPermissions">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
+        </b-nav-item>
       </b-nav>
       <div class="row">
         <div class="col">
@@ -218,6 +224,7 @@ export default {
       accessManagers: state => state.accessManagers.items,
       organizations: state => state.organizations.items,
       roles: state => state.roles.items,
+      permissions: state => state.permissions.items,
     }),
     tableRows() {
       const { accessManagerTypes, organizations } = this;
@@ -267,6 +274,7 @@ export default {
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('permissions/getPermissions', {});
   },
   data() {
     return {

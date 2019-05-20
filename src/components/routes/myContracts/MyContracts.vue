@@ -6,10 +6,10 @@
           <span class="link-text" data-qa="linkMyAllContacts">My All Contacts</span> <b-badge pill>{{ userContracts.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="false" to="/app/api-contracts/1">
-          <span class="link-text" data-qa="linkMyApiContracts">My API Contracts</span> 
+          <span class="link-text" data-qa="linkMyApiContracts">My API Contracts</span> <b-badge pill>{{ userApiContracts.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="false" to="/app/app-contracts/1">
-          <span class="link-text" data-qa="linkMyAppContracts">My APP Contracts</span>
+          <span class="link-text" data-qa="linkMyAppContracts">My APP Contracts</span> <b-badge pill>{{ userAppContracts.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
@@ -26,8 +26,8 @@ export default {
   computed: {
     ...mapState({
       userContracts: state => state.userContracts.items,
-      userApiContracts: state => state.userContracts.userApiContracts.items,
-      userAppContracts: state => state.userContracts.userAppContracts.items,
+      userApiContracts: state => state.userContracts.userApiContracts,
+      userAppContracts: state => state.userContracts.userAppContracts,
       currentUser: state => state.user,
     }),
   },

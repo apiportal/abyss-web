@@ -6,33 +6,33 @@
           <span class="link-text" data-qa="linkMyAllContacts">My All Contacts</span> <b-badge pill>{{ userContracts.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="true">
-          <span class="link-text" data-qa="linkMyApiContracts">My API Contracts</span>
+          <span class="link-text" data-qa="linkMyApiContracts">My API Contracts</span> <b-badge pill>{{ userApiContracts.length }}</b-badge>
         </b-nav-item>
         <b-nav-item :active="false" to="/app/app-contracts/1">
-          <span class="link-text" data-qa="linkMyAppContracts">My APP Contracts</span>
+          <span class="link-text" data-qa="linkMyAppContracts">My APP Contracts</span> <b-badge pill>{{ userAppContracts.length }}</b-badge>
         </b-nav-item>
       </b-nav>
     </div>
     <div class="page-content-nested">
       <router-view></router-view>
-      <SubjectContracts></SubjectContracts>
+      <SubjectApiContracts></SubjectApiContracts>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import SubjectContracts from '@/components/routes/myContracts/subjectContracts/SubjectContracts';
+import SubjectApiContracts from '@/components/routes/myContracts/subjectContracts/SubjectApiContracts';
 
 export default {
   components: {
-    SubjectContracts,
+    SubjectApiContracts,
   },
   computed: {
     ...mapState({
       userContracts: state => state.userContracts.items,
-      userApiContracts: state => state.userContracts.userApiContracts.items,
-      userAppContracts: state => state.userContracts.userAppContracts.items,
+      userApiContracts: state => state.userContracts.userApiContracts,
+      userAppContracts: state => state.userContracts.userAppContracts,
       currentUser: state => state.user,
     }),
   },

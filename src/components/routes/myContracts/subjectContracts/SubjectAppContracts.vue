@@ -28,7 +28,7 @@
     <div class="page-content">
       <Contracts
         :rows="tableRows"
-        :routePath="`/app/my-contracts/my-contracts/${page}`"
+        :routePath="`/app/app-contracts/${page}`"
         :itemsPerPage="itemsPerPage"
         :page="page"
       />
@@ -63,19 +63,19 @@ export default {
   },
   computed: {
     ...mapState({
-      userContracts: state => state.userContracts.items,
+      userAppContracts: state => state.userContracts.userAppContracts,
       currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { userContracts } = this;
+      const { userAppContracts } = this;
       // const getTypeName = (typeId) => {
       //   const type = policyTypes.find(policyType => policyType.uuid === typeId);
       //   return type ? type.name : typeId;
       // };
       return sortArrayOfObjects({
-        array: userContracts
+        array: userAppContracts
         .filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
@@ -126,10 +126,10 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/my-contracts/my-contracts/${page}`);
+      this.$router.push(`/app-contracts/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('userContracts/getUserContracts', {
+      this.$store.dispatch('userContracts/getUserAppContracts', {
         uuid: this.currentUser.uuid,
         refresh: true,
       });

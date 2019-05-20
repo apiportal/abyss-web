@@ -7,6 +7,8 @@
           <dd>{{ item.name }}</dd>
           <dt>Description:</dt>
           <dd>{{ item.description }}</dd>
+          <dt>Subject Permission:</dt>
+          <dd>{{ contractSubjectPermission.permission }}</dd>
         </dl>
         <dl class="col">
           <dt>Environment:</dt>
@@ -23,8 +25,6 @@
           <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
           <dt v-if="item.deleted">Deleted:</dt>
           <dd v-if="item.deleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
-          <dt>subjectpermissionid:</dt>
-          <dd>{{ contractSubjectPermission.permission }}</dd>
         </dl>
       </div>
 

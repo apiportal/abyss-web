@@ -95,7 +95,7 @@
         >
         <b-form-select
           id="policyInput"
-          v-model="licenseEditable.licensedocument.termsOfService.policyKey"
+          v-model="licenseEditable.licensedocument.termsOfService.policyKey[0]"
           :state="policyState"
           :options="[
             {
@@ -108,6 +108,7 @@
               text: policy.name,
             })),
           ]"
+          required
         >
         </b-form-select>
 							

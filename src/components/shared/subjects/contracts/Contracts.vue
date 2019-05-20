@@ -131,7 +131,7 @@ export default {
     },
     statusClass(status) {
       if (status === 'draft') {
-        return 'text-primary';
+        return 'text-secondary';
       } else if (status === 'inforce') {
         return 'text-success';
       } else if (status === 'archived') {

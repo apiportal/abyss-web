@@ -14,7 +14,7 @@
       <hr/>{{ infoText.description + '.' }}
     </b-alert>
     <div class="state-status">
-        <span class="active-state">Active State : {{ currentApiState.name }}</span>
+        <span class="active-state">Current State : {{ currentApiState.name }}</span>
         <span class="target-state">Next State : {{ nextApiState.name }}</span>
     </div>
   </div>

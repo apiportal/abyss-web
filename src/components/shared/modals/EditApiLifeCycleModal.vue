@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import api from '@/api';
 import Modal from '@/components/shared/modals/Modal';
 import LifeCycle from '@/components/shared/LifeCycle';
 import { mapState, mapActions } from 'vuex';
@@ -111,19 +112,18 @@ export default {
   data() {
     return {
       readNewState: '',
-      proxyEditable: JSON.parse(JSON.stringify(this.proxy)),
     };
   },
   methods: {
-    ...mapActions('proxies', ['putProxies']),
+    ...mapActions('lifecycle', ['putLifecycle']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { proxyEditable, onUpdate, putProxies, apiNextState } = this;
-      const proxyToUpdate = {
-        ...proxyEditable,
-        apistateid: apiNextState,
+      const { proxy, onUpdate, apiNextState } = this;
+      const lifecycleToUpdate = {
+        currentstateid: proxy.apistateid,
+        nextstateid: apiNextState,
       };
-      putProxies(proxyToUpdate).then((response) => {
+      api.putLifecycle(proxy.uuid, lifecycleToUpdate).then((response) => {
         if (response && response.data) {
           onUpdate();
         }

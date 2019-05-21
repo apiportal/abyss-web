@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import api from '@/api';
 import Modal from '@/components/shared/modals/Modal';
 import LifeCycle from '@/components/shared/LifeCycle';
 import { mapState, mapActions } from 'vuex';
@@ -111,19 +112,18 @@ export default {
   data() {
     return {
       readNewState: '',
-      businessApiEditable: JSON.parse(JSON.stringify(this.businessApi)),
     };
   },
   methods: {
-    ...mapActions('businessApis', ['putBusinessApis']),
+    ...mapActions('lifecycle', ['putLifecycle']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { businessApiEditable, onUpdate, putBusinessApis, apiNextState } = this;
-      const businessApiToUpdate = {
-        ...businessApiEditable,
-        apistateid: apiNextState,
+      const { businessApi, onUpdate, apiNextState } = this;
+      const lifecycleToUpdate = {
+        currentstateid: businessApi.apistateid,
+        nextstateid: apiNextState,
       };
-      putBusinessApis(businessApiToUpdate).then((response) => {
+      api.putLifecycle(businessApi.uuid, lifecycleToUpdate).then((response) => {
         if (response && response.data) {
           onUpdate();
         }

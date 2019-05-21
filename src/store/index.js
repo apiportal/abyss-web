@@ -58,6 +58,7 @@ import userContracts from '@/store/modules/userContracts';
 import apiLicenses from '@/store/modules/apiLicenses';
 import exploreApis from '@/store/modules/exploreApis';
 import userApps from '@/store/modules/userApps';
+import contracts from '@/store/modules/contracts';
 
 Vue.use(Vuex);
 
@@ -105,6 +106,7 @@ export default new Vuex.Store({
     apiLicenses,
     exploreApis,
     userApps,
+    contracts,
   },
   debug: true,
 });

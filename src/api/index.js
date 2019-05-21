@@ -514,6 +514,12 @@ export default {
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
   },
+  getUserApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/user/${uuid}`);
+  },
+  getUserAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/user/${uuid}`);
+  },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
   },

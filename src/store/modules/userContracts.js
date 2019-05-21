@@ -19,6 +19,8 @@ import api from '@/api';
 
 const state = {
   items: [],
+  userApiContracts: [],
+  userAppContracts: [],
   lastUpdatedAt: 0,
 };
 
@@ -42,11 +44,53 @@ const actions = {
       }
     });
   },
+  getUserApiContracts: ({ commit }, { uuid, refresh = false }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 && !refresh) {
+      return false;
+    }
+    api.getUserApiContracts(uuid)
+    .then((response) => {
+      if (response && response.data) {
+        commit('setUserApiContracts', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setUserApiContracts', []);
+      }
+    });
+  },
+  getUserAppContracts: ({ commit }, { uuid, refresh = false }) => {
+    const { lastUpdatedAt } = state;
+    if (lastUpdatedAt > 0 && !refresh) {
+      return false;
+    }
+    api.getUserAppContracts(uuid)
+    .then((response) => {
+      if (response && response.data) {
+        commit('setUserAppContracts', response.data);
+      }
+    })
+    .catch((error) => {
+      if (error.status === 404) {
+        commit('setUserAppContracts', []);
+      }
+    });
+  },
 };
 
 const mutations = {
-  setUserContracts: (state, contracts) => {
-    state.items = contracts;
+  setUserContracts: (state, userContracts) => {
+    state.items = userContracts;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setUserApiContracts: (state, userApiContracts) => {
+    state.userApiContracts = userApiContracts;
+    state.lastUpdatedAt = (new Date()).getTime();
+  },
+  setUserAppContracts: (state, userAppContracts) => {
+    state.userAppContracts = userAppContracts;
     state.lastUpdatedAt = (new Date()).getTime();
   },
 };

@@ -20,6 +20,7 @@
         @submit="handleSubmit"
       >
       <div style="padding: 1rem;">
+        <h6 class="group-title">License Info</h6>
         <b-form-group
           id="licenseNameGroup"
           label="License Name*:"
@@ -85,19 +86,36 @@
         >
         </b-form-textarea>
         </b-form-group>
-        <b-form-group id="licenseEnabledGroup">
-          <b-form-checkbox
-              id="licenseEnabledChecks"
-              v-model="licenseEditable.isactive"
-              :value="true"
-              :unchecked-value="false"
-          >
-              Is Active?
-          </b-form-checkbox>
+        <b-form-group
+          id="policyGroup"
+          label="Policy*:"
+          label-for="policyInput"
+          :invalid-feedback="policyInvalidFeedback"
+          :state="policyState"
+        >
+        <b-form-select
+          id="policyInput"
+          v-model="licenseEditable.licensedocument.termsOfService.policyKey[0]"
+          :state="policyState"
+          :options="[
+            {
+              value: null,
+              text: 'Please select',
+            },
+            ...policies.filter(policy => currentUser.uuid === policy.subjectid)
+            .map(policy => ({
+              value: policy.uuid,
+              text: policy.name,
+            })),
+          ]"
+          required
+        >
+        </b-form-select>
+							
         </b-form-group>
         <b-form-group
         id="licenseVisibilityGroup"
-        label="Visibility*"
+        label="Visibility*:"
         label-for="licenseVisibilityInput"
         :invalid-feedback="visibilityInvalidFeedback"
         :state="visibilityState"
@@ -118,6 +136,18 @@
           ]"
         />
         </b-form-group>
+        <b-form-group id="licenseEnabledGroup">
+          <b-form-checkbox
+            id="licenseEnabledChecks"
+            v-model="licenseEditable.isactive"
+            :value="true"
+            :unchecked-value="false"
+          >
+            Is Active?
+          </b-form-checkbox>
+        </b-form-group>        
+        <br>
+        <h6 class="group-title">SLA Info</h6>
         <b-form-group
           id="slaTierNameGroup"
           label="SLA Tier Name*:"
@@ -220,6 +250,8 @@
         >
         </b-form-input>
         </b-form-group>
+        <br>
+        <h6 class="group-title">Legal Info</h6>
         <b-form-group
           id="legalAgreementNameGroup"
           label="Legal Agreement Name*:"
@@ -256,7 +288,7 @@
         </b-form-group>
         <b-form-group
         id="agreementTypeGroup"
-        label="Agreement Type*"
+        label="Agreement Type*:"
         label-for="agreementTypeInput"
         :invalid-feedback="legalAgreementTypeInvalidFeedback"
         :state="legalAgreementTypeState"
@@ -282,7 +314,7 @@
         </b-form-group>
         <b-form-group
         id="documentStateGroup"
-        label="Document State*"
+        label="Document State*:"
         label-for="documentStateInput"
         :invalid-feedback="documentStateInvalidFeedback"
         :state="documentStateState"
@@ -426,10 +458,14 @@ export default {
       default() { return 'edit'; },
     },
   },
+  created() {
+    this.$store.dispatch('policies/getPolicies', {});
+  },
   computed: {
     ...mapState({
       currentUser: state => state.user,
       visibilityTypes: state => state.apiVisibilityTypes.items,
+      policies: state => state.policies.items,
     }),
     licenseVersionInvalidFeedback() {
       const { version } = this.licenseEditable;
@@ -474,6 +510,17 @@ export default {
     licenseDescriptionState() {
       const { description } = this.licenseEditable.licensedocument.info;
       return description.length > 0;
+    },
+    policyInvalidFeedback() {
+      const { policyKey } = this.licenseEditable.licensedocument.termsOfService;
+      if (policyKey.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    policyState() {
+      const { policyKey } = this.licenseEditable.licensedocument.termsOfService;
+      return policyKey.length > 0;
     },
     visibilityInvalidFeedback() {
       const { visibility } = this.licenseEditable.licensedocument.info;
@@ -681,5 +728,11 @@ export default {
     border-width: 11px;
     margin-left: -11px;
   }
+}
+
+h6.group-title {
+  background-color:dodgerblue;
+  color: white;
+  padding: 5px 10px;
 }
 </style>

@@ -33,6 +33,15 @@
               sortByKey="version"
               sortByKeyType="string"
             />
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Policies"
+              sortByKey="Policies"
+              sortByKeyType="string"
+            />
           </th>
           <th>
             <SortBy
@@ -49,7 +58,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(licenseItem, licenseIndex) in paginatedRows" v-bind:key="licenseIndex"
@@ -68,13 +77,13 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            {{ licenseItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
-          <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'proxies'">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.updated | moment("DD.MM.YYYY HH:mm") }}
+          <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'proxies'">
             {{ licenseApis.length }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'contracts'">
@@ -114,7 +123,7 @@
           <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"

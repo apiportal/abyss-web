@@ -271,19 +271,19 @@ export default {
   color:#8b8e91
 }
 .stateDraft{
-  color:#212121
+  color:#161c9a
 }
 .stateStaged{
   color:#6f42c1
 }
 .statePublished{
-  color:#4cac00
+  color:#eeee00
 }
 .statePromoted{
-  color:#db408d
+  color:#4cac00
 }
 .stateDemoted{
-  color:#ec7700
+  color:#db408d
 }
 .stateDeprecated{
   color:#ecb100
@@ -295,6 +295,6 @@ export default {
   color:#177ec1
 }
 .stateRemoved{
-  color:#161c9a
+  color:#212121
 }
 </style>

@@ -1,89 +1,53 @@
 <template>
-  <div 
-    :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`"
-  >
-    <div 
-      class="open-api-object-title"
-      @click="() => handleToggleCollapse()"
-    >
-      <span style="float: right;">
+  <div :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`">
+    <div class="open-api-object-title">
+      <span class="oao-arrow">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
-      <span v-if="type === 'Response Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
+      <span v-if="type !== 'Info Object' && type !== 'Components Object'" class="oao-dropdown">
+        <b-dropdown variant="link" size="md" right no-caret>
+
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete response</b-dropdown-item>
+
+          <b-dropdown-item v-if="type === 'Responses Object'" @click="addObjectItem(newResponse)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="type === 'Media Type Object' && isMap" @click="addObjectItem(newMediaType)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="type === 'Schema Object' && isMap" @click="addObjectItem({ newItem: {} })"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="type === 'Server Variable Object' && isMap" @click="addObjectItem({ newVar: { default: 'default' } })"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="isArray" @click="addArrayItem"><Icon icon="plus" /> Add New {{item}} Item</b-dropdown-item>
+
+          <b-dropdown-form class="pt-3 path-form" v-if="!isMap && !isArray && !isMapWithRegex && !isDynamicTitle && (pathArray.indexOf('schemas') > -1 || pathArray.indexOf('variables') > -1)">
+            <b-form-group>
+              <label class="form-label">Rename {{type}}</label>
+              <b-form-input
+                v-model="renamedItem"
+                type="text"
+                @change="renameObjectItem"
+              ></b-form-input>
+            </b-form-group>
+          </b-dropdown-form>
+
+          <b-dropdown-item v-if="!isDynamicTitle && !isArray" @click="handleDeleteObjectItem" class="border-top"><Icon icon="trash" /> Delete {{item}} Object</b-dropdown-item>
+          <b-dropdown-item v-if="isDynamicTitle" @click="handleDeleteArrayItem" class="border-top"><Icon icon="trash-alt" /> Delete {{title}} Item</b-dropdown-item>
+
         </b-dropdown>
       </span>
-      <span v-if="type === 'Schema Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete schema</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Parameter Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem" v-if="!isDynamicTitle">Delete parameter</b-dropdown-item>
-          <b-dropdown-item @click="handleDeleteArrayItem" v-if="isDynamicTitle">Delete parameter</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Request Body Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete request body</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Header Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete header</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Security Scheme Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete security scheme</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Link Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete link</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Callback Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteObjectItem">Delete callback</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Server Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteArrayItem">Delete Server</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="type === 'Tag Object' && !isMap && !isArray" class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
-          <template slot="button-content"><Icon icon="ellipsis-h" /></template>
-          <b-dropdown-item @click="handleDeleteArrayItem">Delete tag</b-dropdown-item>
-        </b-dropdown>
-      </span>
-      <span v-if="isDynamicTitle">
-        {{ title }} <span style="font-size: .75rem; color: grey;">{{ description }}</span>
-      </span>
-      <span v-else>
-        <strong>{{ item }}</strong>
-        <small class="text-muted">{{type}} - {{typeHelper}}</small>
-      </span>
+      <div @click="() => handleToggleCollapse()">
+        <span v-if="isDynamicTitle">
+          <strong>{{ title }}</strong> <small class="text-muted">{{ description }}</small>
+        </span>
+        <span v-else>
+          <strong>{{ item }}</strong>
+          [{{ formDataKeys.length }}]
+        </span>
+        <small class="text-muted">{{type}} - <strong>{{typeHelper}}</strong></small>
+        <small :title="pathArray">{{ pathDots }}</small>
+      </div>
     </div>
     <div v-if="isCollapsed" class="open-api-object-container">
       <div v-if="isMapWithRegex">
         <div
           v-for="(key, index) in formDataKeys"
           v-bind:key="index"
-          :class="(index < (formDataKeys.length - 1) ? 'mb-3' : '')"
         >
           <OpenApiObject
             :item="key"
@@ -100,7 +64,6 @@
         <div
           v-for="(key, index) in formDataKeys"
           v-bind:key="index"
-          :class="(index < (formDataKeys.length - 1) ? 'mb-3' : '')"
         >
           <OpenApiObject
             :item="key"
@@ -114,9 +77,7 @@
         </div>
       </div>
       <div v-else-if="isArray">
-        <div
-          v-if="type === 'Security Requirement Object'"
-        >
+        <div v-if="type === 'Security Requirement Object'">
           <Security
             :onChange="onChange"
             :pathArray="pathArray"
@@ -128,7 +89,6 @@
           <div
             v-for="(formItemData, index) in formData"
             v-bind:key="index"
-            :class="(index < (formData.length - 1) ? 'mb-3' : '')"
           >
             <OpenApiObject
               :item="index"
@@ -139,56 +99,44 @@
               :securitySchemes="securitySchemes"
               :onChange="onChange"
               :isDynamicTitle ="true"
-              :title="getTitle(type, formItemData)"
-              :description="getDescription(type, formItemData)"
+              :title="getTitle(formItemData)"
+              :description="getDescription(formItemData)"
             />
-          </div>
-          <div :style="`margin-top: ${formData.length === 0 ? 0 : 1}rem;`">
-            <b-button
-              @click="() => addArrayItem(pathArray, formData)"
-            >
-              New "{{item}}" item
-            </b-button>
           </div>
         </div>
       </div>
       <div v-else>
-        <div
-          v-if="
+        <div v-if="
             type === 'Response Object' ||
             type === 'Request Body Object' ||
             type === 'Parameter Object' ||
             type === 'Callback Object' ||
             type === 'Schema Object' ||
             type === 'Security Scheme Object'
-          "
-          style="margin-bottom: 1rem;"
-        >
-          <b-input-group prepend="$ref:">
-            <b-form-select
-              v-model="formData['$ref']"
-              @change="handleRefChange"
-            >
-              <option
-                :value="undefined"
+          ">
+          <b-form-group>
+            <b-input-group prepend="$ref:">
+              <b-form-select
+                v-model="formData['$ref']"
+                @change="handleRefChange"
               >
-                None
-              </option>
-              <optgroup 
-                v-for="(optGroup, optGroupIndex) in refs"
-                v-bind:key="optGroupIndex"
-                :label="optGroup.name"
-              >
-                <option
-                  v-for="(option, optionIndex) in optGroup.options"
-                  v-bind:key="optionIndex"
-                  :value="option"
+                <option :value="undefined">None</option>
+                <optgroup 
+                  v-for="(optGroup, optGroupIndex) in refs"
+                  v-bind:key="optGroupIndex"
+                  :label="optGroup.name"
                 >
-                  {{ option }}
-                </option>
-              </optgroup>
-            </b-form-select>
-          </b-input-group>
+                  <option
+                    v-for="(option, optionIndex) in optGroup.options"
+                    v-bind:key="optionIndex"
+                    :value="option"
+                  >
+                    {{ option }}
+                  </option>
+                </optgroup>
+              </b-form-select>
+            </b-input-group>
+          </b-form-group>
         </div>
         <div v-if="!formData['$ref']">
           <OpenApiObjectForm
@@ -285,6 +233,17 @@ export default {
     formDataKeys() {
       return Object.keys(this.formData);
     },
+    pathDots() {
+      return this.pathArray.slice(1, this.pathArray.length).join('.');
+    },
+    renamedItem: {
+      get() {
+        return this.item;
+      },
+      set(newVal) {
+        return newVal;
+      },
+    },
     typeHelper() {
       if (this.isMapWithRegex) {
         return 'isMapWithRegex';
@@ -301,6 +260,18 @@ export default {
       isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
       refAddress: this.formData['$ref'] || null, // eslint-disable-line
+      newResponse: {
+        100: {
+          description: 'Successful operation',
+        },
+      },
+      newMediaType: {
+        'application/json': {
+          schema: {
+            type: 'object',
+          },
+        },
+      },
     };
   },
   methods: {
@@ -315,11 +286,32 @@ export default {
         this.onChange([...pathArray], { '$ref': newValue }); // eslint-disable-line
       }
     },
-    addArrayItem(pathArray, currentItems) {
-      console.log('pathArray, currentItems: ', pathArray, currentItems); // eslint-disable-line
-      this.onChange(pathArray, [...currentItems, {}]);
+    addArrayItem() {
+      const { pathArray, formData } = this;
+      this.onChange(pathArray, [...formData, {}]);
     },
-    getTitle(type, data) {
+    addObjectItem(newObject = {}) {
+      const { pathArray } = this;
+      const key = Object.keys(newObject)[0];
+      const value = newObject[key];
+      // console.log('pathArray, newObject: ', [...pathArray, key], value); // eslint-disable-line
+      this.onChange([...pathArray, key], value, 'addItem');
+    },
+    renameObjectItem(val) {
+      const { pathArray } = this;
+      // console.log('pathArray, val: ', pathArray, val); // eslint-disable-line
+      this.onChange(pathArray, val, 'renameItem');
+    },
+    handleDeleteObjectItem() {
+      this.handleToggleCollapse();
+      this.onChange(this.pathArray, null, 'deleteLastItem');
+    },
+    handleDeleteArrayItem() {
+      this.handleToggleCollapse();
+      this.onChange(this.pathArray, null, 'deleteLastIndex');
+    },
+    getTitle(data) {
+      const { type } = this;
       if (data['$ref']) { // eslint-disable-line
         return data['$ref']; // eslint-disable-line
       }
@@ -329,10 +321,13 @@ export default {
         return (data.url || '');
       } else if (type === 'Parameter Object') {
         return (data.name || '');
+      } else if (type === 'Schema Object') {
+        return (data.type || '-');
       }
-      return '';
+      return '-';
     },
-    getDescription(type, data) {
+    getDescription(data) {
+      const { type } = this;
       if (type === 'Tag Object') {
         return (data.description || '');
       } else if (type === 'Server Object') {
@@ -341,14 +336,6 @@ export default {
         return (data.description || '');
       }
       return '';
-    },
-    handleDeleteObjectItem() {
-      this.handleToggleCollapse();
-      this.onChange(this.pathArray, null, 'deleteLastItem');
-    },
-    handleDeleteArrayItem() {
-      this.handleToggleCollapse();
-      this.onChange(this.pathArray, null, 'deleteLastIndex');
     },
   },
 };

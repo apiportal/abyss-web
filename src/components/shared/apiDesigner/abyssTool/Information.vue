@@ -10,6 +10,16 @@
         :isCollapsedInitial="true"
       />
     </div>
+    <div>
+      <OpenApiObject
+        item="externalDocs"
+        type="External Documentation Object"
+        :formData="openapidocument.externalDocs"
+        :pathArray="['openapidocument', 'externalDocs']"
+        :onChange="onChange"
+        :isCollapsedInitial="true"
+      />
+    </div>
   </div>
 </template>
 

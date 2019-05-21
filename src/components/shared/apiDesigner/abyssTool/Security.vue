@@ -5,7 +5,7 @@
       <b-form-radio @change="handleChange" v-model="selected" value="disabled">Disable security</b-form-radio>
       <b-form-radio @change="handleChange" v-model="selected" value="custom">Use custom security</b-form-radio>
     </b-form-group>
-    <div v-if="selected === 'custom'">
+    <div v-if="selected === 'custom' && Array.isArray(formData)">
       <div
         v-for="(securityOption, index) in securityOptions"
         v-bind:key="index"

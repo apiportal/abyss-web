@@ -34,6 +34,11 @@ export default {
       type: Number,
       required: false,
     },
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
   },
   watch: {
     value(newValue) {
@@ -58,7 +63,7 @@ export default {
     };
   },
   mounted() {
-    const { $el, mode, value, theme } = this;
+    const { $el, mode, value, theme, readOnly } = this;
     this.editor = ace.edit($el);
     this.editor.$blockScrolling = Infinity;
     // this.editor.setOption('enableEmmet', true);
@@ -67,6 +72,7 @@ export default {
     this.editor.getSession().setTabSize(2);
     this.editor.setValue(value);
     this.editor.clearSelection();
+    this.editor.setReadOnly(readOnly);
     // editor is ready
     this.isMounted = true;
 

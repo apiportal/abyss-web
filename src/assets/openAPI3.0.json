@@ -1,11 +1,11 @@
 {
   "Tag Object": {
     "name": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "externalDocs": {
@@ -14,18 +14,18 @@
   },
   "OAuth Flow Object": {
     "authorizationUrl": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "tokenUrl": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "refreshUrl": {
-      "type": "string"
+      "type": "String"
     },
     "scopes": {
-      "type": "string",
+      "type": "String",
       "Required": true,
       "Map": true
     }
@@ -46,34 +46,34 @@
   },
   "Security Scheme Object": {
     "type": {
-      "type": "string",
+      "type": "String",
       "Required": true,
       "ValidValues": ["apiKey", "http", "oauth2", "openIdConnect"]
     },
     "description": {
-      "type": "string"
+      "type": "String"
     },
     "name": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "in": {
-      "type": "string",
+      "type": "String",
       "Required": true,
       "ValidValues": ["query", "header", "cookie"]
     },
     "scheme": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "bearerFormat": {
-      "type": "string"
+      "type": "String"
     },
     "flows": {
       "type": "OAuth Flows Object"
     },
     "openIdConnectUrl": {
-      "type": "string",
+      "type": "String",
       "Required": true
     }
   },
@@ -83,8 +83,8 @@
       "Map": true
     },
     "responses": {
-      "type": "Response Object",
-      "Map": true
+      "type": "Responses Object",
+      "MapWithRegex": true
     },
     "parameters": {
       "type": "Parameter Object",
@@ -117,7 +117,7 @@
   },
   "Security Requirement Object": {
     "{template}": {
-      "type": "string",
+      "type": "String",
       "Array": true
     }
   },
@@ -131,10 +131,10 @@
   },
   "Link Object": {
     "href": {
-      "type": "string"
+      "type": "String"
     },
     "operationId": {
-      "type": "string"
+      "type": "String"
     },
     "parameters": {
       "type": "Link Parameters Object"
@@ -143,20 +143,21 @@
       "type": "Header Object"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     }
   },
   "Response Object": {
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
     },
     "headers": {
       "type": "Header Object"
-    },
-    "content": {
-      "type": "Media Type Object"
     },
     "links": {
       "type": "Link Object",
@@ -174,39 +175,39 @@
   },
   "Header Object":  {
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "required": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "deprecated": {
-      "type": "boolean"
+      "type": "Boolean"
     }
   },
   "Encoding Object": {
     "contentType": {
-      "type": "string"
+      "type": "String"
     },
     "headers": {
       "type": "Header Object"
     },
     "style": {
-      "type": "string"
+      "type": "String"
     },
     "explode": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "allowReserved": {
-      "type": "boolean"
+      "type": "Boolean"
     }
   },
   "Example Object": {
     "summary": {
-      "type": "string"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "Value": {
@@ -216,54 +217,249 @@
   },
   "Discriminator Object": {
     "propertyName": {
-      "type": "string"
+      "type": "String"
     },
     "mapping": {
-      "type": "string",
+      "type": "Object",
       "Map": true
     }
   },
   "XML Object": {
     "name": {
-      "type": "string"
+      "type": "String"
     },
     "namespace": {
-      "type": "string"
+      "type": "String"
     },
     "prefix": {
-      "type": "string"
+      "type": "String"
     },
     "attribute": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "wrapped": {
-      "type": "boolean"
+      "type": "Boolean"
+    }
+  },
+  "object": {
+    "properties": {
+      "type": "Schema Object",
+      "Map": true,
+      "info": "semi-supported"
+    },
+    "additionalProperties ": {
+      "type": "Schema Object",
+      "Map": true,
+      "info": "semi-supported"
+    },
+    "minProperties": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "maxProperties": {
+      "type": "Number",
+      "info": "supported"
+    }
+  },
+  "integer": {
+    "default": {
+      "type": "Integer",
+      "info": "semi-supported"
+    },
+    "minimum": {
+      "type": "Integer",
+      "info": "supported"
+    },
+    "maximum": {
+      "type": "Integer",
+      "info": "supported"
+    },
+    "multipleOf": {
+      "type": "Integer",
+      "info": "supported"
+    },
+    "exclusiveMinimum": {
+      "type": "Boolean",
+      "info": "supported"
+    },
+    "exclusiveMaximum": {
+      "type": "Boolean",
+      "info": "supported"
+    },
+    "enum": {
+      "type": "Integer",
+      "Array": true,
+      "info": "supported"
+    },
+    "format": {
+      "type": "String",
+      "Select": true,
+      "Options": ["int32", "int64"],
+      "info": "semi-supported"
+    }
+  },
+  "number": {
+    "default": {
+      "type": "Number",
+      "info": "semi-supported"
+    },
+    "minimum": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "maximum": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "multipleOf": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "exclusiveMinimum": {
+      "type": "Boolean",
+      "info": "supported"
+    },
+    "exclusiveMaximum": {
+      "type": "Boolean",
+      "info": "supported"
+    },
+    "enum": {
+      "type": "Number",
+      "Array": true,
+      "info": "supported"
+    },
+    "format": {
+      "type": "String",
+      "Select": true,
+      "Options": ["float", "double"],
+      "info": "semi-supported"
+    }
+  },
+  "string": {
+    "default": {
+      "type": "Number",
+      "info": "semi-supported"
+    },
+    "minLength": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "maxLength": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "pattern": {
+      "type": "String",
+      "info": "supported"
+    },
+    "enum": {
+      "type": "String",
+      "Array": true,
+      "info": "supported"
+    },
+    "format": {
+      "type": "String",
+      "Select": true,
+      "Options": ["date", "date-time", "byte", "binary", "password", "uri", "uuid", "email", "hostname", "ipv4", "ipv6", "pattern"],
+      "info": "semi-supported"
+    }
+  },
+  "array": {
+    "items": {
+      "type": "Schema Object",
+      "Map": false,
+      "info": "semi-supported"
+    },
+    "minItems": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "maxItems": {
+      "type": "Number",
+      "info": "supported"
+    },
+    "uniqueItems": {
+      "type": "Boolean",
+      "info": "supported"
     }
   },
   "Schema Object":  {
-    "nullable": {
-      "type": "boolean"
+    "type": {
+      "type": "String",
+      "Select": true,
+      "Options": ["", "string", "integer", "number", "boolean", "array", "object"],
+      "info": "semi-supported"
     },
-    "discriminator": {
-      "type": "Discriminator Object"
+
+    "title": {
+      "type": "String",
+      "info": "supported"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true,
+      "info": "semi-supported"
+    },
+
+    "required": {
+      "type": "String",
+      "Array": true,
+      "info": "supported"
+    },
+
+    "example": {
+      "type": "String",
+      "info": "additional"
+    },
+    "not": {
+      "type": "String",
+      "Select": true,
+      "Options": ["", "string", "integer", "number", "boolean", "array", "object"],
+      "info": "semi-supported"
+    },
+    "nullable": {
+      "type": "Boolean",
+      "info": "additional"
     },
     "readOnly": {
-      "type": "boolean"
+      "type": "Boolean",
+      "info": "additional"
     },
     "writeOnly": {
-      "type": "boolean"
-    },
-    "xml": {
-      "type": "XML Object"
-    },
-    "externalDocs": {
-      "type": "External Documentation Object"
-    },
-    "example": {
-      "type": "Any"
+      "type": "Boolean",
+      "info": "additional"
     },
     "deprecated": {
-      "type": "boolean"
+      "type": "Boolean",
+      "info": "additional"
+    },
+    "xml": {
+      "type": "XML Object",
+      "info": "additional"
+    },
+    "discriminator": {
+      "type": "Discriminator Object",
+      "info": "additional"
+    },
+
+    "allOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "oneOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "anyOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "externalDocs": {
+      "type": "External Documentation Object",
+      "info": "additional"
     }
   },
   "Media Type Object": {
@@ -284,7 +480,7 @@
   },
   "Request Body Object": {
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "content": {
@@ -293,55 +489,55 @@
       "Map": true
     },
     "required": {
-      "type": "boolean"
+      "type": "Boolean"
     }
   },
   "Parameter Object": {
     "name": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "in": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "required": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "deprecated": {
-      "type": "boolean"
+      "type": "Boolean"
     }
   },
   "External Documentation Object": {
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "url": {
-      "type": "string",
+      "type": "String",
       "Required": true
     }
   },
   "Operation Object": {
     "operationId": {
-      "type": "string"
+      "type": "String"
     },
     "deprecated": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "tags": {
-      "type": "string",
+      "type": "String",
       "Array": true
     },
     "summary": {
-      "type": "string"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "security": {
@@ -381,10 +577,10 @@
   },
   "Path Item Object": {
     "summary": {
-      "type": "string"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "servers": {
@@ -423,24 +619,24 @@
   },
   "Server Variable Object": {
     "enum": {
-      "type": "primitive",
+      "type": "String",
       "Array": true
     },
     "default": {
-      "type": "primitive"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     }
   },
   "Server Object": {
     "url": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "variables": {
@@ -450,50 +646,50 @@
   },
   "License Object": {
     "name": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "url": {
-      "type": "string"
+      "type": "String"
     }
   },
   "Contact Object": {
     "name": {
-      "type": "string"
+      "type": "String"
     },
     "url": {
-      "type": "string"
+      "type": "String"
     },
     "email": {
-      "type": "string"
+      "type": "String"
     }
   },
   "Info Object": {
     "title": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
-    "description": {
-      "type": "string",
-      "Markdown": true
+    "version": {
+      "type": "String",
+      "Required": true
     },
     "termsOfService": {
-      "type": "string"
+      "type": "String"
     },
-    "contact": {
-      "type": "Contact Object"
+    "description": {
+      "type": "String",
+      "Markdown": true
     },
     "license": {
       "type": "License Object"
     },
-    "version": {
-      "type": "string",
-      "Required": true
+    "contact": {
+      "type": "Contact Object"
     }
   },
   "Root Object": {
     "openapi": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "info": {

@@ -1,15 +1,12 @@
 <template>
   <div>
-    <div
-      class="tag-header"
+    <div class="oao-tag-header"
       @click="handleToggleCollapse"
     >
-      <h5>
-        <span style="float: right;">
-          <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
-        </span>
-        <span>{{ tag }}</span>
-      </h5>
+      <span class="oao-arrow">
+        <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
+      </span>
+      <div>{{ tag }}</div>
     </div>
     <div
       :class="`${isCollapsed ? '' : 'd-none'}`"
@@ -74,9 +71,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tag-header {
+.oao-tag-header {
   cursor: pointer;
-  border-bottom: 1px solid silver;
-  margin-bottom: .5rem;
+  min-height: 2.5rem;
+  > div {
+    padding: .5rem 1rem .5rem 0;
+  }
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  margin-bottom: 1rem;
+}
+.oao-arrow {
+  float: right;
+  padding: .5rem 0;
+  width: 2.5rem;
+  text-align: center;
+  svg { width: 1rem; }
 }
 </style>

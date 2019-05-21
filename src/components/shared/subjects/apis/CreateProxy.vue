@@ -101,7 +101,7 @@ export default {
       const api = businessApis.find(item => item.uuid === apiId);
       const newExtendedDocument = () => {
         const extendeddocument = JSON.parse(JSON.stringify(api.openapidocument));
-        extendeddocument.security = [];
+        extendeddocument.security = [{ abyssApiKeyAuth: [] }];
         extendeddocument.components.securitySchemes = {
           abyssApiKeyAuth: {
             in: 'header',

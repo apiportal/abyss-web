@@ -7,7 +7,7 @@
       <span v-if="required" class="text-danger">*</span>
     </label>
     <b-form-select
-      v-model="inputValue" 
+      v-model="inputValue"
       :options="options"
       :state="state"
       :required="required"

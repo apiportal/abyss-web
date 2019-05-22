@@ -1,8 +1,8 @@
 <template>
   <div>
     <div
-      v-for="(item, index) in currentObjectInterfaceKeys" 
-      v-bind:key="index" 
+      v-for="(item, index) in currentObjectInterfaceKeys"
+      v-bind:key="index"
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
         <OpenApiObject

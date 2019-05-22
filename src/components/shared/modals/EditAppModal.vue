@@ -58,24 +58,24 @@
             </b-col>
             <b-col md="4">
               <div class="d-flex justify-content-center">
-                <div class="item p-0"> 
+                <div class="item p-0">
                   <img
                     v-if="appEditable.picture"
-                    :src="appEditable.picture" 
-                    :alt="appEditable.displayname" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
+                    :src="appEditable.picture"
+                    :alt="appEditable.displayname"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 200px;"
+                    v-b-tooltip.hover
                     title="Click to change picture"
                     @click="$refs.fileInput.click()"
                   >
-                  <img 
-                    v-if="!appEditable.picture" 
-                    src="@/assets/avatar.jpg" 
-                    :alt="appEditable.displayname" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
+                  <img
+                    v-if="!appEditable.picture"
+                    src="@/assets/avatar.jpg"
+                    :alt="appEditable.displayname"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 200px;"
+                    v-b-tooltip.hover
                     title="Click to change picture"
                     @click="$refs.fileInput.click()" />
                   <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>

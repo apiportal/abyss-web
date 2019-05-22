@@ -121,7 +121,7 @@
                 @change="handleRefChange"
               >
                 <option :value="undefined">None</option>
-                <optgroup 
+                <optgroup
                   v-for="(optGroup, optGroupIndex) in refs"
                   v-bind:key="optGroupIndex"
                   :label="optGroup.name"

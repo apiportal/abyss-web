@@ -1,7 +1,7 @@
 <template>
   <div class="auto-generated-form-container">
     <div class="auto-generated-form-header-container">
-      <span 
+      <span
         v-for="(propName, columnIndex) in path"
         v-bind:key="columnIndex"
       >

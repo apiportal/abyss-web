@@ -71,8 +71,6 @@ export default {
   },
   mounted() {
     this.getGroupMemberships();
-    // this.$store.dispatch('users/getUsers', {});
-    // this.$store.dispatch('groups/getGroups', {});
   },
 };
 </script>

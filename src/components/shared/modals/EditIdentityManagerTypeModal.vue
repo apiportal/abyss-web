@@ -20,7 +20,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="directoryTypeNameGroup"
           >
             <label>
@@ -37,7 +37,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeDescriptionGroup"
           >
             <label>
@@ -54,7 +54,7 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeOrganizationIdGroup"
           >
             <label>
@@ -63,7 +63,7 @@
             </label>
             <b-form-select
               id="directoryTypeOrganizationIdInput"
-              v-model="subjectDirectoryTypeEditable.organizationid" 
+              v-model="subjectDirectoryTypeEditable.organizationid"
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -86,7 +86,7 @@
               Enabled
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeTemplateGroup"
           >
             <label>

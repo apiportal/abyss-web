@@ -4,12 +4,12 @@
     <b-button class="btn-life-cycle" :variant="buttonStatus('Staged')" @click="changeState('Staged')" @mouseover="showInfo('Staged')">Staged</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Published')" @click="changeState('Published')" @mouseover="showInfo('Published')">Published</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Promoted')" @click="changeState('Promoted')" @mouseover="showInfo('Promoted')">Promoted</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>  
+    <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Deprecated')" @click="changeState('Deprecated')" @mouseover="showInfo('Deprecated')">Deprecated</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Retired')" @click="changeState('Retired')" @mouseover="showInfo('Retired')">Retired</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Archived')" @click="changeState('Archived')" @mouseover="showInfo('Archived')">Archived</b-button>
 
-    <b-alert class="state-description" show variant="light"> 
+    <b-alert class="state-description" show variant="light">
       <span class="info-header">{{ infoText.name }}</span>
       <hr/>{{ infoText.description + '.' }}
     </b-alert>

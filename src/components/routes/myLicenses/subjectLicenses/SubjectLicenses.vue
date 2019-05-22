@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -27,7 +27,7 @@
           <b-button
             :to="`/app/my-licenses/my-licenses/${page}/add-new`"
             variant="primary"
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Add New License"
             class="page-btn-add"
             block
@@ -49,10 +49,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"

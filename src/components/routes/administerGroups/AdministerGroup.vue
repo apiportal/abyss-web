@@ -2,7 +2,11 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + group.picture + ')' }"></dt>
+        <dt
+          class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1"
+          style="width: 150px;"
+          :style="{ 'background-image': 'url(' + group.picture + ')' }">
+        </dt>
       </dl>
       <dl class="col">
         <dt>Group Name:</dt>

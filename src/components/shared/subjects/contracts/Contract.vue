@@ -198,7 +198,6 @@ export default {
       .find(permission => permission.uuid === this.item.subjectpermissionid);
   },
   created() {
-    // this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('licenses/getLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });

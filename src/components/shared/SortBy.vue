@@ -1,5 +1,5 @@
 <template>
-  <b-link 
+  <b-link
     @click="() => onClick({ sortByKey, sortByKeyType, sortDirection: selectedSortDirection })"
   >
     <span class="link-text">{{text}}</span>

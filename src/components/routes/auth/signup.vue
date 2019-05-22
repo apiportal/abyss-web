@@ -29,7 +29,7 @@
       </b-form-group>
     </div>
     <!-- End Form Group -->
-    
+
      <!-- Form Group -->
     <div class="js-form-message form-group">
       <b-form-group
@@ -156,16 +156,16 @@
         <a class="link-muted" @click="toggleInformModal" data-qa="linkTerms">Terms of Use</a>
       </small>
       <InformModal
-          v-if="isInformModalVisible"  
+          v-if="isInformModalVisible"
           size="md"
           title="Terms of Use"
           :hideHeader="false"
           text="Welcome to ABYSS API PORTAL.\n\n
-            If you continue to browse and use this portal, you are agreeing to comply with and be bound by 
-            the following terms and conditions of use, which together with our privacy policy govern VERAPI 
+            If you continue to browse and use this portal, you are agreeing to comply with and be bound by
+            the following terms and conditions of use, which together with our privacy policy govern VERAPI
             YAZILIM TEKNOLOJİLERİ A.Ş.'s relationship with you in relation to this portal.\n\n
-            If you disagree with any part of these terms and conditions, please do not use ABYSS API PORTAL. 
-            The term 'VERAPI YAZILIM TEKNOLOJİLERİ A.Ş.' or 'us' or 'we' refers to the owner of the portal 
+            If you disagree with any part of these terms and conditions, please do not use ABYSS API PORTAL.
+            The term 'VERAPI YAZILIM TEKNOLOJİLERİ A.Ş.' or 'us' or 'we' refers to the owner of the portal
             whose registered office is Koşuyolu Mah. Koşuyolu Cad. No: 33 Kadıköy / İstanbul / TURKEY\n\n
             Our company registration number is Kadİköy V.D., 924 051 8054.\n\n
             The term 'you' refers to the user or viewer of ABYSS API PORTAL."
@@ -246,32 +246,24 @@ export default {
       return firstname.length > 0;
     },
     firstNameInvalidFeedback() {
-      // const { firstname } = this.form;
-      // return (firstname.length === 0) ? 'Please enter your first name.' : '';
     },
     lastNameState() {
       const { lastname } = this.form;
       return lastname.length > 0;
     },
     lastNameInvalidFeedback() {
-      // const { lastname } = this.form;
-      // return (lastname.length === 0) ? 'Please enter your last name.' : '';
     },
     userNameState() {
       const { username } = this.form;
       return username.length > 0;
     },
     userNameInvalidFeedback() {
-      // const { username } = this.form;
-      // return (username.length === 0) ? 'Please enter your user name.' : '';
     },
     emailState() {
       const { email } = this.form;
       return email.length > 0;
     },
     emailInvalidFeedback() {
-      // const { email } = this.form;
-      // return (email.length === 0) ? 'Please enter your e-mail.' : '';
     },
     passwordState() {
       const { password } = this.form;
@@ -287,12 +279,7 @@ export default {
     },
     confirmPasswordInvalidFeedback() {
       const { password, password2 } = this.form;
-      if (password2.length === 0) {
-        // return 'Please re-enter your password.';
-      } else if (password !== password2) {
-        return 'Passwords did not match.';
-      }
-      return '';
+      return (password !== password2) ? 'Passwords did not match.' : '';
     },
   },
   methods: {

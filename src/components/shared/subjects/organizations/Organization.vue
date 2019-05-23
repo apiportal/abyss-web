@@ -45,7 +45,7 @@
         v-if="organization.organizationusers && organization.organizationusers.length"
         :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" /> 
+        <Icon icon="users" />
         <span class="btn-text">Users</span>
         <b-badge pill>{{ organization.organizationusers ? organization.organizationusers.length : 0 }}</b-badge>
       </b-button>

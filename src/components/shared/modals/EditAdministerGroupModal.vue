@@ -67,7 +67,7 @@
                     :alt="groupEditable.displayname"
                     class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
                     style="width: 175px;"
-                    v-b-tooltip.hove
+                    v-b-tooltip.hover
                     title="Click to change picture"
                     @click="$refs.fileInput.click()"
                   >

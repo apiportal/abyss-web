@@ -61,7 +61,7 @@
           <!--  -->
           <td class="actions">
             <b-button
-              v-b-tooltip.hover 
+              v-b-tooltip.hover
               title="Regenerate"
               variant="link"
               size="lg"
@@ -76,7 +76,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">           
+          <td colspan="5">
             <div class="collapsible-content token-area">
               <b-input-group>
                 <b-input-group-prepend>

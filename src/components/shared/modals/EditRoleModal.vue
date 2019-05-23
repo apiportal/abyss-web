@@ -20,7 +20,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="roleNameGroup"
             label="Role Name:"
             label-for="roleNameInput"
@@ -38,7 +38,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="displayNameGroup"
             label="Display Name:"
             label-for="displayNameInput"
@@ -65,8 +65,7 @@
               Enabled
             </b-form-checkbox>
           </b-form-group>
-          
-          <b-form-group 
+          <b-form-group
             id="roleOrganizationIdGroup"
             label="Organization:"
             label-for="roleOrganizationIdInput"
@@ -75,7 +74,7 @@
           >
             <b-form-select
               id="roleOrganizationIdInput"
-              v-model="roleEditable.organizationid" 
+              v-model="roleEditable.organizationid"
               :options="[
                 {
                   value: null,
@@ -90,7 +89,7 @@
               :state="organizationIdState"
             />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="roleDirectoryIdGroup"
             label="Directory:"
             label-for="roleDirectoryIdInput"
@@ -99,7 +98,7 @@
           >
             <b-form-select
               id="roleDirectoryIdInput"
-              v-model="roleEditable.subjectdirectoryid" 
+              v-model="roleEditable.subjectdirectoryid"
               :options="[
                 {
                   value: null,
@@ -114,8 +113,7 @@
               :state="subjectDirectoryIdState"
             />
           </b-form-group>
-
-          <b-form-group 
+          <b-form-group
             id="effectiveStartDateGroup"
             label="Effective Start Date:"
             label-for="effectiveStartDateInput"
@@ -132,7 +130,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="effectiveEndDateGroup"
             label="Effective End Date:"
             label-for="effectiveEndDateInput"
@@ -149,8 +147,7 @@
             >
             </b-form-input>
           </b-form-group>
-
-          <b-form-group 
+          <b-form-group
             id="roleDescriptionGroup"
             label="Description:"
             label-for="roleDescriptionTextarea"

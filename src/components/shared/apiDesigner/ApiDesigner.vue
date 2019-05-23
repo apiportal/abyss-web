@@ -7,7 +7,7 @@
         <div class="ml-auto">
           <b-button-group size="md" class="mr-1">
             <b-button
-              @click="setView('abyss')" 
+              @click="setView('abyss')"
               :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
               v-b-tooltip.hover
               title="Abyss View"
@@ -25,18 +25,16 @@
               title="Editor View"
             ><Icon icon="code" /></b-button>
           </b-button-group>
-          
           <b-button-group size="md" class="mr-1">
             <b-button
-              @click="setMode('json')" 
+              @click="setMode('json')"
               :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
             >JSON</b-button>
             <b-button
-              @click="setMode('yaml')" 
+              @click="setMode('yaml')"
               :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
             >YAML</b-button>
           </b-button-group>
-          
           <b-button-group size="md" class="mr-1">
             <b-button
               @click="handleUndo"
@@ -56,7 +54,7 @@
     </div>
 
     <div class="api-designer-columns-container">
-      <div 
+      <div
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
@@ -469,7 +467,7 @@ export default {
 <style lang="scss" scoped>
 .api-designer-container {
   .api-designer-actions-bar {
-    border-bottom: 1px solid #e9ecef; 
+    border-bottom: 1px solid #e9ecef;
     padding: 1rem 1rem;
 
     .toolbar-title {

@@ -20,7 +20,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="organizationOwnerGroup"
           >
             <label>
@@ -29,7 +29,7 @@
             </label>
             <b-form-select
               id="organizationOwnerInput"
-              v-model="computedOrganizationOwner" 
+              v-model="computedOrganizationOwner"
               :options="[
                 { value: null, text: 'Please Select'},
                 ...computedOrganizationUsers.map(user => ({

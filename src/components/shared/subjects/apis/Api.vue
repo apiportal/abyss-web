@@ -12,7 +12,7 @@
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
         <dt>State:</dt>
-        <dd>{{ item.apistatename }}</dd>     
+        <dd>{{ item.apistatename }}</dd>
       </dl>
       <dl class="col">
         <dt>Description:</dt>

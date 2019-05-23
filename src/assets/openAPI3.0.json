@@ -30,11 +30,6 @@
       "Map": true
     }
   },
-  "Single Object": {
-    "type": "Object",
-    "Required": true,
-    "Map": true
-  },
   "OAuth Flows Object": {
     "implicit": {
       "type": "OAuth Flow Object"

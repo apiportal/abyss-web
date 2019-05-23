@@ -63,11 +63,9 @@ export default {
   computed: {
     state() {
       const { inputValue, required } = this;
-
       if (required) {
         return Boolean(inputValue);
       }
-
       return true;
     },
   },

@@ -69,5 +69,6 @@ export default {
   border-radius: .3rem;
   background: white;
   padding: .5rem;
+  margin-bottom: 1rem;
 }
 </style>

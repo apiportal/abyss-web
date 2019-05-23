@@ -2,10 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-          style="width: 200px;"
-          :style="{ 'background-image': 'url(' + organization.picture + ')' }">
-        </dt>
+        <Pictures :uuid="organization.uuid" :altText="organization.name" :color="organization.color" type="organizations" shape="rectangle" width="200px"></Pictures>
       </dl>
       <dl class="col">
         <dt>Organization Name:</dt>
@@ -48,7 +45,7 @@
         v-if="organization.organizationusers && organization.organizationusers.length"
         :id="`IDOrganizationUsersButton_${organization.uuid}`"
       >
-        <Icon icon="users" />
+        <Icon icon="users" /> 
         <span class="btn-text">Users</span>
         <b-badge pill>{{ organization.organizationusers ? organization.organizationusers.length : 0 }}</b-badge>
       </b-button>
@@ -91,8 +88,10 @@
 
 <script>
 import { mapState } from 'vuex';
+// import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Users from '@/components/shared/subjects/users/Users';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -120,6 +119,7 @@ export default {
   components: {
     Icon,
     Users,
+    Pictures,
     Organizations: () => import('@/components/shared/subjects/organizations/Organizations'),
   },
   computed: {
@@ -161,6 +161,7 @@ export default {
       return subOrganizations;
     },
     organizationUsers() {
+      // const { users, organizationSubjects } = this;
       const { users, organization } = this;
       const organizationUsers = users.filter(user =>
         // organizationSubjects.some(f =>

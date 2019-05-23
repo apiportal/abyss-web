@@ -20,6 +20,7 @@
         :onChange="onChange"
         :isCollapsedInitial="true"
         :refs="refs"
+        :isMenu="false"
       />
     </div>
   </div>

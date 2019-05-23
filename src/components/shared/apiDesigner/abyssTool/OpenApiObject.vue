@@ -4,18 +4,15 @@
       <span class="oao-arrow">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
-      <span v-if="type !== 'Info Object' && type !== 'Components Object'" class="oao-dropdown">
+      <span v-if="isMenu && type !== 'License Object' && type !== 'Contact Object'" class="oao-dropdown">
         <b-dropdown variant="link" size="md" right no-caret>
 
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
 
-          <b-dropdown-item v-if="type === 'Responses Object'" @click="addObjectItem(newResponse)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
-          <b-dropdown-item v-if="type === 'Media Type Object' && isMap" @click="addObjectItem(newMediaType)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
-          <b-dropdown-item v-if="type === 'Schema Object' && isMap" @click="addObjectItem({ newItem: {} })"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
-          <b-dropdown-item v-if="type === 'Server Variable Object' && isMap" @click="addObjectItem({ newVar: { default: 'default' } })"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="isMap || isMapWithRegex" @click="addObjectItem(newObjectItem)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
           <b-dropdown-item v-if="isArray" @click="addArrayItem"><Icon icon="plus" /> Add New {{item}} Item</b-dropdown-item>
 
-          <b-dropdown-form class="pt-3 path-form" v-if="!isMap && !isArray && !isMapWithRegex && !isDynamicTitle && (pathArray.indexOf('schemas') > -1 || pathArray.indexOf('variables') > -1)">
+          <b-dropdown-form class="pt-3 path-form" v-if="!isInterface && !isMap && !isArray && !isMapWithRegex">
             <b-form-group>
               <label class="form-label">Rename {{type}}</label>
               <b-form-input
@@ -26,7 +23,20 @@
             </b-form-group>
           </b-dropdown-form>
 
-          <b-dropdown-item v-if="!isDynamicTitle && !isArray" @click="handleDeleteObjectItem" class="border-top"><Icon icon="trash" /> Delete {{item}} Object</b-dropdown-item>
+          <b-dropdown-form class="pt-3 path-form" v-if="isMap && pathArray.indexOf('securitySchemes') > -1">
+            <b-form-group >
+              <label>
+                Add Security Schemes
+              </label>
+              <b-form-select
+                v-model="selectedSecurity"
+                :options="computedSecurityOptions"
+                @change="addSecurity"
+              />
+            </b-form-group>
+          </b-dropdown-form>
+
+          <b-dropdown-item v-if="!isInterface && !isDynamicTitle && !isArray" @click="handleDeleteObjectItem" class="border-top"><Icon icon="trash" /> Delete {{item}} Object</b-dropdown-item>
           <b-dropdown-item v-if="isDynamicTitle" @click="handleDeleteArrayItem" class="border-top"><Icon icon="trash-alt" /> Delete {{title}} Item</b-dropdown-item>
 
         </b-dropdown>
@@ -182,6 +192,16 @@ export default {
       type: Function,
       required: true,
     },
+    isInterface: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
+    isMenu: {
+      type: Boolean,
+      required: false,
+      default() { return true; },
+    },
     isMapWithRegex: {
       type: Boolean,
       required: false,
@@ -229,12 +249,58 @@ export default {
     Security: () => import('@/components/shared/apiDesigner/abyssTool/Security'),
     Icon,
   },
+  watch: {
+    formDataKeys(newValue) {
+      if (newValue) {
+        this.selectedSecurity = null;
+      }
+    },
+  },
   computed: {
+    newItemName() {
+      return `new${this.type.replace(' Object', '').replace(/ /g, '')}`;
+    },
+    newObjectItem() {
+      const { type, newItemName } = this;
+      if (type === 'Media Type Object') {
+        return {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        };
+      }
+      if (type === 'Responses Object') {
+        return {
+          100: {
+            description: 'Successful operation',
+          },
+        };
+      }
+      if (type === 'Server Variable Object') {
+        return { [newItemName]: { default: 'default' } };
+      }
+      return { [newItemName]: {} };
+    },
     formDataKeys() {
       return Object.keys(this.formData);
     },
     pathDots() {
       return this.pathArray.slice(1, this.pathArray.length).join('.');
+    },
+    computedSecurityOptions() {
+      const { securityOptions } = this;
+      const options = Object.keys(securityOptions).map(i => ({
+        value: {
+          [i]: securityOptions[i],
+        },
+        text: i,
+      }));
+      // console.log('options: ', options); // eslint-disable-line
+      return options.filter(el =>
+        !this.formDataKeys.some(f => f === el.text),
+      );
     },
     renamedItem: {
       get() {
@@ -260,6 +326,8 @@ export default {
       isCollapsed: this.isCollapsedInitial,
       interfaces: Interfaces,
       refAddress: this.formData['$ref'] || null, // eslint-disable-line
+      selectedSecurity: null,
+      securityOptions: Interfaces['Security Schemes Options'],
       newResponse: {
         100: {
           description: 'Successful operation',
@@ -289,6 +357,7 @@ export default {
     addArrayItem() {
       const { pathArray, formData } = this;
       this.onChange(pathArray, [...formData, {}]);
+      this.isCollapsed = true;
     },
     addObjectItem(newObject = {}) {
       const { pathArray } = this;
@@ -296,6 +365,7 @@ export default {
       const value = newObject[key];
       // console.log('pathArray, newObject: ', [...pathArray, key], value); // eslint-disable-line
       this.onChange([...pathArray, key], value, 'addItem');
+      this.isCollapsed = true;
     },
     renameObjectItem(val) {
       const { pathArray } = this;
@@ -309,6 +379,15 @@ export default {
     handleDeleteArrayItem() {
       this.handleToggleCollapse();
       this.onChange(this.pathArray, null, 'deleteLastIndex');
+    },
+    addSecurity(val) {
+      if (val) {
+        const { pathArray } = this;
+        const key = Object.keys(val)[0];
+        const value = val[key];
+        this.onChange([...pathArray, key], value, 'addItem');
+        this.isCollapsed = true;
+      }
     },
     getTitle(data) {
       const { type } = this;

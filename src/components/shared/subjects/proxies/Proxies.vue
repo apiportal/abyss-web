@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -96,8 +97,10 @@
         :level="1"
       >
         <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
+          <td class="picture">
+            <Pictures :uuid="proxyItem.uuid" :altText="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
-            <Images :uuid="proxyItem.uuid" :itext="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ proxyItem.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -172,7 +175,7 @@ import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -277,7 +280,7 @@ export default {
     Icon,
     SortBy,
     Proxy,
-    Images,
+    Pictures,
   },
   data() {
     return {

@@ -81,7 +81,6 @@ const paginateArray = ({ array, itemsPerPage, page }) => {
 
 const objectDeepUpdate = (propPath, value, object, customAction) => {
   // console.log('propPath.length : ', propPath.length, propPath, value, object, customAction );
-  // console.log('propPath.length : ', propPath.length, object);
   if (propPath.length > 1) {
     if (object[propPath[0]] === undefined) {
       object[propPath[0]] = {}; // eslint-disable-line

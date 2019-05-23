@@ -161,7 +161,6 @@ export default {
       return subOrganizations;
     },
     organizationUsers() {
-      // const { users, organizationSubjects } = this;
       const { users, organization } = this;
       const organizationUsers = users.filter(user =>
         // organizationSubjects.some(f =>

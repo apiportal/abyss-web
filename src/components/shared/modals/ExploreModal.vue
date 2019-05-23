@@ -70,7 +70,7 @@
             <b-form @submit="handleSubscribe">
               <div class="row">
                 <div class="col-md-4">
-                  <b-form-group 
+                  <b-form-group
                     id="selectedAppId"
                     label="My Apps:"
                     v-b-tooltip.hover

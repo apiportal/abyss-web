@@ -39,7 +39,7 @@
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Add New Identity Manager"
             class="page-btn-add"
             block
@@ -317,7 +317,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

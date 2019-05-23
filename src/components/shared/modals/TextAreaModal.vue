@@ -15,10 +15,10 @@
       <p v-html="modifiedText" style="text-align: justify"></p>
     </template>
     <template slot="footer">
-      <b-button 
-        class="float-right" 
-        variant="primary" 
-        size="sm" 
+      <b-button
+        class="float-right"
+        variant="primary"
+        size="sm"
         @click="onConfirm"
         data-qa ="btnConfirm"
       >

@@ -22,7 +22,7 @@
         <div style="padding: 1rem;">
           <b-row align-v="center">
             <b-col md=9>
-              <b-form-group 
+              <b-form-group
                 id="firstNameGroup"
                 label="First Name*:"
                 label-for="firstNameInput"
@@ -39,7 +39,7 @@
                 >
                 </b-form-input>
               </b-form-group>
-              <b-form-group 
+              <b-form-group
                 id="lastNameGroup"
                 label="Last Name*:"
                 label-for="lastNameInput"
@@ -85,7 +85,7 @@
               </div>
             </b-col>
           </b-row>
-          <b-form-group 
+          <b-form-group
             id="displayNameGroup"
             label="Display Name*:"
             label-for="displayNameInput"
@@ -102,7 +102,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userNameGroup"
             label="User Name*:"
             label-for="userNameInput"
@@ -157,7 +157,7 @@
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="emailGroup"
             label="Email*:"
             label-for="emailInput"
@@ -174,7 +174,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="secondaryEmailGroup"
             label="Secondary Email:"
             label-for="secondaryEmailInput"
@@ -187,7 +187,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="urlGroup"
             label="URL:"
             label-for="urlInput"
@@ -203,7 +203,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userOrganizationIdGroup"
             label="Organization*:"
             label-for="userOrganizationIdInput"
@@ -212,7 +212,7 @@
           >
             <b-form-select
               id="userOrganizationIdInput"
-              v-model="userEditable.organizationid" 
+              v-model="userEditable.organizationid"
               :options="[
                 {
                   value: null,
@@ -227,7 +227,7 @@
               :state="organizationIdState"
             />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userDirectoryIdGroup"
             label="Directory*:"
             label-for="userDirectoryIdInput"
@@ -236,7 +236,7 @@
           >
             <b-form-select
               id="userDirectoryIdInput"
-              v-model="userEditable.subjectdirectoryid" 
+              v-model="userEditable.subjectdirectoryid"
               :options="[
                 {
                   value: null,
@@ -251,7 +251,7 @@
               :state="subjectDirectoryIdState"
             />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userDescriptionGroup"
             label="Description:"
             label-for="userDescriptionTextarea"

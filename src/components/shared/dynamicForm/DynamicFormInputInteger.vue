@@ -1,5 +1,5 @@
 <template>
-  <b-form-group 
+  <b-form-group
     :description="label"
   >
     <label v-if="description">

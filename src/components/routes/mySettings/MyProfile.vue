@@ -147,7 +147,7 @@
                   <b-form-input v-model="form.oldpassword" type="password" placeholder="********" required
                     class="form-control"></b-form-input>
                 </b-form-group>
-                
+
                 <b-form-group>
                   <label class="form-label">
                     <span class="d-flex justify-content-between align-items-center">
@@ -157,7 +157,7 @@
                   <b-form-input v-model="form.newpassword" type="password" placeholder="********" required
                     class="form-control"></b-form-input>
                 </b-form-group>
-                
+
                 <b-form-group>
                   <label class="form-label">
                     <span class="d-flex justify-content-between align-items-center">
@@ -189,19 +189,19 @@
               <div class="py-3">
                 <b-form-group id="referralEmailAddress">
                   <label for="referralEmailAddressInput">Referral Email Address <code>*</code></label>
-                  <b-form-input 
-                    id="referralEmailAddressInput" 
+                  <b-form-input
+                    id="referralEmailAddressInput"
                     type="email"
                     v-model="referral.email"
-                    placeholder="Referral Email Address" 
+                    placeholder="Referral Email Address"
                     required
                   >
                   </b-form-input>
                 </b-form-group>
 
                 <b-form-group id="invitationGroup" label="Invitation Text" label-for="invitationTextarea">
-                  <b-form-textarea 
-                    id="invitationTextarea" 
+                  <b-form-textarea
+                    id="invitationTextarea"
                     v-model="referral.message"
                     placeholder="Invitation text" :rows="4" :cols="100"
                   >
@@ -220,8 +220,8 @@
                 </b-form-group>
               </div>
               <footer class="text-center">
-                <b-button size="lg" 
-                  variant="primary" 
+                <b-button size="lg"
+                  variant="primary"
                   type="submit"
                   id="IdSendReferral"
                   >Send</b-button>
@@ -249,7 +249,6 @@ export default {
     Icon,
   },
   data() {
-    // const { user } = this;
     return {
       referral: {
         email: '',
@@ -318,7 +317,6 @@ export default {
         });
     },
     onFileSelected(event) {
-      // console.log(event.target.files[0]); // eslint-disable-line no-console
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -358,11 +356,8 @@ export default {
       reader.readAsDataURL(file);
     },
     handleDeleteImage() {
-      // this.pictureEditable.props.picture = '';
-      // console.log('e');
       const {
         description, url, effectiveenddate, secondaryemail, email,
-        // picture,
         distinguishedname, uniqueid, phonebusiness, phoneextension,
         phonehome, phonemobile, jobtitle, department, company,
         } = this.pictureEditable.props;

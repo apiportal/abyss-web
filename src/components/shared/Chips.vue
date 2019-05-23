@@ -5,8 +5,8 @@
     </div>
     <div class="chips-container">
       <ul class="chips-ul">
-        <li 
-          v-for="(chip, index) in chips" 
+        <li
+          v-for="(chip, index) in chips"
           v-bind:key="index"
           class="btn btn-secondary chip-btn btn-icon"
           :class="`${chip.color} ${chip.isdeleted ? 'is-deleted' : ''}`"
@@ -16,7 +16,7 @@
           </span>
           <b-link
             v-if="!chip.disabled"
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Delete"
             class="text-white"
             @click="() => onDeleteChip(index, chip)"
@@ -46,7 +46,7 @@
             </b-dropdown-form>
             <b-dropdown-text>
               <b-button
-                v-for="(chip, index) in computedOptions" 
+                v-for="(chip, index) in computedOptions"
                 v-bind:key="index"
                 variant="secondary"
                 @click="() => addChip({ chip })"
@@ -88,7 +88,7 @@
               <hr v-if="showAddChip" />
               <div class="py-1">
                 <b-button
-                  v-for="(chip, index) in computedOptions" 
+                  v-for="(chip, index) in computedOptions"
                   v-bind:key="index"
                   variant="secondary"
                   @click="() => addChip({ chip })"

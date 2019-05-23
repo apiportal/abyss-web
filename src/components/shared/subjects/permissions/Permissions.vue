@@ -191,7 +191,6 @@ export default {
       //
     },
     getSubject(subjectId) {
-      // const { subjectid } = this.permission;
       console.log('subjid', subjectId); // eslint-disable-line
       api.getSubject(subjectId).then((response) => {
         this.subject = response.data[0];
@@ -202,9 +201,6 @@ export default {
         }
       });
     },
-  },
-  mounted() {
-    // this.getSubject();
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="loading-modal-backdrop">
     <div class="loading-modal">
-      <Icon icon="spinner" spin /> 
+      <Icon icon="spinner" spin />
     </div>
   </div>
 </template>

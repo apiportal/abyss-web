@@ -4,7 +4,7 @@
 
     <div class="form-array-items" v-if="items.type === 'object'">
       <div v-for="(valueItem, valueIndex) in value" v-bind:key="valueIndex" class="row">
-        <div 
+        <div
           v-for="(templateItem, templateIndex) in Object.keys(items.properties)"
           v-bind:key="templateIndex"
           class="col"

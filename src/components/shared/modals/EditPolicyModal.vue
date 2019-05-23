@@ -68,12 +68,12 @@
             <label for="directoryTypeInput">Policy Type: <span class="text-danger">*</span></label>
           </div>
           <div class="col-10">
-            <b-form-group 
+            <b-form-group
               id="policyTypeGroup"
             >
               <b-form-select
                 id="policyTypeInput"
-                v-model="policyEditable.typeid" 
+                v-model="policyEditable.typeid"
                 :state="policyTypeState"
                 :options="[
                   { value: null, text: 'Please Select'},
@@ -125,7 +125,7 @@
         >
           Cancel
         </b-button>
-        <b-button 
+        <b-button
           variant="primary"
           @click="handleSubmit"
           data-qa="btnSave"

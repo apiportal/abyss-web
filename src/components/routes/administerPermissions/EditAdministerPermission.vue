@@ -3,7 +3,7 @@
     <EditAdministerPermissionModal
       v-if="
         areAccessManagersLoaded &&
-        areOrganizationsLoaded && 
+        areOrganizationsLoaded &&
         arePermissionsLoaded &&
         areResourcesLoaded &&
         areResourceTypesLoaded &&

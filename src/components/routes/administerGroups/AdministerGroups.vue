@@ -38,7 +38,7 @@
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Add New Group"
             class="page-btn-add"
             block
@@ -139,7 +139,9 @@
 
                 <b-dropdown-header class="p-0"></b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`">
+                  <Icon icon="users" /> Edit Group Users
+                </b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -337,7 +339,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

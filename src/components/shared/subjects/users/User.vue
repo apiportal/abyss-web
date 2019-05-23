@@ -4,7 +4,7 @@
       <dl class="col">
           <Pictures :uuid="user.uuid" :altText="user.displayname" :color="user.color" type="subjects" shape="rectangle" width="200px"></Pictures>
       </dl>
-  
+
       <dl class="col">
         <dt>User Name:</dt>
         <dd>{{ user.subjectname }}</dd>
@@ -17,7 +17,7 @@
         <dt>Main Organization:</dt>
         <dd>{{ user.organizationname }}</dd>
       </dl>
-  
+
       <dl class="col">
         <dt>Description:</dt>
         <dd>{{ user.description }}</dd>
@@ -29,13 +29,11 @@
         <dd>{{ user.email }}</dd>
         <dt>Secondary Email:</dt>
         <dd>{{ secondaryEmail }}</dd>
-
       </dl>
-  
+
       <dl class="col">
-
       </dl>
-      
+
       <dl class="col">
         <dt>Active:</dt>
         <dd>{{ user.isactivated | booleanToText }}</dd>

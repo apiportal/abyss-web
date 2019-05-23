@@ -12,7 +12,7 @@
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
         <dt>State:</dt>
-        <dd>{{ item.apistatename }}</dd>     
+        <dd>{{ item.apistatename }}</dd>
       </dl>
       <dl class="col">
         <dt>Description:</dt>
@@ -109,7 +109,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

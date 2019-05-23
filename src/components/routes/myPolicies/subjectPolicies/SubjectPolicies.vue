@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -27,7 +27,7 @@
           <b-button
             :to="`/app/my-policies/my-policies/${page}/add-new`"
             variant="primary"
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Add New Policy"
             class="page-btn-add"
             block
@@ -49,10 +49,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -85,7 +85,7 @@ export default {
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
-      const { policyTypes, currentUser, policies } = this;
+      const { policyTypes, policies } = this;
       const getTypeName = (typeId) => {
         const type = policyTypes.find(policyType => policyType.uuid === typeId);
         return type ? type.name : typeId;

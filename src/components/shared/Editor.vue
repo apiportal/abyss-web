@@ -66,7 +66,6 @@ export default {
     const { $el, mode, value, theme, readOnly } = this;
     this.editor = ace.edit($el);
     this.editor.$blockScrolling = Infinity;
-    // this.editor.setOption('enableEmmet', true);
     this.editor.getSession().setMode(`ace/mode/${mode}`);
     this.editor.setTheme(`ace/theme/${theme}`);
     this.editor.getSession().setTabSize(2);

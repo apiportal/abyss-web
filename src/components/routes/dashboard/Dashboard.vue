@@ -103,7 +103,6 @@ export default {
     // },
   },
   mounted() {
-    // this.getDashboarData();
   },
 };
 </script>

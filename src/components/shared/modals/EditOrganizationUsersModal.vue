@@ -175,7 +175,6 @@ export default {
         const ownerToAdd = computedOrganizationUsers.find(
           user => user.crudsubjectid === user.subjectid);
         if (owner) {
-          // console.log(owner);
           return owner;
         } else if (ownerToAdd) {
           return ownerToAdd;
@@ -189,7 +188,6 @@ export default {
         if (user) {
           user.isowner = true;
         }
-        // console.log(newval, ownerNew);
         return ownerNew;
       },
     },

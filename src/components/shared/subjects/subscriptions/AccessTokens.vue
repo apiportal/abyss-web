@@ -96,8 +96,9 @@
                     :disabled="!isAccessTokenVisible"
                     @click="copyTokenText()"
                     data-qa="btnCopyTokenText"
+                    style="font-size:14px"
                   >
-                    <Icon icon="copy" />
+                    COPY
                   </b-button>
                 </b-input-group-prepend>
                 <b-form-input

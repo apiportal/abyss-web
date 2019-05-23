@@ -62,11 +62,12 @@ export default {
   computed: {
     state() {
       const { inputValue, required } = this;
-
       if (required) {
-        return inputValue.toString().length > 0;
+        if (inputValue && inputValue.toString().length > 0) {
+          return true;
+        }
+        return false;
       }
-
       return true;
     },
   },

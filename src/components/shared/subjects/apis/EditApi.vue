@@ -13,6 +13,8 @@
 <script>
 import api from '@/api';
 import EditApiModal from '@/components/shared/modals/EditApiModal';
+// import Pet3 from '@/assets/pet3.json';
+// import Pet3 from '@/assets/test.json';
 
 export default {
   components: {
@@ -30,6 +32,7 @@ export default {
       apiId: this.$route.params.apiId,
       isApisLoaded: false,
       api: null,
+      // api: { openapidocument: Pet3 },
     };
   },
   methods: {

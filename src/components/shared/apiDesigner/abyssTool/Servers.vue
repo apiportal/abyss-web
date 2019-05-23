@@ -21,6 +21,7 @@
         :onChange="onChange"
         :isArray="true"
         :isCollapsedInitial="true"
+        :isMenu="false"
       />
     </div>
   </div>

@@ -1,8 +1,8 @@
 <template>
   <div>
     <div
-      v-for="(item, index) in currentObjectInterfaceKeys" 
-      v-bind:key="index" 
+      v-for="(item, index) in currentObjectInterfaceKeys"
+      v-bind:key="index"
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
         <OpenApiObject
@@ -20,6 +20,7 @@
           :isArray="currentObjectInterface[item].Array || false"
           :refs="refs"
           :securitySchemes="securitySchemes"
+          :isInterface="true"
         />
       </div>
 
@@ -41,6 +42,7 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :required="currentObjectInterface[item].Required"
                 :debounce="1000"
               />
             </div>
@@ -51,6 +53,7 @@
                 :onChange="onChange"
                 :value="formData[item]"
                 :options="currentObjectInterface[item].Options"
+                :required="currentObjectInterface[item].Required"
                 :debounce="1000"
               />
             </div>
@@ -60,6 +63,7 @@
                 :propAddress="[...pathArray, item]"
                 :onChange="onChange"
                 :value="formData[item]"
+                :required="currentObjectInterface[item].Required"
                 :debounce="1000"
               />
             </div>
@@ -90,11 +94,29 @@
               :propAddress="[...pathArray, item]"
               :onChange="onChange"
               :value="formData[item]"
+              :required="currentObjectInterface[item].Required"
               :debounce="1000"
             />
           </div>
         </div>
-        <div v-else-if="currentObjectInterface[item].type === 'Object'">
+        <!-- <div v-else-if="currentObjectInterface[item].type === 'Object'">
+          {{item}}
+          <hr>
+          {{currentObjectInterface[item]}}
+          <hr>
+          {{formData[item]}}
+          <hr>
+          {{pathArray}}
+          <OpenApiObjectForm
+            :type="'Single Object'"
+            :formData="formData[item]"
+            :pathArray="[...pathArray, item]"
+            :refs="refs"
+            :securitySchemes="securitySchemes"
+            :onChange="onChange"
+          />
+        </div> -->
+        <div v-else-if="currentObjectInterface[item].type === 'Object' && formData[item]">
           <div
             v-for="(key, index) in Object.keys(formData[item])"
             v-bind:key="index"
@@ -110,16 +132,15 @@
         </div>
 
         <div v-else>
-          <pre>
-          i: {{item}}
-          cii: {{ currentObjectInterface[item] }}
-          fi: {{ formData[item] }}
-          f: {{ formData }}
-          </pre>
+<pre>
+i: {{item}}
+cii: {{ currentObjectInterface[item] }}
+fi: {{ formData[item] }}
+f: {{ formData }}
+</pre>
         </div>
 
         <div v-if="item == 'type' && formData[item]">
-          <!-- <pre>********** i: {{item}} - fit: {{formData[item]}} - fi: {{formData[item]}} - f: {{formData}}</pre> -->
           <OpenApiObjectForm
             :type="formData[item]"
             :formData="formData"
@@ -183,29 +204,20 @@ export default {
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },
   computed: {
+    currentObjectInterface() {
+      return Interfaces[this.type];
+    },
     currentObjectInterfaceKeys() {
       return Object.keys(this.currentObjectInterface);
     },
   },
   data() {
     return {
-      currentObjectInterface: Interfaces[this.type],
+      // currentObjectInterface: Interfaces[this.type],
       interfaces: Interfaces,
       collapsedRows: [],
     };
   },
-  /* watch: {
-    formData(newValue) {
-      if (newValue) {
-        if (this.type === 'Schema Object') {
-          const formDataKeys = Object.keys(this.formData);
-          console.log('this.pathArray: ', this.pathArray, formDataKeys); // eslint-disable-line
-          console.log('this.formData: ', this.formData); // eslint-disable-line
-          console.log('formData newValue: ', newValue); // eslint-disable-line
-        }
-      }
-    },
-  }, */
   methods: {
     handleToggleCollapse(key) {
       const index = this.collapsedRows.indexOf(key);

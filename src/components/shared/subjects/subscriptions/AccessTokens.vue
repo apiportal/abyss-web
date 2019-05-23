@@ -46,7 +46,11 @@
         v-for="(item, index) in tableRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''} ${item.isexpired ? 'is-expired' : ''}`" class="opaque" :data-qa="`tableRow-${index}`">
+        <tr
+          slot="main"
+          :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''} ${item.isexpired ? 'is-expired' : ''}`"
+          class="opaque" :data-qa="`tableRow-${index}`"
+        >
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon
               :icon="item.isactive ? 'check-circle' : 'times-circle'"

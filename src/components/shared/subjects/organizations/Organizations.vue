@@ -60,7 +60,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="7"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -111,7 +111,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer">
-          <td colspan="6">
+          <td colspan="7">
             <div class="collapsible-content">
               <!-- {{sortedRows}} -->
               <Organization

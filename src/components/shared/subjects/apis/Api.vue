@@ -3,7 +3,7 @@
     <div class="row">
       <dl class="col-auto">
         <dt style="width: 260px;" class="pb-2">
-          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+          <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" width="200px"></Pictures>
         </dt>
       </dl>
       <dl class="col">
@@ -51,7 +51,7 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   name: 'Api',
@@ -68,7 +68,7 @@ export default {
   },
   components: {
     Icon,
-    Images,
+    Pictures,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {

@@ -13,6 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -49,7 +50,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -59,8 +60,10 @@
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
           </td>
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <img class="favimage" :src="item.picture"/>
             {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
@@ -88,7 +91,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1" data-qa="tableFooter">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <App
                 :item="item"
@@ -110,6 +113,8 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -169,6 +174,8 @@ export default {
     TBodyLoading,
     SortBy,
     Icon,
+    Images,
+    Pictures,
   },
   data() {
     return {
@@ -195,11 +202,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.favimage {
-  max-width: 35px;
-  height: auto;
-  margin: -7px 10px;
-}
-</style>

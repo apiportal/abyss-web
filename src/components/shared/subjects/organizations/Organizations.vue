@@ -13,6 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -59,7 +60,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="7"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -73,8 +74,10 @@
               :icon="item.isactive ? 'check-circle' : 'times-circle'"
               :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.name" :color="item.color" type="organizations" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <img class="favimage" :src="item.picture"/>
             {{ item.name }}
           </td>
           <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -108,7 +111,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer">
-          <td colspan="6">
+          <td colspan="7">
             <div class="collapsible-content">
               <!-- {{sortedRows}} -->
               <Organization
@@ -133,6 +136,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -196,6 +200,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Pictures,
     Organization: () => import('@/components/shared/subjects/organizations/Organization'),
   },
   data() {

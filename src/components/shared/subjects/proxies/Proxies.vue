@@ -1,6 +1,6 @@
 <template>
   <div class="abyss-table-content">
-    <table class="table abyss-table abyss-table-cards">
+    <table class="table abyss-table abyss-table-cards" v-if="isUsersLoaded">
       <thead>
         <tr>
           <th></th>
@@ -211,6 +211,7 @@ export default {
       licenses: state => state.subjectLicenses.items,
       contracts: state => state.userContracts.items,
       apiLicenses: state => state.apiLicenses.items,
+      isUsersLoaded: state => state.users.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows, users,

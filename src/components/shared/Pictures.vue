@@ -1,5 +1,5 @@
 <template>
-  <div>  
+  <div>
     <img :src="`https://dev2.apiportal.com/abyss/oapi/${type}/image/${uuid}`" :alt="altText" class="thumb-picture" :class="shape" :width="width" height="auto">
   </div>
 </template>
@@ -62,12 +62,11 @@ export default {
   position: relative;
   padding: 0;
   overflow: hidden;
-  cursor: pointer;
-  &::before {
-    display: block;
-    content: "";
-    padding-top: 56.25%;
-  }
+  // &::before {
+  //   display: block;
+  //   content: "";
+  //   padding-top: 56.25%;
+  // }
   &.rectangle::before {
     padding-top: 56.25%;
   }

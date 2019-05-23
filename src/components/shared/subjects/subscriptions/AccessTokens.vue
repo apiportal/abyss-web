@@ -84,16 +84,16 @@
                     v-b-tooltip.hover.left
                     title="Show/Hide"
                     variant="light"
-                    @click="isVisible = !isVisible"
+                    @click="isAccessTokenVisible = !isAccessTokenVisible"
                     data-qa="btnToggleTokenText"
                   >
-                    <Icon icon="eye" />
+                    <Icon :icon="`${isAccessTokenVisible ? 'eye-slash' : 'eye'}`" />
                   </b-button>
                   <b-button
                     v-b-tooltip.hover.left
                     title="Copy Token"
                     variant="light"
-                    :disabled="!isVisible"
+                    :disabled="!isAccessTokenVisible"
                     @click="copyTokenText()"
                     data-qa="btnCopyTokenText"
                   >
@@ -104,7 +104,7 @@
                   id="textarea1"
                   class="token-area-show"
                   v-model="item.token"
-                  v-if="isVisible"
+                  v-if="isAccessTokenVisible"
                   rows="4"
                   max-rows="6"
                   readonly="readonly"
@@ -113,7 +113,7 @@
                 <b-form-input
                   id="textarea2"
                   class="token-area-hide"
-                  v-if="!isVisible"
+                  v-if="!isAccessTokenVisible"
                   placeholder="••••••••••••••••••••••••••••••••••••••••••••••••••"
                   rows="4"
                   max-rows="6"
@@ -188,7 +188,7 @@ export default {
       sortByKey: 'created',
       sortByKeyType: 'string',
       sortDirection: 'desc',
-      isVisible: false,
+      isAccessTokenVisible: false,
     };
   },
   methods: {

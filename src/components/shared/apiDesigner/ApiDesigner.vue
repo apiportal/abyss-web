@@ -4,52 +4,54 @@
     <div class="api-designer-actions-bar">
       <b-button-toolbar>
         <span v-if="title" class="toolbar-title">{{ title }}</span>
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setView('abyss')" 
-            :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Abyss View"
-          ><Icon icon="magic" /></b-button>
-          <b-button
-            @click="setView('hybrid')"
-            :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Hybrid View"
-          ><Icon icon="columns" /></b-button>
-          <b-button
-            @click="setView('editor')"
-            :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Editor View"
-          ><Icon icon="code" /></b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setMode('json')" 
-            :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
-          >JSON</b-button>
-          <b-button
-            @click="setMode('yaml')" 
-            :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
-          >YAML</b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="handleUndo"
-            :disabled="apiStateIndex === 0"
-          >
-            <Icon icon="undo" />
-          </b-button>
-          <b-button
-            @click="handleRedo"
-            :disabled="apiStateIndex === (apiStates.length - 1)"
-          >
-            <Icon icon="redo" />
-          </b-button>
-        </b-button-group>
+        <div class="ml-auto">
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setView('abyss')" 
+              :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Abyss View"
+            ><Icon icon="magic" /></b-button>
+            <b-button
+              @click="setView('hybrid')"
+              :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Hybrid View"
+            ><Icon icon="columns" /></b-button>
+            <b-button
+              @click="setView('editor')"
+              :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Editor View"
+            ><Icon icon="code" /></b-button>
+          </b-button-group>
+          
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setMode('json')" 
+              :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
+            >JSON</b-button>
+            <b-button
+              @click="setMode('yaml')" 
+              :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
+            >YAML</b-button>
+          </b-button-group>
+          
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="handleUndo"
+              :disabled="apiStateIndex === 0"
+            >
+              <Icon icon="undo" />
+            </b-button>
+            <b-button
+              @click="handleRedo"
+              :disabled="apiStateIndex === (apiStates.length - 1)"
+            >
+              <Icon icon="redo" />
+            </b-button>
+          </b-button-group>
+        </div>
       </b-button-toolbar>
     </div>
 
@@ -155,7 +157,7 @@ export default {
     return {
       view: this.initialView,
       apiStates: [(JSON.parse(JSON.stringify(this.api)))],
-      apiVersion: this.api.openapidocument.info.version,
+      apiInitialVersion: this.api.openapidocument.info.version,
       apiStateIndex: 0,
       licensesToClone: [],
       showNotValidAlert: false,
@@ -179,9 +181,24 @@ export default {
       }
       return openapidocument;
     },
+    apiVersion() {
+      return this.apiStates[this.apiStateIndex].openapidocument.info.version;
+    },
   },
   mounted() {
     this.getApiLicenses();
+  },
+  watch: {
+    apiVersion(newValue) {
+      if (newValue) {
+        console.log('newValue: ', newValue); // eslint-disable-line
+        if (newValue !== this.apiInitialVersion) {
+          this.isVersionChanged = true;
+        } else {
+          this.isVersionChanged = false;
+        }
+      }
+    },
   },
   methods: {
     ...mapActions('businessApis', ['putBusinessApis', 'postBusinessApis']),
@@ -210,18 +227,10 @@ export default {
       this.mode = mode;
     },
     handleChange(propAddress, newPropValue, customAction) {
-      console.log('propAddress, newPropValue, customAction: ', propAddress, newPropValue, customAction); // eslint-disable-line
+      console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
-      const versionKey = propAddress.join('.');
-      if (versionKey === 'openapidocument.info.version') {
-        if (this.apiVersion !== newPropValue) {
-          this.isVersionChanged = true;
-        } else {
-          this.isVersionChanged = false;
-        }
-      }
       objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
@@ -234,12 +243,6 @@ export default {
           ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
         },
       };
-      const newVersion = newApiState.openapidocument.info.version;
-      if (this.apiVersion !== newVersion) {
-        this.isVersionChanged = true;
-      } else {
-        this.isVersionChanged = false;
-      }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },
@@ -467,12 +470,12 @@ export default {
 .api-designer-container {
   .api-designer-actions-bar {
     border-bottom: 1px solid #e9ecef; 
-    padding: 1rem;
+    padding: 1rem 1rem;
 
     .toolbar-title {
       display: inline-flex;
       vertical-align: middle;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 500;
       margin-right: 1rem;
     }
@@ -487,7 +490,7 @@ export default {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
-    height: calc(100vh - 205px);
+    height: calc(100vh - 215px);
 
     .api-designer-abyss-container {
       display: flex;

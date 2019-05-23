@@ -1,11 +1,9 @@
 <template>
   <div class="security-option-container">
     <div class="security-option-title-container">
-      <div class="custom-checkbox">
-        <label>
-          <input type="checkbox" v-model="checked" @change="handleChange" /> {{ securityKey }}
-        </label>
-      </div>
+      <b-form-checkbox v-model="checked" @change.native="handleChange">
+        {{ securityKey }}
+      </b-form-checkbox>
     </div>
     <div class="security-option-content-container" v-if="formData.length > 0">
       {{ formData[0][securityKey] }}
@@ -53,17 +51,16 @@ export default {
 
 <style lang="scss">
 .security-option-container {
-  border: 1px solid silver;
-  border-radius: .3rem;
+  border: 1px solid lightgrey;
   margin-top: 1rem;
 
   .security-option-title-container {
-    padding: .25rem .5rem;
+    padding: .5rem 1rem;
   }
 
   .security-option-content-container {
-    padding: .5rem;
-    border-top: 1px solid silver;
+    padding: .5rem 1rem;
+    border-top: 1px solid lightgrey;
   }
 }
 </style>

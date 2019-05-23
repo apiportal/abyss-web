@@ -7,6 +7,7 @@
         :onDeleteChip="handleDeleteChip"
         :onAddChip="handleAddChip"
         :addItemText="addItemText"
+        :type="type"
       />
     </div>
   </div>
@@ -21,6 +22,11 @@ export default {
       type: String,
       required: false,
       default() { return ''; },
+    },
+    type: {
+      type: String,
+      required: false,
+      default() { return 'string'; },
     },
     propAddress: {
       type: Array,

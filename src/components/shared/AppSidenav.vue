@@ -40,6 +40,12 @@
           </b-link>
 
           <b-link
+            to="/app/my-contracts/my-contracts/1"
+            :class="`${currentPage.rootPath === 'my-contracts' ? 'selected' : ''}`" data-qa="sideMenuMyContracts">
+            <span class="route-icon"><Icon icon="file-signature" /></span> My Contracts
+          </b-link> 
+
+          <b-link
             to="/app/my-licenses/my-licenses/1"
             :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
@@ -51,7 +57,6 @@
             <span class="route-icon"><Icon icon="atlas" /></span> My Policies
           </b-link> 
 
-
           <p>ADMIN</p>
           
           <b-link
@@ -61,9 +66,6 @@
           >
             <span class="route-icon"><Icon icon="sitemap" /></span> Organizations
           </b-link>
-          <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`" data-qa="sideMenuPermissions">
-            <span class="route-icon"><Icon icon="user-cog" /></span> Permissions
-          </b-link> 
 
           <b-link
             to="/app/identity-managers/1"

@@ -99,7 +99,7 @@
   .b-dropdown-form {
     min-width: 260px;
     max-width: 800px;
-    padding: 1.5rem 1.25rem 1rem 1.25rem;
+    padding: 1rem 1.25rem 1rem 1.25rem;
   }
   .b-dropdown-text {
     padding: 1rem 1.25rem 1rem 1.25rem;
@@ -646,6 +646,7 @@
     margin-bottom: 1rem;
     border-left: 6px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
     &.collapsed {
       border-left: 6px solid #0088CC;
     }
@@ -659,16 +660,29 @@
       }
     }
     .open-api-object-title {
-      padding: .5rem 1rem;
       cursor: pointer;
+      min-height: 2.5rem;
+      > div {
+        padding: .5rem 1rem;
+      }
     }
     .oao-dropdown {
       float: right;
-      margin-right: .5rem;
-      .btn-sm {
-        padding-top: 0;
-        padding-bottom: 0;
+      .btn {
+        padding: .5rem 0;
+        width: 2.5rem;
+        text-align: center;
+        // border-left: 1px solid rgba(0, 0, 0, 0.15);
+        svg { width: 1rem; }
       }
+    }
+    .oao-arrow {
+      float: right;
+      padding: .5rem 0;
+      width: 2.5rem;
+      text-align: center;
+      border-left: 1px solid rgba(0, 0, 0, 0.15);
+      svg { width: 1rem; }
     }
   }
   .open-api-object-container {
@@ -727,10 +741,16 @@
   option[disabled] {
     color: red;
   }
-  input, select, textarea {
+  input, textarea {
     &.is-valid:not([required]) {
       border-color: $border-color;
-      background-image: none;
+      background: none;
+    }
+  }
+  select {
+    &.is-valid:not([required]) {
+      border-color: $border-color;
+      background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
     }
   }
 // custom utilities

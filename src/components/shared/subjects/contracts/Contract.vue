@@ -7,6 +7,8 @@
           <dd>{{ item.name }}</dd>
           <dt>Description:</dt>
           <dd>{{ item.description }}</dd>
+          <dt>Subject Permission:</dt>
+          <dd>{{ contractSubjectPermission.permission }}</dd>
         </dl>
         <dl class="col">
           <dt>Environment:</dt>
@@ -14,7 +16,7 @@
           <dt>Status:</dt>
           <dd>{{ item.status }}</dd>
           <dt>State:</dt>
-          <dd>{{ state }}</dd>
+          <dd>{{ contractState.name }}</dd>
         </dl>
         <dl class="col">
           <dt>Created:</dt>
@@ -23,8 +25,6 @@
           <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
           <dt v-if="item.deleted">Deleted:</dt>
           <dd v-if="item.deleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
-          <dt>subjectpermissionid:</dt>
-          <dd>{{ item.subjectpermissionid }}</dd>
         </dl>
       </div>
 
@@ -118,6 +118,8 @@ export default {
       // licenses: state => state.subjectLicenses.items,
       licenses: state => state.licenses.items,
       proxies: state => state.proxies.items,
+      contractStates: state => state.contractStates.items,
+      permissions: state => state.permissions.items,
     }),
     computedContractApis() {
       const { proxies, item } = this;
@@ -139,6 +141,8 @@ export default {
       isLicensesTableVisible: false,
       accessTokens: [],
       contractApis: [],
+      contractState: '',
+      contractSubjectPermission: '',
     };
   },
   methods: {
@@ -187,12 +191,20 @@ export default {
       });
     },
   },
+  mounted() {
+    this.contractState = this.contractStates
+      .find(state => state.uuid === this.item.contractstateid);
+    this.contractSubjectPermission = this.permissions
+      .find(permission => permission.uuid === this.item.subjectpermissionid);
+  },
   created() {
     // this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('licenses/getLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('contractStates/getContractStates', {});
+    this.$store.dispatch('permissions/getPermissions', {});
     this.getAccessTokens();
     this.getContractApi();
   },

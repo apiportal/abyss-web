@@ -3,30 +3,28 @@
     <div
       v-for="(item, index) in currentObjectInterfaceKeys" 
       v-bind:key="index" 
-      :class="(index < (currentObjectInterfaceKeys.length - 1) ? 'mb-3' : '')"
     >
       <div v-if="interfaces[currentObjectInterface[item].type]">
-        <div>
-          <OpenApiObject
-            :item="item"
-            :type="currentObjectInterface[item].type"
-            :formData="(
-              formData[item] ||
-              (currentObjectInterface[item].Array ?
-              (currentObjectInterface[item].type === 'Security Requirement Object' ? { empty: true } : []) : {})
-            )"
-            :pathArray="[...pathArray, item]"
-            :onChange="onChange"
-            :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
-            :isMap="currentObjectInterface[item].Map || false"
-            :isArray="currentObjectInterface[item].Array || false"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+        <OpenApiObject
+          :item="item"
+          :type="currentObjectInterface[item].type"
+          :formData="(
+            formData[item] ||
+            (currentObjectInterface[item].Array ?
+            (currentObjectInterface[item].type === 'Security Requirement Object' ? { empty: true } : []) : {})
+          )"
+          :pathArray="[...pathArray, item]"
+          :onChange="onChange"
+          :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
+          :isMap="currentObjectInterface[item].Map || false"
+          :isArray="currentObjectInterface[item].Array || false"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+        />
       </div>
+
       <div v-else>
-        <div v-if="currentObjectInterface[item].type === 'string'">
+        <div v-if="currentObjectInterface[item].type === 'String'">
           <div v-if="currentObjectInterface[item].Array">
             <DynamicFormChips
               :label="item"
@@ -46,6 +44,16 @@
                 :debounce="1000"
               />
             </div>
+            <div v-else-if="currentObjectInterface[item].Select">
+              <DynamicFormSelect
+                :description="item"
+                :propAddress="[...pathArray, item]"
+                :onChange="onChange"
+                :value="formData[item]"
+                :options="currentObjectInterface[item].Options"
+                :debounce="1000"
+              />
+            </div>
             <div v-else>
               <DynamicFormInputString
                 :description="item"
@@ -57,7 +65,7 @@
             </div>
           </div>
         </div>
-        <div v-else-if="currentObjectInterface[item].type === 'boolean'">
+        <div v-else-if="currentObjectInterface[item].type === 'Boolean'">
           <DynamicFormCheckbox
             :description="item"
             :propAddress="[...pathArray, item]"
@@ -65,9 +73,63 @@
             :value="formData[item]"
           />
         </div>
-        <div v-else>
-          {{ currentObjectInterface[item] }}
+        <div v-else-if="currentObjectInterface[item].type === 'Number' || currentObjectInterface[item].type === 'Integer'">
+          <div v-if="currentObjectInterface[item].Array">
+            <DynamicFormChips
+              :label="item"
+              :propAddress="[...pathArray, item]"
+              :onChange="onChange"
+              :value="formData[item]"
+              type="number"
+              addItemText="New Item"
+            />
+          </div>
+          <div v-else>
+            <DynamicFormInputInteger
+              :description="item"
+              :propAddress="[...pathArray, item]"
+              :onChange="onChange"
+              :value="formData[item]"
+              :debounce="1000"
+            />
+          </div>
         </div>
+        <div v-else-if="currentObjectInterface[item].type === 'Object'">
+          <div
+            v-for="(key, index) in Object.keys(formData[item])"
+            v-bind:key="index"
+          >
+            <DynamicFormInputString
+              :description="key"
+              :propAddress="[...pathArray, item, key]"
+              :onChange="onChange"
+              :value="formData[item][key]"
+              :debounce="1000"
+            />
+          </div>
+        </div>
+
+        <div v-else>
+          <pre>
+          i: {{item}}
+          cii: {{ currentObjectInterface[item] }}
+          fi: {{ formData[item] }}
+          f: {{ formData }}
+          </pre>
+        </div>
+
+        <div v-if="item == 'type' && formData[item]">
+          <!-- <pre>********** i: {{item}} - fit: {{formData[item]}} - fi: {{formData[item]}} - f: {{formData}}</pre> -->
+          <OpenApiObjectForm
+            :type="formData[item]"
+            :formData="formData"
+            :pathArray="pathArray"
+            :refs="refs"
+            :securitySchemes="securitySchemes"
+            :onChange="onChange"
+          />
+        </div>
+
       </div>
     </div>
   </div>
@@ -80,6 +142,8 @@ import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormI
 import DynamicFormTextarea from '@/components/shared/dynamicForm/DynamicFormTextarea';
 import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
 import DynamicFormChips from '@/components/shared/dynamicForm/DynamicFormChips';
+import DynamicFormSelect from '@/components/shared/dynamicForm/DynamicFormSelect';
+import DynamicFormInputInteger from '@/components/shared/dynamicForm/DynamicFormInputInteger';
 
 export default {
   name: 'OpenApiObjectForm',
@@ -114,6 +178,8 @@ export default {
     DynamicFormTextarea,
     DynamicFormCheckbox,
     DynamicFormChips,
+    DynamicFormSelect,
+    DynamicFormInputInteger,
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },
   computed: {
@@ -128,6 +194,18 @@ export default {
       collapsedRows: [],
     };
   },
+  /* watch: {
+    formData(newValue) {
+      if (newValue) {
+        if (this.type === 'Schema Object') {
+          const formDataKeys = Object.keys(this.formData);
+          console.log('this.pathArray: ', this.pathArray, formDataKeys); // eslint-disable-line
+          console.log('this.formData: ', this.formData); // eslint-disable-line
+          console.log('formData newValue: ', newValue); // eslint-disable-line
+        }
+      }
+    },
+  }, */
   methods: {
     handleToggleCollapse(key) {
       const index = this.collapsedRows.indexOf(key);

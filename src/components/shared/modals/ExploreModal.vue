@@ -330,11 +330,11 @@ export default {
       const { appId } = this.form;
       const { licenseId } = this.licensesMain;
       const { apiId } = this.$route.params;
-      const { apps, apis, contractStates, resourceActions, resources } = this;
+      const { apps, apis, resources } = this;
       const licenseApp = apps.find(item => item.uuid === appId);
       const licenseApi = apis.find(item => item.uuid === apiId);
-      const contractstateid = contractStates.find(item => item.name === 'activated').uuid;
-      const resourceactionid = resourceActions.find(item => item.actionname === 'INVOKE_API').uuid;
+      const contractstateid = '846282ec-1329-4a3c-908b-672b4de3ade2'; // activated
+      const resourceactionid = 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8'; // CONSUME_API
       const resource = resources.find(item => item.resourcerefid === licenseApi.uuid);
       // permission to post
       const permission = {

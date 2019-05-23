@@ -421,6 +421,9 @@ export default {
   getApiLicenses(uuid) {
     return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
+  putLifecycle(uuid, params) {
+    return axios.put(`/abyss/oapi/lifecycle/${uuid}`, params);
+  },
   // policies
   getSubjectPolicies(uuid) {
     return axios.get(`/abyss/oapi/policies/subject/${uuid}`);
@@ -513,6 +516,12 @@ export default {
   },
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
+  },
+  getUserApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/user/${uuid}`);
+  },
+  getUserAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/user/${uuid}`);
   },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);

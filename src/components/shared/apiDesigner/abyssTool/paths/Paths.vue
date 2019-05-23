@@ -1,50 +1,46 @@
 <template>
   <div>
-    <div style="text-align: center;">
-      <b-button-group size="sm" style="width: 100%;">
-        <b-button
-          :class="`${ groupBy === 'paths' ? 'btn-selected' : '' }`"
-          @click="handleGroupBy('paths')"
-        >
-          Group by Paths
-        </b-button>
-        <b-button
-          :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
-          @click="handleGroupBy('tags')"
-        >
-          Group by Tags
-        </b-button>
-      </b-button-group>
-    </div>
-    <div style="margin-top: 1rem;">
-      <div v-if="groupBy === 'tags'">
-        <div
-          v-for="(tag, index) in tags"
-          v-bind:key="index"
-        >
-          <Tag
-            :tag="tag"
-            :operations="operations.filter(item => item.tags.indexOf(tag) > -1)"
-            :onChange="onChange"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+    <b-button-group size="sm" style="width: 100%;">
+      <b-button
+        :class="`${ groupBy === 'paths' ? 'btn-selected' : '' }`"
+        @click="handleGroupBy('paths')"
+      >
+        Group by Paths
+      </b-button>
+      <b-button
+        :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
+        @click="handleGroupBy('tags')"
+      >
+        Group by Tags
+      </b-button>
+    </b-button-group>
+    <div v-if="groupBy === 'tags'" class="mt-3">
+      <div
+        v-for="(tag, index) in tags"
+        v-bind:key="index"
+      >
+        <Tag
+          :tag="tag"
+          :operations="operations.filter(item => item.tags.indexOf(tag) > -1)"
+          :onChange="onChange"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+        />
       </div>
-      <div v-else-if="groupBy === 'paths'">
-        <div
-          v-for="(path, index) in Object.keys(paths)"
-          v-bind:key="index"
-        >
-          <PathItem
-            :path="path"
-            :pathObject="paths[path]"
-            :operations="operations.filter(item => item.parentProps.path === path)"
-            :onChange="onChange"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+    </div>
+    <div v-else-if="groupBy === 'paths'" class="mt-3">
+      <div
+        v-for="(path, index) in Object.keys(paths)"
+        v-bind:key="index"
+      >
+        <PathItem
+          :path="path"
+          :pathObject="paths[path]"
+          :operations="operations.filter(item => item.parentProps.path === path)"
+          :onChange="onChange"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+        />
       </div>
     </div>
   </div>

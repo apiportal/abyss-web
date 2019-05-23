@@ -11,6 +11,18 @@
         :isCollapsedInitial="true"
       />
     </div>
+    <div>
+      <OpenApiObject
+        item="security"
+        type="Security Requirement Object"
+        :formData="openapidocument.security"
+        :pathArray="['openapidocument', 'security']"
+        :securitySchemes="openapidocument.components.securitySchemes"
+        :onChange="onChange"
+        :isArray="true"
+        :isCollapsedInitial="true"
+      />
+    </div>
   </div>
 </template>
 

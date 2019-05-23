@@ -32,11 +32,9 @@ export default {
   methods: {
     handleModalClose() {
       this.$router.push(this.routePath);
-      this.$store.commit('businessApis/setNextStateId', null);
     },
     handleModalUpdate() {
       this.$router.push(this.routePath);
-      this.$store.commit('businessApis/setNextStateId', null);
     },
   },
   data() {

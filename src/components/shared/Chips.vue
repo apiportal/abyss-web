@@ -33,7 +33,7 @@
               <b-input-group>
                 <input
                   v-model="freeText"
-                  type="text"
+                  :type="inputType"
                   class="form-control"
                   placeholder="Type here"
                 />
@@ -136,6 +136,11 @@ export default {
       type: String,
       required: false,
     },
+    type: {
+      type: String,
+      required: false,
+      default() { return 'string'; },
+    },
     addItemText: {
       type: String,
       required: false,
@@ -152,6 +157,12 @@ export default {
       const { autocompleteOptions, chips } = this;
       return autocompleteOptions
         .filter(option => chips.filter(chip => chip.value === option.value).length === 0);
+    },
+    inputType() {
+      if (this.type === 'number') {
+        return 'number';
+      }
+      return 'text';
     },
   },
   data() {
@@ -175,7 +186,7 @@ export default {
       this.addChip({
         chip: {
           text: this.freeText,
-          value: this.freeText,
+          value: this.type === 'number' ? Number(this.freeText) : this.freeText,
         },
       });
       this.freeText = '';

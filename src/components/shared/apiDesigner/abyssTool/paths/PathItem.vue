@@ -1,11 +1,11 @@
 <template>
   <div :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`">
     <div class="open-api-object-title">
-      <span class="float-right">
+      <span class="oao-arrow">
         <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
       </span>
       <span class="oao-dropdown">
-        <b-dropdown variant="link" size="sm" right no-caret>
+        <b-dropdown variant="link" size="md" right no-caret>
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
           <b-dropdown-form class="pt-3 path-form">
             <b-form-group>

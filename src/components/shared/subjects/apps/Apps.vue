@@ -60,11 +60,10 @@
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
           </td>
-          <td class="number">
+          <td class="picture">
             <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <!-- <Images :uuid="item.uuid" :itext="item.displayname" :color="item.color" type="subjects" shape="circle" class="favimage"></Images> -->
             {{ item.displayname }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
@@ -203,10 +202,3 @@ export default {
   },
 };
 </script>
-
-// <style lang="scss" scoped>
-// .favimage {
-//   width: 35px;
-//   height: auto;
-// }
-// </style>

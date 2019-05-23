@@ -65,6 +65,7 @@
                 sortByKeyType="boolean"
               />
             </th>
+            <th></th>
             <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -115,8 +116,10 @@
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
+            <td class="picture">
+              <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-              <img class="favimage" :src="item.picture"/>
               {{ item.displayname }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -185,6 +188,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   components: {
@@ -194,6 +198,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Pictures,
   },
   computed: {
     ...mapState({

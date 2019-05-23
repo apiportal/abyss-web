@@ -1,6 +1,6 @@
 <template>
   <div>  
-    <img :src="`https://dev2.apiportal.com/abyss/oapi/${type}/image/${uuid}`" :alt="altText" class="thumb-image" :class="shape" :width="width" height="auto">
+    <img :src="`https://dev2.apiportal.com/abyss/oapi/${type}/image/${uuid}`" :alt="altText" class="thumb-picture" :class="shape" :width="width" height="auto">
   </div>
 </template>
 
@@ -53,15 +53,13 @@ export default {
 };
 </script>
 <style lang="scss">
-.thumb-image {
+.thumb-picture {
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  // font-size: 4rem;
   background-color: #177ec1;
   position: relative;
-  // width: 100%;
   padding: 0;
   overflow: hidden;
   cursor: pointer;
@@ -95,7 +93,7 @@ export default {
   text-transform: uppercase;
   font-weight: 400;
 }
-.thumb-img {
+.thumb-pic {
   position: absolute;
   top: 0;
   right: 0;

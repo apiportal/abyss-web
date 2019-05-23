@@ -66,8 +66,8 @@
               :class="item.isactivated ? 'text-success' : 'text-danger'"
             />
           </td>
-          <td>
-            <Images :uuid="item.uuid" :itext="item.displayname" type="subjects" shape="circle"></Images>
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.displayname }}
@@ -126,7 +126,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -209,7 +209,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
-    Images,
+    Pictures,
   },
   data() {
     return {

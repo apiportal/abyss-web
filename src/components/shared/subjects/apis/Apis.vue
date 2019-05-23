@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -86,8 +87,10 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" class="favimage"></Images>
             {{ item.openapidocument.info.title }}
           </td>
           <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
@@ -153,7 +156,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   name: 'Apis',
@@ -230,7 +233,7 @@ export default {
     TBodyLoading,
     Icon,
     SortBy,
-    Images,
+    Pictures,
   },
   data() {
     return {

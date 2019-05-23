@@ -3,8 +3,6 @@
     <div class="row">
       <dl class="col-auto">
         <dt class="pb-2">
-          <!-- <img src="https://dev2.apiportal.com/abyss/oapi/subjects/image/644f8124-7b95-49fd-bc4a-1823fc416c84" style="width: 250px;">
-          <Images :uuid="item.uuid" :itext="item.displayname" :color="item.color" type="subjects" shape="rectangle" class="favimage"></Images> -->
           <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="rectangle" width="200px"></Pictures>
         </dt>
       </dl>

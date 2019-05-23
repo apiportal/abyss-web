@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col">
-          <Images :uuid="user.uuid" :itext="user.displayname" type="subjects" shape="circle"></Images>
+          <Pictures :uuid="user.uuid" :altText="user.displayname" :color="user.color" type="subjects" shape="rectangle" width="200px"></Pictures>
       </dl>
   
       <dl class="col">
@@ -113,7 +113,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Groups from '@/components/shared/subjects/groups/Groups';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 import Organizations from '@/components/shared/subjects/organizations/Organizations';
 import Roles from '@/components/shared/subjects/roles/Roles';
 
@@ -132,7 +132,7 @@ export default {
   components: {
     Icon,
     Groups,
-    Images,
+    Pictures,
     Organizations,
     Roles,
   },

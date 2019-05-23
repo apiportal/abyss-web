@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + group.picture + ')' }"></dt>
+        <Pictures :uuid="group.uuid" :altText="group.displayname" :color="group.color" type="subjects" shape="rectangle" width="200px"></Pictures>
       </dl>
       <dl class="col">
         <dt>Group Name:</dt>
@@ -65,6 +65,7 @@ import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Users from '@/components/shared/subjects/users/Users';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   components: {
@@ -72,6 +73,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     Users,
+    Pictures,
   },
   props: {
     group: {

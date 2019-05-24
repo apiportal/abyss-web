@@ -1,23 +1,31 @@
 <template>
   <div>
+    <!-- <code class="text-success">{{currentInterfaceKeys}}</code> -->
     <div
-      v-for="(item, index) in currentObjectInterfaceKeys"
+      v-for="(key, index) in currentInterfaceKeys"
       v-bind:key="index"
     >
-      <div v-if="interfaces[currentObjectInterface[item].type]">
+      <div v-if="interfaces[currentInterface[key].type]">
+<!-- <textarea class="code" id="" cols="60" rows="5">
+:item-{{key}}
+:type={{type}}
+:ci-key-type={{currentInterface[key].type}}
+:formData={{formData[key] }}
+:pathArray={{[...pathArray, key]}}
+</textarea> -->
         <OpenApiObject
-          :item="item"
-          :type="currentObjectInterface[item].type"
+          :item="key"
+          :type="currentInterface[key].type"
           :formData="(
-            formData[item] ||
-            (currentObjectInterface[item].Array ?
-            (currentObjectInterface[item].type === 'Security Requirement Object' ? { empty: true } : []) : {})
+            formData[key] ||
+            (currentInterface[key].Array ?
+            (currentInterface[key].type === 'Security Requirement Object' ? { empty: true } : []) : {})
           )"
-          :pathArray="[...pathArray, item]"
+          :pathArray="[...pathArray, key]"
           :onChange="onChange"
-          :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
-          :isMap="currentObjectInterface[item].Map || false"
-          :isArray="currentObjectInterface[item].Array || false"
+          :isMapWithRegex="currentInterface[key].MapWithRegex || false"
+          :isMap="currentInterface[key].Map || false"
+          :isArray="currentInterface[key].Array || false"
           :refs="refs"
           :securitySchemes="securitySchemes"
           :isInterface="true"
@@ -25,124 +33,111 @@
       </div>
 
       <div v-else>
-        <div v-if="currentObjectInterface[item].type === 'String'">
-          <div v-if="currentObjectInterface[item].Array">
+        <!-- <code>i:{{key}} t:{{type}} cit:{{currentInterface[key].type}}</code> -->
+        <div v-if="currentInterface[key].type === 'String'">
+          <div v-if="currentInterface[key].Array">
             <DynamicFormChips
-              :label="item"
-              :propAddress="[...pathArray, item]"
+              :label="key"
+              :propAddress="[...pathArray, key]"
               :onChange="onChange"
-              :value="formData[item]"
+              :value="formData[key]"
               addItemText="New Item"
             />
           </div>
           <div v-else>
-            <div v-if="currentObjectInterface[item].Markdown">
+            <div v-if="currentInterface[key].Markdown">
               <DynamicFormTextarea
-                :description="item"
-                :propAddress="[...pathArray, item]"
+                :description="key"
+                :propAddress="[...pathArray, key]"
                 :onChange="onChange"
-                :value="formData[item]"
-                :required="currentObjectInterface[item].Required"
+                :value="formData[key]"
+                :required="currentInterface[key].Required"
                 :debounce="1000"
               />
             </div>
-            <div v-else-if="currentObjectInterface[item].Select">
+            <div v-else-if="currentInterface[key].Select">
               <DynamicFormSelect
-                :description="item"
-                :propAddress="[...pathArray, item]"
+                :description="key"
+                :propAddress="[...pathArray, key]"
                 :onChange="onChange"
-                :value="formData[item]"
-                :options="currentObjectInterface[item].Options"
-                :required="currentObjectInterface[item].Required"
+                :value="formData[key]"
+                :options="currentInterface[key].Options"
+                :required="currentInterface[key].Required"
                 :debounce="1000"
               />
             </div>
             <div v-else>
               <DynamicFormInputString
-                :description="item"
-                :propAddress="[...pathArray, item]"
+                :description="key"
+                :propAddress="[...pathArray, key]"
                 :onChange="onChange"
-                :value="formData[item]"
-                :required="currentObjectInterface[item].Required"
+                :value="formData[key]"
+                :required="currentInterface[key].Required"
                 :debounce="1000"
               />
             </div>
           </div>
         </div>
-        <div v-else-if="currentObjectInterface[item].type === 'Boolean'">
+        <div v-else-if="currentInterface[key].type === 'Boolean'">
           <DynamicFormCheckbox
-            :description="item"
-            :propAddress="[...pathArray, item]"
+            :description="key"
+            :propAddress="[...pathArray, key]"
             :onChange="onChange"
-            :value="formData[item]"
+            :value="formData[key]"
           />
         </div>
-        <div v-else-if="currentObjectInterface[item].type === 'Number' || currentObjectInterface[item].type === 'Integer'">
-          <div v-if="currentObjectInterface[item].Array">
+        <div v-else-if="currentInterface[key].type === 'Number' || currentInterface[key].type === 'Integer'">
+          <div v-if="currentInterface[key].Array">
             <DynamicFormChips
-              :label="item"
-              :propAddress="[...pathArray, item]"
+              :label="key"
+              :propAddress="[...pathArray, key]"
               :onChange="onChange"
-              :value="formData[item]"
+              :value="formData[key]"
               type="number"
               addItemText="New Item"
             />
           </div>
           <div v-else>
             <DynamicFormInputInteger
-              :description="item"
-              :propAddress="[...pathArray, item]"
+              :description="key"
+              :propAddress="[...pathArray, key]"
               :onChange="onChange"
-              :value="formData[item]"
-              :required="currentObjectInterface[item].Required"
+              :value="formData[key]"
+              :required="currentInterface[key].Required"
               :debounce="1000"
             />
           </div>
         </div>
-        <!-- <div v-else-if="currentObjectInterface[item].type === 'Object'">
-          {{item}}
-          <hr>
-          {{currentObjectInterface[item]}}
-          <hr>
-          {{formData[item]}}
-          <hr>
-          {{pathArray}}
-          <OpenApiObjectForm
-            :type="'Single Object'"
-            :formData="formData[item]"
-            :pathArray="[...pathArray, item]"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
+
+        <div v-else-if="type === 'Object Property'">
+<!-- <textarea class="code" id="" cols="30" rows="5">
+key-{{key}}
+type-{{type}}
+pathArray-{{pathArray}}
+formData-{{formData}}
+formData-{{formData[key]}}
+</textarea> -->
+          <DynamicFormInputString
+            :description="key"
+            :propAddress="[...pathArray]"
             :onChange="onChange"
+            :value="formData[key]"
+            :debounce="1000"
           />
-        </div> -->
-        <div v-else-if="currentObjectInterface[item].type === 'Object' && formData[item]">
-          <div
-            v-for="(key, index) in Object.keys(formData[item])"
-            v-bind:key="index"
-          >
-            <DynamicFormInputString
-              :description="key"
-              :propAddress="[...pathArray, item, key]"
-              :onChange="onChange"
-              :value="formData[item][key]"
-              :debounce="1000"
-            />
-          </div>
         </div>
 
         <div v-else>
 <pre>
-i: {{item}}
-cii: {{ currentObjectInterface[item] }}
-fi: {{ formData[item] }}
-f: {{ formData }}
+key: {{key}}
+currentInterface.key: {{ currentInterface[key] }}
+formData.key: {{ formData[key] }}
+formData: {{ formData }}
 </pre>
         </div>
 
-        <div v-if="item == 'type' && formData[item]">
+        <div v-if="key == 'type' && formData[key]">
           <OpenApiObjectForm
-            :type="formData[item]"
+            :type="formData[key]"
             :formData="formData"
             :pathArray="pathArray"
             :refs="refs"
@@ -204,16 +199,24 @@ export default {
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },
   computed: {
-    currentObjectInterface() {
+    currentInterface() {
+      // console.log('Interfaces[this.type]: ', Interfaces[this.type]); // eslint-disable-line
+      const objectInterface = {
+        [Object.keys(this.formData)[0]]: { ...Interfaces[this.type] },
+      };
+      // console.log('objectInterface: ', objectInterface); // eslint-disable-line
+      if (this.type === 'Object Property') {
+        return objectInterface;
+      }
       return Interfaces[this.type];
     },
-    currentObjectInterfaceKeys() {
-      return Object.keys(this.currentObjectInterface);
+    currentInterfaceKeys() {
+      return Object.keys(this.currentInterface);
     },
   },
   data() {
     return {
-      // currentObjectInterface: Interfaces[this.type],
+      // currentInterface: Interfaces[this.type],
       interfaces: Interfaces,
       collapsedRows: [],
     };

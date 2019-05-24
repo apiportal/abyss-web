@@ -76,6 +76,17 @@
           v-bind:key="index"
         >
           <OpenApiObject
+            v-if="type === 'Object Item'"
+            :item="key"
+            :type="'Object Property'"
+            :formData="{[key]: formData[key]}"
+            :pathArray="[...pathArray, key]"
+            :refs="refs"
+            :securitySchemes="securitySchemes"
+            :onChange="onChange"
+          />
+          <OpenApiObject
+            v-else
             :item="key"
             :type="type"
             :formData="formData[key]"
@@ -149,6 +160,7 @@
           </b-form-group>
         </div>
         <div v-if="!formData['$ref']">
+          <!-- <code style="line-height:1">eee {{type}} - {{formData}}</code> -->
           <OpenApiObjectForm
             :type="type"
             :formData="formData"
@@ -280,6 +292,9 @@ export default {
       }
       if (type === 'Server Variable Object') {
         return { [newItemName]: { default: 'default' } };
+      }
+      if (type === 'Object Item') {
+        return { [newItemName]: '' };
       }
       return { [newItemName]: {} };
     },

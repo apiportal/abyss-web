@@ -25,10 +25,14 @@
       "type": "String"
     },
     "scopes": {
-      "type": "Object",
+      "type": "Object Item",
       "Required": true,
       "Map": true
     }
+  },
+  "Object Item": {
+    "type": "Object Item",
+    "regex": "(.*?)"
   },
   "OAuth Flows Object": {
     "implicit": {
@@ -276,7 +280,7 @@
       "type": "String"
     },
     "mapping": {
-      "type": "Object",
+      "type": "Object Item",
       "Map": true
     }
   },

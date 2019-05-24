@@ -110,6 +110,10 @@
   textarea[rows="2"] {
     height: calc(1.5em + .75rem + 2px);
   }
+  textarea.code {
+    font-size: 12px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  }
   // h1, h2, h3, h4, h5, h6 {
   //   margin-bottom: .5rem;
   //   font-weight: 300;

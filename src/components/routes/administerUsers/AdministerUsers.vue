@@ -1,6 +1,6 @@
 <template>
   <div class="page-container page-users">
-    
+
     <div class="page-header-nested">
       <b-nav class="page-tabs" tabs>
         <b-nav-item :active="false" to="/app/organizations/1">
@@ -17,7 +17,7 @@
     <div class="page-content-nested">
       <router-view></router-view>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>

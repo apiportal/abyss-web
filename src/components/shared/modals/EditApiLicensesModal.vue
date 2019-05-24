@@ -157,7 +157,6 @@ export default {
     handleSubmit(evt) {
       const { proxy, proxyLicensesEditable, postApiLicensesRefs,
         deleteApiLicensesRefs, onUpdate } = this;
-      // const { proxy, proxyLicensesEditable } = this;
       evt.preventDefault();
       this.licensesToDelete = proxyLicensesEditable
       .filter(license => license.proxyLicense && !license.isAttached)

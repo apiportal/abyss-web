@@ -3,7 +3,7 @@
     <div class="row">
       <dl class="col-auto">
         <dt style="width: 260px;" class="pb-2">
-          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+          <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" width="200px"></Pictures>
         </dt>
       </dl>
       <dl class="col">
@@ -12,7 +12,7 @@
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
         <dt>State:</dt>
-        <dd>{{ item.apistatename }}</dd>     
+        <dd>{{ item.apistatename }}</dd>
       </dl>
       <dl class="col">
         <dt>Description:</dt>
@@ -51,7 +51,7 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   name: 'Api',
@@ -68,7 +68,7 @@ export default {
   },
   components: {
     Icon,
-    Images,
+    Pictures,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
@@ -109,7 +109,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

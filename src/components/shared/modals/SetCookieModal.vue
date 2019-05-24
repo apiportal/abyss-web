@@ -20,7 +20,7 @@
       >
         <div style="padding: 1rem;">
           <p>Currently, you don't have a valid token.</p>
-          <b-form-group 
+          <b-form-group
             id="cookieGroup"
             label="Cookie:"
             label-for="cookieInput"

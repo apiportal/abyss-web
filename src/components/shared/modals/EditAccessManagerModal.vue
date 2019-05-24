@@ -21,7 +21,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="accessManagerNameGroup"
           >
             <label>
@@ -38,7 +38,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="accessManagerDescriptionGroup"
           >
             <label>
@@ -65,7 +65,7 @@
               Enabled
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="accessManagerOrganizationIdGroup"
           >
             <label>
@@ -74,7 +74,7 @@
             </label>
             <b-form-select
               id="accessManagerOrganizationIdInput"
-              v-model="accessManagerEditable.organizationid" 
+              v-model="accessManagerEditable.organizationid"
               :state="accessManagerOrganizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -92,12 +92,12 @@
               <label for="accessManagerTypeInput">Access Manager Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
-              <b-form-group 
+              <b-form-group
                 id="accessManagerTypeGroup"
               >
                 <b-form-select
                   id="accessManagerTypeInput"
-                  v-model="accessManagerEditable.accessmanagertypeid" 
+                  v-model="accessManagerEditable.accessmanagertypeid"
                   :state="accessManagerTypeState"
                   :options="[
                     { value: null, text: 'Please Select'},
@@ -126,7 +126,7 @@
               </b-button>
             </div>
           </div>
-          <div 
+          <div
             v-if="accessManagerEditable.accessmanagertypeid"
             :class="`configure-access-manager ${isConfigureAccessManagerVisible ? 'd-block' : 'd-none'}`"
           >

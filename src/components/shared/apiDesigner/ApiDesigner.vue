@@ -3,11 +3,11 @@
 
     <div class="api-designer-actions-bar">
       <b-button-toolbar>
-        <span v-if="title" class="toolbar-title">{{ title }}</span>
+        <span class="toolbar-title">{{ apiStates[this.apiStateIndex].openapidocument.info.title }}</span>
         <div class="ml-auto">
           <b-button-group size="md" class="mr-1">
             <b-button
-              @click="setView('abyss')" 
+              @click="setView('abyss')"
               :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
               v-b-tooltip.hover
               title="Abyss View"
@@ -25,18 +25,16 @@
               title="Editor View"
             ><Icon icon="code" /></b-button>
           </b-button-group>
-          
           <b-button-group size="md" class="mr-1">
             <b-button
-              @click="setMode('json')" 
+              @click="setMode('json')"
               :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
             >JSON</b-button>
             <b-button
-              @click="setMode('yaml')" 
+              @click="setMode('yaml')"
               :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
             >YAML</b-button>
           </b-button-group>
-          
           <b-button-group size="md" class="mr-1">
             <b-button
               @click="handleUndo"
@@ -56,7 +54,7 @@
     </div>
 
     <div class="api-designer-columns-container">
-      <div 
+      <div
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
@@ -78,7 +76,10 @@
     <div class="api-designer-footer">
       <div class="row">
         <div class="col-md-8">
-          <b-alert class="alert-vivid alert-t-r" v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+          <b-alert class="alert-vivid alert-t-l" v-model="showNotValidAlert" variant="danger" dismissible>
+            <h4>API is not valid!</h4>
+            <div v-for="(error, index) in notValidMessage" v-bind:key="index">{{ error }}</div>
+          </b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
           <b-alert v-model="isVersionChanged" variant="info" dismissible>
@@ -161,6 +162,7 @@ export default {
       apiStateIndex: 0,
       licensesToClone: [],
       showNotValidAlert: false,
+      notValidMessage: [],
       showSavedAlert: false,
       showCreatedAlert: false,
       isVersionChanged: false,
@@ -232,6 +234,14 @@ export default {
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
       objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
+      if ((propAddress.indexOf('schemas') > -1 ||
+        propAddress.indexOf('securitySchemes') > -1) &&
+        propAddress[propAddress.length - 1] === 'type') {
+        const schemaItem = propAddress.slice(0, -1);
+        console.log('schemaItem: ', schemaItem); // eslint-disable-line
+        // objectDeepUpdate([...sss, 'properties'], null, newApiState, 'deleteLastItem');
+        objectDeepUpdate(schemaItem, { type: newPropValue }, newApiState);
+      }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },
@@ -367,7 +377,7 @@ export default {
                     });
                   }
                 });
-                // !!!
+                // !!
               }
             });
           } else {
@@ -457,9 +467,10 @@ export default {
       .catch((error) => {
         console.log('error: ', error); // eslint-disable-line
         this.showNotValidAlert = true;
-        setTimeout(() => {
-          this.showNotValidAlert = false;
-        }, 3000);
+        this.notValidMessage = JSON.parse(error.data.usermessage);
+        // setTimeout(() => {
+        //   this.showNotValidAlert = false;
+        // }, 3000);
       });
     },
   },
@@ -469,7 +480,7 @@ export default {
 <style lang="scss" scoped>
 .api-designer-container {
   .api-designer-actions-bar {
-    border-bottom: 1px solid #e9ecef; 
+    border-bottom: 1px solid #e9ecef;
     padding: 1rem 1rem;
 
     .toolbar-title {

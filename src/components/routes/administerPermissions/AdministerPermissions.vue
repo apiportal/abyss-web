@@ -3,7 +3,7 @@
 
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
-          <b-nav-item 
+          <b-nav-item
             :active="false"
             to="/app/access-managers/1"
           >
@@ -36,7 +36,7 @@
           </div>
           <div class="col-auto">
             <b-button
-              v-b-tooltip.hover 
+              v-b-tooltip.hover
               title="Refresh"
               variant="link"
               class="page-btn-refresh"
@@ -51,7 +51,7 @@
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
               variant="primary"
-              v-b-tooltip.hover 
+              v-b-tooltip.hover
               title="Add New Permission"
               class="page-btn-add"
               block
@@ -76,10 +76,10 @@
         <router-view></router-view>
       </div>
       <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-        <b-pagination 
+        <b-pagination
           size="md"
           :total-rows="tableRows.length"
-          v-model="page" 
+          v-model="page"
           :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
@@ -249,7 +249,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

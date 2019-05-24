@@ -20,7 +20,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="directoryNameGroup"
           >
             <label>
@@ -37,7 +37,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryDescriptionGroup"
           >
             <label>
@@ -54,7 +54,7 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryPriorityOrderGroup"
           >
             <label>
@@ -91,7 +91,7 @@
               Template
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryOrganizationIdGroup"
           >
             <label>
@@ -100,7 +100,7 @@
             </label>
             <b-form-select
               id="directoryOrganizationIdInput"
-              v-model="subjectDirectoryEditable.organizationid" 
+              v-model="subjectDirectoryEditable.organizationid"
               :state="directoryOrganizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -118,12 +118,12 @@
               <label for="directoryTypeInput">Directory Type: <span class="text-danger">*</span></label>
             </div>
             <div class="col-10">
-              <b-form-group 
+              <b-form-group
                 id="directoryTypeGroup"
               >
                 <b-form-select
                   id="directoryTypeInput"
-                  v-model="subjectDirectoryEditable.directorytypeid" 
+                  v-model="subjectDirectoryEditable.directorytypeid"
                   :state="directoryTypeState"
                   :options="[
                     { value: null, text: 'Please Select'},
@@ -152,7 +152,7 @@
               </b-button>
             </div>
           </div>
-          <div 
+          <div
             v-if="subjectDirectoryEditable.directorytypeid"
             :class="`configure-directory ${isConfigureDirectoryVisible ? 'd-block' : 'd-none'}`"
           >

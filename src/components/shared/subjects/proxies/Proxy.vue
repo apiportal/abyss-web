@@ -3,7 +3,7 @@
     <div class="row">
       <dl class="col-auto">
         <dt style="width: 260px;" class="pb-2">
-          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+          <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" width="200px"></Pictures>
         </dt>
       </dl>
       <dl class="col">
@@ -98,7 +98,7 @@
 import { mapState } from 'vuex';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
-import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   computed: {
@@ -120,7 +120,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    Images,
+    Pictures,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
     Apis: () => import('@/components/shared/subjects/apis/Apis'),
@@ -186,7 +186,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

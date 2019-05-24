@@ -25,7 +25,7 @@
     <div class="page-content-nested">
       <router-view></router-view>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>

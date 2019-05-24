@@ -8,6 +8,7 @@
         :pathArray="['openapidocument', 'info']"
         :onChange="onChange"
         :isCollapsedInitial="true"
+        :isMenu="false"
       />
     </div>
     <div>
@@ -18,6 +19,7 @@
         :pathArray="['openapidocument', 'externalDocs']"
         :onChange="onChange"
         :isCollapsedInitial="true"
+        :isMenu="false"
       />
     </div>
   </div>

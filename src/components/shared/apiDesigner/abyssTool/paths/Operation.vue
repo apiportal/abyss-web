@@ -81,7 +81,7 @@ export default {
 <style lang="scss">
 .operation {
   margin-bottom: 1rem;
-  
+
   .operation-bar {
     display: flex;
     cursor: pointer;

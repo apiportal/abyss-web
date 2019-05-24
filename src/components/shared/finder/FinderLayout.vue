@@ -1,7 +1,7 @@
 <template>
   <div class="finder-layout-container">
     <header>
-      <span 
+      <span
         v-for="(propName, columnIndex) in path"
         v-bind:key="columnIndex"
       >

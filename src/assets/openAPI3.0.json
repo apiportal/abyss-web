@@ -25,7 +25,7 @@
       "type": "String"
     },
     "scopes": {
-      "type": "String",
+      "type": "Object",
       "Required": true,
       "Map": true
     }
@@ -44,15 +44,52 @@
       "type": "OAuth Flow Object"
     }
   },
-  "Security Scheme Object": {
-    "type": {
-      "type": "String",
-      "Required": true,
-      "ValidValues": ["apiKey", "http", "oauth2", "openIdConnect"]
+  "Security Schemes Options": {
+    "basicAuth": {
+      "type": "http",
+      "scheme": "basic"
     },
-    "description": {
-      "type": "String"
+    "bearer": {
+      "type": "http",
+      "scheme": "bearer"
     },
+    "apiKey": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "query"
+    },
+    "abyssCookieAuth": {
+      "type": "apiKey",
+      "name": "abyss.session",
+      "in": "cookie"
+    },
+    "abyssHttpBasicAuth": {
+      "type": "http",
+      "description": "Authorization method for extra security of sensitive methods",
+      "scheme": "basic"
+    },
+    "abyssApiKeyAuth": {
+      "type": "apiKey",
+      "name": "abyss.api.key",
+      "in": "header"
+    },
+    "abyssAppKeyAuth": {
+      "type": "apiKey",
+      "name": "abyss.app.access.token",
+      "in": "header"
+    },
+    "abyssAppKeyCookieAuth": {
+      "type": "apiKey",
+      "name": "abyss.app.access.token",
+      "in": "cookie"
+    },
+    "abyssJWTBearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  },
+  "apiKey": {
     "name": {
       "type": "String",
       "Required": true
@@ -60,21 +97,39 @@
     "in": {
       "type": "String",
       "Required": true,
-      "ValidValues": ["query", "header", "cookie"]
-    },
+      "Select": true,
+      "Options": ["query", "header", "cookie"]
+    }
+  },
+  "http": {
     "scheme": {
       "type": "String",
       "Required": true
     },
     "bearerFormat": {
       "type": "String"
-    },
+    }
+  },
+  "oauth2": {
     "flows": {
       "type": "OAuth Flows Object"
-    },
+    }
+  },
+  "openIdConnect": {
     "openIdConnectUrl": {
       "type": "String",
       "Required": true
+    }
+  },
+  "Security Scheme Object": {
+    "type": {
+      "type": "String",
+      "Required": true,
+      "Select": true,
+      "Options": ["apiKey", "http", "oauth2", "openIdConnect"]
+    },
+    "description": {
+      "type": "String"
     }
   },
   "Components Object": {
@@ -86,12 +141,12 @@
       "type": "Responses Object",
       "MapWithRegex": true
     },
-    "parameters": {
-      "type": "Parameter Object",
+    "securitySchemes": {
+      "type": "Security Scheme Object",
       "Map": true
     },
-    "examples": {
-      "type": "Example Object",
+    "parameters": {
+      "type": "Parameter Object",
       "Map": true
     },
     "requestBodies": {
@@ -102,8 +157,8 @@
       "type": "Header Object",
       "Map": true
     },
-    "securitySchemes": {
-      "type": "Security Scheme Object",
+    "examples": {
+      "type": "Example Object",
       "Map": true
     },
     "links": {
@@ -150,6 +205,7 @@
   "Response Object": {
     "description": {
       "type": "String",
+      "Required": true,
       "Markdown": true
     },
     "content": {
@@ -381,6 +437,13 @@
     "uniqueItems": {
       "type": "Boolean",
       "info": "supported"
+    }
+  },
+  "boolean": {},
+  "Schemas Object": {
+    "{template}": {
+      "type": "Schema Object",
+      "regex": "(.*?)"
     }
   },
   "Schema Object":  {
@@ -623,7 +686,8 @@
       "Array": true
     },
     "default": {
-      "type": "String"
+      "type": "String",
+      "Required": true
     },
     "description": {
       "type": "String",

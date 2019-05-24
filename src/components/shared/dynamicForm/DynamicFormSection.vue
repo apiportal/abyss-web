@@ -18,7 +18,7 @@
           :level="(level + 1)"
           :onChange="onChange"
         />
-        <DynamicFormGroup 
+        <DynamicFormGroup
           v-else
           :title="key"
           :type="properties[key].type"
@@ -123,7 +123,6 @@ export default {
         margin-top: 0;
       }
     }
-    
   }
 }
 </style>

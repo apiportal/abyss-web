@@ -111,7 +111,7 @@
           required
         >
         </b-form-select>
-							
+
         </b-form-group>
         <b-form-group
         id="licenseVisibilityGroup"
@@ -145,7 +145,7 @@
           >
             Is Active?
           </b-form-checkbox>
-        </b-form-group>        
+        </b-form-group>
         <br>
         <h6 class="group-title">SLA Info</h6>
         <b-form-group

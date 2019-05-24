@@ -168,7 +168,6 @@ export default {
         subjectdirectoryid: role.subjectdirectoryid,
       }));
       if (this.rolesToDelete.length) {
-        // console.log('rolesToDelete', this.rolesToDelete);
         for (let i = 0; i < this.rolesToDelete.length; i += 1) {
           deleteSubjectMemberships(this.rolesToDelete[i]).then((response) => {
             if (response && response.data) {
@@ -178,7 +177,6 @@ export default {
         }
       }
       if (this.rolesToAdd.length) {
-        // console.log('rolesToAdd', this.rolesToAdd);
         for (let i = 0; i < this.rolesToAdd.length; i += 1) {
           postSubjectMemberships([this.rolesToAdd[i]]).then((response) => {
             if (response && response.data) {

@@ -1,5 +1,5 @@
 <template>
-  <b-form-group 
+  <b-form-group
     :description="label"
   >
     <label v-if="description">
@@ -62,11 +62,12 @@ export default {
   computed: {
     state() {
       const { inputValue, required } = this;
-
       if (required) {
-        return inputValue.toString().length > 0;
+        if (inputValue && inputValue.toString().length > 0) {
+          return true;
+        }
+        return false;
       }
-
       return true;
     },
   },

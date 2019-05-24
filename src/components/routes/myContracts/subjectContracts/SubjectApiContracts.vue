@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -35,10 +35,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -70,10 +70,7 @@ export default {
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
       const { userApiContracts } = this;
-      // const getTypeName = (typeId) => {
-      //   const type = policyTypes.find(policyType => policyType.uuid === typeId);
-      //   return type ? type.name : typeId;
-      // };
+
       return sortArrayOfObjects({
         array: userApiContracts
         .filter((item) => {

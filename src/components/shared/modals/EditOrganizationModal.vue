@@ -22,7 +22,7 @@
         <div style="padding: 1rem;">
           <b-row align-v="center">
             <b-col md=9>
-              <b-form-group 
+              <b-form-group
                 id="organizationNameGroup"
               >
                 <label>
@@ -39,7 +39,7 @@
                 >
                 </b-form-input>
               </b-form-group>
-              <b-form-group 
+              <b-form-group
                 id="organizationDescriptionGroup"
               >
                 <label>
@@ -59,24 +59,24 @@
             </b-col>
             <b-col md=3>
               <div class="d-flex">
-                <div class="item p-0"> 
+                <div class="item p-0">
                   <img
                     v-if="organizationEditable.picture"
-                    :src="organizationEditable.picture" 
-                    :alt="organizationEditable.name" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
+                    :src="organizationEditable.picture"
+                    :alt="organizationEditable.name"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 200px;"
+                    v-b-tooltip.hover
                     title="Click to change picture"
                     @click="$refs.fileInput.click()"
                   >
-                  <img 
-                    v-if="!organizationEditable.picture" 
-                    src="@/assets/avatar.jpg" 
-                    :alt="organizationEditable.name" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
+                  <img
+                    v-if="!organizationEditable.picture"
+                    src="@/assets/avatar.jpg"
+                    :alt="organizationEditable.name"
+                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
+                    style="width: 200px;"
+                    v-b-tooltip.hover
                     title="Click to change picture"
                     @click="$refs.fileInput.click()" />
                   <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
@@ -84,7 +84,7 @@
               </div>
             </b-col>
           </b-row>
-          <b-form-group 
+          <b-form-group
             id="organizationOrganizationIdGroup"
           >
             <label>
@@ -93,7 +93,7 @@
             </label>
             <b-form-select
               id="organizationOrganizationIdInput"
-              v-model="organizationEditable.organizationid" 
+              v-model="organizationEditable.organizationid"
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -116,7 +116,7 @@
                 Is Active?
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="organizationUrlGroup"
           >
             <label>

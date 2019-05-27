@@ -301,94 +301,6 @@
       }
     }
   },
-  "Anonymization 222": {
-    "attributeClass": {
-      "type": "String",
-      "Select": [
-        { "value": "auxiliary", "text": "Auxiliary" },
-        { "value": "id", "text": "Identifier" },
-        { "value": "sensitive", "text": "Sensitive" },
-        { "value": "qid", "text": "QuasiIdentifier" }
-      ],
-      "Options": {
-        "auxiliary": {
-          "action": {
-            "type": "String",
-            "Select": ["passThrough"]
-          }
-        },
-        "qid": {
-          "action": {
-            "type": "String",
-            "Select": ["generalize"]
-          },
-          "matchPattern": {
-            "type": "String"
-          },
-          "maskPattern": {
-            "type": "String"
-          },
-          "generalizationLevel": {
-            "type": "String"
-          }
-        },
-        "sensitive": {
-          "action": {
-            "type": "String",
-            "Select": ["remove", "mask", "generalize"]
-          },
-          "matchPattern": {
-            "type": "String"
-          },
-          "maskPattern": {
-            "type": "String"
-          },
-          "generalizationLevel": {
-            "type": "String"
-          }
-        },
-        "id": {
-          "action": {
-            "type": "String",
-            "Select": ["remove", "mask", "generalize"]
-          },
-          "matchPattern": {
-            "type": "String"
-          },
-          "maskPattern": {
-            "type": "String"
-          },
-          "generalizationLevel": {
-            "type": "String"
-          }
-        }
-      }
-    }
-  },
-  "Anonymization All": {
-    "attributeClass": {
-      "type": "String",
-      "Select": [
-        { "value": "auxiliary", "text": "Auxiliary" },
-        { "value": "id", "text": "Identifier" },
-        { "value": "sensitive", "text": "Sensitive" },
-        { "value": "qid", "text": "QuasiIdentifier" }
-      ]
-    },
-    "action": {
-      "type": "String",
-      "Select": ["remove", "mask", "generalize", "passThrough"]
-    },
-    "matchPattern": {
-      "type": "String"
-    },
-    "maskPattern": {
-      "type": "String"
-    },
-    "generalizationLevel": {
-      "type": "String"
-    }
-  },
   "Schema Object":  {
     "type": {
       "type": "String",
@@ -906,9 +818,6 @@
     }
   },
   "Components Object": {
-    "x-abyss-privacy": {
-      "type": "Anonymization"
-    },
     "schemas": {
       "type": "Schema Object",
       "Map": true

@@ -60,6 +60,14 @@ export default {
     },
   },
   computed: {
+    inputValue: {
+      get() {
+        return this.value || this.example;
+      },
+      set(newVal) {
+        return newVal;
+      },
+    },
     state() {
       const { inputValue, required } = this;
       if (required) {
@@ -71,13 +79,12 @@ export default {
       return true;
     },
   },
-  data() {
-    const { example, value } = this;
-
-    return {
-      inputValue: value || example,
-    };
-  },
+  // data() {
+  //   const { example, value } = this;
+  //   return {
+  //     inputValue: value || example,
+  //   };
+  // },
   methods: {
     handleKeyup() {
       const { inputValue, propAddress, onChange } = this;

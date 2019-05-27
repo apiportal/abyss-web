@@ -61,6 +61,14 @@ export default {
     },
   },
   computed: {
+    inputValue: {
+      get() {
+        return this.value || this.example;
+      },
+      set(newVal) {
+        return newVal;
+      },
+    },
     state() {
       const { inputValue, required } = this;
       if (required) {
@@ -80,10 +88,9 @@ export default {
     },
   },
   data() {
-    const { example, value } = this;
-
+    // const { example, value } = this;
     return {
-      inputValue: value || example,
+      // inputValue: value || example,
       isEditing: false,
       timer: null,
     };
@@ -91,7 +98,6 @@ export default {
   methods: {
     handleKeyup() {
       const { inputValue, propAddress, onChange, debounce } = this;
-
       if (debounce) {
         if (this.timer) {
           clearTimeout(this.timer);

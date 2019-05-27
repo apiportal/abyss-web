@@ -6,7 +6,6 @@
         <nav class="navbar navbar-expand u-header__navbar">
           <!-- White Logo -->
           <a class="d-none d-lg-flex navbar-brand u-header__navbar-brand u-header__navbar-brand-center u-header__navbar-brand-text-white" to="/auth/" aria-label="Front">
-            <!-- <img src="/static/abyss_dark.png" style="max-height: 40px; " /> -->
           </a>
           <!-- End White Logo -->
         </nav>

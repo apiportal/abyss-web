@@ -2,7 +2,7 @@
   <div class="app-header">
     <b-navbar toggleable="md" style="padding: 0;">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand to="/app/dashboard"><img src="/static/abyss_dark.png" class="logo" /></b-navbar-brand>
+      <b-navbar-brand><img src="/static/abyss_dark.png" class="logo" /></b-navbar-brand>
       <b-collapse is-nav id="nav_collapse" v-if="user.uuid">
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">

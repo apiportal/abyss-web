@@ -24,7 +24,7 @@
               data-qa="tableHeadName"
             />
           </th>
-          <th>
+          <!-- <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -53,7 +53,7 @@
               sortByKey="contracts"
               sortByKeyType="number"
             />
-          </th>
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -94,15 +94,6 @@
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" :data-qa="`tableRowName-${licenseIndex}`">
             {{ licenseItem.name }}
-          </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
-            {{ 111 }}
-          </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
-            {{ 222 }}
-          </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" class="number">
-            {{ 333 }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}

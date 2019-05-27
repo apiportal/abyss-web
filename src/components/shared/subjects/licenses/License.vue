@@ -29,7 +29,7 @@
         <dt>Link:</dt>
         <dd><b-link :href="item.licensedocument.legal.link" target="_blank">{{ item.licensedocument.legal.link }}</b-link></dd>
         <b-link
-          @click="toggleInformModal"  
+          @click="toggleInformModal"
         >
           Show Legal Agreement
         </b-link>
@@ -44,7 +44,7 @@
       </dl>
     </div>
     <TextAreaModal
-      v-if="isInformModalVisible"  
+      v-if="isInformModalVisible"
       size="lg"
       :item="item"
       :onClose="toggleInformModal"
@@ -219,7 +219,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
@@ -275,9 +274,7 @@ export default {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
-    // if (this.childComponent === 'contracts') {
     this.getLicenseContracts();
-    // } else if (this.childComponent === 'proxies') {
     this.getLicenseApis();
     // }
   },

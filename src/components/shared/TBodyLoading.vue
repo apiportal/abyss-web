@@ -1,11 +1,11 @@
 <template>
   <tbody>
-    <tr 
-      v-for="(item, index) in rows" 
+    <tr
+      v-for="(item, index) in rows"
       v-bind:key="index"
       :class="`${index % 2 === 0 ? 'odd' : 'even'}`"
     >
-      <td 
+      <td
         v-for="(colItem, colIndex) in cols"
         v-bind:key="colIndex"
       >

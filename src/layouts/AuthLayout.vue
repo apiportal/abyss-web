@@ -3,10 +3,12 @@
     <AuthHeader />
     <main>
       <div class="d-flex align-items-center position-relative height-lg-100vh">
-        <div class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0" style="background-image: url('/static/abyss1.jpg'); background-position: bottom center; background-size: cover">
-           <div class="w-100 p-5">
-            <AuthSide />
-          </div>
+        <div
+          class="col-lg-5 col-xl-4 d-none d-lg-flex align-items-center gradient-half-primary-v1 height-lg-100vh px-0"
+          style="background-image: url('/static/abyss1.jpg'); background-position: bottom center; background-size: cover">
+            <div class="w-100 p-5">
+              <AuthSide />
+            </div>
         </div>
         <div class="container height-lg-100vh" style="overflow-y: auto;" id="no-scroll">
           <div class="row no-gutters">
@@ -103,7 +105,6 @@ export default {
     background-image: linear-gradient(150deg, #2d1582, #19a0ff);
     background-repeat: repeat-x
   }
-  
   .container {
     width: 100%;
     padding-right: 15px;
@@ -115,7 +116,6 @@ export default {
     margin-right: 0;
     margin-left: 0
   }
-  
   .space-3 {
     padding-top: 8rem !important;
     padding-bottom: 8rem !important;

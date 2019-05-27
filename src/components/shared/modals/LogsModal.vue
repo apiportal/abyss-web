@@ -70,10 +70,10 @@
     </template>
     <template slot="footer" v-if="totalCount > 0">
       <div class="w-100" v-if="logs.length > 0">
-        <b-pagination 
+        <b-pagination
           size="md"
           :total-rows="totalCount"
-          v-model="logPage" 
+          v-model="logPage"
           :per-page="itemsPerPage"
           align="center"
           @change="onPageChange"

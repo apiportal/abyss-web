@@ -19,6 +19,8 @@
         :pathArray="['openapidocument', 'components']"
         :onChange="onChange"
         :isCollapsedInitial="true"
+        :refs="refs"
+        :isMenu="false"
       />
     </div>
   </div>
@@ -33,6 +35,11 @@ export default {
       type: Object,
       required: false,
       default() { return {}; },
+    },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     onChange: {
       type: Function,

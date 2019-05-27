@@ -2,7 +2,9 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
+        <dt class="pb-2">
+          <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="rectangle" width="200px"></Pictures>
+        </dt>
       </dl>
       <dl class="col">
         <dt>App Name:</dt>
@@ -38,6 +40,8 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="APP Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
@@ -56,6 +60,8 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -76,6 +82,8 @@ export default {
   },
   components: {
     Icon,
+    Images,
+    Pictures,
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {

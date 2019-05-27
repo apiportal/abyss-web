@@ -25,7 +25,7 @@
           :active="activeTab === 'servers'"
           @click="() => setActiveTab('servers')"
         >
-          Servers
+          Servers &amp; Security
         </b-nav-item>
       </b-nav>
     </div>
@@ -41,6 +41,7 @@
         v-if="activeTab === 'componentsTags'"
         :openapidocument="api.openapidocument"
         :onChange="onChange"
+        :refs="refs"
       />
       <Information
         v-if="activeTab === 'information'"
@@ -117,7 +118,6 @@ export default {
 
   .abyss-tool-header-container {
     flex: 40px 0 0;
-    background: #f8f8f8;
 
     .nav-tabs {
       margin-top: .5rem;
@@ -130,6 +130,7 @@ export default {
   }
 
    .abyss-tool-content-container {
+    background: #f8f8f8;
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;

@@ -3,10 +3,10 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th class="status">Status</th>
           <th>Contract Name</th>
           <th>State</th>
-          <th>Environment</th>
           <th></th>
         </tr>
       </thead>
@@ -16,6 +16,9 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
+            <Icon :icon=statusIcon(item.status) :class=statusClass(item.status) />
+          </td>
+          <td class="status" @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.status }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
@@ -24,45 +27,28 @@
           <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
             {{ item.contractstatename }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)" style="text-transform: capitalize">
-            {{ item.environment }}
-          </td>
-          <td class="actions" v-if="routePath !== '/app/explore/'">
+          <td class="actions">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
               <b-dropdown-item
-                v-if="isUnsubscibeButtonVisible"
+                v-if="isMineApi"
                 @click="() => handleDeleteContract(item.uuid)"
                 data-qa="btnUnsubscribe"
               >
                 Unsubscribe
               </b-dropdown-item>
 
-              <b-dropdown-header v-if="isLogsButtonVisible">LOGS</b-dropdown-header>
+              <b-dropdown-header v-if="isMineApi">LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isLogsButtonVisible">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isMineApi">All</b-dropdown-item>
 
-              <b-dropdown-header v-if="isLogsButtonVisible"><code>{{ item.uuid }}</code></b-dropdown-header>
+              <b-dropdown-header v-if="isMineApi"><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
-          <td class="actions" v-else-if="routePath === '/app/explore/' && isUnsubscibeButtonVisible">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
-              <template slot="button-content">
-                <Icon icon="ellipsis-h" />
-              </template>
-              <b-dropdown-item
-                v-if="isUnsubscibeButtonVisible"
-                @click="() => handleDeleteContract(item.uuid)"
-              >
-                Unsubscribe
-              </b-dropdown-item>
-            </b-dropdown>
-          </td>
-          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="5">
@@ -99,12 +85,7 @@ export default {
       required: false,
       default() { return ''; },
     },
-    isUnsubscibeButtonVisible: {
-      type: Boolean,
-      required: false,
-      default() { return false; },
-    },
-    isLogsButtonVisible: {
+    isMineApi: {
       type: Boolean,
       required: false,
       default() { return true; },
@@ -137,6 +118,26 @@ export default {
       api.deleteContract(uuid).then(() => {
         this.onNeedsRefreshData();
       });
+    },
+    statusIcon(status) {
+      if (status === 'draft') {
+        return 'play-circle';
+      } else if (status === 'inforce') {
+        return 'check-circle';
+      } else if (status === 'archived') {
+        return 'stop-circle';
+      }
+      return '';
+    },
+    statusClass(status) {
+      if (status === 'draft') {
+        return 'text-secondary';
+      } else if (status === 'inforce') {
+        return 'text-success';
+      } else if (status === 'archived') {
+        return 'text-danger';
+      }
+      return '';
     },
   },
 };

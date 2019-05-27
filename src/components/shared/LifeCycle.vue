@@ -4,17 +4,17 @@
     <b-button class="btn-life-cycle" :variant="buttonStatus('Staged')" @click="changeState('Staged')" @mouseover="showInfo('Staged')">Staged</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Published')" @click="changeState('Published')" @mouseover="showInfo('Published')">Published</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Promoted')" @click="changeState('Promoted')" @mouseover="showInfo('Promoted')">Promoted</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>  
+    <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Deprecated')" @click="changeState('Deprecated')" @mouseover="showInfo('Deprecated')">Deprecated</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Retired')" @click="changeState('Retired')" @mouseover="showInfo('Retired')">Retired</b-button>
     <b-button class="btn-life-cycle" :variant="buttonStatus('Archived')" @click="changeState('Archived')" @mouseover="showInfo('Archived')">Archived</b-button>
 
-    <b-alert class="state-description" show variant="light"> 
+    <b-alert class="state-description" show variant="light">
       <span class="info-header">{{ infoText.name }}</span>
       <hr/>{{ infoText.description + '.' }}
     </b-alert>
     <div class="state-status">
-        <span class="active-state">Active State : {{ currentApiState.name }}</span>
+        <span class="active-state">Current State : {{ currentApiState.name }}</span>
         <span class="target-state">Next State : {{ nextApiState.name }}</span>
     </div>
   </div>
@@ -27,6 +27,10 @@ export default {
   props: {
     currentApiState: {
       type: Object,
+      required: false,
+    },
+    role: {
+      type: String,
       required: false,
     },
   },
@@ -50,9 +54,13 @@ export default {
       this.infoText = apiStates.find(item => item.name === state);
     },
     changeState(state) {
-      const { apiStates } = this;
+      const { apiStates, role } = this;
       this.nextApiState = apiStates.find(item => item.name === state);
-      this.$store.commit('proxies/setNextStateId', this.nextApiState.uuid);
+      if (role === 'proxyApi') {
+        this.$store.commit('proxies/setNextStateId', this.nextApiState.uuid);
+      } else if (role === 'businessApi') {
+        this.$store.commit('businessApis/setNextStateId', this.nextApiState.uuid);
+      }
     },
   },
 };

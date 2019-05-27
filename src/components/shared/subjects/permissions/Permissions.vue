@@ -105,8 +105,8 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Permission</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Permission</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -191,7 +191,6 @@ export default {
       //
     },
     getSubject(subjectId) {
-      // const { subjectid } = this.permission;
       console.log('subjid', subjectId); // eslint-disable-line
       api.getSubject(subjectId).then((response) => {
         this.subject = response.data[0];
@@ -202,9 +201,6 @@ export default {
         }
       });
     },
-  },
-  mounted() {
-    // this.getSubject();
   },
 };
 </script>

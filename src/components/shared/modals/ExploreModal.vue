@@ -13,7 +13,7 @@
       <div v-if="api">
         <b-row>
           <b-col md="3">
-            <Images :uuid="api.uuid" :itext="api.openapidocument.info.title" :color="api.color" type="apis" shape="rectangle"></Images>
+            <Images :uuid="api.uuid" :itext="api.apititle" :color="api.color" type="apis" shape="rectangle"></Images>
           </b-col>
           <b-col md="3">
             <dl>
@@ -21,28 +21,24 @@
                 Title
               </dt>
               <dd>
-                {{ api.openapidocument.info.title }}
+                {{ api.apititle }}
               </dd>
               <dt>Version</dt>
               <dd>{{ api.version }}</dd>
-              <dt>Environment</dt>
-              <dd>{{ getEnvironment(api) }}</dd>
+              <dt>State</dt>
+              <dd>{{ getApiStateName(api.apistateid) }}</dd>
               <dt>Owner</dt>
-              <dd>{{ getOwnerName(api.subjectid) }}</dd>
+              <dd>{{ api.apiowner }}</dd>
             </dl>
           </b-col>
           <b-col md="3">
             <dl>
-              <dt>State</dt>
-              <dd>{{ getApiStateName(api.apistateid) }}</dd>
+              <dt>Environment</dt>
+              <dd>{{ getEnvironment(api) }}</dd>
               <dt>Visibility</dt>
               <dd>{{ getApiVisibilityName(api.apivisibilityid) }}</dd>
-              <dt v-if="api.openapidocument.info.license">
-                License
-              </dt>
-              <dd v-if="api.openapidocument.info.license">
-                {{ api.openapidocument.info.license.name }}
-              </dd>
+              <dt>License</dt>
+              <dd>{{ api.apilicense }}</dd>
             </dl>
           </b-col>
           <b-col md="3">
@@ -58,12 +54,12 @@
           <b-col>
             <dt>Server</dt>
             <dd>
-            <code class="d-block txt-break" v-for="(sv, index) in api.openapidocument.servers" v-bind:title="sv.url" :key="index">{{sv.url}}</code>
+            <code class="d-block txt-break" v-for="(sv, index) in api.apiservers" v-bind:title="sv.url" :key="index">{{sv.url}}</code>
             </dd>
             <dt>
               Description
             </dt>
-            <dd>{{ api.openapidocument.info.description }}</dd>
+            <dd>{{ api.apidescription }}</dd>
           </b-col>
         </b-row>
         <div class="licenses-container">
@@ -74,9 +70,11 @@
             <b-form @submit="handleSubscribe">
               <div class="row">
                 <div class="col-md-4">
-                  <b-form-group 
+                  <b-form-group
                     id="selectedAppId"
                     label="My Apps:"
+                    v-b-tooltip.hover
+                    title="My Please select your APP to Subscribe"
                     label-for="selectedAppIdInput"
                   >
                     <b-form-select
@@ -87,7 +85,7 @@
                           value: null,
                           text: 'Please select app',
                         },
-                        ...computedApps
+                        ...apps
                         .map(app => ({
                           value: app.uuid,
                           text: app.displayname,
@@ -111,15 +109,21 @@
             @click="handleToggleLicensesTable"
             size="md"
             variant="link"
+            v-b-tooltip.hover
+            title="Avaliable Licenses to select"
             :class="{'active': isLicensesTableVisible}"
           >
             <span>Licenses</span>
-            <b-badge pill>{{ apiLicenses.length }}</b-badge>
+            <b-badge pill>{{ api.availablelicenses.length }}</b-badge>
           </b-button>
           <b-button
             @click="handleToggleContractsTable"
             size="md"
             variant="link"
+            v-b-tooltip.hover
+            :title="`My existing Contracts with ${api.apititle}`"
+
+            v-if="isMineApi"
             :class="{'active': isContractsTableVisible}"
           >
             <span>Contracts</span>
@@ -128,9 +132,10 @@
         </div>
         <div v-if="isLicensesTableVisible">
           <Licenses
-            :rows="apiLicenses"
+            :rows="api.availablelicenses"
             :licenseIdFromStore="this.licensesMain.licenseId"
             routePath="/app/explore/"
+            :showSelectLicense="true"
           ></Licenses>
         </div>
         <div v-if="isContractsTableVisible">
@@ -138,11 +143,12 @@
             :rows="computedApiContracts"
             v-if="apiContracts.length > 0"
             routePath="/app/explore/"
-            :isUnsubscibeButtonVisible="true"
-            :isLogsButtonVisible="false"
-            :onNeedsRefreshData="getApiLicenses"
+            :isMineApi="isMineApi"
+            :onNeedsRefreshData="getApiContracts"
           ></Contracts>
         </div>
+        <b-alert class="alert-vivid alert-t-r" v-model="showSelectLicenseAlert" variant="warning" dismissible>Please select a license!</b-alert>
+        <b-alert class="alert-vivid alert-t-r" v-model="showSubscribedAlert" variant="success" dismissible>Subscribed to {{ api.apititle }}</b-alert>
       </div>
     </template>
     <template slot="footer">
@@ -180,7 +186,7 @@ export default {
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.licenses.items,
       licensesMain: state => state.licenses,
-      apps: state => state.apps.items,
+      apps: state => state.userApps.items,
       apis: state => state.exploreApis.items,
       contractStates: state => state.contractStates.items,
       resourceTypes: state => state.resourceTypes.items,
@@ -189,10 +195,13 @@ export default {
       subjectApps: state => state.subjectApps.items,
       userAppMemberships: state => state.subjectMemberships.userApp,
     }),
+    isMineApi() {
+      return this.currentUser.uuid === this.api.subjectid;
+    },
     computedApiContracts() {
       const { apiContracts, contractStates } = this;
-      const { apis, userAppMemberships, currentUser } = this;
-      const { rootPath } = this.currentPage;
+      const { apis, userAppMemberships } = this;
+      // const { rootPath } = this.currentPage;
       const getContractStateName = (contractStateId) => {
         const contractState = contractStates
           .find(contractStateItem => contractStateItem.uuid === contractStateId);
@@ -212,21 +221,14 @@ export default {
           contractstatename: getContractStateName(contract.contractstateid),
           userIdFromApi: getUserFromApi(contract.apiid),
           userIdFromApp: getUserFromApp(contract.subjectid),
-        }))
-        .filter((item) => {
-          if (rootPath === 'explore') {
-            return item.userIdFromApi === currentUser.props.uuid || item.userIdFromApp === currentUser.props.uuid; // eslint-disable-line
-          }
-          return true;
-        });
-    },
-    computedApps() {
-      const { subjectApps, apps, currentUser } = this;
-      return apps.filter(el =>
-        subjectApps.some(f =>
-          f.subjectgroupid === el.uuid && f.subjectid === currentUser.uuid,
-        ),
-      );
+        }));
+        // .filter((item) => {
+        //   if (rootPath === 'explore') {
+        //     return item.userIdFromApi === currentUser.props.uuid ||
+        //     item.userIdFromApp === currentUser.props.uuid; // eslint-disable-line
+        //   }
+        //   return true;
+        // });
     },
   },
   props: {
@@ -273,7 +275,8 @@ export default {
     return {
       isLicensesTableVisible: true,
       isContractsTableVisible: false,
-      apiLicenses: [],
+      showSubscribedAlert: false,
+      showSelectLicenseAlert: false,
       apiContracts: [],
       form: {
         appId: null,
@@ -281,11 +284,6 @@ export default {
     };
   },
   methods: {
-    getOwnerName(subjectId) {
-      const { users } = this;
-      const user = users.find(item => item.uuid === subjectId) || {};
-      return user.displayname || subjectId;
-    },
     getApiStateName(apistateid) {
       const { apiStates } = this;
       const apiState = apiStates.find(item => item.uuid === apistateid) || {};
@@ -307,27 +305,20 @@ export default {
     getEnvironment(item) {
       return item.islive ? 'Live' : 'Sandbox';
     },
-    getApiLicenses() {
-      const { uuid } = this.api;
-      api.getExploreApiLicenses(uuid)
-      .then((response) => {
-        if (response && response.data) {
-          const apiLicensesIds = response.data.map(item => item.licenseid);
-          this.apiLicenses = this.licenses.filter(item => (
-            (apiLicensesIds.indexOf(item.uuid) > -1) && item.isactive && !item.isdeleted
-          ));
-          this.getApiContracts(apiLicensesIds);
-        }
-      });
-    },
-    async getApiContracts(licensesIds) {
-      Promise
-      .all(licensesIds.map(licenseId => api.getLicenseContracts(licenseId)))
-      .then((values) => {
-        this.apiContracts = values
-        .reduce((acc, val) => (val.data ? [...acc, ...val.data] : acc), []);
-      })
-      .catch(e => console.error(e.data)); //eslint-disable-line
+    getApiContracts() {
+      if (this.isMineApi) {
+        api.getApiContracts(this.api.uuid)
+        .then((response) => {
+          if (response && response.data) {
+            this.apiContracts = response.data;
+          }
+        })
+        .catch((error) => {
+          if (error.status === 404) {
+            this.apiContracts = [];
+          }
+        });
+      }
     },
     handleSubscribe(evt) {
       evt.preventDefault();
@@ -339,22 +330,22 @@ export default {
       const { appId } = this.form;
       const { licenseId } = this.licensesMain;
       const { apiId } = this.$route.params;
-      const { apps, apis, contractStates, resourceActions, resources } = this;
+      const { apps, apis, resources } = this;
       const licenseApp = apps.find(item => item.uuid === appId);
       const licenseApi = apis.find(item => item.uuid === apiId);
-      const contractstateid = contractStates.find(item => item.name === 'activated').uuid;
-      const resourceactionid = resourceActions.find(item => item.actionname === 'INVOKE_API').uuid;
+      const contractstateid = '846282ec-1329-4a3c-908b-672b4de3ade2'; // activated
+      const resourceactionid = 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8'; // CONSUME_API
       const resource = resources.find(item => item.resourcerefid === licenseApi.uuid);
       // permission to post
       const permission = {
         accessmanagerid,
         crudsubjectid: uuid,
-        description: `Subscription of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        description: `Subscription of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
         effectiveenddate: moment(effectiveenddate),
         effectivestartdate: moment(effectivestartdate),
         isactive: true,
         organizationid,
-        permission: `Subscription of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        permission: `Subscription of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
         resourceactionid,
         resourceid: resource.uuid,
         subjectid: licenseApp.uuid,
@@ -373,50 +364,57 @@ export default {
         apiid: apiId,
         contractstateid,
         crudsubjectid: uuid,
-        description: `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        description: `Contract of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
         environment: 'LIVE',
         isrestrictedtosubsetofapi: false,
         licenseid: licenseId,
-        name: `Contract of ${licenseApp.displayname} App with ${licenseApi.openapidocument.info.title} API`,
+        name: `Contract of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
         organizationid,
         status: 'inforce',
         subjectid: appId,
         subjectpermissionid: null,
       };
       // POST permission
-      api.postPermissions([permission])
-      .then((response) => {
-        if (response && response.data && response.data.length > 0) {
-          const subjectpermissionid = response.data[0].uuid;
-          // POST accessToken
-          api.postResourceAccessTokens([{
-            ...accessToken,
-            subjectpermissionid,
-          }])
-          .then(() => {
-            // POST contract
-            api.postContracts([{
-              ...contract,
+      if (licenseId) {
+        api.postPermissions([permission])
+        .then((response) => {
+          if (response && response.data && response.data.length > 0) {
+            const subjectpermissionid = response.data[0].uuid;
+            // POST accessToken
+            api.postResourceAccessTokens([{
+              ...accessToken,
               subjectpermissionid,
             }])
             .then(() => {
-              // GET component data
-              this.getApiLicenses();
-              this.isLicensesTableVisible = false;
-              this.isContractsTableVisible = true;
-              this.$store.commit('licenses/setLicenseId', null);
-              this.$bvToast.toast(`Subscriped to ${contract.name}`, {
-                title: 'Success',
-                autoHideDelay: 5000,
+              // POST contract
+              api.postContracts([{
+                ...contract,
+                subjectpermissionid,
+              }])
+              .then(() => {
+                // GET component data
+                this.isLicensesTableVisible = false;
+                this.isContractsTableVisible = true;
+                this.$store.commit('licenses/setLicenseId', null);
+                this.showSubscribedAlert = true;
+                setTimeout(() => {
+                  this.showSubscribedAlert = false;
+                }, 3000);
               });
             });
-          });
-        }
-      });
+          }
+        });
+      } else {
+        this.showSelectLicenseAlert = true;
+        setTimeout(() => {
+          this.showSelectLicenseAlert = false;
+        }, 3000);
+      }
     },
   },
   mounted() {
-    this.getApiLicenses();
+    const apiLicensesIds = this.api.availablelicenses.map(item => item.uuid);
+    this.getApiContracts(apiLicensesIds);
   },
 };
 </script>

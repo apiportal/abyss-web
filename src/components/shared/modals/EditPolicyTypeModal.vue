@@ -20,7 +20,7 @@
         @submit="handleSubmit"
       >
         <div style="padding: 1rem;">
-          <b-form-group 
+          <b-form-group
             id="policyTypeNameGroup"
           >
             <label>
@@ -38,7 +38,7 @@
             </b-form-input>
           </b-form-group>
 
-          <b-form-group 
+          <b-form-group
             id="policyTypeTypeGroup"
           >
             <label>
@@ -55,7 +55,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="policyTypeSubtypeGroup"
           >
             <label>
@@ -73,7 +73,7 @@
             </b-form-input>
           </b-form-group>
 
-          <b-form-group 
+          <b-form-group
             id="policyTypeDescriptionGroup"
           >
             <label>
@@ -90,7 +90,7 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="policyTypeOrganizationIdGroup"
           >
             <label>
@@ -99,7 +99,7 @@
             </label>
             <b-form-select
               id="policyTypeOrganizationIdInput"
-              v-model="policyTypeEditable.organizationid" 
+              v-model="policyTypeEditable.organizationid"
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -122,7 +122,7 @@
               Enabled
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="policyTypeTemplateGroup"
           >
             <label>
@@ -145,7 +145,6 @@
             variant="secondary"
             @click="onClose"
             data-qa="btnCancel"
-            
           >
             Cancel
           </b-button>

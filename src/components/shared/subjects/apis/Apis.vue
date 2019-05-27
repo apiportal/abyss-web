@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -14,7 +15,7 @@
               data-qa="tableHeadName"
             />
           </th>
-          <th>
+          <!-- <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
@@ -23,7 +24,7 @@
               sortByKey="islive"
               sortByKeyType="boolean"
             />
-          </th>
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -86,17 +87,21 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.openapidocument.info.title }}
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
+          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ environment(item) }}
-          </td>
+          </td> -->
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.apistatename }}
+            <Icon icon="circle" :class="`state${item.apistatename}`"/>
+            {{ item.apistatename }} - {{ environment(item) }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.apivisibilityname }}
@@ -116,6 +121,8 @@
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${item.uuid}`"><Icon icon="bezier-curve" /> Change API Lifecycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -149,6 +156,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   name: 'Apis',
@@ -225,6 +233,7 @@ export default {
     TBodyLoading,
     Icon,
     SortBy,
+    Pictures,
   },
   data() {
     return {
@@ -254,3 +263,41 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+.stateInitial{
+  color:#8b8e91
+}
+.stateDraft{
+  color:#161c9a
+}
+.stateStaged{
+  color:#6f42c1
+}
+.statePublished{
+  color:#eeee00
+}
+.statePromoted{
+  color:#4cac00
+}
+.stateDemoted{
+  color:#db408d
+}
+.stateDeprecated{
+  color:#ecb100
+}
+.stateRetired{
+  color:#00bbbb
+}
+.stateArchived{
+  color:#177ec1
+}
+.stateRemoved{
+  color:#212121
+}
+</style>

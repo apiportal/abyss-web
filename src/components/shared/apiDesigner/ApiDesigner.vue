@@ -3,58 +3,58 @@
 
     <div class="api-designer-actions-bar">
       <b-button-toolbar>
-        <span v-if="title" class="toolbar-title">{{ title }}</span>
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setView('abyss')" 
-            :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Abyss View"
-          ><Icon icon="magic" /></b-button>
-          <b-button
-            @click="setView('hybrid')"
-            :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Hybrid View"
-          ><Icon icon="columns" /></b-button>
-          <b-button
-            @click="setView('editor')"
-            :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Editor View"
-          ><Icon icon="code" /></b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setMode('json')" 
-            :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
-          >JSON</b-button>
-          <b-button
-            @click="setMode('yaml')" 
-            :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
-          >YAML</b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="handleUndo"
-            :disabled="apiStateIndex === 0"
-          >
-            <Icon icon="undo" />
-          </b-button>
-          <b-button
-            @click="handleRedo"
-            :disabled="apiStateIndex === (apiStates.length - 1)"
-          >
-            <Icon icon="redo" />
-          </b-button>
-        </b-button-group>
+        <span class="toolbar-title">{{ apiStates[this.apiStateIndex].openapidocument.info.title }}</span>
+        <div class="ml-auto">
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setView('abyss')"
+              :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Abyss View"
+            ><Icon icon="magic" /></b-button>
+            <b-button
+              @click="setView('hybrid')"
+              :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Hybrid View"
+            ><Icon icon="columns" /></b-button>
+            <b-button
+              @click="setView('editor')"
+              :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Editor View"
+            ><Icon icon="code" /></b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setMode('json')"
+              :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
+            >JSON</b-button>
+            <b-button
+              @click="setMode('yaml')"
+              :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
+            >YAML</b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="handleUndo"
+              :disabled="apiStateIndex === 0"
+            >
+              <Icon icon="undo" />
+            </b-button>
+            <b-button
+              @click="handleRedo"
+              :disabled="apiStateIndex === (apiStates.length - 1)"
+            >
+              <Icon icon="redo" />
+            </b-button>
+          </b-button-group>
+        </div>
       </b-button-toolbar>
     </div>
 
-    <div class="api-designer-columns-container" :style="`height: ${height}px`">
-      <div 
+    <div class="api-designer-columns-container">
+      <div
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
@@ -76,7 +76,10 @@
     <div class="api-designer-footer">
       <div class="row">
         <div class="col-md-8">
-          <b-alert class="alert-vivid alert-t-r" v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+          <b-alert class="alert-vivid alert-t-l" v-model="showNotValidAlert" variant="danger" dismissible>
+            <h4>API is not valid!</h4>
+            <div v-for="(error, index) in notValidMessage" v-bind:key="index">{{ error }}</div>
+          </b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
           <b-alert v-model="isVersionChanged" variant="info" dismissible>
@@ -133,11 +136,6 @@ export default {
       required: false,
       default() { return {}; },
     },
-    height: {
-      type: Number,
-      required: false,
-      default() { return 500; },
-    },
     title: {
       type: String,
       required: false,
@@ -160,10 +158,11 @@ export default {
     return {
       view: this.initialView,
       apiStates: [(JSON.parse(JSON.stringify(this.api)))],
-      apiVersion: this.api.openapidocument.info.version,
+      apiInitialVersion: this.api.openapidocument.info.version,
       apiStateIndex: 0,
       licensesToClone: [],
       showNotValidAlert: false,
+      notValidMessage: [],
       showSavedAlert: false,
       showCreatedAlert: false,
       isVersionChanged: false,
@@ -184,9 +183,24 @@ export default {
       }
       return openapidocument;
     },
+    apiVersion() {
+      return this.apiStates[this.apiStateIndex].openapidocument.info.version;
+    },
   },
   mounted() {
     this.getApiLicenses();
+  },
+  watch: {
+    apiVersion(newValue) {
+      if (newValue) {
+        console.log('newValue: ', newValue); // eslint-disable-line
+        if (newValue !== this.apiInitialVersion) {
+          this.isVersionChanged = true;
+        } else {
+          this.isVersionChanged = false;
+        }
+      }
+    },
   },
   methods: {
     ...mapActions('businessApis', ['putBusinessApis', 'postBusinessApis']),
@@ -215,18 +229,19 @@ export default {
       this.mode = mode;
     },
     handleChange(propAddress, newPropValue, customAction) {
+      console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
-      const versionKey = propAddress.join('.');
-      if (versionKey === 'openapidocument.info.version') {
-        if (this.apiVersion !== newPropValue) {
-          this.isVersionChanged = true;
-        } else {
-          this.isVersionChanged = false;
-        }
-      }
       objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
+      if ((propAddress.indexOf('schemas') > -1 ||
+        propAddress.indexOf('securitySchemes') > -1) &&
+        propAddress[propAddress.length - 1] === 'type') {
+        const schemaItem = propAddress.slice(0, -1);
+        console.log('schemaItem: ', schemaItem); // eslint-disable-line
+        // objectDeepUpdate([...sss, 'properties'], null, newApiState, 'deleteLastItem');
+        objectDeepUpdate(schemaItem, { type: newPropValue }, newApiState);
+      }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },
@@ -238,12 +253,6 @@ export default {
           ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
         },
       };
-      const newVersion = newApiState.openapidocument.info.version;
-      if (this.apiVersion !== newVersion) {
-        this.isVersionChanged = true;
-      } else {
-        this.isVersionChanged = false;
-      }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;
     },
@@ -368,7 +377,7 @@ export default {
                     });
                   }
                 });
-                // !!!
+                // !!
               }
             });
           } else {
@@ -458,9 +467,10 @@ export default {
       .catch((error) => {
         console.log('error: ', error); // eslint-disable-line
         this.showNotValidAlert = true;
-        setTimeout(() => {
-          this.showNotValidAlert = false;
-        }, 3000);
+        this.notValidMessage = JSON.parse(error.data.usermessage);
+        // setTimeout(() => {
+        //   this.showNotValidAlert = false;
+        // }, 3000);
       });
     },
   },
@@ -470,13 +480,13 @@ export default {
 <style lang="scss" scoped>
 .api-designer-container {
   .api-designer-actions-bar {
-    border-bottom: 1px solid #e9ecef; 
-    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1rem;
 
     .toolbar-title {
       display: inline-flex;
       vertical-align: middle;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 500;
       margin-right: 1rem;
     }
@@ -491,6 +501,7 @@ export default {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
+    height: calc(100vh - 215px);
 
     .api-designer-abyss-container {
       display: flex;

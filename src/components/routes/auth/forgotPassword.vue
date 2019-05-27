@@ -77,7 +77,6 @@ export default {
       evt.preventDefault();
       api.postForgotPassword(this.form)
         .then((response) => {
-          // console.log(response);
           this.redirect = true;
           this.res.usermessage = response.data.usermessage;
           if (response.data.details === response.data.recommendation) {

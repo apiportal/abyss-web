@@ -2,7 +2,7 @@
   <div class="abyss-table-content">
     <div class="row">
       <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + organization.picture + ')' }"></dt>
+        <Pictures :uuid="organization.uuid" :altText="organization.name" :color="organization.color" type="organizations" shape="rectangle" width="200px"></Pictures>
       </dl>
       <dl class="col">
         <dt>Organization Name:</dt>
@@ -39,7 +39,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Users"
+        title="Organization Users"
         @click="listOrganizationUsers"
         :class="{'active': isShowOrganizationUsers}"
         v-if="organization.organizationusers && organization.organizationusers.length"
@@ -91,6 +91,7 @@ import { mapState } from 'vuex';
 // import api from '@/api';
 import Icon from '@/components/shared/Icon';
 import Users from '@/components/shared/subjects/users/Users';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -118,6 +119,7 @@ export default {
   components: {
     Icon,
     Users,
+    Pictures,
     Organizations: () => import('@/components/shared/subjects/organizations/Organizations'),
   },
   computed: {

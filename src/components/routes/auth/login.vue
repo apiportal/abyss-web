@@ -74,7 +74,15 @@
       </div>
 
       <div class="col-6 text-right">
-        <b-button type="submit" class="btn btn-primary transition-3d-hover" variant="primary" data-qa="btnGetStarted">Get Started <Icon v-if="isLoading" icon="spinner" spin /></b-button>
+        <b-button
+          type="submit"
+          class="btn btn-primary transition-3d-hover"
+          variant="primary"
+          data-qa="btnGetStarted"
+        >
+          Get Started
+          <Icon v-if="isLoading" icon="spinner" spin />
+        </b-button>
       </div>
     </div>
     <!-- End Button -->
@@ -117,16 +125,12 @@ export default {
       return username.length > 0;
     },
     userNameInvalidFeedback() {
-      // const { username } = this.formLogin;
-      // return (username.length === 0) ? 'Please enter username' : '';
     },
     passwordState() {
       const { password } = this.formLogin;
       return password.length >= 3;
     },
     passwordInvalidFeedback() {
-      // const { password } = this.formLogin;
-      // return (password.length < 3) ? 'Password must be at least 3 characters.' : '';
     },
   },
   methods: {
@@ -166,7 +170,7 @@ export default {
   .mb-0,
   .my-0 {
     margin-bottom: 0 !important
-  } 
+  }
   .mb-5,
   .my-5 {
     margin-bottom: 3rem !important

@@ -8,6 +8,18 @@
         :pathArray="['openapidocument', 'info']"
         :onChange="onChange"
         :isCollapsedInitial="true"
+        :isMenu="false"
+      />
+    </div>
+    <div>
+      <OpenApiObject
+        item="externalDocs"
+        type="External Documentation Object"
+        :formData="openapidocument.externalDocs"
+        :pathArray="['openapidocument', 'externalDocs']"
+        :onChange="onChange"
+        :isCollapsedInitial="true"
+        :isMenu="false"
       />
     </div>
   </div>

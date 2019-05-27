@@ -6,7 +6,8 @@
 import ace from 'brace';
 import json from 'brace/mode/json'; // eslint-disable-line no-unused-vars
 import yaml from 'brace/mode/yaml'; // eslint-disable-line no-unused-vars
-import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
+import tomorrowNightEighties from 'brace/theme/tomorrow_night_eighties'; // eslint-disable-line no-unused-vars
+// import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
 
 export default {
   props: {
@@ -23,7 +24,7 @@ export default {
     theme: {
       type: String,
       required: false,
-      default() { return 'eclipse'; },
+      default() { return 'tomorrow_night_eighties'; },
     },
     onChange: {
       type: Function,
@@ -32,6 +33,11 @@ export default {
     debounce: {
       type: Number,
       required: false,
+    },
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
     },
   },
   watch: {
@@ -57,15 +63,15 @@ export default {
     };
   },
   mounted() {
-    const { $el, mode, value, theme } = this;
+    const { $el, mode, value, theme, readOnly } = this;
     this.editor = ace.edit($el);
     this.editor.$blockScrolling = Infinity;
-    // this.editor.setOption('enableEmmet', true);
     this.editor.getSession().setMode(`ace/mode/${mode}`);
     this.editor.setTheme(`ace/theme/${theme}`);
     this.editor.getSession().setTabSize(2);
     this.editor.setValue(value);
     this.editor.clearSelection();
+    this.editor.setReadOnly(readOnly);
     // editor is ready
     this.isMounted = true;
 

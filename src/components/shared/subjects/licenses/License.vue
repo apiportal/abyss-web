@@ -56,6 +56,9 @@
         @click="handleTogglePoliciesTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Policies attached to License"
+
         :class="{'active': isPoliciesTableVisible}"
       >
         <span>Policies</span>
@@ -66,9 +69,11 @@
         @click="handleToggleApisTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Proxy APIs using this License"
         :class="{'active': isApisTableVisible}"
       >
-        <span>Proxy APIs with this License</span>
+        <span>Proxy APIs</span>
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
@@ -76,9 +81,11 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Contracts with this License"
         :class="{'active': isContractsTableVisible}"
       >
-        <span>Contracts with this License</span>
+        <span>Contracts</span>
         <b-badge pill>{{ computedLicenseContracts.length }}</b-badge>
       </b-button>
     </div>
@@ -141,7 +148,7 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
-      policies: state => state.subjectPolicies.items,
+      // policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
       apis: state => state.exploreApis.items,
@@ -150,6 +157,12 @@ export default {
       proxies: state => state.proxies.items,
       contractStates: state => state.contractStates.items,
     }),
+    policies() {
+      if (this.item.subjectid !== this.currentUser.uuid) {
+        return this.$store.state.policies.items;
+      }
+      return this.$store.state.subjectPolicies.items;
+    },
     tableRows() {
       const { item, policies, policyTypes } = this;
       const licensePolicyIds = item.licensedocument.termsOfService.policyKey;
@@ -273,7 +286,12 @@ export default {
   mounted() {
     this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
+    if (this.item.subjectid !== this.currentUser.uuid) {
+      this.$store.dispatch('policies/getPolicies', { uuid: this.currentUser.uuid });
+    } else {
+      this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
+    }
+    // if (this.childComponent === 'contracts') {
     this.getLicenseContracts();
     this.getLicenseApis();
     // }

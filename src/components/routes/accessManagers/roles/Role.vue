@@ -35,6 +35,8 @@
         @click="listRolePermissions"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Permissions"
         :class="{'active': isShowRolePermissions}"
         data-qa="btnRolePermissions"
       >
@@ -46,6 +48,8 @@
         @click="listRoleUsers"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Users"
         :class="{'active': isShowRoleUsers}"
         data-qa="btnRoleUsers"
       >
@@ -57,6 +61,8 @@
         @click="listRoleGroups"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Groups"
         :class="{'active': isShowRoleGroups}"
         data-qa="btnRoleGroups"
       >

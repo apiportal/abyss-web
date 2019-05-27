@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/identity-manager-types/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New Identity Manager Type"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -109,8 +111,8 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+              <Icon
+                :icon="item.isactive ? 'check-circle' : 'times-circle'"
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
@@ -129,8 +131,10 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Identity Manager Type</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-manager-types/${page}/delete/${item.uuid}`">
+                  <Icon icon="trash-alt" /> Delete Identity Manager Type
+                </b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -172,10 +176,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -285,7 +289,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

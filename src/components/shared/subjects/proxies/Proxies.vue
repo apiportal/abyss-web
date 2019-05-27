@@ -1,8 +1,9 @@
 <template>
   <div class="abyss-table-content">
-    <table class="table abyss-table abyss-table-cards">
+    <table class="table abyss-table abyss-table-cards" v-if="isUsersLoaded">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -63,16 +64,6 @@
               sortByKeyType="number"
             />
           </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Updated"
-              sortByKey="updated"
-              sortByKeyType="string"
-            />
-          </th>
           <th v-if="currentPage.firstChildPath === 'shared-with-me'">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -80,6 +71,16 @@
               :onClick="handleSortByClick"
               text="Owner"
               sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Updated"
+              sortByKey="updated"
               sortByKeyType="string"
             />
           </th>
@@ -96,6 +97,9 @@
         :level="1"
       >
         <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
+          <td class="picture">
+            <Pictures :uuid="proxyItem.uuid" :altText="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
             {{ proxyItem.openapidocument.info.title }}
           </td>
@@ -103,6 +107,7 @@
             {{ proxyItem.version }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            <Icon icon="circle" :class="`state${proxyItem.apistatename}`"/>
             {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
           </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
@@ -114,11 +119,11 @@
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
             {{ proxyItem.licensescount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
-          </td>
           <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
             {{ proxyItem.owner.name }}
+          </td>
+          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted" data-qa="dropDownActions">
@@ -128,9 +133,13 @@
 
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit Proxy API</b-dropdown-item>
 
-              <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`">
+                <Icon icon="certificate" /> Add/Edit API Licenses
+              </b-dropdown-item>
 
-              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`">
+                <Icon icon="bezier-curve" />Change API Lifecycle
+              </b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -166,6 +175,7 @@ import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -201,6 +211,7 @@ export default {
       licenses: state => state.subjectLicenses.items,
       contracts: state => state.userContracts.items,
       apiLicenses: state => state.apiLicenses.items,
+      isUsersLoaded: state => state.users.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows, users,
@@ -270,6 +281,7 @@ export default {
     Icon,
     SortBy,
     Proxy,
+    Pictures,
   },
   data() {
     return {
@@ -307,3 +319,41 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.favimage {
+  max-width: 35px;
+  height: auto;
+  margin: -7px 10px;
+}
+.stateInitial{
+  color:#8b8e91
+}
+.stateDraft{
+  color:#161c9a
+}
+.stateStaged{
+  color:#6f42c1
+}
+.statePublished{
+  color:#eeee00
+}
+.statePromoted{
+  color:#4cac00
+}
+.stateDemoted{
+  color:#db408d
+}
+.stateDeprecated{
+  color:#ecb100
+}
+.stateRetired{
+  color:#00bbbb
+}
+.stateArchived{
+  color:#177ec1
+}
+.stateRemoved{
+  color:#212121
+}
+</style>

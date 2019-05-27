@@ -61,7 +61,6 @@ const actions = {
       response.data.map((status) => {
         if (status.error.code !==0) {
           error = true;
-          alert(status.error.usermessage);
         } else {
           commit('addNewResource', status.response);
         }

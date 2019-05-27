@@ -13,6 +13,7 @@
               sortByKeyType="boolean"
             />
           </th>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -59,7 +60,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="6"
+        :cols="7"
       />
       <TbodyCollapsible
         v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -73,8 +74,10 @@
               :icon="item.isactive ? 'check-circle' : 'times-circle'"
               :class="item.isactive ? 'text-success' : 'text-danger'" />
           </td>
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.name" :color="item.color" type="organizations" shape="circle" width="35px"></Pictures>
+          </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <img class="favimage" :src="item.picture"/>
             {{ item.name }}
           </td>
           <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -92,9 +95,14 @@
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-              <b-dropdown-item data-qa="btnEditOrganizationUsers" :to="`${routePath}/edit-organization-users/${item.uuid}`"><Icon icon="users" /> Add/Edit Organization Users</b-dropdown-item>
-              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Organization</b-dropdown-item>
+              <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Organization</b-dropdown-item>
+              <b-dropdown-header class="p-0">
+              </b-dropdown-header>
+              <b-dropdown-item data-qa="btnEditOrganizationUsers"
+                :to="`${routePath}/edit-organization-users/${item.uuid}`">
+                <Icon icon="users" /> Add/Edit Organization Users
+              </b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -106,7 +114,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer">
-          <td colspan="6">
+          <td colspan="7">
             <div class="collapsible-content">
               <!-- {{sortedRows}} -->
               <Organization
@@ -131,6 +139,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -194,6 +203,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Pictures,
     Organization: () => import('@/components/shared/subjects/organizations/Organization'),
   },
   data() {

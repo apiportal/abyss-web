@@ -1,73 +1,151 @@
 <template>
   <div>
+    <!-- <code class="text-success">{{currentInterfaceKeys}}</code> -->
     <div
-      v-for="(item, index) in currentObjectInterfaceKeys" 
-      v-bind:key="index" 
-      :class="(index < (currentObjectInterfaceKeys.length - 1) ? 'mb-3' : '')"
+      v-for="(key, index) in currentInterfaceKeys"
+      v-bind:key="index"
     >
-      <div v-if="interfaces[currentObjectInterface[item].type]">
-        <div>
-          <OpenApiObject
-            :item="item"
-            :type="currentObjectInterface[item].type"
-            :formData="(
-              formData[item] ||
-              (currentObjectInterface[item].Array ?
-              (currentObjectInterface[item].type === 'Security Requirement Object' ? { empty: true } : []) : {})
-            )"
-            :pathArray="[...pathArray, item]"
-            :onChange="onChange"
-            :isMapWithRegex="currentObjectInterface[item].MapWithRegex || false"
-            :isMap="currentObjectInterface[item].Map || false"
-            :isArray="currentObjectInterface[item].Array || false"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+      <div v-if="interfaces[currentInterface[key].type]">
+<!-- <textarea class="code" id="" cols="60" rows="5">
+:item-{{key}}
+:type={{type}}
+:ci-key-type={{currentInterface[key].type}}
+:formData={{formData[key] }}
+:pathArray={{[...pathArray, key]}}
+</textarea> -->
+        <OpenApiObject
+          :item="key"
+          :type="currentInterface[key].type"
+          :formData="(
+            formData[key] ||
+            (currentInterface[key].Array ?
+            (currentInterface[key].type === 'Security Requirement Object' ? { empty: true } : []) : {})
+          )"
+          :pathArray="[...pathArray, key]"
+          :onChange="onChange"
+          :isMapWithRegex="currentInterface[key].MapWithRegex || false"
+          :isMap="currentInterface[key].Map || false"
+          :isArray="currentInterface[key].Array || false"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+          :isInterface="true"
+        />
       </div>
+
       <div v-else>
-        <div v-if="currentObjectInterface[item].type === 'string'">
-          <div v-if="currentObjectInterface[item].Array">
+        <!-- <code>i:{{key}} t:{{type}} cit:{{currentInterface[key].type}}</code> -->
+        <div v-if="currentInterface[key].type === 'String'">
+          <div v-if="currentInterface[key].Array">
             <DynamicFormChips
-              :label="item"
-              :propAddress="[...pathArray, item]"
+              :label="key"
+              :propAddress="[...pathArray, key]"
               :onChange="onChange"
-              :value="formData[item]"
+              :value="formData[key]"
               addItemText="New Item"
             />
           </div>
           <div v-else>
-            <div v-if="currentObjectInterface[item].Markdown">
+            <div v-if="currentInterface[key].Markdown">
               <DynamicFormTextarea
-                :description="item"
-                :propAddress="[...pathArray, item]"
+                :description="key"
+                :propAddress="[...pathArray, key]"
                 :onChange="onChange"
-                :value="formData[item]"
+                :value="formData[key]"
+                :required="currentInterface[key].Required"
+                :debounce="1000"
+              />
+            </div>
+            <div v-else-if="currentInterface[key].Select">
+              <DynamicFormSelect
+                :description="key"
+                :propAddress="[...pathArray, key]"
+                :onChange="onChange"
+                :value="formData[key]"
+                :options="currentInterface[key].Options"
+                :required="currentInterface[key].Required"
                 :debounce="1000"
               />
             </div>
             <div v-else>
               <DynamicFormInputString
-                :description="item"
-                :propAddress="[...pathArray, item]"
+                :description="key"
+                :propAddress="[...pathArray, key]"
                 :onChange="onChange"
-                :value="formData[item]"
+                :value="formData[key]"
+                :required="currentInterface[key].Required"
                 :debounce="1000"
               />
             </div>
           </div>
         </div>
-        <div v-else-if="currentObjectInterface[item].type === 'boolean'">
+        <div v-else-if="currentInterface[key].type === 'Boolean'">
           <DynamicFormCheckbox
-            :description="item"
-            :propAddress="[...pathArray, item]"
+            :description="key"
+            :propAddress="[...pathArray, key]"
             :onChange="onChange"
-            :value="formData[item]"
+            :value="formData[key]"
           />
         </div>
-        <div v-else>
-          {{ currentObjectInterface[item] }}
+        <div v-else-if="currentInterface[key].type === 'Number' || currentInterface[key].type === 'Integer'">
+          <div v-if="currentInterface[key].Array">
+            <DynamicFormChips
+              :label="key"
+              :propAddress="[...pathArray, key]"
+              :onChange="onChange"
+              :value="formData[key]"
+              type="number"
+              addItemText="New Item"
+            />
+          </div>
+          <div v-else>
+            <DynamicFormInputInteger
+              :description="key"
+              :propAddress="[...pathArray, key]"
+              :onChange="onChange"
+              :value="formData[key]"
+              :required="currentInterface[key].Required"
+              :debounce="1000"
+            />
+          </div>
         </div>
+
+        <div v-else-if="type === 'Object Property'">
+<!-- <textarea class="code" id="" cols="30" rows="5">
+key-{{key}}
+type-{{type}}
+pathArray-{{pathArray}}
+formData-{{formData}}
+formData-{{formData[key]}}
+</textarea> -->
+          <DynamicFormInputString
+            :description="key"
+            :propAddress="[...pathArray]"
+            :onChange="onChange"
+            :value="formData[key]"
+            :debounce="1000"
+          />
+        </div>
+
+        <div v-else>
+<pre>
+key: {{key}}
+currentInterface.key: {{ currentInterface[key] }}
+formData.key: {{ formData[key] }}
+formData: {{ formData }}
+</pre>
+        </div>
+
+        <div v-if="key == 'type' && formData[key]">
+          <OpenApiObjectForm
+            :type="formData[key]"
+            :formData="formData"
+            :pathArray="pathArray"
+            :refs="refs"
+            :securitySchemes="securitySchemes"
+            :onChange="onChange"
+          />
+        </div>
+
       </div>
     </div>
   </div>
@@ -80,6 +158,8 @@ import DynamicFormInputString from '@/components/shared/dynamicForm/DynamicFormI
 import DynamicFormTextarea from '@/components/shared/dynamicForm/DynamicFormTextarea';
 import DynamicFormCheckbox from '@/components/shared/dynamicForm/DynamicFormCheckbox';
 import DynamicFormChips from '@/components/shared/dynamicForm/DynamicFormChips';
+import DynamicFormSelect from '@/components/shared/dynamicForm/DynamicFormSelect';
+import DynamicFormInputInteger from '@/components/shared/dynamicForm/DynamicFormInputInteger';
 
 export default {
   name: 'OpenApiObjectForm',
@@ -114,16 +194,29 @@ export default {
     DynamicFormTextarea,
     DynamicFormCheckbox,
     DynamicFormChips,
+    DynamicFormSelect,
+    DynamicFormInputInteger,
     OpenApiObject: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObject'),
   },
   computed: {
-    currentObjectInterfaceKeys() {
-      return Object.keys(this.currentObjectInterface);
+    currentInterface() {
+      // console.log('Interfaces[this.type]: ', Interfaces[this.type]); // eslint-disable-line
+      const objectInterface = {
+        [Object.keys(this.formData)[0]]: { ...Interfaces[this.type] },
+      };
+      // console.log('objectInterface: ', objectInterface); // eslint-disable-line
+      if (this.type === 'Object Property') {
+        return objectInterface;
+      }
+      return Interfaces[this.type];
+    },
+    currentInterfaceKeys() {
+      return Object.keys(this.currentInterface);
     },
   },
   data() {
     return {
-      currentObjectInterface: Interfaces[this.type],
+      // currentInterface: Interfaces[this.type],
       interfaces: Interfaces,
       collapsedRows: [],
     };

@@ -32,7 +32,6 @@ export default {
   methods: {
     handleModalClose() {
       this.$router.push(this.routePath);
-      this.$store.commit('proxies/setNextStateId', null);
     },
     handleModalUpdate() {
       this.$router.push(this.routePath);
@@ -44,10 +43,5 @@ export default {
       page: this.$route.params.page,
     };
   },
-  mounted() {
-    // this.$store.dispatch(', {  });
-    // this.$store.dispatch('', {});
-  },
 };
-
 </script>

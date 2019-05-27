@@ -3,8 +3,26 @@
 
       <div class="page-header">
         <b-nav class="page-tabs" tabs>
+          <b-nav-item
+            :active="false"
+            to="/app/access-managers/1"
+          >
+            <span class="link-text" data-qa="linkAccessManagers">Access Managers</span> <b-badge pill>{{ accessManagers.length }}</b-badge>
+          </b-nav-item>
+          <b-nav-item
+            :active="false"
+            to="/app/access-manager-types/1"
+          >
+            <span class="link-text" data-qa="linkAccessManagerTypes">Access Manager Types</span> <b-badge pill>{{ accessManagerTypes.length }}</b-badge>
+          </b-nav-item>
+          <b-nav-item
+            :active="false"
+            to="/app/roles/1"
+          >
+            <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
+          </b-nav-item>
           <b-nav-item :active="true">
-            <span class="link-text" data-qa="linkAccessManagers">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
+            <span class="link-text" data-qa="linkPermissions">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
           </b-nav-item>
         </b-nav>
         <div class="row">
@@ -18,7 +36,7 @@
           </div>
           <div class="col-auto">
             <b-button
-              v-b-tooltip.hover 
+              v-b-tooltip.hover
               title="Refresh"
               variant="link"
               class="page-btn-refresh"
@@ -33,6 +51,8 @@
             <b-button
               :to="`/app/administer-permissions/${page}/add-new`"
               variant="primary"
+              v-b-tooltip.hover
+              title="Add New Permission"
               class="page-btn-add"
               block
               data-qa="btnAddNew"
@@ -56,10 +76,10 @@
         <router-view></router-view>
       </div>
       <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-        <b-pagination 
+        <b-pagination
           size="md"
           :total-rows="tableRows.length"
-          v-model="page" 
+          v-model="page"
           :per-page="itemsPerPage"
           align="center"
           @change="handlePageChange"
@@ -92,6 +112,7 @@ export default {
       resourceTypes: state => state.resourceTypes.items,
       resourceActions: state => state.resourceActions.items,
       roles: state => state.roles.items,
+      accessManagerTypes: state => state.accessManagerTypes.items,
     }),
     tableRows() {
       const { accessManagers,
@@ -200,6 +221,7 @@ export default {
     this.$store.dispatch('apps/getApps', {});
     this.$store.dispatch('subjectTypes/getSubjectTypes', {});
     this.$store.dispatch('roles/getRoles', {});
+    this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
   },
   data() {
     return {
@@ -227,7 +249,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

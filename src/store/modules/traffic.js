@@ -15,7 +15,6 @@
  */
 
 /* eslint-disable */
-import api from '@/api';
 
 const state = {
   requestsCount: 0,

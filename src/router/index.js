@@ -39,7 +39,8 @@ import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import CreateProxy from '@/components/routes/myApis/CreateProxy';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
-import EditMyApisLifeCycle from '@/components/routes/myApis/EditMyApisLifeCycle';
+import EditMyProxyApisLifeCycle from '@/components/routes/myApis/EditMyProxyApisLifeCycle';
+import EditMyBusinessApisLifeCycle from '@/components/routes/myApis/EditMyBusinessApisLifeCycle';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -136,7 +137,11 @@ import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
 import EditMyPolicy from '@/components/routes/myPolicies/EditMyPolicy';
 import AddMyPolicy from '@/components/routes/myPolicies/AddMyPolicy';
 import DeleteMyPolicy from '@/components/routes/myPolicies/DeleteMyPolicy';
-
+// My Contracts
+import MyContracts from '@/components/routes/myContracts/MyContracts';
+import SubjectContracts from '@/components/routes/myContracts/subjectContracts/SubjectContracts';
+import MyApiContracts from '@/components/routes/myContracts/MyApiContracts';
+import MyAppContracts from '@/components/routes/myContracts/MyAppContracts';
 // Explore
 import Explore from '@/components/routes/explore/Explore';
 import ExploreModal from '@/components/routes/explore/ExploreApis';
@@ -159,6 +164,10 @@ export default new Router({
     {
       path: '/',
       component: Home,
+    },
+    {
+      path: '/test/:apiId',
+      component: EditMyApis,
     },
     {
       path: '/auth',
@@ -236,6 +245,10 @@ export default new Router({
                   path: 'create-proxy/:apiId',
                   component: CreateProxy,
                 },
+                {
+                  path: 'edit-api-lifecycle/:apiId',
+                  component: EditMyBusinessApisLifeCycle,
+                },
               ],
             },
             {
@@ -308,7 +321,7 @@ export default new Router({
                 },
                 {
                   path: 'edit-api-lifecycle/:apiId',
-                  component: EditMyApisLifeCycle,
+                  component: EditMyProxyApisLifeCycle,
                 },
               ],
             },
@@ -688,6 +701,24 @@ export default new Router({
               ],
             },
           ],
+        },
+        {
+          path: 'my-contracts',
+          component: MyContracts,
+          children: [
+            {
+              path: 'my-contracts/:page',
+              component: SubjectContracts,
+            },
+          ],
+        },
+        {
+          path: 'api-contracts/:page',
+          component: MyApiContracts,
+        },
+        {
+          path: 'app-contracts/:page',
+          component: MyAppContracts,
         },
         {
           path: 'organizations/:page',

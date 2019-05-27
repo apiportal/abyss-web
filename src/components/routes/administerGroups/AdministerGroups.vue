@@ -38,6 +38,8 @@
           <b-button
             :to="`/app/administer-groups/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New Group"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -63,6 +65,7 @@
                 sortByKeyType="boolean"
               />
             </th>
+            <th></th>
             <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -99,7 +102,7 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="5"
+          :cols="6"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"
@@ -113,8 +116,10 @@
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
             </td>
+            <td class="picture">
+              <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
+            </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-              <img class="favimage" :src="item.picture"/>
               {{ item.displayname }}
             </td>
             <td class="number" @click="() => handleCollapseTableRows(item.uuid)">
@@ -129,12 +134,14 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/administer-groups/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Group</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete"  :to="`/app/administer-groups/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Group</b-dropdown-item>
 
                 <b-dropdown-header class="p-0"></b-dropdown-header>
 
-                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`"><Icon icon="users" /> Edit Group Users</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEditGroupUsers" :to="`/app/administer-groups/${page}/edit-group-users/${item.uuid}`">
+                  <Icon icon="users" /> Edit Group Users
+                </b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -146,7 +153,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer" data-qa="tableFooter">
-            <td colspan="5">
+            <td colspan="6">
               <div class="collapsible-content">
                 <AdministerGroup
                   :group="item"
@@ -183,6 +190,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   components: {
@@ -192,6 +200,7 @@ export default {
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
+    Pictures,
   },
   computed: {
     ...mapState({
@@ -330,7 +339,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

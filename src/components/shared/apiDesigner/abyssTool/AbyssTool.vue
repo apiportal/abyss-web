@@ -33,15 +33,20 @@
       <Paths
         v-if="activeTab === 'paths'"
         :paths="api.openapidocument.paths"
+        :pathArray="['openapidocument', 'paths']"
         :onChange="onChange"
         :refs="refs"
         :securitySchemes="api.openapidocument.components.securitySchemes"
+        :tags="api.openapidocument.tags"
+        :showGroupButtons="true"
       />
       <ComponentsTags
         v-if="activeTab === 'componentsTags'"
         :openapidocument="api.openapidocument"
         :onChange="onChange"
         :refs="refs"
+        :securitySchemes="api.openapidocument.components.securitySchemes"
+        :tags="api.openapidocument.tags"
       />
       <Information
         v-if="activeTab === 'information'"

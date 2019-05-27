@@ -1,9 +1,7 @@
 <template>
   <div :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`">
     <div class="open-api-object-title">
-      <span class="oao-arrow">
-        <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
-      </span>
+      <div @click="handleToggleCollapse"><strong>{{ path }}</strong></div>
       <span class="oao-dropdown">
         <b-dropdown variant="link" size="md" right no-caret>
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
@@ -35,7 +33,9 @@
           <b-dropdown-item @click="deletePath">Delete Path</b-dropdown-item>
         </b-dropdown>
       </span>
-      <div @click="handleToggleCollapse"><strong>{{ path }}</strong></div>
+      <span class="oao-arrow" @click="handleToggleCollapse">
+        <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
+      </span>
     </div>
     <div class="open-api-object-container" :class="`${isCollapsed ? '' : 'd-none'}`">
       <div v-for="(item, index) in operations" v-bind:key="index">
@@ -46,13 +46,14 @@
           :onChange="onChange"
           :refs="refs"
           :securitySchemes="securitySchemes"
+          :tags="tags"
         />
       </div>
       <div>
         <OpenApiObjectForm
           type="Path Item Object"
           :formData="pathObject"
-          :pathArray="['openapidocument', 'paths', path]"
+          :pathArray="pathArray"
           :onChange="onChange"
           :refs="refs"
           :securitySchemes="securitySchemes"
@@ -73,18 +74,31 @@ export default {
       type: String,
       required: true,
     },
-    refs: {
-      type: Array,
-    },
     pathObject: {
       type: Object,
     },
-    securitySchemes: {
-      type: Object,
+    pathArray: {
+      type: Array,
+      required: true,
     },
     operations: {
       type: Array,
       required: true,
+    },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    securitySchemes: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     onChange: {
       type: Function,
@@ -144,17 +158,21 @@ export default {
       this.isCollapsed = !this.isCollapsed;
     },
     renamePath(val) {
+      const { pathArray } = this;
       if (this.pathKeyState) {
-        this.onChange(['openapidocument', 'paths', this.path], val, 'renameItem');
+        this.onChange(pathArray, val, 'renameItem');
       }
     },
     deletePath() {
-      this.onChange(['openapidocument', 'paths', this.path], null, 'deleteLastItem');
+      const { pathArray } = this;
+      this.onChange(pathArray, null, 'deleteLastItem');
     },
     addPath() {
-      this.onChange(['openapidocument', 'paths', '/newPath'], {}, 'addItem');
+      const { pathArray } = this;
+      this.onChange([...pathArray.slice(0, -1), '/newPath'], {}, 'addItem');
     },
     addOperation(val) {
+      const { pathArray } = this;
       if (val) {
         const newOp = {
           responses: {
@@ -163,7 +181,7 @@ export default {
             },
           },
         };
-        this.onChange(['openapidocument', 'paths', this.path, val], newOp, 'addItem');
+        this.onChange([...pathArray, val], newOp, 'addItem');
       }
     },
   },

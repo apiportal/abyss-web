@@ -19,6 +19,7 @@
         :onChange="onChange"
         :refs="refs"
         :securitySchemes="securitySchemes"
+        :tags="tags"
       />
     </div>
   </div>
@@ -45,15 +46,24 @@ export default {
       required: false,
       default() { return ''; },
     },
-    onChange: {
-      type: Function,
-      required: true,
-    },
     refs: {
       type: Array,
+      required: false,
+      default() { return []; },
     },
     securitySchemes: {
       type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    onChange: {
+      type: Function,
+      required: true,
     },
   },
   components: {

@@ -51,6 +51,14 @@
   body {
     background-color: $bg-body;
   }
+  .table {
+    th, td {
+      vertical-align: middle;
+    }
+    thead th {
+      vertical-align: bottom;
+    }
+  }
   .page-link {
     min-width: calc(1.5em + .75rem + 2px);
     text-align: center;
@@ -666,12 +674,16 @@
     .open-api-object-title {
       cursor: pointer;
       min-height: 2.5rem;
+      display: flex;
+      // align-items: center;
       > div {
-        padding: .5rem 1rem;
+        padding: .5rem 1rem .5rem 1rem;
+        margin-right: auto;
+        word-wrap: break-word;
+        flex-grow: 1;
       }
     }
     .oao-dropdown {
-      float: right;
       .btn {
         padding: .5rem 0;
         width: 2.5rem;
@@ -681,16 +693,15 @@
       }
     }
     .oao-arrow {
-      float: right;
-      padding: .5rem 0;
-      width: 2.5rem;
+      padding: .5rem .75rem;
       text-align: center;
       border-left: 1px solid rgba(0, 0, 0, 0.15);
       svg { width: 1rem; }
     }
   }
   .open-api-object-container {
-    padding: 1rem;
+    min-height: 2.5rem;
+    padding: 1rem 1rem 0 1rem;
     border-top: 1px solid rgba(0, 0, 0, 0.15);
   }
 

@@ -22,6 +22,7 @@
           :onChange="onChange"
           :refs="refs"
           :securitySchemes="securitySchemes"
+          :tags="tags"
         />
       </div>
     </div>
@@ -38,15 +39,24 @@ export default {
       type: String,
       required: true,
     },
-    refs: {
-      type: Array,
-    },
-    securitySchemes: {
-      type: Object,
-    },
     operations: {
       type: Array,
       required: true,
+    },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    securitySchemes: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     onChange: {
       type: Function,

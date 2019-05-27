@@ -4,6 +4,7 @@
     <div class="chips-container">
       <Chips
         :chips="value.map(chip => ({ text: chip, value: chip }))"
+        :autocompleteOptions="autocompleteOptions"
         :onDeleteChip="handleDeleteChip"
         :onAddChip="handleAddChip"
         :addItemText="addItemText"
@@ -18,6 +19,11 @@ import Chips from '@/components/shared/Chips';
 
 export default {
   props: {
+    autocompleteOptions: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     label: {
       type: String,
       required: false,

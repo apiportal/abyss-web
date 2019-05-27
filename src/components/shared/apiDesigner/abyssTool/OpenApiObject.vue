@@ -1,18 +1,26 @@
 <template>
   <div :class="`open-api-object ${isCollapsed ? 'collapsed' : ''}`">
     <div class="open-api-object-title">
-      <span class="oao-arrow">
-        <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
-      </span>
-      <span v-if="isMenu && type !== 'License Object' && type !== 'Contact Object'" class="oao-dropdown">
+      <div @click="handleToggleCollapse">
+        <span v-if="isDynamicTitle">
+          <strong>{{ title }}</strong> <small class="text-muted">{{ description }}</small>
+        </span>
+        <span v-else>
+          <strong>{{ item }}</strong>
+          [{{ formDataKeys.length }}]
+        </span>
+        <small class="text-muted">{{type}} - <strong>{{typeHelper}}</strong></small>
+        <small :title="pathArray">{{ pathDots }}</small>
+      </div>
+      <span v-if="isMenu" class="oao-dropdown">
         <b-dropdown variant="link" size="md" right no-caret>
 
           <template slot="button-content"><Icon icon="ellipsis-h" /></template>
 
-          <b-dropdown-item v-if="isMap || isMapWithRegex" @click="addObjectItem(newObjectItem)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
+          <b-dropdown-item v-if="isMap || isMapWithRegex || type === 'Paths Object'" @click="addObjectItem(newObjectItem)"><Icon icon="plus" /> Add {{type}}</b-dropdown-item>
           <b-dropdown-item v-if="isArray" @click="addArrayItem"><Icon icon="plus" /> Add New {{item}} Item</b-dropdown-item>
-
-          <b-dropdown-form class="pt-3 path-form" v-if="!isInterface && !isMap && !isArray && !isMapWithRegex">
+          
+          <b-dropdown-form class="pt-3 path-form" v-if="!isInterface && !isMap && !isArray && !isMapWithRegex && isNaN(item)">
             <b-form-group>
               <label class="form-label">Rename {{type}}</label>
               <b-form-input
@@ -36,29 +44,18 @@
             </b-form-group>
           </b-dropdown-form>
 
-          <b-dropdown-item v-if="!isInterface && !isDynamicTitle && !isArray" @click="handleDeleteObjectItem" class="border-top"><Icon icon="trash" /> Delete {{item}} Object</b-dropdown-item>
+          <b-dropdown-item v-if="(!isInterface && !isDynamicTitle && !isArray) || type === 'Anonymization'" @click="handleDeleteObjectItem" class="border-top"><Icon icon="trash" /> Delete {{item}} Object</b-dropdown-item>
           <b-dropdown-item v-if="isDynamicTitle" @click="handleDeleteArrayItem" class="border-top"><Icon icon="trash-alt" /> Delete {{title}} Item</b-dropdown-item>
 
         </b-dropdown>
       </span>
-      <div @click="() => handleToggleCollapse()">
-        <span v-if="isDynamicTitle">
-          <strong>{{ title }}</strong> <small class="text-muted">{{ description }}</small>
-        </span>
-        <span v-else>
-          <strong>{{ item }}</strong>
-          [{{ formDataKeys.length }}]
-        </span>
-        <small class="text-muted">{{type}} - <strong>{{typeHelper}}</strong></small>
-        <small :title="pathArray">{{ pathDots }}</small>
-      </div>
+      <span class="oao-arrow" @click="handleToggleCollapse">
+        <Icon :icon="(isCollapsed ? 'chevron-down' : 'chevron-right')" />
+      </span>
     </div>
     <div v-if="isCollapsed" class="open-api-object-container">
       <div v-if="isMapWithRegex">
-        <div
-          v-for="(key, index) in formDataKeys"
-          v-bind:key="index"
-        >
+        <div v-for="(key, index) in formDataKeys" v-bind:key="index">
           <OpenApiObject
             :item="key"
             :type="interfaces[type]['{template}'].type"
@@ -71,10 +68,7 @@
         </div>
       </div>
       <div v-else-if="isMap">
-        <div
-          v-for="(key, index) in formDataKeys"
-          v-bind:key="index"
-        >
+        <div v-for="(key, index) in formDataKeys" v-bind:key="index">
           <OpenApiObject
             v-if="type === 'Object Item'"
             :item="key"
@@ -107,10 +101,7 @@
           />
         </div>
         <div v-else>
-          <div
-            v-for="(formItemData, index) in formData"
-            v-bind:key="index"
-          >
+          <div v-for="(formItemData, index) in formData" v-bind:key="index">
             <OpenApiObject
               :item="index"
               :type="type"
@@ -133,6 +124,7 @@
             type === 'Parameter Object' ||
             type === 'Callback Object' ||
             type === 'Schema Object' ||
+            type === 'Header Object' ||
             type === 'Security Scheme Object'
           ">
           <b-form-group>
@@ -160,15 +152,39 @@
           </b-form-group>
         </div>
         <div v-if="!formData['$ref']">
-          <!-- <code style="line-height:1">eee {{type}} - {{formData}}</code> -->
-          <OpenApiObjectForm
-            :type="type"
-            :formData="formData"
-            :pathArray="pathArray"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-            :onChange="onChange"
-          />
+          <div v-if="type === 'Callback Object'">
+            <!-- <div
+              v-for="(key, index) in formDataKeys"
+              v-bind:key="index"
+            >
+              <OpenApiObject
+                :item="key"
+                :type="interfaces[type]['{template}'].type"
+                :formData="formData[key]"
+                :pathArray="[...pathArray, key]"
+                :refs="refs"
+                :securitySchemes="securitySchemes"
+                :onChange="onChange"
+              />
+            </div> -->
+            <Paths
+              :paths="formData"
+              :pathArray="pathArray"
+              :onChange="onChange"
+              :refs="refs"
+              :securitySchemes="securitySchemes"
+            />
+          </div>
+          <div v-else>
+            <OpenApiObjectForm
+              :type="type"
+              :formData="formData"
+              :pathArray="pathArray"
+              :refs="refs"
+              :securitySchemes="securitySchemes"
+              :onChange="onChange"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -251,14 +267,24 @@ export default {
     },
     refs: {
       type: Array,
+      required: false,
+      default() { return []; },
     },
     securitySchemes: {
       type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
   },
   components: {
     OpenApiObjectForm: () => import('@/components/shared/apiDesigner/abyssTool/OpenApiObjectForm'),
     Security: () => import('@/components/shared/apiDesigner/abyssTool/Security'),
+    Paths: () => import('@/components/shared/apiDesigner/abyssTool/paths/Paths'),
     Icon,
   },
   watch: {
@@ -302,7 +328,7 @@ export default {
       return Object.keys(this.formData);
     },
     pathDots() {
-      return this.pathArray.slice(1, this.pathArray.length).join('.');
+      return this.pathArray.slice(1).join('.');
     },
     computedSecurityOptions() {
       const { securityOptions } = this;
@@ -342,7 +368,7 @@ export default {
       interfaces: Interfaces,
       refAddress: this.formData['$ref'] || null, // eslint-disable-line
       selectedSecurity: null,
-      securityOptions: Interfaces['Security Schemes Options'],
+      securityOptions: Interfaces['Security Schemes Predefined'],
       newResponse: {
         100: {
           description: 'Successful operation',

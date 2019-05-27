@@ -1,15 +1,20 @@
 <template>
   <div>
-    <!-- <code class="text-success">{{currentInterfaceKeys}}</code> -->
     <div
       v-for="(key, index) in currentInterfaceKeys"
       v-bind:key="index"
     >
+<!-- <textarea class="code" id="" cols="60" rows="5">
+:type={{type}}
+:currentInterface={{currentInterface}}
+:formData={{formData}}
+</textarea> -->
       <div v-if="interfaces[currentInterface[key].type]">
 <!-- <textarea class="code" id="" cols="60" rows="5">
 :item-{{key}}
 :type={{type}}
-:ci-key-type={{currentInterface[key].type}}
+:currentInterface-key-type={{currentInterface[key].type}}
+:currentInterface-key={{currentInterface[key]}}
 :formData={{formData[key] }}
 :pathArray={{[...pathArray, key]}}
 </textarea> -->
@@ -29,11 +34,19 @@
           :refs="refs"
           :securitySchemes="securitySchemes"
           :isInterface="true"
+          :isMenu="currentInterface[key].Menu"
         />
       </div>
 
       <div v-else>
-        <!-- <code>i:{{key}} t:{{type}} cit:{{currentInterface[key].type}}</code> -->
+<!-- <textarea class="code" id="" cols="30" rows="10">
+:type={{type}}
+:ooo={{Object.keys(currentInterface)}}
+</textarea>
+<textarea class="code" id="" cols="30" rows="10">
+:type={{type}}
+:ooo={{Object.keys(formData)}}
+</textarea> -->
         <div v-if="currentInterface[key].type === 'String'">
           <div v-if="currentInterface[key].Array">
             <DynamicFormChips
@@ -41,6 +54,7 @@
               :propAddress="[...pathArray, key]"
               :onChange="onChange"
               :value="formData[key]"
+              :autocompleteOptions="autocompleteOptions(key)"
               addItemText="New Item"
             />
           </div>
@@ -61,8 +75,9 @@
                 :propAddress="[...pathArray, key]"
                 :onChange="onChange"
                 :value="formData[key]"
-                :options="currentInterface[key].Options"
+                :options="currentInterface[key].Select"
                 :required="currentInterface[key].Required"
+                :replace="Boolean(currentInterface[key].Replace)"
                 :debounce="1000"
               />
             </div>
@@ -110,13 +125,6 @@
         </div>
 
         <div v-else-if="type === 'Object Property'">
-<!-- <textarea class="code" id="" cols="30" rows="5">
-key-{{key}}
-type-{{type}}
-pathArray-{{pathArray}}
-formData-{{formData}}
-formData-{{formData[key]}}
-</textarea> -->
           <DynamicFormInputString
             :description="key"
             :propAddress="[...pathArray]"
@@ -127,17 +135,28 @@ formData-{{formData[key]}}
         </div>
 
         <div v-else>
-<pre>
-key: {{key}}
-currentInterface.key: {{ currentInterface[key] }}
-formData.key: {{ formData[key] }}
-formData: {{ formData }}
-</pre>
+          <pre>
+          key: {{key}}
+          currentInterface.key: {{ currentInterface[key] }}
+          formData.key: {{ formData[key] }}
+          formData: {{ formData }}
+          </pre>
         </div>
 
-        <div v-if="key == 'type' && formData[key]">
+        <div v-if="currentInterface[key].Options && formData[key]">
+<!-- <textarea class="code" id="" cols="30" rows="5">
+{{`${type}.${Object.keys(currentInterface)[0]}.Options.${formData[key]}`}}
+:type={{type}}
+:currentInterface[key]={{currentInterface[key]}}
+:currentInterface={{currentInterface}}
+</textarea>
+<textarea class="code" id="" cols="30" rows="5">
+:type={{type}}
+:formData={{formData}}
+:formData[key]={{formData[key]}}
+</textarea> -->
           <OpenApiObjectForm
-            :type="formData[key]"
+            :type="`${type}.${Object.keys(currentInterface)[0]}.Options.${formData[key]}`"
             :formData="formData"
             :pathArray="pathArray"
             :refs="refs"
@@ -177,15 +196,29 @@ export default {
       type: Array,
       required: true,
     },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    securitySchemes: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     onChange: {
       type: Function,
       required: true,
     },
-    refs: {
-      type: Array,
-    },
-    securitySchemes: {
-      type: Object,
+    isMenu: {
+      type: Boolean,
+      required: false,
+      default() { return true; },
     },
   },
   components: {
@@ -200,12 +233,14 @@ export default {
   },
   computed: {
     currentInterface() {
-      // console.log('Interfaces[this.type]: ', Interfaces[this.type]); // eslint-disable-line
-      const objectInterface = {
-        [Object.keys(this.formData)[0]]: { ...Interfaces[this.type] },
-      };
-      // console.log('objectInterface: ', objectInterface); // eslint-disable-line
+      const getNestedObject = (o, p) => p.split('.').reduce((xs, x) => (xs && xs[x]) ? xs[x] : undefined, o); // eslint-disable-line
+      if (this.type.indexOf('Options') > -1) {
+        return getNestedObject(Interfaces, this.type);
+      }
       if (this.type === 'Object Property') {
+        const objectInterface = {
+          [Object.keys(this.formData)[0]]: { ...Interfaces[this.type] },
+        };
         return objectInterface;
       }
       return Interfaces[this.type];
@@ -216,12 +251,20 @@ export default {
   },
   data() {
     return {
-      // currentInterface: Interfaces[this.type],
       interfaces: Interfaces,
       collapsedRows: [],
     };
   },
   methods: {
+    autocompleteOptions(key) {
+      if (key === 'tags') {
+        return this.tags.map(chip => ({ text: chip.name, value: chip.name }));
+      }
+      if (this.type === 'Schema Object' && key === 'required' && this.formData.properties) {
+        return Object.keys(this.formData.properties).map(chip => ({ text: chip, value: chip }));
+      }
+      return [];
+    },
     handleToggleCollapse(key) {
       const index = this.collapsedRows.indexOf(key);
 

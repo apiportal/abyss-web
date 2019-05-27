@@ -228,19 +228,14 @@ export default {
     setMode(mode) {
       this.mode = mode;
     },
-    handleChange(propAddress, newPropValue, customAction) {
+    handleChange(propAddress, newPropValue, customAction, replaceItem) {
       console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
       const { apiStates, apiStateIndex } = this;
       const { objectDeepUpdate } = Helpers;
       let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
       objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
-      if ((propAddress.indexOf('schemas') > -1 ||
-        propAddress.indexOf('securitySchemes') > -1) &&
-        propAddress[propAddress.length - 1] === 'type') {
-        const schemaItem = propAddress.slice(0, -1);
-        console.log('schemaItem: ', schemaItem); // eslint-disable-line
-        // objectDeepUpdate([...sss, 'properties'], null, newApiState, 'deleteLastItem');
-        objectDeepUpdate(schemaItem, { type: newPropValue }, newApiState);
+      if (replaceItem) {
+        objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newApiState);
       }
       this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
       this.apiStateIndex += 1;

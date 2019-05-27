@@ -42,6 +42,11 @@ export default {
       required: false,
       default() { return false; },
     },
+    replace: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
     propAddress: {
       type: Array,
       required: false,
@@ -92,8 +97,9 @@ export default {
   // },
   methods: {
     handleChange(val) {
-      const { propAddress, onChange } = this;
-      onChange(propAddress, val);
+      const { propAddress, onChange, replace, description } = this;
+      const replaceItem = replace ? description : null;
+      onChange(propAddress, val, null, replaceItem);
     },
   },
 };

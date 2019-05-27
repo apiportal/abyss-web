@@ -1,15 +1,15 @@
 {
-  "Tag Object": {
-    "name": {
-      "type": "String",
-      "Required": true
+  "Object Item": {
+    "type": "Object Item",
+    "regex": "(.*?)"
+  },
+  "Discriminator Object": {
+    "propertyName": {
+      "type": "String"
     },
-    "description": {
-      "type": "String",
-      "Markdown": true
-    },
-    "externalDocs": {
-      "type": "External Documentation Object"
+    "mapping": {
+      "type": "Object Item",
+      "Map": true
     }
   },
   "OAuth Flow Object": {
@@ -30,10 +30,6 @@
       "Map": true
     }
   },
-  "Object Item": {
-    "type": "Object Item",
-    "regex": "(.*?)"
-  },
   "OAuth Flows Object": {
     "implicit": {
       "type": "OAuth Flow Object"
@@ -48,7 +44,7 @@
       "type": "OAuth Flow Object"
     }
   },
-  "Security Schemes Options": {
+  "Security Schemes Predefined": {
     "basicAuth": {
       "type": "http",
       "scheme": "basic"
@@ -70,22 +66,27 @@
     "abyssHttpBasicAuth": {
       "type": "http",
       "description": "Authorization method for extra security of sensitive methods",
-      "scheme": "basic"
+      "scheme": "basic",
+      "x-abyss-username": "",
+      "x-abyss-password": ""
     },
     "abyssApiKeyAuth": {
       "type": "apiKey",
       "name": "abyss.api.key",
-      "in": "header"
+      "in": "header",
+      "x-abyss-apikey": ""
     },
     "abyssAppKeyAuth": {
       "type": "apiKey",
       "name": "abyss.app.access.token",
-      "in": "header"
+      "in": "header",
+      "x-abyss-apikey": ""
     },
     "abyssAppKeyCookieAuth": {
       "type": "apiKey",
       "name": "abyss.app.access.token",
-      "in": "cookie"
+      "in": "cookie",
+      "x-abyss-apikey": ""
     },
     "abyssJWTBearerAuth": {
       "type": "http",
@@ -93,135 +94,81 @@
       "bearerFormat": "JWT"
     }
   },
-  "apiKey": {
-    "name": {
-      "type": "String",
-      "Required": true
-    },
-    "in": {
-      "type": "String",
-      "Required": true,
-      "Select": true,
-      "Options": ["query", "header", "cookie"]
-    }
-  },
-  "http": {
-    "scheme": {
-      "type": "String",
-      "Required": true
-    },
-    "bearerFormat": {
-      "type": "String"
-    }
-  },
-  "oauth2": {
-    "flows": {
-      "type": "OAuth Flows Object"
-    }
-  },
-  "openIdConnect": {
-    "openIdConnectUrl": {
-      "type": "String",
-      "Required": true
-    }
-  },
   "Security Scheme Object": {
     "type": {
       "type": "String",
       "Required": true,
-      "Select": true,
-      "Options": ["apiKey", "http", "oauth2", "openIdConnect"]
+      "Replace": true,
+      "Select": ["apiKey", "http", "oauth2", "openIdConnect"],
+      "Options": {
+        "apiKey": {
+          "name": {
+            "type": "String",
+            "Required": true
+          },
+          "in": {
+            "type": "String",
+            "Required": true,
+            "Select": ["query", "header", "cookie"]
+          },
+          "x-abyss-apikey": {
+            "type": "String"
+          }
+        },
+        "http": {
+          "scheme": {
+            "type": "String",
+            "Required": true,
+            "Select": ["basic", "bearer", "digest", "hoba", "mutual", "negotiate", "oauth", "vapid", "scram-sha-1", "scram-sha-256"]
+          },
+          "bearerFormat": {
+            "type": "String"
+          },
+          "x-abyss-username": {
+            "type": "String"
+          },
+          "x-abyss-password": {
+            "type": "String"
+          }
+        },
+        "oauth2": {
+          "flows": {
+            "type": "OAuth Flows Object"
+          }
+        },
+        "openIdConnect": {
+          "openIdConnectUrl": {
+            "type": "String",
+            "Required": true
+          }
+        }
+      }
     },
     "description": {
-      "type": "String"
-    }
-  },
-  "Components Object": {
-    "schemas": {
-      "type": "Schema Object",
-      "Map": true
-    },
-    "responses": {
-      "type": "Responses Object",
-      "MapWithRegex": true
-    },
-    "securitySchemes": {
-      "type": "Security Scheme Object",
-      "Map": true
-    },
-    "parameters": {
-      "type": "Parameter Object",
-      "Map": true
-    },
-    "requestBodies": {
-      "type": "Request Body Object",
-      "Map": true
-    },
-    "headers": {
-      "type": "Header Object",
-      "Map": true
-    },
-    "examples": {
-      "type": "Example Object",
-      "Map": true
-    },
-    "links": {
-      "type": "Link Object",
-      "Map": true
-    },
-    "callbacks": {
-      "type": "Callback Object",
-      "Map": true
+      "type": "String",
+      "Markdown": true
     }
   },
   "Security Requirement Object": {
     "{template}": {
       "type": "String",
-      "Array": true
+      "Array": true,
+      "Menu": false
+    }
+  },
+  "Callbacks Object": {
+    "{template}": {
+      "type": "Callback Object",
+      "regex": "(.*?)",
+      "MapWithRegex": true,
+      "Menu": true
     }
   },
   "Callback Object": {
-    "{expression}": {
-      "type": "Path Item Object"
-    }
-  },
-  "Link Parameters Object": {
-    "notDefinedYet": true
-  },
-  "Link Object": {
-    "href": {
-      "type": "String"
-    },
-    "operationId": {
-      "type": "String"
-    },
-    "parameters": {
-      "type": "Link Parameters Object"
-    },
-    "headers": {
-      "type": "Header Object"
-    },
-    "description": {
-      "type": "String",
-      "Markdown": true
-    }
-  },
-  "Response Object": {
-    "description": {
-      "type": "String",
-      "Required": true,
-      "Markdown": true
-    },
-    "content": {
-      "type": "Media Type Object",
-      "Map": true
-    },
-    "headers": {
-      "type": "Header Object"
-    },
-    "links": {
-      "type": "Link Object",
-      "Map": true
+    "{template}": {
+      "type": "Path Item Object Operations",
+      "MapWithRegex": true,
+      "regex": "(.*?)"
     }
   },
   "Responses Object": {
@@ -233,231 +180,381 @@
       "regex": "(.*?)"
     }
   },
-  "Header Object":  {
-    "description": {
-      "type": "String",
-      "Markdown": true
-    },
-    "required": {
-      "type": "Boolean"
-    },
-    "deprecated": {
-      "type": "Boolean"
-    }
-  },
-  "Encoding Object": {
-    "contentType": {
-      "type": "String"
-    },
-    "headers": {
-      "type": "Header Object"
-    },
-    "style": {
-      "type": "String"
-    },
-    "explode": {
-      "type": "Boolean"
-    },
-    "allowReserved": {
-      "type": "Boolean"
-    }
-  },
-  "Example Object": {
-    "summary": {
-      "type": "String"
-    },
-    "description": {
-      "type": "String",
-      "Markdown": true
-    },
-    "Value": {
-      "type": "Any",
-      "Markdown": true
-    }
-  },
-  "Discriminator Object": {
-    "propertyName": {
-      "type": "String"
-    },
-    "mapping": {
-      "type": "Object Item",
-      "Map": true
-    }
-  },
-  "XML Object": {
-    "name": {
-      "type": "String"
-    },
-    "namespace": {
-      "type": "String"
-    },
-    "prefix": {
-      "type": "String"
-    },
-    "attribute": {
-      "type": "Boolean"
-    },
-    "wrapped": {
-      "type": "Boolean"
-    }
-  },
-  "object": {
-    "properties": {
-      "type": "Schema Object",
-      "Map": true,
-      "info": "semi-supported"
-    },
-    "additionalProperties ": {
-      "type": "Schema Object",
-      "Map": true,
-      "info": "semi-supported"
-    },
-    "minProperties": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "maxProperties": {
-      "type": "Number",
-      "info": "supported"
-    }
-  },
-  "integer": {
-    "default": {
-      "type": "Integer",
-      "info": "semi-supported"
-    },
-    "minimum": {
-      "type": "Integer",
-      "info": "supported"
-    },
-    "maximum": {
-      "type": "Integer",
-      "info": "supported"
-    },
-    "multipleOf": {
-      "type": "Integer",
-      "info": "supported"
-    },
-    "exclusiveMinimum": {
-      "type": "Boolean",
-      "info": "supported"
-    },
-    "exclusiveMaximum": {
-      "type": "Boolean",
-      "info": "supported"
-    },
-    "enum": {
-      "type": "Integer",
-      "Array": true,
-      "info": "supported"
-    },
-    "format": {
-      "type": "String",
-      "Select": true,
-      "Options": ["int32", "int64"],
-      "info": "semi-supported"
-    }
-  },
-  "number": {
-    "default": {
-      "type": "Number",
-      "info": "semi-supported"
-    },
-    "minimum": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "maximum": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "multipleOf": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "exclusiveMinimum": {
-      "type": "Boolean",
-      "info": "supported"
-    },
-    "exclusiveMaximum": {
-      "type": "Boolean",
-      "info": "supported"
-    },
-    "enum": {
-      "type": "Number",
-      "Array": true,
-      "info": "supported"
-    },
-    "format": {
-      "type": "String",
-      "Select": true,
-      "Options": ["float", "double"],
-      "info": "semi-supported"
-    }
-  },
-  "string": {
-    "default": {
-      "type": "Number",
-      "info": "semi-supported"
-    },
-    "minLength": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "maxLength": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "pattern": {
-      "type": "String",
-      "info": "supported"
-    },
-    "enum": {
-      "type": "String",
-      "Array": true,
-      "info": "supported"
-    },
-    "format": {
-      "type": "String",
-      "Select": true,
-      "Options": ["date", "date-time", "byte", "binary", "password", "uri", "uuid", "email", "hostname", "ipv4", "ipv6", "pattern"],
-      "info": "semi-supported"
-    }
-  },
-  "array": {
-    "items": {
-      "type": "Schema Object",
-      "Map": false,
-      "info": "semi-supported"
-    },
-    "minItems": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "maxItems": {
-      "type": "Number",
-      "info": "supported"
-    },
-    "uniqueItems": {
-      "type": "Boolean",
-      "info": "supported"
-    }
-  },
-  "boolean": {},
   "Schemas Object": {
     "{template}": {
       "type": "Schema Object",
       "regex": "(.*?)"
     }
   },
+  "Paths Object": {
+    "{template}": {
+      "type": "Path Item Object Operations",
+      "MapWithRegex": true,
+      "regex": "(.*?)"
+    }
+  },
+  "Anonymization": {
+    "attributeClass": {
+      "type": "String",
+      "Select": [
+        { "value": "auxiliary", "text": "Auxiliary" },
+        { "value": "id", "text": "Identifier" },
+        { "value": "sensitive", "text": "Sensitive" },
+        { "value": "qid", "text": "QuasiIdentifier" }
+      ],
+      "Required": true,
+      "Replace": true,
+      "Options": {
+        "auxiliary": {
+          "action": {
+            "type": "String",
+            "Select": [null, "passThrough"],
+            "Required": true,
+            "Replace": false
+          }
+        },
+        "qid": {
+          "action": {
+            "type": "String",
+            "Select": [null, "generalize"],
+            "Required": true,
+            "Replace": false
+          },
+          "matchPattern": {
+            "type": "String"
+          },
+          "maskPattern": {
+            "type": "String"
+          },
+          "generalizationLevel": {
+            "type": "String"
+          }
+        },
+        "sensitive": {
+          "action": {
+            "type": "String",
+            "Select": [null, "remove", "mask", "generalize"],
+            "Required": true,
+            "Replace": false,
+            "Options": {
+              "remove": {
+                "matchPattern": {
+                  "type": "String"
+                }
+              },
+              "mask": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                }
+              },
+              "generalize": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                },
+                "generalizationLevel": {
+                  "type": "String"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "action": {
+            "type": "String",
+            "Select": [null, "remove", "mask", "generalize"],
+            "Required": true,
+            "Replace": false,
+            "Options": {
+              "remove": {
+                "matchPattern": {
+                  "type": "String"
+                }
+              },
+              "mask": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                }
+              },
+              "generalize": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                },
+                "generalizationLevel": {
+                  "type": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Anonymization 222": {
+    "attributeClass": {
+      "type": "String",
+      "Select": [
+        { "value": "auxiliary", "text": "Auxiliary" },
+        { "value": "id", "text": "Identifier" },
+        { "value": "sensitive", "text": "Sensitive" },
+        { "value": "qid", "text": "QuasiIdentifier" }
+      ],
+      "Options": {
+        "auxiliary": {
+          "action": {
+            "type": "String",
+            "Select": ["passThrough"]
+          }
+        },
+        "qid": {
+          "action": {
+            "type": "String",
+            "Select": ["generalize"]
+          },
+          "matchPattern": {
+            "type": "String"
+          },
+          "maskPattern": {
+            "type": "String"
+          },
+          "generalizationLevel": {
+            "type": "String"
+          }
+        },
+        "sensitive": {
+          "action": {
+            "type": "String",
+            "Select": ["remove", "mask", "generalize"]
+          },
+          "matchPattern": {
+            "type": "String"
+          },
+          "maskPattern": {
+            "type": "String"
+          },
+          "generalizationLevel": {
+            "type": "String"
+          }
+        },
+        "id": {
+          "action": {
+            "type": "String",
+            "Select": ["remove", "mask", "generalize"]
+          },
+          "matchPattern": {
+            "type": "String"
+          },
+          "maskPattern": {
+            "type": "String"
+          },
+          "generalizationLevel": {
+            "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Anonymization All": {
+    "attributeClass": {
+      "type": "String",
+      "Select": [
+        { "value": "auxiliary", "text": "Auxiliary" },
+        { "value": "id", "text": "Identifier" },
+        { "value": "sensitive", "text": "Sensitive" },
+        { "value": "qid", "text": "QuasiIdentifier" }
+      ]
+    },
+    "action": {
+      "type": "String",
+      "Select": ["remove", "mask", "generalize", "passThrough"]
+    },
+    "matchPattern": {
+      "type": "String"
+    },
+    "maskPattern": {
+      "type": "String"
+    },
+    "generalizationLevel": {
+      "type": "String"
+    }
+  },
   "Schema Object":  {
     "type": {
       "type": "String",
-      "Select": true,
-      "Options": ["", "string", "integer", "number", "boolean", "array", "object"],
+      "Replace": true,
+      "Select": ["string", "integer", "number", "boolean", "array", "object"],
+      "Options": {
+        "integer": {
+          "x-abyss-privacy": {
+            "type": "Anonymization"
+          },
+          "default": {
+            "type": "Integer",
+            "info": "semi-supported"
+          },
+          "minimum": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "maximum": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "multipleOf": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "exclusiveMinimum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "exclusiveMaximum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "Integer",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["int32", "int64"],
+            "info": "semi-supported"
+          }
+        },
+        "number": {
+          "x-abyss-privacy": {
+            "type": "Anonymization",
+            "info": "semi-supported"
+          },
+          "default": {
+            "type": "Number",
+            "info": "semi-supported"
+          },
+          "minimum": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maximum": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "multipleOf": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "exclusiveMinimum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "exclusiveMaximum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "Number",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["float", "double"],
+            "info": "semi-supported"
+          }
+        },
+        "string": {
+          "x-abyss-privacy": {
+            "type": "Anonymization",
+            "info": "semi-supported"
+          },
+          "default": {
+            "type": "Number",
+            "info": "semi-supported"
+          },
+          "minLength": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxLength": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "pattern": {
+            "type": "String",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "String",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["date", "date-time", "byte", "binary", "password", "uri", "uuid", "email", "hostname", "ipv4", "ipv6", "pattern"],
+            "info": "semi-supported"
+          }
+        },
+        "array": {
+          "items": {
+            "type": "Schema Object",
+            "Map": false,
+            "Menu": false,
+            "info": "semi-supported"
+          },
+          "minItems": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxItems": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "uniqueItems": {
+            "type": "Boolean",
+            "info": "supported"
+          }
+        },
+        "object": {
+          "properties": {
+            "type": "Schema Object",
+            "Map": true,
+            "info": "semi-supported"
+          },
+          "additionalProperties ": {
+            "type": "Schema Object",
+            "Map": true,
+            "info": "semi-supported"
+          },
+          "minProperties": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxProperties": {
+            "type": "Number",
+            "info": "supported"
+          }
+        },
+        "boolean": {}
+      },
       "info": "semi-supported"
     },
-
+    "required": {
+      "type": "String",
+      "Array": true,
+      "info": "supported"
+    },
     "title": {
       "type": "String",
       "info": "supported"
@@ -467,21 +564,13 @@
       "Markdown": true,
       "info": "semi-supported"
     },
-
-    "required": {
-      "type": "String",
-      "Array": true,
-      "info": "supported"
-    },
-
     "example": {
       "type": "String",
       "info": "additional"
     },
     "not": {
       "type": "String",
-      "Select": true,
-      "Options": ["", "string", "integer", "number", "boolean", "array", "object"],
+      "Select": ["", "string", "integer", "number", "boolean", "array", "object"],
       "info": "semi-supported"
     },
     "nullable": {
@@ -502,13 +591,14 @@
     },
     "xml": {
       "type": "XML Object",
-      "info": "additional"
+      "info": "additional",
+      "Menu": false
     },
     "discriminator": {
       "type": "Discriminator Object",
-      "info": "additional"
+      "info": "additional",
+      "Menu": false
     },
-
     "allOf": {
       "type": "Schema Object",
       "Array": true,
@@ -526,7 +616,157 @@
     },
     "externalDocs": {
       "type": "External Documentation Object",
-      "info": "additional"
+      "info": "additional",
+      "Menu": false
+    }
+  },
+  "Link Object": {
+    "operationRef": {
+      "type": "String"
+    },
+    "operationId": {
+      "type": "String"
+    },
+    "parameters": {
+      "type": "String"
+    },
+    "requestBody": {
+      "type": "String"
+    },
+    "server": {
+      "type": "Server Object",
+      "Menu": false
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    }
+  },
+  "Response Object": {
+    "description": {
+      "type": "String",
+      "Required": true,
+      "Markdown": true
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "headers": {
+      "type": "Header Object",
+      "Menu": false
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    }
+  },
+  "Parameter Object": {
+    "name": {
+      "type": "String",
+      "Required": true
+    },
+    "in": {
+      "type": "String",
+      "Required": true,
+      "Select": ["path", "query", "header", "cookie"]
+    },
+    "required": {
+      "type": "Boolean"
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
+    "allowEmptyValue": {
+      "type": "Boolean"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+
+    "style": {
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
+    },
+    "explode": {
+      "type": "Boolean"
+    },
+    "allowReserved": {
+      "type": "Boolean"
+    },
+    "schema": {
+      "type": "Schema Object"
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "example": {
+      "type": "Example Object"
+    }
+  },
+  "Header Object":  {
+    "required": {
+      "type": "Boolean"
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
+    "allowEmptyValue": {
+      "type": "Boolean"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+
+    "style": {
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
+    },
+    "explode": {
+      "type": "Boolean"
+    },
+    "allowReserved": {
+      "type": "Boolean"
+    },
+    "schema": {
+      "type": "Schema Object"
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "example": {
+      "type": "Example Object"
+    }
+  },
+  "Encoding Object": {
+    "contentType": {
+      "type": "String"
+    },
+    "headers": {
+      "type": "Header Object",
+      "Menu": false
+    },
+    "style": {
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
+    },
+    "explode": {
+      "type": "Boolean"
+    },
+    "allowReserved": {
+      "type": "Boolean"
     }
   },
   "Media Type Object": {
@@ -550,43 +790,13 @@
       "type": "String",
       "Markdown": true
     },
+    "required": {
+      "type": "Boolean"
+    },
     "content": {
       "type": "Media Type Object",
       "Required": true,
       "Map": true
-    },
-    "required": {
-      "type": "Boolean"
-    }
-  },
-  "Parameter Object": {
-    "name": {
-      "type": "String",
-      "Required": true
-    },
-    "in": {
-      "type": "String",
-      "Required": true
-    },
-    "description": {
-      "type": "String",
-      "Markdown": true
-    },
-    "required": {
-      "type": "Boolean"
-    },
-    "deprecated": {
-      "type": "Boolean"
-    }
-  },
-  "External Documentation Object": {
-    "description": {
-      "type": "String",
-      "Markdown": true
-    },
-    "url": {
-      "type": "String",
-      "Required": true
     }
   },
   "Operation Object": {
@@ -609,7 +819,8 @@
     },
     "security": {
       "type": "Security Requirement Object",
-      "Array": true
+      "Array": true,
+      "Menu": false
     },
     "parameters": {
       "type": "Parameter Object",
@@ -617,7 +828,8 @@
     },
     "requestBody": {
       "type": "Request Body Object",
-      "Required": true
+      "Required": true,
+      "Menu": false
     },
     "responses": {
       "type": "Responses Object",
@@ -629,17 +841,12 @@
       "Array": true
     },
     "callbacks": {
-      "type": "Callback Object",
-      "Map": true
+      "type": "Callbacks Object",
+      "MapWithRegex": true
     },
     "externalDocs": {
-      "type": "External Documentation Object"
-    }
-  },
-  "Paths Object": {
-    "{path}": {
-      "type": "Path Item Object",
-      "regex": "(.*?)"
+      "type": "External Documentation Object",
+      "Menu": false
     }
   },
   "Path Item Object": {
@@ -682,6 +889,61 @@
     },
     "trace": {
       "type": "Operation Object"
+    },
+    "summary": {
+      "type": "String"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "servers": {
+      "type": "Server Object"
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Array": true
+    }
+  },
+  "Components Object": {
+    "x-abyss-privacy": {
+      "type": "Anonymization"
+    },
+    "schemas": {
+      "type": "Schema Object",
+      "Map": true
+    },
+    "responses": {
+      "type": "Responses Object",
+      "MapWithRegex": true
+    },
+    "securitySchemes": {
+      "type": "Security Scheme Object",
+      "Map": true
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Map": true
+    },
+    "requestBodies": {
+      "type": "Request Body Object",
+      "Map": true
+    },
+    "headers": {
+      "type": "Header Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    },
+    "callbacks": {
+      "type": "Callbacks Object",
+      "MapWithRegex": true
     }
   },
   "Server Variable Object": {
@@ -710,6 +972,54 @@
     "variables": {
       "type": "Server Variable Object",
       "Map": true
+    }
+  },
+  "XML Object": {
+    "name": {
+      "type": "String"
+    },
+    "namespace": {
+      "type": "String"
+    },
+    "prefix": {
+      "type": "String"
+    },
+    "attribute": {
+      "type": "Boolean"
+    },
+    "wrapped": {
+      "type": "Boolean"
+    }
+  },
+  "Tag Object": {
+    "name": {
+      "type": "String",
+      "Required": true
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "externalDocs": {
+      "type": "External Documentation Object",
+      "Menu": false
+    }
+  },
+  "Example Object": {
+    "summary": {
+      "type": "String"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "Value": {
+      "type": "String",
+      "Markdown": true
+    },
+    "externalValue": {
+      "type": "String",
+      "Markdown": true
     }
   },
   "License Object": {
@@ -749,10 +1059,22 @@
       "Markdown": true
     },
     "license": {
-      "type": "License Object"
+      "type": "License Object",
+      "Menu": false
     },
     "contact": {
-      "type": "Contact Object"
+      "type": "Contact Object",
+      "Menu": false
+    }
+  },
+  "External Documentation Object": {
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "url": {
+      "type": "String",
+      "Required": true
     }
   },
   "Root Object": {
@@ -778,14 +1100,16 @@
     },
     "security": {
       "type": "Security Requirement Object",
-      "Array": true
+      "Array": true,
+      "Menu": false
     },
     "tags": {
       "type": "Tag Object",
       "Array": true
     },
     "externalDocs": {
-      "type": "External Documentation Object"
+      "type": "External Documentation Object",
+      "Menu": false
     }
   }
 }

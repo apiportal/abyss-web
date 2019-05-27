@@ -24,6 +24,36 @@
               data-qa="tableHeadName"
             />
           </th>
+          <!-- <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Policies"
+              sortByKey="policies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Proxies"
+              sortByKey="proxies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Contracts"
+              sortByKey="contracts"
+              sortByKeyType="number"
+            />
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"

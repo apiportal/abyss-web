@@ -51,22 +51,13 @@ export default {
       required: false,
     },
   },
-  computed: {
-    inputValue: {
-      get() {
-        return (this.value !== undefined ? this.value : this.example);
-      },
-      set(newVal) {
-        return newVal;
-      },
-    },
+  data() {
+    const { example, value } = this;
+
+    return {
+      inputValue: (value !== undefined ? value : example),
+    };
   },
-  // data() {
-  //   const { example, value } = this;
-  //   return {
-  //     inputValue: (value !== undefined ? value : example),
-  //   };
-  // },
   methods: {
     handleChange(evt) {
       const { propAddress, onChange } = this;

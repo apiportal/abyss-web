@@ -1,12 +1,14 @@
 <template>
   <div class="thumb-image" :class="shape" :style="`background-color: ${color};`">
     <div v-if="itext" class="thumb-txt">{{itext.substring(0, 1)}}</div>
-    <div class="thumb-img" :style="`background-image:url('https://dev2.apiportal.com/abyss/oapi/${type}/image/${uuid}');`">
+    <div class="thumb-img" :style="`background-image:url('${pictureUrl}/${type}/image/${uuid}');`">
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   props: {
     options: {
@@ -44,6 +46,11 @@ export default {
     return {
       image: null,
     };
+  },
+  computed: {
+    ...mapState({
+      pictureUrl: state => state.traffic.pictureUrl,
+    }),
   },
   created() {
   },

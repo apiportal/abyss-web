@@ -20,6 +20,12 @@ const state = {
   requestsCount: 0,
   responsesCount: 0,
   isLoading: false,
+  baseUrl: null,
+  gatewayUrl: null,
+  oapiUrl: null,
+  pictureUrl: null,
+  searchAllUrl: null,
+  httpBinUrl: null,
 };
 
 const getters = {};
@@ -27,6 +33,18 @@ const getters = {};
 const actions = {};
 
 const mutations = {
+  setGlobalConfig: (state, globalUrls) => {
+    if (hostProtocol === 'https') {
+      state.baseUrl = `${hostProtocol}://${host}`;
+    } else {
+      state.baseUrl = `${hostProtocol}://${host}:${abyssPort}`;
+    }
+    state.gatewayUrl = `${state.baseUrl}/${gatewayContext}`;
+    state.oapiUrl = `${state.baseUrl}/abyss/oapi`;
+    state.pictureUrl = `${state.baseUrl}/abyss/oapi`;
+    state.searchAllUrl = searchAllUrl;
+    state.httpBinUrl = httpBinUrl;
+  },
   increaseRequests: (state) => {
     state.requestsCount += 1;
     state.isLoading = (state.requestsCount !== state.responsesCount);

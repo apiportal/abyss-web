@@ -16,14 +16,6 @@
 
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://dev2.apiportal.com';
-// axios.defaults.headers.common.Accept = 'application/json';
-// axios.defaults.headers.common['Content-Type'] = 'application/json';
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8080';
-axios.defaults.withCredentials = true;
-// axios.defaults.timeout = 10000;
-// axios.defaults.responseType = 'json';
-
 export default {
   // auth
   getUser(uuid) {

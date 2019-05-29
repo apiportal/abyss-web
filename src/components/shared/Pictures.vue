@@ -1,10 +1,12 @@
 <template>
   <div>
-    <img :src="`https://dev2.apiportal.com/abyss/oapi/${type}/image/${uuid}`" :alt="altText" class="thumb-picture" :class="shape" :width="width" height="auto">
+    <img :src="`${pictureUrl}/${type}/image/${uuid}`" :alt="altText" class="thumb-picture" :class="shape" :width="width" height="auto">
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   props: {
     options: {
@@ -47,6 +49,11 @@ export default {
     return {
       image: null,
     };
+  },
+  computed: {
+    ...mapState({
+      pictureUrl: state => state.traffic.pictureUrl,
+    }),
   },
   created() {
   },

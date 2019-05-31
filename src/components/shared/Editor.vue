@@ -6,6 +6,7 @@
 import ace from 'brace';
 import json from 'brace/mode/json'; // eslint-disable-line no-unused-vars
 import yaml from 'brace/mode/yaml'; // eslint-disable-line no-unused-vars
+import 'brace/ext/searchbox';
 import tomorrowNightEighties from 'brace/theme/tomorrow_night_eighties'; // eslint-disable-line no-unused-vars
 // import eclipse from 'brace/theme/eclipse'; // eslint-disable-line no-unused-vars
 
@@ -72,6 +73,7 @@ export default {
     this.editor.setValue(value);
     this.editor.clearSelection();
     this.editor.setReadOnly(readOnly);
+    this.editor.setFontSize('14px');
     // editor is ready
     this.isMounted = true;
 

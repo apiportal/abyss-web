@@ -47,11 +47,11 @@
   "Security Schemes Predefined": {
     "basicAuth": {
       "type": "http",
-      "scheme": "basic"
+      "scheme": "Basic"
     },
     "bearer": {
       "type": "http",
-      "scheme": "bearer"
+      "scheme": "Bearer"
     },
     "apiKey": {
       "type": "apiKey",
@@ -66,7 +66,7 @@
     "abyssHttpBasicAuth": {
       "type": "http",
       "description": "Authorization method for extra security of sensitive methods",
-      "scheme": "basic",
+      "scheme": "Basic",
       "x-abyss-username": "",
       "x-abyss-password": ""
     },
@@ -90,7 +90,7 @@
     },
     "abyssJWTBearerAuth": {
       "type": "http",
-      "scheme": "bearer",
+      "scheme": "Bearer",
       "bearerFormat": "JWT"
     }
   },
@@ -119,7 +119,7 @@
           "scheme": {
             "type": "String",
             "Required": true,
-            "Select": ["basic", "bearer", "digest", "hoba", "mutual", "negotiate", "oauth", "vapid", "scram-sha-1", "scram-sha-256"]
+            "Select": ["Basic", "Bearer", "Digest", "HOBA", "Mutual", "Negotiate", "OAuth", "vapid", "SCRAM-SHA-1", "SCRAM-SHA-256"]
           },
           "bearerFormat": {
             "type": "String"

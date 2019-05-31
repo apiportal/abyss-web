@@ -32,6 +32,7 @@ export default {
     }),
   },
   mounted() {
+    this.$store.commit('currentPage/setRootPath', 'my-contracts');
     this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
     this.$store.dispatch('userContracts/getUserApiContracts', { uuid: this.currentUser.uuid });
     this.$store.dispatch('userContracts/getUserAppContracts', { uuid: this.currentUser.uuid });

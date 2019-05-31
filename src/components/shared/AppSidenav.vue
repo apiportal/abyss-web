@@ -77,7 +77,7 @@
 
           <b-link
             to="/app/access-managers/1"
-            :class="`${(currentPage.rootPath === 'access-managers' || currentPage.rootPath === 'access-manager-types' || currentPage.rootPath === 'roles') ? 'selected' : ''}`"
+            :class="`${(currentPage.rootPath === 'access-managers' || currentPage.rootPath === 'access-manager-types' || currentPage.rootPath === 'roles' || currentPage.rootPath === 'administer-permissions') ? 'selected' : ''}`"
             data-qa="sideMenuAccessManagers"
           >
             <span class="route-icon"><Icon icon="user-tie" /></span> Access Management

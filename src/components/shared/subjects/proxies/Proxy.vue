@@ -48,7 +48,6 @@
         :class="{'active': isBusinessTableVisible}"
       >
         <span>Business API</span>
-        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
       </b-button>
       <b-button
         @click="handleToggleLicensesTable"

@@ -303,7 +303,7 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { appEditable, putApps, postApps, onUpdate, role } = this;
-      const { description, url, secondaryemail,
+      const { description, url,
         effectivestartdate, effectiveenddate,
         email, picture, distinguishedname, uniqueid,
         phonebusiness, phoneextension, phonehome, phonemobile,
@@ -325,7 +325,7 @@ export default {
         effectivestartdate: (effectivestartdate === null ?
           this.$moment.utc().toISOString() : effectivestartdate),
         effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : secondaryemail),
+        secondaryemail: email,
       };
       if (role === 'edit') {
         putApps(appToUpdate).then(() => {

@@ -3,7 +3,7 @@
 
     <div class="api-designer-actions-bar">
       <b-button-toolbar>
-        <span class="toolbar-title">{{ apiStates[this.apiStateIndex].openapidocument.info.title }}</span>
+        <span class="toolbar-title">{{ records[this.recordIndex].openapidocument.info.title }}</span>
         <div class="ml-auto">
           <b-button-group size="md" class="mr-1">
             <b-button
@@ -38,13 +38,13 @@
           <b-button-group size="md" class="mr-1">
             <b-button
               @click="handleUndo"
-              :disabled="apiStateIndex === 0"
+              :disabled="recordIndex === 0"
             >
               <Icon icon="undo" />
             </b-button>
             <b-button
               @click="handleRedo"
-              :disabled="apiStateIndex === (apiStates.length - 1)"
+              :disabled="recordIndex === (records.length - 1)"
             >
               <Icon icon="redo" />
             </b-button>
@@ -58,7 +58,7 @@
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
-          :api="apiStates[apiStateIndex]"
+          :api="records[recordIndex]"
           :onChange="handleChange"
         />
       </div>
@@ -157,9 +157,9 @@ export default {
   data() {
     return {
       view: this.initialView,
-      apiStates: [(JSON.parse(JSON.stringify(this.api)))],
+      records: [(JSON.parse(JSON.stringify(this.api)))],
       apiInitialVersion: this.api.openapidocument.info.version,
-      apiStateIndex: 0,
+      recordIndex: 0,
       licensesToClone: [],
       showNotValidAlert: false,
       notValidMessage: [],
@@ -174,8 +174,8 @@ export default {
       currentUser: state => state.user,
     }),
     editorValue() {
-      const { apiStates, apiStateIndex, mode } = this;
-      const { openapidocument } = apiStates[apiStateIndex];
+      const { records, recordIndex, mode } = this;
+      const { openapidocument } = records[recordIndex];
       if (mode === 'json') {
         return JSON.stringify(openapidocument, null, '\t');
       } else if (mode === 'yaml') {
@@ -184,7 +184,7 @@ export default {
       return openapidocument;
     },
     apiVersion() {
-      return this.apiStates[this.apiStateIndex].openapidocument.info.version;
+      return this.records[this.recordIndex].openapidocument.info.version;
     },
   },
   mounted() {
@@ -210,7 +210,7 @@ export default {
     ...mapActions('permissions', ['postPermissions']),
     getApiLicenses() {
       if (this.api.isproxyapi) {
-        api.getExploreApiLicenses(this.api.uuid).then((response) => {
+        api.getApiLicensesRefsApi(this.api.uuid).then((response) => {
           if (response && response.data) {
             this.licensesToClone = response.data.filter(item => !item.isdeleted);
           }
@@ -230,42 +230,48 @@ export default {
     },
     handleChange(propAddress, newPropValue, customAction, replaceItem) {
       console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
-      const { apiStates, apiStateIndex } = this;
+      const { records, recordIndex } = this;
       const { objectDeepUpdate } = Helpers;
-      let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
-      objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
+      let newRecord = JSON.parse(JSON.stringify(records[recordIndex])); // eslint-disable-line
+      objectDeepUpdate(propAddress, newPropValue, newRecord, customAction);
       if (replaceItem) {
-        objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newApiState);
+        objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newRecord);
       }
-      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
-      this.apiStateIndex += 1;
+      this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
+      this.recordIndex += 1;
+      api.validateApi({ spec: records[recordIndex].openapidocument }).then(() => {
+      })
+      .catch((error) => {
+        this.showNotValidAlert = true;
+        this.notValidMessage = JSON.parse(error.data.usermessage);
+      });
     },
     handleEditorChange(newValue) {
-      const { apiStates, apiStateIndex, mode } = this;
-      const newApiState = {
-        ...apiStates[apiStateIndex],
+      const { records, recordIndex, mode } = this;
+      const newRecord = {
+        ...records[recordIndex],
         openapidocument: {
           ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
         },
       };
-      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
-      this.apiStateIndex += 1;
+      this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
+      this.recordIndex += 1;
     },
     handleUndo() {
-      if (this.apiStateIndex > 0) {
-        this.apiStateIndex -= 1;
+      if (this.recordIndex > 0) {
+        this.recordIndex -= 1;
       }
     },
     handleRedo() {
-      if (this.apiStateIndex < (this.apiStates.length - 1)) {
-        this.apiStateIndex += 1;
+      if (this.recordIndex < (this.records.length - 1)) {
+        this.recordIndex += 1;
       }
     },
     handleSubmit() {
-      const { apiStates, apiStateIndex,
+      const { records, recordIndex,
         putBusinessApis, putProxies, postProxies, postBusinessApis,
         postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
-      const currentApi = apiStates[apiStateIndex];
+      const currentApi = records[recordIndex];
       const { openapidocument, businessapiid } = currentApi;
       // VALIDATE API
       api.validateApi({ spec: openapidocument }).then(() => {

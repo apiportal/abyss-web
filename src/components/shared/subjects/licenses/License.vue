@@ -148,14 +148,10 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
-      // policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
       apis: state => state.exploreApis.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
-      contractStates: state => state.contractStates.items,
     }),
     policies() {
       if (this.item.subjectid !== this.currentUser.uuid) {
@@ -184,13 +180,8 @@ export default {
       }));
     },
     computedLicenseContracts() {
-      const { licenseContracts, contractStates, apis } = this;
+      const { licenseContracts, apis } = this;
       const { currentUser, routePath } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
       const getUserFromApi = (apiId) => {
         const theApi = apis.find(item => item.uuid === apiId) || {};
         return theApi.subjectid || apiId;
@@ -198,7 +189,6 @@ export default {
       return licenseContracts
         .map(licenseContractItem => ({
           ...licenseContractItem,
-          contractstatename: getContractStateName(licenseContractItem.contractstateid),
           userid: getUserFromApi(licenseContractItem.apiid),
         }))
         .filter((item) => {
@@ -284,17 +274,14 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
     if (this.item.subjectid !== this.currentUser.uuid) {
       this.$store.dispatch('policies/getPolicies', { uuid: this.currentUser.uuid });
     } else {
       this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     }
-    // if (this.childComponent === 'contracts') {
     this.getLicenseContracts();
     this.getLicenseApis();
-    // }
   },
 };
 </script>

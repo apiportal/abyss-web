@@ -93,7 +93,7 @@
     </div>
     <div v-if="isContractsTableVisible && contractsOfPolicy.length">
       <Contracts
-        :rows="computedContractsOfPolicy"
+        :rows="contractsOfPolicy"
         :routePath="routePath"
       ></Contracts>
     </div>
@@ -179,20 +179,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      contractStates: state => state.contractStates.items,
     }),
-    computedContractsOfPolicy() {
-      const { contractStates, contractsOfPolicy } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId) || {};
-        return contractState.name || contractStateId;
-      };
-      return contractsOfPolicy.map(item => ({
-        ...item,
-        contractstatename: getContractStateName(item.contractstateid),
-      }));
-    },
   },
   data() {
     return {
@@ -209,10 +196,6 @@ export default {
     this.getLicensesOfPolicy();
     this.getContractsOfPolicy();
     this.getApisOfPolicy();
-    this.$store.dispatch('apiStates/getApiStates', {});
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
-    this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

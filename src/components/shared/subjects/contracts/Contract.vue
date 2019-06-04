@@ -7,8 +7,6 @@
           <dd>{{ item.name }}</dd>
           <dt>Description:</dt>
           <dd>{{ item.description }}</dd>
-          <dt>Subject Permission:</dt>
-          <dd>{{ contractSubjectPermission.permission }}</dd>
         </dl>
         <dl class="col">
           <dt>Environment:</dt>
@@ -16,7 +14,7 @@
           <dt>Status:</dt>
           <dd>{{ item.status }}</dd>
           <dt>State:</dt>
-          <dd>{{ contractState.name }}</dd>
+          <dd>{{ item.contractstatename }}</dd>
         </dl>
         <dl class="col">
           <dt>Created:</dt>
@@ -66,13 +64,13 @@
       </div>
       <div v-if="isApisTableVisible">
         <Proxies
-          :rows="contractApis"
+          :rows="contractApi"
           :routePath="routePath"
         ></Proxies>
       </div>
       <div v-if="isLicensesTableVisible">
         <Licenses
-          :rows="computedContractLicenses"
+          :rows="contractLicense"
           :routePath="routePath"
         ></Licenses>
       </div>
@@ -113,24 +111,11 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      // licenses: state => state.subjectLicenses.items,
-      licenses: state => state.licenses.items,
-      proxies: state => state.proxies.items,
-      contractStates: state => state.contractStates.items,
-      permissions: state => state.permissions.items,
+      currentPage: state => state.currentPage,
     }),
-    computedContractApis() {
-      const { proxies, item } = this;
-      return proxies.filter(el => el.uuid === item.apiid);
-    },
     computedExpiredTokens() {
       const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
       return Boolean(!hasNoActiveToken);
-    },
-    computedContractLicenses() {
-      return this.licenses.filter(license => license.uuid === this.item.licenseid);
     },
   },
   data() {
@@ -140,9 +125,8 @@ export default {
       isTokensTableVisible: false,
       isLicensesTableVisible: false,
       accessTokens: [],
-      contractApis: [],
-      contractState: '',
-      contractSubjectPermission: '',
+      contractApi: [],
+      contractLicense: [],
     };
   },
   methods: {
@@ -182,30 +166,38 @@ export default {
     },
     getContractApi() {
       api.getApi(this.item.apiid).then((response) => {
-        this.contractApis = response.data;
+        this.contractApi = response.data;
       })
       .catch((error) => {
         if (error.status === 404) {
-          this.contractApis = [];
+          this.contractApi = [];
+        }
+      });
+    },
+    getContractLicense() {
+      api.getLicense(this.item.licenseid).then((response) => {
+        this.contractLicense = response.data;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.contractLicense = [];
         }
       });
     },
   },
-  mounted() {
-    this.contractState = this.contractStates
-      .find(state => state.uuid === this.item.contractstateid);
-    this.contractSubjectPermission = this.permissions
-      .find(permission => permission.uuid === this.item.subjectpermissionid);
-  },
   created() {
-    this.$store.dispatch('licenses/getLicenses', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('permissions/getPermissions', {});
-    this.getAccessTokens();
-    this.getContractApi();
+    if (this.currentPage.rootPath === 'my-apps') {
+      this.contractLicense = this.item.licenses;
+      this.contractApi = this.item.apis;
+      this.accessTokens = this.item.tokens.map(token => ({
+        ...token,
+        isexpired: this.$moment(token.expiredate).isBefore(this.$moment.utc()),
+      }));
+    } else {
+      this.getContractLicense();
+      this.getAccessTokens();
+      this.getContractApi();
+    }
   },
 };
 </script>

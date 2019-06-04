@@ -148,7 +148,6 @@
             <b-form-select
               id="directoryInput"
               v-model="appEditable.subjectdirectoryid"
-              :state="directoryState"
               :options="[
                 {
                   value: null,
@@ -159,6 +158,8 @@
                   text: item.directoryname,
                 })),
               ]"
+              :state="directoryState"
+              required
             />
           </b-form-group>
         </div>

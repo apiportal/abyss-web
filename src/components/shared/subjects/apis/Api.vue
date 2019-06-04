@@ -75,24 +75,10 @@ export default {
     ...mapState({
       currentPage: state => state.currentPage,
       proxies: state => state.proxies.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      organizations: state => state.organizations.items,
     }),
     apiProxies() {
-      const { proxies, organizations } = this;
-      const getOrganizationName = (organizationid) => {
-        const organization = organizations.find(item => item.uuid === organizationid);
-        return organization ? organization.name : organizationid;
-      };
-      return proxies
-      .filter(proxy => proxy.businessapiid === this.item.uuid)
-      .map(item => ({
-        ...item,
-        organizationame: getOrganizationName(item.organizationid),
-        subscriptions: this.subscriptions[item.uuid] || [],
-        subscriptionsUpdated: this.subscriptions.lastUpdated,
-      }));
+      const { proxies } = this;
+      return proxies.filter(proxy => proxy.businessapiid === this.item.uuid);
     },
   },
   data() {

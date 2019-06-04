@@ -50,8 +50,9 @@
     </div>
     <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
-        :rows="appContracts"
+        :rows="item.contracts"
         :routePath="routePath"
+        :isMineApi="false"
       ></Contracts>
     </div>
   </div>
@@ -92,18 +93,6 @@ export default {
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
     }),
-    appContracts() {
-      const { item, contractStates } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
-      return item.contracts.map(contract => ({
-        ...contract,
-        contractstatename: getContractStateName(contract.contractstateid),
-      }));
-    },
   },
   data() {
     return {

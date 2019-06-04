@@ -79,7 +79,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      contracts: state => state.userContracts.items,
+      contracts: state => state.userContracts.userApiContracts,
       proxies: state => state.proxies.items,
     }),
     contractRows() {

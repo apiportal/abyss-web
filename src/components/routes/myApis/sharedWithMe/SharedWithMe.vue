@@ -79,9 +79,6 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      proxies: state => state.proxies.items,
       apisSharedWithUser: state => state.apisSharedWithUser.items,
     }),
     tableRows() {

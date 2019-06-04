@@ -28,7 +28,7 @@
     <div class="page-content">
       <Contracts
         :rows="tableRows"
-        :routePath="`/app/api-contracts/${page}`"
+        :routePath="`/app/my-contracts/api-contracts/${page}`"
         :itemsPerPage="itemsPerPage"
         :page="page"
       />
@@ -113,9 +113,6 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
-      subscriptions: {
-        lastUpdated: 0,
-      },
     };
   },
   methods: {
@@ -123,7 +120,7 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/api-contracts/${page}`);
+      this.$router.push(`/app/my-contracts/api-contracts/${page}`);
     },
     refreshData() {
       this.$store.dispatch('userContracts/getUserApiContracts', {
@@ -131,6 +128,9 @@ export default {
         refresh: true,
       });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'api-contracts');
   },
 };
 </script>

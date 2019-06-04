@@ -596,26 +596,7 @@
         font-size: .65rem;
         color: $brand-color;
       }
-
       .tbody-collapsible {
-        // & > tr {
-        //   &:first-child {
-        //     td {
-        //       cursor: pointer;
-        //     }
-        //     &:hover {
-        //       // td {
-        //         background: $brand-color;
-        //         border-color: $brand-color;
-        //         color: white !important;
-        //       // }
-        //       .btn-link {
-        //         color: white;
-        //       }
-        //     }
-        //   }
-        // }
-
         .collapsible-content {
           // width: 0;
           display: none;
@@ -626,31 +607,24 @@
             white-space: pre-wrap;
           }
         }
-
         &.tbody-collapsed {
-
           & > tr:first-child {
             & > td:first-child {
               border-left: 8px solid $brand-color;
             }
-
-            & > td {
-              background-color: $brand-color;
-              color: white;
-
-              .btn-link {
-                color: white !important;
-              }
+            background-color: $brand-color;
+            border-color: $brand-color;
+            color: white;
+            .btn-link {
+              color: white !important;
             }
           }
-
           & > tr:last-child {
             & > td:first-child {
               border-left: 8px solid $brand-color;
               padding: 0;
             }
           }
-
         }
       }
     }

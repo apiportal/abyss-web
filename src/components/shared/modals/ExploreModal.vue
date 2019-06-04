@@ -14,96 +14,86 @@
         <b-row>
           <b-col md="3">
             <Images :uuid="api.uuid" :itext="api.apititle" :color="api.color" type="apis" shape="rectangle"></Images>
-          </b-col>
-          <b-col md="3">
-            <dl>
-              <dt>
-                Title
-              </dt>
-              <dd>
-                {{ api.apititle }}
-              </dd>
-              <dt>Version</dt>
-              <dd>{{ api.version }}</dd>
-              <dt>State</dt>
-              <dd>{{ getApiStateName(api.apistateid) }}</dd>
-              <dt>Owner</dt>
-              <dd>{{ api.apiowner }}</dd>
-            </dl>
-          </b-col>
-          <b-col md="3">
-            <dl>
-              <dt>Environment</dt>
-              <dd>{{ getEnvironment(api) }}</dd>
-              <dt>Visibility</dt>
-              <dd>{{ getApiVisibilityName(api.apivisibilityid) }}</dd>
-              <dt>License</dt>
-              <dd>{{ api.apilicense }}</dd>
-            </dl>
-          </b-col>
-          <b-col md="3">
-            <dl>
-            <dt>Created</dt>
-            <dd>{{ api.created | moment("DD.MM.YYYY HH:mm") }}</dd>
-            <dt>Updated</dt>
-            <dd>{{ api.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
-            </dl>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <dt>Server</dt>
-            <dd>
-            <code class="d-block txt-break" v-for="(sv, index) in api.apiservers" v-bind:title="sv.url" :key="index">{{sv.url}}</code>
-            </dd>
-            <dt>
-              Description
-            </dt>
-            <dd>{{ api.apidescription }}</dd>
-          </b-col>
-        </b-row>
-        <div class="licenses-container">
-          <div class="licenses-header-container">
-            Subscribe
-          </div>
-          <div class="licenses-content-container">
-            <b-form @submit="handleSubscribe">
-              <div class="row">
-                <div class="col-md-4">
+            <div class="border mb-4 shadow-sm">
+              <div class="p-3">
+                <b-form @submit="handleSubscribe">
                   <b-form-group
                     id="selectedAppId"
-                    label="My Apps:"
-                    v-b-tooltip.hover
-                    title="My Please select your APP to Subscribe"
+                    label="Select an App to Subscribe:"
+                    class="small font-weight-bold"
                     label-for="selectedAppIdInput"
+                    :invalid-feedback="appIdInvalidFeedback"
+                    :state="appIdState"
                   >
                     <b-form-select
                       id="selectedAppIdInput"
-                      v-model="form.appId"
+                      v-model="selectedAppId"
                       :options="[
-                        {
-                          value: null,
-                          text: 'Please select app',
-                        },
+                        { value: null, text: 'Please select app' },
                         ...apps
                         .map(app => ({
                           value: app.uuid,
-                          text: app.displayname,
+                          text: `${app.displayname} - ${app.issandbox ? 'Sandbox' : 'Live'}`,
+                          disabled: app.isdeleted,
                         })),
                       ]"
-                      :required="true"
+                      :state="appIdState"
+                      required
                     />
                   </b-form-group>
-                </div>
-                <div class="col-md-4">
-                  <b-button type="submit" block variant="primary" style="margin-top: 32px;">
+                  <b-button type="submit" block variant="success">
                     Subscribe
                   </b-button>
-                </div>
+                </b-form>
               </div>
-            </b-form>
-          </div>
-        </div>
+            </div>
+          </b-col>
+          <b-col md="9">
+            <b-row>
+              <b-col md="4">
+                <dl>
+                  <dt>Title</dt>
+                  <dd>{{ api.apititle }}</dd>
+                  <dt>Version</dt>
+                  <dd>{{ api.version }}</dd>
+                  <dt>State</dt>
+                  <dd>{{ getApiStateName(api.apistateid) }}</dd>
+                </dl>
+              </b-col>
+              <b-col md="4">
+                <dl>
+                  <dt>Environment</dt>
+                  <dd>{{ getEnvironment(api) }}</dd>
+                  <dt>Visibility</dt>
+                  <dd>{{ getApiVisibilityName(api.apivisibilityid) }}</dd>
+                  <dt>License</dt>
+                  <dd>{{ api.apilicense }}</dd>
+                </dl>
+              </b-col>
+              <b-col md="4">
+                <dl>
+                  <dt>Owner</dt>
+                  <dd>{{ api.apiowner }}</dd>
+                  <dt>Created</dt>
+                  <dd>{{ api.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+                  <dt>Updated</dt>
+                  <dd>{{ api.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+                </dl>
+              </b-col>
+              <b-col md="12">
+                <dt>Server</dt>
+                <dd>
+                <code class="d-block txt-break" v-for="(sv, index) in api.apiservers" v-bind:title="sv.url" :key="index">{{sv.url}}</code>
+                </dd>
+                <dt>
+                  Description
+                </dt>
+                <dd>{{ api.apidescription }}</dd>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+        
         <div class="row abyss-table-buttons">
           <b-button
             @click="handleToggleLicensesTable"
@@ -122,47 +112,44 @@
             variant="link"
             v-b-tooltip.hover
             :title="`My existing Contracts with ${api.apititle}`"
-
             v-if="isMineApi"
             :class="{'active': isContractsTableVisible}"
           >
             <span>Contracts</span>
-            <b-badge pill>{{ computedApiContracts.length }}</b-badge>
+            <b-badge pill>{{ apiContracts.length }}</b-badge>
           </b-button>
         </div>
         <div v-if="isLicensesTableVisible">
           <Licenses
             :rows="api.availablelicenses"
-            :licenseIdFromStore="this.licensesMain.licenseId"
+            :licenseIdFromStore="selectedLicenseId"
             routePath="/app/explore/"
             :showSelectLicense="true"
           ></Licenses>
         </div>
         <div v-if="isContractsTableVisible">
           <Contracts
-            :rows="computedApiContracts"
+            :rows="apiContracts"
             v-if="apiContracts.length > 0"
             routePath="/app/explore/"
             :isMineApi="isMineApi"
             :onNeedsRefreshData="getApiContracts"
           ></Contracts>
         </div>
+        <!-- <pre>{{api.resources}}</pre> -->
         <b-alert class="alert-vivid alert-t-r" v-model="showSelectLicenseAlert" variant="warning" dismissible>Please select a license!</b-alert>
+        <b-alert class="alert-vivid alert-t-r" v-model="showEnvironmenteAlert" variant="warning" dismissible>Please select an APP with the same environment of selected API</b-alert>
         <b-alert class="alert-vivid alert-t-r" v-model="showSubscribedAlert" variant="success" dismissible>Subscribed to {{ api.apititle }}</b-alert>
       </div>
     </template>
     <template slot="footer">
-      <b-button
-        variant="secondary"
-        @click="onClose"
-      >
+      <b-button variant="secondary" @click="onClose">
         Close
       </b-button>
     </template>
   </Modal>
 </template>
 <script>
-import moment from 'moment-timezone';
 import { mapState } from 'vuex';
 import api from '@/api';
 import Modal from '@/components/shared/modals/Modal';
@@ -181,54 +168,29 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
-      users: state => state.users.items,
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      licenses: state => state.licenses.items,
-      licensesMain: state => state.licenses,
+      selectedLicenseId: state => state.licenses.licenseId,
       apps: state => state.userApps.items,
       apis: state => state.exploreApis.items,
-      contractStates: state => state.contractStates.items,
-      resourceTypes: state => state.resourceTypes.items,
-      resources: state => state.resources.items,
-      resourceActions: state => state.resourceActions.items,
-      subjectApps: state => state.subjectApps.items,
-      userAppMemberships: state => state.subjectMemberships.userApp,
     }),
     isMineApi() {
       return this.currentUser.uuid === this.api.subjectid;
     },
-    computedApiContracts() {
-      const { apiContracts, contractStates } = this;
-      const { apis, userAppMemberships } = this;
-      // const { rootPath } = this.currentPage;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
-      const getUserFromApi = (apiId) => {
-        const theApi = apis.find(item => item.uuid === apiId) || {};
-        return theApi.subjectid || apiId;
-      };
-      const getUserFromApp = (appId) => {
-        const app = userAppMemberships.find(item => item.subjectgroupid === appId) || {};
-        return app.subjectid || appId;
-      };
-      return apiContracts
-        .map(contract => ({
-          ...contract,
-          contractstatename: getContractStateName(contract.contractstateid),
-          userIdFromApi: getUserFromApi(contract.apiid),
-          userIdFromApp: getUserFromApp(contract.subjectid),
-        }));
-        // .filter((item) => {
-        //   if (rootPath === 'explore') {
-        //     return item.userIdFromApi === currentUser.props.uuid ||
-        //     item.userIdFromApp === currentUser.props.uuid; // eslint-disable-line
-        //   }
-        //   return true;
-        // });
+    selectedApp() {
+      return this.apps.find(item => item.uuid === this.selectedAppId);
+    },
+    appIdState() {
+      return this.selectedAppId !== null &&
+      this.selectedApp.issandbox === this.api.issandbox;
+    },
+    appIdInvalidFeedback() {
+      if (this.selectedAppId === null) {
+        return 'Please select an APP';
+      } else if (this.selectedApp.issandbox !== this.api.issandbox) {
+        return 'Please select an APP with the same environment of selected API';
+      }
+      return '';
     },
   },
   props: {
@@ -277,11 +239,15 @@ export default {
       isContractsTableVisible: false,
       showSubscribedAlert: false,
       showSelectLicenseAlert: false,
+      showEnvironmenteAlert: false,
       apiContracts: [],
-      form: {
-        appId: null,
-      },
+      selectedAppId: null,
     };
+  },
+  mounted() {
+    if (this.isMineApi) {
+      this.getApiContracts();
+    }
   },
   methods: {
     getApiStateName(apistateid) {
@@ -303,52 +269,90 @@ export default {
       this.isContractsTableVisible = !this.isContractsTableVisible;
     },
     getEnvironment(item) {
-      return item.islive ? 'Live' : 'Sandbox';
+      // return item.islive ? 'Live' : 'Sandbox';
+      return item.issandbox ? 'Sandbox' : 'Live';
     },
     getApiContracts() {
-      if (this.isMineApi) {
-        api.getApiContracts(this.api.uuid)
-        .then((response) => {
-          if (response && response.data) {
-            this.apiContracts = response.data;
-          }
-        })
-        .catch((error) => {
-          if (error.status === 404) {
-            this.apiContracts = [];
+      api.getApiContracts(this.api.uuid)
+      .then((response) => {
+        if (response && response.data) {
+          this.apiContracts = response.data;
+        }
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.apiContracts = [];
+        }
+      });
+    },
+    handleSubscribe(evt) {
+      evt.preventDefault();
+      const { selectedApp, selectedAppId, selectedLicenseId, onClose } = this;
+      if (!selectedLicenseId) {
+        this.showSelectLicenseAlert = true;
+        setTimeout(() => {
+          this.showSelectLicenseAlert = false;
+        }, 3000);
+      } else if (selectedApp.issandbox !== this.api.issandbox) {
+        this.showEnvironmenteAlert = true;
+        setTimeout(() => {
+          this.showEnvironmenteAlert = false;
+        }, 3000);
+      } else {
+        const selectedLicense = this.api.availablelicenses.find(item =>
+          item.uuid === selectedLicenseId);
+        const subscription = [
+          {
+            contractname: `CONTRACT of ${selectedApp.displayname} APP with ${this.api.apititle} API`,
+            contractdescription: `CONTRACT of ${selectedApp.displayname} APP with ${this.api.apititle} API with ${selectedLicense.name} LICENSE`,
+            apiid: this.api.uuid,
+            resourceidofapi: this.api.resources[0].uuid,
+            appid: selectedAppId,
+            environment: 'LIVE',
+            licenseid: selectedLicenseId,
+          },
+        ];
+        api.subscribeToApi(subscription).then((response) => {
+          // if (response && response.data && response.data.length > 0) {
+          if (response) {
+            console.log('response.data: ', response.data); // eslint-disable-line
+            this.isLicensesTableVisible = false;
+            this.isContractsTableVisible = false;
+            this.$store.commit('licenses/setLicenseId', null);
+            this.showSubscribedAlert = true;
+            setTimeout(() => {
+              this.showSubscribedAlert = false;
+              this.$store.dispatch('exploreApis/getExploreApis', {
+                refresh: true,
+              });
+              this.$store.dispatch('userApps/getApps', {
+                uuid: this.currentUser.uuid,
+                refresh: true,
+              });
+              onClose();
+            }, 3000);
           }
         });
       }
     },
-    handleSubscribe(evt) {
+    handleSubscribeOld(evt) {
       evt.preventDefault();
-      const accessmanagerid = '6223ebbe-b30f-4976-bcf9-364003142379'; // from config.js
-      const effectivestartdate = new Date();
-      const effectiveenddate = new Date(effectivestartdate);
-      effectiveenddate.setFullYear(effectivestartdate.getFullYear() + 1);
       const { organizationid, uuid } = this.currentUser;
-      const { appId } = this.form;
-      const { licenseId } = this.licensesMain;
-      const { apiId } = this.$route.params;
-      const { apps, apis, resources } = this;
-      const licenseApp = apps.find(item => item.uuid === appId);
-      const licenseApi = apis.find(item => item.uuid === apiId);
-      const contractstateid = '846282ec-1329-4a3c-908b-672b4de3ade2'; // activated
-      const resourceactionid = 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8'; // CONSUME_API
-      const resource = resources.find(item => item.resourcerefid === licenseApi.uuid);
+      const { selectedApp, selectedAppId, selectedLicenseId } = this;
+      const resource = this.api.resources[0];
       // permission to post
       const permission = {
-        accessmanagerid,
+        accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379',
         crudsubjectid: uuid,
-        description: `Subscription of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
-        effectiveenddate: moment(effectiveenddate),
-        effectivestartdate: moment(effectivestartdate),
+        description: `Subscription of ${selectedApp.displayname} App with ${this.api.apititle} API`,
+        effectivestartdate: this.$moment.utc().toISOString(),
+        effectiveenddate: this.$moment.utc().add(1, 'years').toISOString(),
         isactive: true,
         organizationid,
-        permission: `Subscription of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
-        resourceactionid,
+        permission: `Subscription of ${selectedApp.displayname} App with ${this.api.apititle} API`,
+        resourceactionid: 'c5639f00-94c9-4cc9-8ad9-df76f9d162a8', // CONSUME_API,
         resourceid: resource.uuid,
-        subjectid: licenseApp.uuid,
+        subjectid: selectedApp.uuid,
       };
       // accessToken to post
       const accessToken = {
@@ -361,21 +365,31 @@ export default {
       };
       // contract to post
       const contract = {
-        apiid: apiId,
-        contractstateid,
+        apiid: this.api.uuid,
+        contractstateid: '846282ec-1329-4a3c-908b-672b4de3ade2', // activated
         crudsubjectid: uuid,
-        description: `Contract of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
+        description: `Contract of ${selectedApp.displayname} App with ${this.api.apititle} API`,
         environment: 'LIVE',
         isrestrictedtosubsetofapi: false,
-        licenseid: licenseId,
-        name: `Contract of ${licenseApp.displayname} App with ${licenseApi.apititle} API`,
+        licenseid: selectedLicenseId,
+        name: `Contract of ${selectedApp.displayname} App with ${this.api.apititle} API`,
         organizationid,
         status: 'inforce',
-        subjectid: appId,
+        subjectid: selectedAppId,
         subjectpermissionid: null,
       };
       // POST permission
-      if (licenseId) {
+      if (!selectedLicenseId) {
+        this.showSelectLicenseAlert = true;
+        setTimeout(() => {
+          this.showSelectLicenseAlert = false;
+        }, 3000);
+      } else if (selectedApp.issandbox !== this.api.issandbox) {
+        this.showEnvironmenteAlert = true;
+        setTimeout(() => {
+          this.showEnvironmenteAlert = false;
+        }, 3000);
+      } else {
         api.postPermissions([permission])
         .then((response) => {
           if (response && response.data && response.data.length > 0) {
@@ -404,34 +418,14 @@ export default {
             });
           }
         });
-      } else {
-        this.showSelectLicenseAlert = true;
-        setTimeout(() => {
-          this.showSelectLicenseAlert = false;
-        }, 3000);
       }
     },
-  },
-  mounted() {
-    const apiLicensesIds = this.api.availablelicenses.map(item => item.uuid);
-    this.getApiContracts(apiLicensesIds);
   },
 };
 </script>
 
 <style lang="scss">
-.licenses-container {
-  border: 1px solid silver;
-  border-radius: .3rem;
-  margin: 1rem 0;
-
-  .licenses-header-container {
-    padding: .5rem 1rem;
-  }
-
-  .licenses-content-container {
-    border-top: 1px solid silver;
-    padding: 1rem;
-  }
+dt {
+  font-size: 0.85rem;
 }
 </style>

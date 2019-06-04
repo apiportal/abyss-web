@@ -113,9 +113,6 @@ export default {
       filterKey: '',
       collapsedRows: [],
       itemsPerPage: 20,
-      subscriptions: {
-        lastUpdated: 0,
-      },
     };
   },
   methods: {
@@ -131,6 +128,9 @@ export default {
         refresh: true,
       });
     },
+  },
+  created() {
+    this.$store.commit('currentPage/setFirstChildPath', 'my-contracts');
   },
 };
 </script>

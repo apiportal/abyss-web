@@ -140,8 +140,8 @@ import DeleteMyPolicy from '@/components/routes/myPolicies/DeleteMyPolicy';
 // My Contracts
 import MyContracts from '@/components/routes/myContracts/MyContracts';
 import SubjectContracts from '@/components/routes/myContracts/subjectContracts/SubjectContracts';
-import MyApiContracts from '@/components/routes/myContracts/MyApiContracts';
-import MyAppContracts from '@/components/routes/myContracts/MyAppContracts';
+import MyApiContracts from '@/components/routes/myContracts/subjectContracts/SubjectApiContracts';
+import MyAppContracts from '@/components/routes/myContracts/subjectContracts/SubjectAppContracts';
 // Explore
 import Explore from '@/components/routes/explore/Explore';
 import ExploreModal from '@/components/routes/explore/ExploreApis';
@@ -156,6 +156,7 @@ import EditOrganizationUser from '@/components/routes/organizations/EditOrganiza
 import EditOrganizationUserGroups from '@/components/routes/organizations/EditOrganizationUserGroups';
 import EditOrganizationUserOrganizations from '@/components/routes/organizations/EditOrganizationUserOrganizations';
 import EditOrganizationUsers from '@/components/routes/organizations/EditOrganizationUsers';
+import xxx from '@/components/routes/myApis/api/Api';
 
 Vue.use(Router);
 
@@ -164,10 +165,15 @@ export default new Router({
     {
       path: '/',
       component: Home,
+      redirect: '/app/explore',
     },
     {
       path: '/test/:apiId',
       component: EditMyApis,
+    },
+    {
+      path: '/xxx',
+      component: xxx,
     },
     {
       path: '/auth',
@@ -709,16 +715,34 @@ export default new Router({
             {
               path: 'my-contracts/:page',
               component: SubjectContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
+            },
+            {
+              path: 'api-contracts/:page',
+              component: MyApiContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
+            },
+            {
+              path: 'app-contracts/:page',
+              component: MyAppContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
             },
           ],
-        },
-        {
-          path: 'api-contracts/:page',
-          component: MyApiContracts,
-        },
-        {
-          path: 'app-contracts/:page',
-          component: MyAppContracts,
         },
         {
           path: 'organizations/:page',

@@ -15,16 +15,6 @@
               data-qa="tableHeadName"
             />
           </th>
-          <!-- <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
-            />
-          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -93,15 +83,12 @@
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.openapidocument.info.title }}
           </td>
-          <!-- <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ environment(item) }}
-          </td> -->
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             <Icon icon="circle" :class="`state${item.apistatename}`"/>
-            {{ item.apistatename }} - {{ environment(item) }}
+            {{ item.apistatename }} - {{ item.environment }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.apivisibilityname }}
@@ -109,7 +96,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.numberofproxies }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions">
@@ -211,6 +198,7 @@ export default {
             apistatename: getApiStateName(item.apistateid),
             apivisibilityname: getApiVisibilityName(item.apivisibilityid),
             numberofproxies: getNumberOfProxies(item.uuid),
+            environment: item.islive ? 'Live' : 'Sandbox',
           })),
         sortByKey,
         sortByKeyType,
@@ -244,9 +232,6 @@ export default {
     };
   },
   methods: {
-    environment(item) {
-      return item.islive ? 'Live' : 'Sandbox';
-    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -260,6 +245,10 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+  },
+  mounted() {
+    this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
   },
 };
 </script>

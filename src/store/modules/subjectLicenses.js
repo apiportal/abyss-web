@@ -30,7 +30,6 @@ const actions = {
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;
     }
-    // api.getSubjectLicenses(uuid)
     api.getSubjectLicensesCascaded(uuid)
     .then((response) => {
       if (response && response.data) {
@@ -56,7 +55,6 @@ const actions = {
     });
   },
   postLicenses: ({ commit }, license) => {
-    // return api.postLicenses(license).then((response) => {
     return api.postSubjectLicensesCascaded(license.crudsubjectid, license).then((response) => {
       let error = false;
 

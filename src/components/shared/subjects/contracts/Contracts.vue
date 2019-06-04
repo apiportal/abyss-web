@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <TbodyCollapsible
-        v-for="(item, index) in rows" v-bind:key="index"
+        v-for="(item, index) in tableRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
@@ -34,18 +34,18 @@
               </template>
 
               <b-dropdown-item
-                v-if="isMineApi"
-                @click="() => handleDeleteContract(item.uuid)"
+                @click="() => handleUnsubscribe(item.uuid)"
                 data-qa="btnUnsubscribe"
               >
-                Unsubscribe
+                <span v-if="isMineApi">Terminate Subscription</span>
+                <span v-else>Unsubscribe</span>
               </b-dropdown-item>
 
-              <b-dropdown-header v-if="isMineApi">LOGS</b-dropdown-header>
+              <b-dropdown-header v-if="currentPage.rootPath === 'my-contracts'">LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="isMineApi">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/contract/1`" v-if="currentPage.rootPath === 'my-contracts'">All</b-dropdown-item>
 
-              <b-dropdown-header v-if="isMineApi"><code>{{ item.uuid }}</code></b-dropdown-header>
+              <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Contract from '@/components/shared/subjects/contracts/Contract';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
@@ -105,6 +106,23 @@ export default {
       collapsedRows: [],
     };
   },
+  computed: {
+    ...mapState({
+      contractStates: state => state.contractStates.items,
+      currentPage: state => state.currentPage,
+    }),
+    tableRows() {
+      const { rows, contractStates } = this;
+      const getContractStateName = (id) => {
+        const contractState = contractStates.find(item => item.uuid === id);
+        return contractState ? contractState.name : id;
+      };
+      return rows.map(item => ({
+        ...item,
+        contractstatename: getContractStateName(item.contractstateid),
+      }));
+    },
+  },
   methods: {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
@@ -114,8 +132,8 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    handleDeleteContract(uuid) {
-      api.deleteContract(uuid).then(() => {
+    handleUnsubscribe(uuid) {
+      api.unsubscribeFromApi(uuid).then(() => {
         this.onNeedsRefreshData();
       });
     },
@@ -139,6 +157,9 @@ export default {
       }
       return '';
     },
+  },
+  created() {
+    this.$store.dispatch('contractStates/getContractStates', {});
   },
 };
 </script>

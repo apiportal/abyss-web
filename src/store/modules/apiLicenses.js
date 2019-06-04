@@ -25,14 +25,14 @@ const state = {
 const getters = {};
 
 const actions = {
-  getApiLicensesRefs: ({ commit }) => {
-  // getApiLicensesRefs: ({ rootState, commit }) => {
+  // getApiLicensesRefs: ({ commit }) => {
+  getApiLicensesRefs: ({ rootState, commit }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 ) {
       return false;
     }
-    api.getApiLicensesRefs()
-    // api.getApiLicensesRefsByUuid(rootState.user.uuid)
+    // api.getApiLicensesRefs()
+    api.getApiLicensesRefsUser(rootState.user.uuid)
     .then((response) => {
       if (response && response.data) {
         commit('setApiLicensesRefs', response.data);

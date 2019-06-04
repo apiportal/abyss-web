@@ -80,9 +80,6 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       businessApis: state => state.businessApis.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      proxies: state => state.proxies.items,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, businessApis } = this;

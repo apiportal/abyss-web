@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <Pictures :uuid="organization.uuid" :altText="organization.name" :color="organization.color" type="organizations" shape="rectangle" width="200px"></Pictures>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="organization.uuid" :altText="organization.name" type="organizations" shape="rectangle" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>Organization Name:</dt>
@@ -130,6 +130,7 @@ export default {
       apis: state => state.apis.items,
       // organizations: state => state.organizations.items,
       subjectOrganizations: state => state.subjectOrganizations.items,
+      itemsLastUpdatedAt: state => state.organizations.lastUpdatedAt,
     }),
     // organizationGroups() {
     //   const { groups, organization } = this;

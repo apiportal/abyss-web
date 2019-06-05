@@ -78,7 +78,7 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td class="picture">
-            <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="circle" width="35px"></Pictures>
+            <Images :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.openapidocument.info.title }}
@@ -143,7 +143,7 @@ import TBodyLoading from '@/components/shared/TBodyLoading';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
-import Pictures from '@/components/shared/Pictures';
+import Images from '@/components/shared/Images';
 
 export default {
   name: 'Apis',
@@ -175,6 +175,7 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
+      itemsLastUpdatedAt: state => state.apis.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows,
@@ -221,7 +222,7 @@ export default {
     TBodyLoading,
     Icon,
     SortBy,
-    Pictures,
+    Images,
   },
   data() {
     return {

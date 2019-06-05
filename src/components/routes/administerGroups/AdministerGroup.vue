@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <Pictures :uuid="group.uuid" :altText="group.displayname" :color="group.color" type="subjects" shape="rectangle" width="200px"></Pictures>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="group.uuid" :altText="group.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>Group Name:</dt>
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
@@ -97,7 +98,11 @@ export default {
       default() { return []; },
     },
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
+    }),
+  },
   data() {
     return {
       isShowGroupUsers: false,

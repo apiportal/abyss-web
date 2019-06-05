@@ -1,9 +1,9 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt style="width: 260px;" class="pb-2">
-          <Pictures :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="rectangle" width="200px"></Pictures>
+      <dl class="col-auto pb-3">
+        <dt style="width: 260px;">
+          <Images :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
         </dt>
       </dl>
       <dl class="col">
@@ -100,7 +100,7 @@ import { mapState } from 'vuex';
 import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
-import Pictures from '@/components/shared/Pictures';
+import Images from '@/components/shared/Images';
 
 export default {
   computed: {
@@ -108,6 +108,7 @@ export default {
       currentUser: state => state.user,
       businessApis: state => state.businessApis.items,
       organizations: state => state.organizations.items,
+      itemsLastUpdatedAt: state => state.proxies.lastUpdatedAt,
     }),
     // computedBusinessApi() {
     //   return this.businessApis.filter(item =>
@@ -126,7 +127,7 @@ export default {
   components: {
     TbodyCollapsible,
     Icon,
-    Pictures,
+    Images,
     Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
     Apis: () => import('@/components/shared/subjects/apis/Apis'),

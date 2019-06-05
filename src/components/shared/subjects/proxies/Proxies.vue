@@ -101,7 +101,7 @@
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
           <td class="picture">
-            <Pictures :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="circle" width="35px"></Pictures>
+            <Images :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.apititle }}
@@ -181,7 +181,7 @@ import Icon from '@/components/shared/Icon';
 import Proxy from '@/components/shared/subjects/proxies/Proxy';
 import SortBy from '@/components/shared/SortBy';
 import Helpers from '@/helpers';
-import Pictures from '@/components/shared/Pictures';
+import Images from '@/components/shared/Images';
 
 export default {
   props: {
@@ -218,6 +218,7 @@ export default {
       contracts: state => state.userContracts.userApiContracts,
       apiLicenses: state => state.apiLicenses.items,
       isUsersLoaded: state => state.users.lastUpdatedAt,
+      itemsLastUpdatedAt: state => state.proxies.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows, users,
@@ -288,7 +289,7 @@ export default {
     Icon,
     SortBy,
     Proxy,
-    Pictures,
+    Images,
   },
   data() {
     return {

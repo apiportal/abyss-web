@@ -13,7 +13,7 @@
       <div v-if="api">
         <b-row>
           <b-col md="3">
-            <Images :uuid="api.uuid" :itext="api.apititle" :color="api.color" type="apis" shape="rectangle"></Images>
+            <Images :uuid="api.uuid" :altText="api.apititle" :color="api.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
             <div class="border mb-4 shadow-sm">
               <div class="p-3">
                 <b-form @submit="handleSubscribe">
@@ -173,6 +173,7 @@ export default {
       selectedLicenseId: state => state.licenses.licenseId,
       apps: state => state.userApps.items,
       apis: state => state.exploreApis.items,
+      itemsLastUpdatedAt: state => state.exploreApis.lastUpdatedAt,
     }),
     isMineApi() {
       return this.currentUser.uuid === this.api.subjectid;

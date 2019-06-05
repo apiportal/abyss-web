@@ -55,6 +55,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
+            <th></th>
             <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -65,7 +66,6 @@
                 sortByKeyType="boolean"
               />
             </th>
-            <th></th>
             <th>
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -110,14 +110,14 @@
           :data-qa="`tableRow-${index}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="picture">
+              <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="circle" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
+            </td>
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'"
                 :class="item.isactivated ? 'text-success' : 'text-danger'"
               />
-            </td>
-            <td class="picture">
-              <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
             </td>
             <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
               {{ item.displayname }}
@@ -214,6 +214,7 @@ export default {
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
       userGroupMemberships: state => state.subjectMemberships.userGroup,
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
     }),
     computedOrganizations() {
       const { subjectOrganizations, currentUser } = this;

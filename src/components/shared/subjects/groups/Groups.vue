@@ -3,6 +3,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
+            <th></th>
             <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -57,6 +58,9 @@
           :data-qa="`tableRow-${index}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="picture">
+              <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="circle" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
+            </td>
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'"
@@ -118,6 +122,7 @@ import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Group from '@/components/shared/subjects/groups/Group';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   components: {
@@ -127,6 +132,7 @@ export default {
     TbodyCollapsible,
     TBodyLoading,
     Group,
+    Pictures,
   },
   props: {
     rows: {
@@ -152,6 +158,7 @@ export default {
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
       userGroupMemberships: state => state.subjectMemberships.userGroup,
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
     }),
     tableRows() {
       const { subjectDirectories, organizations, rows, users } = this;

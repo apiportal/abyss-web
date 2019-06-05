@@ -11,8 +11,7 @@
             <template slot="button-content">
               <div class="d-flex align-items-center" data-qa="navbarUser">
                 <span v-if="user.props">{{ user.props.displayname }}</span>
-                <img  v-if="user.props.picture" :src="user.props.picture" class="bg-cover bg-secondary rounded-circle avatar" />
-                <img  v-if="!user.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" />
+                <Pictures :uuid="user.uuid" :altText="user.props.displayname" type="subjects" shape="circle ml-2" width="44px" height="44px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
               </div>
             </template>
             <b-dropdown-item to="/app/my-profile/" data-qa="navbarMyProfile">
@@ -40,15 +39,18 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   name: 'app-header',
   components: {
     Icon,
+    Pictures,
   },
   computed: {
     ...mapState({
       user: state => state.user,
+      itemsLastUpdatedAt: state => state.user.lastUpdatedAt,
     }),
   },
   methods: {

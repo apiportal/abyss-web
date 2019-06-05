@@ -21,7 +21,7 @@
       >
         <div style="padding: 1rem;">
           <b-row align-v="center">
-            <b-col md=9>
+            <b-col>
               <b-form-group
                 id="firstNameGroup"
                 label="First Name*:"
@@ -57,31 +57,27 @@
                 </b-form-input>
               </b-form-group>
             </b-col>
-            <b-col md=3>
-              <div class="d-flex">
-                <div class="p-0">
-                  <img
-                    v-if="userEditable.picture"
-                    :src="userEditable.picture"
-                    :alt="userEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 175px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  />
-                  <img
-                    v-if="!userEditable.picture"
-                    src="@/assets/avatar.jpg"
-                    :alt="userEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 175px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  />
-                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*" />
-                </div>
+            <b-col cols="auto">
+              <div class="thumb-picture square bg-secondary" style="width: 200px;">
+                <img
+                  v-if="userEditable.picture"
+                  :src="userEditable.picture"
+                  :alt="userEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                />
+                <img
+                  v-if="!userEditable.picture"
+                  src="/static/avatar.png"
+                  :alt="userEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                />
+                <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*" />
               </div>
             </b-col>
           </b-row>

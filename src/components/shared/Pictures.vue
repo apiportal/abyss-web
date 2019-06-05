@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <img :src="`${pictureUrl}/${type}/image/${uuid}`" :alt="altText" class="thumb-picture" :class="shape" :width="width" height="auto">
+  <div class="thumb-picture" :class="shape" :style="`width: ${width}; height: ${height}`">
+    <img v-if="isLoaded" :src="imageSrc" :alt="altText">
+    <img v-else src="/static/avatar.png" :alt="altText">
   </div>
 </template>
 
@@ -42,20 +43,39 @@ export default {
     width: {
       type: String,
       required: false,
-      default() { return ''; },
+      default() { return 'auto'; },
+    },
+    height: {
+      type: String,
+      required: false,
+      default() { return 'auto'; },
+    },
+    lastUpdatedAt: {
+      type: Number,
+      required: false,
     },
   },
   data() {
     return {
-      image: null,
+      isLoaded: false,
     };
   },
   computed: {
     ...mapState({
       pictureUrl: state => state.traffic.pictureUrl,
     }),
+    imageSrc() {
+      return `${this.pictureUrl}/${this.type}/image/${this.uuid}?bust=${this.lastUpdatedAt}`;
+    },
   },
   created() {
+    const img = new Image();
+    img.src = this.imageSrc;
+    img.onload = () => {
+      if (img) {
+        this.isLoaded = true;
+      }
+    };
   },
 };
 </script>
@@ -64,16 +84,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  background-color: #177ec1;
+  // color: #fff;
+  // background-color: #177ec1;
+  // background-color: #999;
   position: relative;
   padding: 0;
   overflow: hidden;
-  // &::before {
-  //   display: block;
-  //   content: "";
-  //   padding-top: 56.25%;
-  // }
+  // border: 1px solid Gainsboro;
+  &::before {
+    display: block;
+    content: "";
+    padding-top: 56.25%;
+  }
   &.rectangle::before {
     padding-top: 56.25%;
   }
@@ -85,6 +107,10 @@ export default {
     &::before {
       padding-top: 100%;
     }
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
   }
 }
 .thumb-txt {

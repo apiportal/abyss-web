@@ -21,7 +21,7 @@
       >
         <div style="padding: 1rem;">
           <b-row align-v="center">
-            <b-col md="8">
+            <b-col>
               <b-form-group
                 id="appNameGroup"
                 label="App Name*:"
@@ -56,30 +56,26 @@
                 </b-form-textarea>
               </b-form-group>
             </b-col>
-            <b-col md="4">
-              <div class="d-flex justify-content-center">
-                <div class="item p-0">
-                  <img
-                    v-if="appEditable.picture"
-                    :src="appEditable.picture"
-                    :alt="appEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 200px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  >
-                  <img
-                    v-if="!appEditable.picture"
-                    src="@/assets/avatar.jpg"
-                    :alt="appEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 200px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()" />
-                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
-                </div>
+            <b-col cols="auto">
+              <div class="thumb-picture square bg-secondary" style="width: 200px;">
+                <img
+                  v-if="appEditable.picture"
+                  :src="appEditable.picture"
+                  :alt="appEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                >
+                <img
+                  v-if="!appEditable.picture"
+                  src="/static/avatar.png"
+                  :alt="appEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()" />
+                <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
               </div>
             </b-col>
           </b-row>

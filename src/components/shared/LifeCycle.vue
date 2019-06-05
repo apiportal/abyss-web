@@ -1,21 +1,23 @@
 <template>
   <div class="life-cycle">
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Draft')" @click="changeState('Draft')" @mouseover="showInfo('Draft')">Draft</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Staged')" @click="changeState('Staged')" @mouseover="showInfo('Staged')">Staged</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Published')" @click="changeState('Published')" @mouseover="showInfo('Published')">Published</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Promoted')" @click="changeState('Promoted')" @mouseover="showInfo('Promoted')">Promoted</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Deprecated')" @click="changeState('Deprecated')" @mouseover="showInfo('Deprecated')">Deprecated</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Retired')" @click="changeState('Retired')" @mouseover="showInfo('Retired')">Retired</b-button>
-    <b-button class="btn-life-cycle" :variant="buttonStatus('Archived')" @click="changeState('Archived')" @mouseover="showInfo('Archived')">Archived</b-button>
+    <div class="d-flex flex-wrap p-2 border-bottom">
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Draft')" @click="changeState('Draft')" @mouseover="showInfo('Draft')">Draft</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Staged')" @click="changeState('Staged')" @mouseover="showInfo('Staged')">Staged</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Published')" @click="changeState('Published')" @mouseover="showInfo('Published')">Published</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Promoted')" @click="changeState('Promoted')" @mouseover="showInfo('Promoted')">Promoted</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Demoted')" @click="changeState('Demoted')" @mouseover="showInfo('Demoted')">Demoted</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Deprecated')" @click="changeState('Deprecated')" @mouseover="showInfo('Deprecated')">Deprecated</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Retired')" @click="changeState('Retired')" @mouseover="showInfo('Retired')">Retired</b-button>
+      <b-button class="btn-life-cycle" :variant="buttonStatus('Archived')" @click="changeState('Archived')" @mouseover="showInfo('Archived')">Archived</b-button>
+    </div>
 
     <b-alert class="state-description" show variant="light">
-      <span class="info-header">{{ infoText.name }}</span>
-      <hr/>{{ infoText.description + '.' }}
+      <h6>{{ infoText.name }}</h6>
+      {{ infoText.description + '.' }}
     </b-alert>
-    <div class="state-status">
-        <span class="active-state">Current State : {{ currentApiState.name }}</span>
-        <span class="target-state">Next State : {{ nextApiState.name }}</span>
+    <div class="p-3 border-top">
+        <span class="px-3 active-state">Current State : {{ currentApiState.name }}</span>
+        <span class="px-3 target-state">Next State : {{ nextApiState.name }}</span>
     </div>
   </div>
 </template>
@@ -68,18 +70,15 @@ export default {
 
 <style lang="scss" scoped>
 .life-cycle {
-  text-align: justify;
+  // padding: 1rem;
 }
 .btn-life-cycle {
   width: 110px;
   margin: 5px 5px;
 }
-.info-header {
-  font-weight: bold;
-}
 .state-description {
   margin-top: 10px;
-  height: 200px;
+  height: 160px;
 }
 .state-status {
   margin: 0 0 10px 20px;

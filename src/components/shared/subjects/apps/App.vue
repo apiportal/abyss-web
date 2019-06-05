@@ -1,10 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="pb-2">
-          <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="rectangle" width="200px"></Pictures>
-        </dt>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>App Name:</dt>
@@ -94,6 +92,7 @@ export default {
       contractStates: state => state.contractStates.items,
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
+      itemsLastUpdatedAt: state => state.userApps.lastUpdatedAt,
     }),
   },
   data() {

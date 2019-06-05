@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col">
-          <Pictures :uuid="user.uuid" :altText="user.displayname" :color="user.color" type="subjects" shape="rectangle" width="200px"></Pictures>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="user.uuid" :altText="user.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
 
       <dl class="col">
@@ -140,6 +140,7 @@ export default {
       users: state => state.users.items,
       groups: state => state.groups.items,
       roles: state => state.roles.items,
+      itemsLastUpdatedAt: state => state.users.lastUpdatedAt,
     }),
     secondaryEmail() {
       const { email, secondaryemail } = this.user;

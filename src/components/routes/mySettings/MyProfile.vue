@@ -2,11 +2,11 @@
 <div>
   <nav class="navbar page-navbar d-flex justify-content-between">
     <div class="d-flex">
-      <div v-if="pictureEditable.props.picture" class="position-relative">
+      <div v-if="userEditable.props.picture" class="position-relative">
         <span class="notify-badge" @click="handleDeleteImage" ><Icon icon="times"/></span>
-        <img :src="pictureEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+        <img v-if="userEditable.props.picture" :src="userEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       </div>
-      <img  v-if="!pictureEditable.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <img v-if="!userEditable.props.picture" src="/static/avatar.png" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
       <div class="d-flex align-items-center px-4">
         <dl class="m-0">
@@ -267,19 +267,16 @@ export default {
         newpassword: '',
         confirmpassword: '',
       },
-      // userEditable: JSON.parse(JSON.stringify(user)),
+      userEditable: JSON.parse(JSON.stringify(this.$store.state.user)),
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
     }),
-    userEditable() {
-      return JSON.parse(JSON.stringify(this.user));
-    },
-    pictureEditable() {
-      return JSON.parse(JSON.stringify(this.user));
-    },
+    // userEditable() {
+    //   return JSON.parse(JSON.stringify(this.user));
+    // },
   },
   methods: {
     ...mapActions('users', ['putUsers']),
@@ -312,79 +309,22 @@ export default {
           this.$store.commit('user/setUserProps', response.data[0]);
         }
       })
-        .catch((err) => {
-          console.error('Error Message >>> ', err); // eslint-disable-line no-console
-        });
+      .catch((err) => {
+        console.error('Error Message >>> ', err); // eslint-disable-line no-console
+      });
     },
     onFileSelected(event) {
+      event.preventDefault();
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.pictureEditable.props.picture = reader.result;
-        console.log(this.pictureEditable.props.picture); // eslint-disable-line no-console
-        const {
-        description, url, effectiveenddate, secondaryemail, email,
-        picture,
-        distinguishedname, uniqueid, phonebusiness, phoneextension,
-        phonehome, phonemobile, jobtitle, department, company,
-        } = this.pictureEditable.props;
-        api.putUsers({
-          ...this.pictureEditable.props,
-          description: (description === null ? '' : description),
-          url: (url === null ? '' : url),
-          picture: (picture === null ? '' : picture),
-          distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-          uniqueid: (uniqueid === null ? '' : uniqueid),
-          phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-          phoneextension: (phoneextension === null ? '' : phoneextension),
-          phonehome: (phonehome === null ? '' : phonehome),
-          phonemobile: (phonemobile === null ? '' : phonemobile),
-          jobtitle: (jobtitle === null ? '' : jobtitle),
-          department: (department === null ? '' : department),
-          company: (company === null ? '' : company),
-          effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-          secondaryemail: (secondaryemail === null ? email : email),
-        }).then((response) => {
-          if (response && response.data) {
-            this.$store.commit('user/setUserProps', response.data[0]);
-          }
-        })
-          .catch((err) => {
-            console.error('Error Message >>> ', err); // eslint-disable-line no-console
-          });
+        this.userEditable.props.picture = reader.result;
       };
       reader.readAsDataURL(file);
     },
     handleDeleteImage() {
-      const {
-        description, url, effectiveenddate, secondaryemail, email,
-        distinguishedname, uniqueid, phonebusiness, phoneextension,
-        phonehome, phonemobile, jobtitle, department, company,
-        } = this.pictureEditable.props;
-      api.putUsers({
-        ...this.pictureEditable.props,
-        description: (description === null ? '' : description),
-        url: (url === null ? '' : url),
-        picture: (''),
-        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-        uniqueid: (uniqueid === null ? '' : uniqueid),
-        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-        phoneextension: (phoneextension === null ? '' : phoneextension),
-        phonehome: (phonehome === null ? '' : phonehome),
-        phonemobile: (phonemobile === null ? '' : phonemobile),
-        jobtitle: (jobtitle === null ? '' : jobtitle),
-        department: (department === null ? '' : department),
-        company: (company === null ? '' : company),
-        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : email),
-      }).then((response) => {
-        if (response && response.data) {
-          this.$store.commit('user/setUserProps', response.data[0]);
-        }
-      })
-        .catch((err) => {
-          console.error('Error Message >>> ', err); // eslint-disable-line no-console
-        });
+      this.userEditable.props.picture = '';
+      this.$refs.fileInput.value = null;
     },
     sendReferral(e) {
       e.preventDefault();

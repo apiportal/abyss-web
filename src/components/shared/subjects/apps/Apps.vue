@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th class="status">
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -13,7 +14,6 @@
               sortByKeyType="boolean"
             />
           </th>
-          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -57,11 +57,11 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+          <td class="picture">
+            <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="square" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
+          </td>
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon :icon="item.isactivated ? 'check-circle' : 'times-circle'" :class="item.isactivated ? 'text-success' : 'text-danger'" />
-          </td>
-          <td class="picture">
-            <Pictures :uuid="item.uuid" :altText="item.displayname" :color="item.color" type="subjects" shape="circle" width="35px"></Pictures>
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
             {{ item.displayname }}
@@ -143,6 +143,7 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       currentUser: state => state.user,
+      itemsLastUpdatedAt: state => state.userApps.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;

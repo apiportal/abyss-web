@@ -1,9 +1,9 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt style="width: 260px;" class="pb-2">
-          <Pictures :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" width="200px"></Pictures>
+      <dl class="col-auto pb-3">
+        <dt style="width: 260px;">
+          <Images :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
         </dt>
       </dl>
       <dl class="col">
@@ -51,7 +51,7 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import Pictures from '@/components/shared/Pictures';
+import Images from '@/components/shared/Images';
 
 export default {
   name: 'Api',
@@ -68,13 +68,14 @@ export default {
   },
   components: {
     Icon,
-    Pictures,
+    Images,
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({
       currentPage: state => state.currentPage,
       proxies: state => state.proxies.items,
+      itemsLastUpdatedAt: state => state.apis.lastUpdatedAt,
     }),
     apiProxies() {
       const { proxies } = this;

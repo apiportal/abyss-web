@@ -9,7 +9,7 @@
         >
           <b-card @click="handleModalOpen(cardItem.uuid)">
             <div slot="header" class="mb-0">
-              <Images :uuid="cardItem.uuid" :itext="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle"></Images>
+              <Images :uuid="cardItem.uuid" :altText="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
             </div>
             <div class="clearfixx">
               <div class="float-right">
@@ -52,6 +52,7 @@ export default {
       currentUser: state => state.user,
       apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
+      itemsLastUpdatedAt: state => state.exploreApis.lastUpdatedAt,
     }),
     cardItems() {
       const { apis, apiStates } = this;

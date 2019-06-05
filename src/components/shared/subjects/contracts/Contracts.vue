@@ -34,7 +34,7 @@
               </template>
 
               <b-dropdown-item
-                @click="() => handleUnsubscribe(item.uuid)"
+                @click="() => handleUnsubscribe(item.uuid, item.name)"
                 data-qa="btnUnsubscribe"
               >
                 <span v-if="isMineApi">Terminate Subscription</span>
@@ -63,15 +63,23 @@
         </tr>
       </TbodyCollapsible>
     </table>
+    <ConfirmModal
+      v-if="unsubscribeId"
+      title="Are you sure?"
+      :text="`${unsubscribeName} will be deleted. You can't revert your action.`"
+      :onClose="handleModalClose"
+      :onConfirm="handleModalConfirm"
+    />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import Contract from '@/components/shared/subjects/contracts/Contract';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
-import api from '@/api';
+import ConfirmModal from '@/components/shared/modals/ConfirmModal';
 
 export default {
   name: 'Contracts',
@@ -100,10 +108,13 @@ export default {
     Contract,
     TbodyCollapsible,
     Icon,
+    ConfirmModal,
   },
   data() {
     return {
       collapsedRows: [],
+      unsubscribeId: null,
+      unsubscribeName: null,
     };
   },
   computed: {
@@ -132,9 +143,19 @@ export default {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
-    handleUnsubscribe(uuid) {
-      api.unsubscribeFromApi(uuid).then(() => {
+    handleUnsubscribe(uuid, name) {
+      this.unsubscribeId = uuid;
+      this.unsubscribeName = name;
+    },
+    handleModalClose() {
+      this.unsubscribeId = null;
+      this.unsubscribeName = null;
+    },
+    handleModalConfirm() {
+      api.unsubscribeFromApi(this.unsubscribeId).then(() => {
         this.onNeedsRefreshData();
+        this.unsubscribeId = null;
+        this.unsubscribeName = null;
       });
     },
     statusIcon(status) {

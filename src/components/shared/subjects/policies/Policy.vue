@@ -95,6 +95,7 @@
       <Contracts
         :rows="contractsOfPolicy"
         :routePath="routePath"
+        :onNeedsRefreshData="getContractsOfPolicy"
       ></Contracts>
     </div>
     <div v-if="isApisTableVisible && apisOfPolicy.length">

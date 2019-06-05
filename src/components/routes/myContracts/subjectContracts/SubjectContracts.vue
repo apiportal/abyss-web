@@ -31,6 +31,7 @@
         :routePath="`/app/my-contracts/my-contracts/${page}`"
         :itemsPerPage="itemsPerPage"
         :page="page"
+        :onNeedsRefreshData="refreshData"
       />
       <router-view></router-view>
     </div>

@@ -32,6 +32,7 @@
         :isMineApi="false"
         :itemsPerPage="itemsPerPage"
         :page="page"
+        :onNeedsRefreshData="refreshData"
       />
       <router-view></router-view>
     </div>

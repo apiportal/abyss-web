@@ -105,6 +105,7 @@
       <Contracts
         :rows="computedLicenseContracts"
         :routePath="routePath"
+        :onNeedsRefreshData="getLicenseContracts"
       ></Contracts>
     </div>
   </div>

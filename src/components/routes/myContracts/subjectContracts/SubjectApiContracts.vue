@@ -31,6 +31,7 @@
         :routePath="`/app/my-contracts/api-contracts/${page}`"
         :itemsPerPage="itemsPerPage"
         :page="page"
+        :onNeedsRefreshData="refreshData"
       />
       <router-view></router-view>
     </div>

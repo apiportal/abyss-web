@@ -83,6 +83,7 @@
         :rows="item.contracts"
         :routePath="routePath"
         :isMineApi="isMineApi"
+        :onNeedsRefreshData="refreshData"
       ></Contracts>
     </div>
     <div v-if="isBusinessTableVisible && businessApi.length">
@@ -203,6 +204,12 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
+    },
+    refreshData() {
+      this.$store.dispatch('userContracts/getUserApiContracts', {
+        uuid: this.currentUser.uuid,
+        refresh: true,
+      });
     },
   },
   created() {

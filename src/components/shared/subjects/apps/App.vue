@@ -8,7 +8,7 @@
       </dl>
       <dl class="col">
         <dt>App Name:</dt>
-        <dd>{{ item.subjectname }}</dd>
+        <dd>{{ item.displayname }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
         <dt>Organization:</dt>
@@ -53,6 +53,7 @@
         :rows="item.contracts"
         :routePath="routePath"
         :isMineApi="false"
+        :onNeedsRefreshData="refreshData"
       ></Contracts>
     </div>
   </div>
@@ -89,6 +90,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       contractStates: state => state.contractStates.items,
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
@@ -113,6 +115,12 @@ export default {
       const { subjectDirectories } = this;
       const directory = subjectDirectories.find(item => item.uuid === subjectDirectoryId) || {};
       return directory.directoryname || subjectDirectoryId;
+    },
+    refreshData() {
+      this.$store.dispatch('userApps/getApps', {
+        uuid: this.currentUser.uuid,
+        refresh: true,
+      });
     },
   },
 };

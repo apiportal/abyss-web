@@ -107,6 +107,7 @@
             block
           >
             <span v-if='isVersionChanged'><Icon icon="plus" /> Create New Version</span>
+            <span v-else-if="role === 'add'"><Icon icon="plus" /> Create</span>
             <span v-else><Icon icon="save" /> Save</span>
           </b-button>
         </div>
@@ -247,15 +248,26 @@ export default {
       });
     },
     handleEditorChange(newValue) {
-      const { records, recordIndex, mode } = this;
-      const newRecord = {
-        ...records[recordIndex],
-        openapidocument: {
-          ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
-        },
-      };
-      this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
-      this.recordIndex += 1;
+      try {
+        const { records, recordIndex, mode } = this;
+        let newRecord = { // eslint-disable-line
+          ...records[recordIndex],
+          openapidocument: {
+            ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
+          },
+        };
+        this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
+        this.recordIndex += 1;
+        api.validateApi({ spec: newRecord.openapidocument }).then(() => {
+        })
+        .catch((error) => {
+          this.showNotValidAlert = true;
+          this.notValidMessage = JSON.parse(error.data.usermessage);
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
     handleUndo() {
       if (this.recordIndex > 0) {
@@ -267,16 +279,68 @@ export default {
         this.recordIndex += 1;
       }
     },
+    addBusinessApi(item) {
+      const { postBusinessApis, currentUser, postResources, postPermissions } = this;
+      postBusinessApis(item).then((response) => {
+        if (response && response.data) {
+          const createdApi = response.data[0].response;
+          /* // !!! replace after cascade
+          this.showCreatedAlert = true;
+          setTimeout(() => {
+            this.showCreatedAlert = false;
+            this.onClose();
+          }, 3000);
+          // !!! */
+          const resourceApiToAdd = [{
+            organizationid: createdApi.organizationid,
+            crudsubjectid: createdApi.crudsubjectid,
+            resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
+            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API ${createdApi.uuid}`,
+            description: createdApi.openapidocument.info.description,
+            resourcerefid: createdApi.uuid,
+            isactive: true,
+          }];
+          postResources(resourceApiToAdd).then((responseResource) => {
+            if (responseResource && responseResource.data) {
+              const createdResource = responseResource.data[0].response;
+              const permissionToAdd = [{
+                organizationid: createdApi.organizationid,
+                crudsubjectid: createdApi.crudsubjectid,
+                permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                effectivestartdate: this.$moment.utc().toISOString(),
+                effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                subjectid: createdApi.subjectid,
+                resourceid: createdResource.uuid,
+                resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
+                accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                isactive: true,
+              }];
+              postPermissions(permissionToAdd).then((responsePermission) => {
+                if (responsePermission && responsePermission.data) {
+                  this.showCreatedAlert = true;
+                  setTimeout(() => {
+                    this.showCreatedAlert = false;
+                    this.onClose();
+                  }, 3000);
+                }
+              });
+            }
+          });
+          // !!!
+        }
+      });
+    },
     handleSubmit() {
-      const { records, recordIndex,
-        putBusinessApis, putProxies, postProxies, postBusinessApis,
+      const { records, recordIndex, role,
+        putBusinessApis, putProxies, postProxies,
         postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
       const currentApi = records[recordIndex];
       const { openapidocument, businessapiid } = currentApi;
       // VALIDATE API
       api.validateApi({ spec: openapidocument }).then(() => {
-        if (this.isVersionChanged) { // CREATE API
-          const apiToCreate = {
+        if (this.isVersionChanged) { // VERSION CREATE
+          const apiToVersion = {
             ...currentApi,
             version: currentApi.openapidocument.info.version,
             // apioriginid: currentApi.apioriginid,
@@ -284,10 +348,10 @@ export default {
             apiparentid: currentApi.uuid,
             businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
           };
-          const { uuid, created, updated, deleted, isdeleted, ...rest } = apiToCreate;
+          const { uuid, created, updated, deleted, isdeleted, ...restVersion } = apiToVersion;
           if (currentApi.isproxyapi) {
-            postProxies([{
-              ...rest,
+            postProxies([{ // PROXY VERSION CREATE
+              ...restVersion,
             }]).then((response) => {
               if (response && response.data) {
                 const createdProxy = response.data[0].response;
@@ -381,60 +445,12 @@ export default {
                 // !!
               }
             });
-          } else {
-            postBusinessApis([{
-              ...rest,
-            }]).then((response) => {
-              if (response && response.data) {
-                const createdApi = response.data[0].response;
-                /* // !!! replace after cascade
-                this.showCreatedAlert = true;
-                setTimeout(() => {
-                  this.showCreatedAlert = false;
-                  this.onClose();
-                }, 3000);
-                // !!! */
-                const resourceApiToAdd = [{
-                  organizationid: createdApi.organizationid,
-                  crudsubjectid: createdApi.crudsubjectid,
-                  resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
-                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
-                  description: createdApi.openapidocument.info.description,
-                  resourcerefid: createdApi.uuid,
-                  isactive: true,
-                }];
-                postResources(resourceApiToAdd).then((responseResource) => {
-                  if (responseResource && responseResource.data) {
-                    const createdResource = responseResource.data[0].response;
-                    const permissionToAdd = [{
-                      organizationid: createdApi.organizationid,
-                      crudsubjectid: createdApi.crudsubjectid,
-                      permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
-                      description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
-                      effectivestartdate: this.$moment.utc().toISOString(),
-                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
-                      subjectid: createdApi.subjectid,
-                      resourceid: createdResource.uuid,
-                      resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
-                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
-                      isactive: true,
-                    }];
-                    postPermissions(permissionToAdd).then((responsePermission) => {
-                      if (responsePermission && responsePermission.data) {
-                        this.showCreatedAlert = true;
-                        setTimeout(() => {
-                          this.showCreatedAlert = false;
-                          this.onClose();
-                        }, 3000);
-                      }
-                    });
-                  }
-                });
-                // !!!
-              }
-            });
+          } else { // BUSINESS VERSION CREATE
+            this.addBusinessApi([{
+              ...restVersion,
+            }]);
           }
-        } else { // SAVE API
+        } else if (role === 'edit') { // UPDATE API
           const apiToUpdate = {
             ...currentApi,
             version: currentApi.openapidocument.info.version,
@@ -463,6 +479,10 @@ export default {
               }, 3000);
             });
           }
+        } else if (role === 'add') { // CREATE API
+          this.addBusinessApi([{
+            ...currentApi,
+          }]);
         }
       })
       .catch((error) => {

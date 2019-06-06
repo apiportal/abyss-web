@@ -36,7 +36,7 @@
         :pathArray="['openapidocument', 'paths']"
         :onChange="onChange"
         :refs="refs"
-        :securitySchemes="api.openapidocument.components.securitySchemes"
+        :securitySchemes="securitySchemes"
         :tags="api.openapidocument.tags"
         :showGroupButtons="true"
       />
@@ -45,7 +45,7 @@
         :openapidocument="api.openapidocument"
         :onChange="onChange"
         :refs="refs"
-        :securitySchemes="api.openapidocument.components.securitySchemes"
+        :securitySchemes="securitySchemes"
         :tags="api.openapidocument.tags"
       />
       <Information
@@ -89,16 +89,25 @@ export default {
   computed: {
     refs() {
       const { components } = this.api.openapidocument;
-      const optionGroups = Object.keys(components);
-      return optionGroups.map((optionGroup) => {
-        const optionGroupProps = Object.keys(components[optionGroup]);
-        const optionGroupOptions = optionGroupProps
-        .map(optionGroupProp => `#/components/${optionGroup}/${optionGroupProp}`);
-        return {
-          name: optionGroup,
-          options: optionGroupOptions,
-        };
-      });
+      if (components) {
+        const optionGroups = Object.keys(components);
+        return optionGroups.map((optionGroup) => {
+          const optionGroupProps = Object.keys(components[optionGroup]);
+          const optionGroupOptions = optionGroupProps
+          .map(optionGroupProp => `#/components/${optionGroup}/${optionGroupProp}`);
+          return {
+            name: optionGroup,
+            options: optionGroupOptions,
+          };
+        });
+      }
+      return [];
+    },
+    securitySchemes() {
+      if (this.api.openapidocument.components) {
+        return this.api.openapidocument.components.securitySchemes;
+      }
+      return {};
     },
   },
   data() {

@@ -15,7 +15,6 @@ export default {
   computed: {
     ...mapState({
       currentPage: state => state.currentPage,
-      users: state => state.users.items,
     }),
   },
   data() {

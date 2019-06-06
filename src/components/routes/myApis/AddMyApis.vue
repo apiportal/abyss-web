@@ -1,6 +1,8 @@
 <template>
   <AddNewApiModal
     :onClose="handleCloseModal"
+    :routePath="`/app/my-apis/${currentPage.firstChildPath}/${page}`"
+    size="md"
   />
 </template>
 
@@ -23,6 +25,11 @@ export default {
       const { page } = this.$route.params;
       this.$router.push(`/app/my-apis/${firstChildPath}/${page}`);
     },
+  },
+  data() {
+    return {
+      page: this.$route.params.page,
+    };
   },
 };
 </script>

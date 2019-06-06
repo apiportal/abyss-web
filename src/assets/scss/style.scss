@@ -797,12 +797,18 @@
     top: 1rem;
     right: 1rem;
     z-index: 3000;
+    overflow: auto;
+    max-width: 90%;
+    max-height: 50vh;
   }
   .alert-t-l {
     position: fixed;
     top: 1rem;
     left: 1rem;
     z-index: 3000;
+    overflow: auto;
+    max-width: 90%;
+    max-height: 50vh;
   }
   .alert-dismissible .close {
     padding: .75rem 1.25rem;

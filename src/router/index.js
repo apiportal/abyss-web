@@ -156,7 +156,7 @@ import EditOrganizationUser from '@/components/routes/organizations/EditOrganiza
 import EditOrganizationUserGroups from '@/components/routes/organizations/EditOrganizationUserGroups';
 import EditOrganizationUserOrganizations from '@/components/routes/organizations/EditOrganizationUserOrganizations';
 import EditOrganizationUsers from '@/components/routes/organizations/EditOrganizationUsers';
-import xxx from '@/components/routes/myApis/api/Api';
+// import xxx from '@/components/routes/myApis/api/Api';
 
 Vue.use(Router);
 
@@ -173,7 +173,7 @@ export default new Router({
     },
     {
       path: '/xxx',
-      component: xxx,
+      component: AddMyApis,
     },
     {
       path: '/auth',

@@ -17,6 +17,17 @@
 import axios from 'axios';
 
 export default {
+  swaggerToOas(schema) {
+    return axios.post('/abyss/oapi/convert-swagger-to-oas', schema);
+  },
+  getExternalData(url) {
+    return axios({
+      method: 'get',
+      url,
+      baseURL: '',
+      withCredentials: false,
+    });
+  },
   // auth
   getUser(uuid) {
     return axios.get(`/abyss/oapi/subjects/${uuid}`);

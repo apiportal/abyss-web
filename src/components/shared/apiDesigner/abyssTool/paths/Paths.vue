@@ -14,6 +14,20 @@
         Group by Tags
       </b-button>
     </b-button-group>
+
+    <div class="text-center">
+      <b-button
+        v-if="Object.keys(paths).length === 0"
+        variant="primary"
+        @click="addPath"
+        size="lg"
+        class="mt-3 mx-auto"
+        data-qa="btnAddPath"
+      >
+        Add Path
+      </b-button>
+    </div>
+
     <div v-if="groupBy === 'tags'" class="mt-3">
       <div v-if="computedDefaultTags.length">
         <Tag
@@ -150,6 +164,10 @@ export default {
   methods: {
     handleGroupBy(groupBy) {
       this.groupBy = groupBy;
+    },
+    addPath() {
+      const { pathArray } = this;
+      this.onChange([...pathArray, '/newPath'], {}, 'addItem');
     },
   },
 };

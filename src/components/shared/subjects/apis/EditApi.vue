@@ -53,10 +53,11 @@ export default {
     getApi() {
       if (this.apiId === 'new-api' && this.temporaryApi) {
         this.api = this.temporaryApi;
+      } else if (this.apiId === 'new-api' && !this.temporaryApi) {
+        this.$router.push(this.routePath);
       } else {
         api.getApi(this.apiId).then((response) => {
           this.api = response.data[0];
-          // fake bir id ile response.data > [] dönüyor
           if (!this.api) {
             this.$router.push(this.routePath);
           }

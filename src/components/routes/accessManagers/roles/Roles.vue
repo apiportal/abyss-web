@@ -146,7 +146,7 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && tableRows.length === 0"
-          :cols="5"
+          :cols="8"
         />
         <TbodyCollapsible
           v-for="(item, index) in paginatedRows" v-bind:key="index"

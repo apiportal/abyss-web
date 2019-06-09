@@ -72,7 +72,7 @@
       :cols="7"
     />
       <TbodyCollapsible
-        v-for="(item, index) in rows" v-bind:key="index"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :data-qa="`tableRow-${index}`"
         :subjectId="item.subjectid"
@@ -140,6 +140,7 @@ import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Permission from '@/components/shared/subjects/permissions/Permission';
+import Helpers from '@/helpers';
 import api from '@/api';
 
 export default {
@@ -162,11 +163,43 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
     }),
+    tableRows() {
+      const { sortByKey, sortByKeyType, sortDirection, rows } = this;
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
+        array: rows
+          .map(item => ({
+            ...item,
+          })),
+        sortByKey,
+        sortByKeyType,
+        sortDirection,
+      });
+    },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   data() {
     return {
@@ -179,6 +212,11 @@ export default {
     };
   },
   methods: {
+    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
+      this.sortByKey = sortByKey;
+      this.sortByKeyType = sortByKeyType;
+      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+    },
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
@@ -186,9 +224,6 @@ export default {
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
-    },
-    handleSortByClick() {
-      //
     },
     getSubject(subjectId) {
       console.log('subjid', subjectId); // eslint-disable-line

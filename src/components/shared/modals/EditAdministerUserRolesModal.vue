@@ -1,6 +1,7 @@
 <template>
   <Modal
     bodyClass="p-0"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -26,6 +27,7 @@
               :autocompleteOptions="rolesEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
+              :showAddChip="false"
               label="User Roles"
             />
           </div>

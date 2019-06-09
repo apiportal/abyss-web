@@ -66,12 +66,10 @@
 
       <div class="page-content">
         <Permissions
-          :rows="paginatedRows"
+          :rows="tableRows"
           :routePath="`/app/administer-permissions/${page}`"
-          :handleSortByClick="handleSortByClick"
-          :sortByKey="sortByKey"
-          :sortDirection="sortDirection"
-          :sortByKeyType="sortByKeyType"
+          :itemsPerPage="itemsPerPage"
+          :page="page"
         />
         <router-view></router-view>
       </div>
@@ -198,15 +196,6 @@ export default {
         sortDirection,
       });
     },
-    paginatedRows() {
-      const { tableRows, itemsPerPage, page } = this;
-      const { paginateArray } = Helpers;
-      return paginateArray({
-        array: tableRows,
-        itemsPerPage,
-        page,
-      });
-    },
   },
   created() {
     this.$store.commit('currentPage/setRootPath', 'administer-permissions');
@@ -235,24 +224,11 @@ export default {
     };
   },
   methods: {
-    handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
-      this.sortByKey = sortByKey;
-      this.sortByKeyType = sortByKeyType;
-      this.sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
-    },
     handleFilterKeyup({ value }) {
       this.filterKey = value;
     },
     handlePageChange(page) {
       this.$router.push(`/app/administer-permissions/${page}`);
-    },
-    handleCollapseTableRows(itemId) {
-      const rowIndex = this.collapsedRows.indexOf(itemId);
-      if (rowIndex === -1) {
-        this.collapsedRows = [itemId];
-      } else {
-        this.collapsedRows.splice(rowIndex, 1);
-      }
     },
     refreshData() {
       this.$store.dispatch('permissions/getPermissions', {

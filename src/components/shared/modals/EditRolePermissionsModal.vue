@@ -23,7 +23,7 @@
         <div class="p-3">
           <div class="form-group">
             <Chips
-              :chips="rolePermissions.map(chip => ({ text: chip.description, value: chip.uuid }))"
+              :chips="computedRolePermissions"
               :autocompleteOptions="permissionsEditable"
               :onDeleteChip="handleDeleteRolePermissions"
               :onAddChip="handleAddRolePermissions"
@@ -102,20 +102,16 @@ export default {
       type: Function,
       required: true,
     },
-    user: {
-      type: Object,
+    permissions: {
+      type: Array,
       required: false,
+      default() { return []; },
     },
     selectedRole: {
       type: Object,
       required: false,
     },
     rolePermissions: {
-      type: Array,
-      required: false,
-      default() { return []; },
-    },
-    permissions: {
       type: Array,
       required: false,
       default() { return []; },
@@ -128,22 +124,24 @@ export default {
     computedRolePermissions() {
       const { permissionsEditable } = this;
       return permissionsEditable
-        .filter(permission => permission.isAttached)
-        .sort((a, b) => b.sortTime - a.sortTime);
+      .filter(permission => permission.isAttached)
+      .sort((a, b) => b.sortTime - a.sortTime);
     },
   },
   data() {
-    const { permissions, rolePermissions } = this;
+    const { permissions, rolePermissions, selectedRole } = this;
     return {
-      permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
-        const rolepermission = rolePermissions.find(
-          o => o.permission.subjectid === this.selectedRole.uuid);
+      permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission, index) => {
+        const rolepermission = rolePermissions.find(m =>
+          m.subjectid === permission.subjectid &&
+          m.subjectid === selectedRole.uuid,
+        );
         const isAttached = Boolean(rolepermission);
         const sortTime = (new Date()).getTime();
         return {
           ...permission,
-          text: permission.permission,
           value: permission.uuid,
+          text: `${permission.permission} - ${index}`,
           isAttached,
           rolepermission,
           sortTime,
@@ -176,10 +174,8 @@ export default {
           resourceactionid: permission.resourceactionid,
           accessmanagerid: permission.accessmanagerid,
           isactive: true,
-          // permissionrefid: permission.uuid,
         }))];
       if (this.permissionsToDelete.length) {
-        console.log('delete:::', this.permissionsToDelete); // eslint-disable-line
         for (let i = 0; i < this.permissionsToDelete.length; i += 1) {
           deletePermissions(this.permissionsToDelete[i]).then((response) => {
             if (response && response.data) {
@@ -202,14 +198,6 @@ export default {
           });
         }
       }
-      // let rolePermissionsObj = {}; // eslint-disable-line
-      // for (let i = 0; i < rolePermissions.length; i += 1) {
-      //   const { uuid, ...rest } = rolePermissions[i];
-      //   rolePermissionsObj[uuid] = rest;
-      // }
-      // postPermissions(rolePermissionsObj).then(() => {
-      //   onUpdate();
-      // });
     },
     handleDeleteRolePermissions(index, chip) {
       const { permissionsEditable } = this;

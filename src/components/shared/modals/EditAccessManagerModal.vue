@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-access-manager"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -12,7 +12,6 @@
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">
-        <Icon :icon=iconTitle class="name" />
         {{ role === 'edit' ? this.accessManagerEditable.accessmanagername : 'New Access Manager' }}
       </h5>
     </template>
@@ -20,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-form-group
             id="accessManagerNameGroup"
           >
@@ -87,50 +86,43 @@
               required
             />
           </b-form-group>
-          <div class="row">
-            <div class="col-12">
-              <label for="accessManagerTypeInput">Access Manager Type: <span class="text-danger">*</span></label>
-            </div>
-            <div class="col-10">
-              <b-form-group
-                id="accessManagerTypeGroup"
-              >
-                <b-form-select
-                  id="accessManagerTypeInput"
-                  v-model="accessManagerEditable.accessmanagertypeid"
-                  :state="accessManagerTypeState"
-                  :options="[
-                    { value: null, text: 'Please Select'},
-                    ...accessManagerTypes.map(accessManagerType => ({
-                      value: accessManagerType.uuid,
-                      text: accessManagerType.typename,
-                      disabled: accessManagerType.isdeleted,
-                    }))
-                  ]"
-                  @change="(val) => handleAccessManagerTypeChange(val)"
-                  required
-                />
-              </b-form-group>
-            </div>
-            <div class="col-2">
-              <b-button
-                variant="primary"
-                block
-                v-b-tooltip.hover
-                title="Configure AccessManager"
-                @click="toggleConfigureAccessManager"
-                :disabled="!accessManagerEditable.accessmanagertypeid"
-                data-qa="btnConfigure"
-              >
-                <Icon icon="cog" />
-              </b-button>
-            </div>
-          </div>
+          <b-form-group id="accessManagerTypeGroup">
+            <label for="accessManagerTypeInput">Access Manager Type: <span class="text-danger">*</span></label>
+            <b-input-group>
+              <b-input-group-prepend>
+                <b-button
+                  :variant="`${isConfigureAccessManagerVisible ? 'primary' : 'secondary'}`"
+                  v-b-tooltip.hover
+                  title="Configure AccessManager"
+                  @click="toggleConfigureAccessManager"
+                  :disabled="!accessManagerEditable.accessmanagertypeid"
+                  data-qa="btnConfigure"
+                >
+                  <Icon icon="cog" />
+                </b-button>
+              </b-input-group-prepend>
+              <b-form-select
+                id="accessManagerTypeInput"
+                v-model="accessManagerEditable.accessmanagertypeid"
+                :state="accessManagerTypeState"
+                :options="[
+                  { value: null, text: 'Please Select'},
+                  ...accessManagerTypes.map(accessManagerType => ({
+                    value: accessManagerType.uuid,
+                    text: accessManagerType.typename,
+                    disabled: accessManagerType.isdeleted,
+                  }))
+                ]"
+                @change="(val) => handleAccessManagerTypeChange(val)"
+                required
+              />
+            </b-input-group>
+          </b-form-group>
           <div
             v-if="accessManagerEditable.accessmanagertypeid"
-            :class="`configure-access-manager ${isConfigureAccessManagerVisible ? 'd-block' : 'd-none'}`"
+            :class="`${isConfigureAccessManagerVisible ? 'd-block' : 'd-none'}`"
           >
-            <h6>Configure Access Manager</h6>
+            <h6 class="text-primary font-weight-bold mb-3">Configure Access Manager</h6>
             <DynamicForm
               :formTemplate="accessManagerConfigurationTemplate"
               :formData="{ configuration: accessManagerEditable.accessmanagerattributes }"
@@ -140,14 +132,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -354,36 +346,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-access-manager {
-    padding: 0;
-  }
-}
-
-.configure-access-manager {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
-
-.name {
-  color: #3b68af;
-}
+<style lang="scss" scoped>
 </style>

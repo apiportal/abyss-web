@@ -19,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <div>
             <Chips
               :chips="computedProxyLicenses"
@@ -33,13 +33,13 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -222,3 +222,6 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+</style>

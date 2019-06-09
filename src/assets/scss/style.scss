@@ -124,6 +124,9 @@
     font-size: 12px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   }
+  .custom-select {
+    -webkit-appearance: none;
+  }
   .btn.btn-secondary.btn-selected {
     background-color: $gray-700;
     border-color: $gray-700;
@@ -738,8 +741,16 @@
     }
   }
 // form
+  .image-upload {
+    display: none;
+  }
   option[disabled] {
     color: red;
+  }
+  input, textarea, select, .form-control, .custom-select {
+    &.is-valid {
+      border-color: $input-border-color;
+    }
   }
   input, textarea {
     &.is-valid:not([required]) {

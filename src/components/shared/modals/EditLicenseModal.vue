@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-my-license"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,8 +19,8 @@
       <b-form
         @submit="handleSubmit"
       >
-      <div style="padding: 1rem;">
-        <h6 class="group-title">License Info</h6>
+      <div class="p-3">
+        <h5 class="text-primary font-weight-medium mb-3">License Info</h5>
         <b-form-group
           id="licenseNameGroup"
           label="License Name*:"
@@ -147,7 +147,7 @@
           </b-form-checkbox>
         </b-form-group>
         <br>
-        <h6 class="group-title">SLA Info</h6>
+        <h5 class="text-primary font-weight-medium mb-3">SLA Info</h5>
         <b-form-group
           id="slaTierNameGroup"
           label="SLA Tier Name*:"
@@ -251,7 +251,7 @@
         </b-form-input>
         </b-form-group>
         <br>
-        <h6 class="group-title">Legal Info</h6>
+        <h5 class="text-primary font-weight-medium mb-3">Legal Info</h5>
         <b-form-group
           id="legalAgreementNameGroup"
           label="Legal Agreement Name*:"
@@ -380,14 +380,14 @@
       </div>
       <footer class="modal-footer">
         <b-button
-          variant="secondary"
+          variant="link"
           @click="onClose"
           data-qa="btnCancel"
         >
           Cancel
         </b-button>
         <b-button
-          variant="success"
+          variant="primary"
           type="submit"
           data-qa="btnSave"
         >
@@ -701,38 +701,6 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.modal-body {
-  &.edit-my-license {
-    padding: 0;
-  }
-}
 
-.configure-my-license {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
-
-h6.group-title {
-  background-color:dodgerblue;
-  color: white;
-  padding: 5px 10px;
-}
+<style lang="scss" scoped>
 </style>

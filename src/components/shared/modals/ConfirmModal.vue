@@ -20,7 +20,7 @@
     </template>
     <template slot="footer">
       <b-button
-        variant="secondary"
+        variant="link"
         @click="onClose"
         data-qa="btnCancel"
       >

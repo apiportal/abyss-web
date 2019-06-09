@@ -9,6 +9,11 @@
     :size="size"
     :onClose="onClose"
   >
+    <template slot="header">
+      <h5 class="modal-title">
+        {{ api.apititle }}
+      </h5>
+    </template>
     <template>
       <div v-if="api">
         <b-row>
@@ -143,7 +148,7 @@
       </div>
     </template>
     <template slot="footer">
-      <b-button variant="secondary" @click="onClose">
+      <b-button variant="link" @click="onClose">
         Close
       </b-button>
     </template>

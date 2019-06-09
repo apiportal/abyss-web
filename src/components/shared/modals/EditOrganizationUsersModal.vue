@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user"
+    bodyClass="p-0"
     :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
@@ -19,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-form-group
             id="organizationOwnerGroup"
           >
@@ -54,13 +54,13 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -309,10 +309,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-administer-user {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

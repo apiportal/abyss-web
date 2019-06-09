@@ -16,9 +16,7 @@
     </template>
     <template slot="footer">
       <b-button
-        class="float-right"
         variant="primary"
-        size="sm"
         @click="onConfirm"
         data-qa ="btnConfirm"
       >

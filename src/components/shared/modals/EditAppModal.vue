@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-my-app"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-row align-v="center">
             <b-col>
               <b-form-group
@@ -75,7 +75,7 @@
                   v-b-tooltip.hover
                   title="Click to change picture"
                   @click="$refs.fileInput.click()" />
-                <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+                <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
               </div>
             </b-col>
           </b-row>
@@ -161,14 +161,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -353,13 +353,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-my-app {
-    padding: 0;
-  }
-}
-input[type="file"] {
-    display: none;
-}
+<style lang="scss" scoped>
 </style>

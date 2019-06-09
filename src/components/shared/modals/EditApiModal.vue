@@ -1,7 +1,7 @@
 <template>
   <Modal
     dialogClass="modal-xxl"
-    bodyClass="edit-my-api"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -92,10 +92,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-my-api {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

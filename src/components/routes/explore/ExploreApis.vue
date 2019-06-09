@@ -3,7 +3,7 @@
     <ExploreModal
       v-if="isApisLoaded"
       :onClose="handleModalClose"
-      :hideHeader="true"
+      :hideFooter="true"
       :api="getCardItem(apiId)"
       size="lg"
     />

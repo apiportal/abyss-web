@@ -75,7 +75,7 @@
             <div class="thumb-img" :style="`background-image:url('${api.image}');`">
             </div>
           </div>
-          <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+          <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
         </div>
         <b-form-group>
           <label>
@@ -180,8 +180,5 @@ export default {
     width: 20px;
     z-index: 1;
     cursor: pointer;
-}
-input[type="file"] {
-  display: none;
 }
 </style>

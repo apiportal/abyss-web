@@ -3,11 +3,11 @@
   <nav class="navbar page-navbar d-flex justify-content-between">
     <div class="d-flex">
       <div v-if="userEditable.props.picture" class="position-relative">
-        <span class="notify-badge" @click="handleDeleteImage" ><Icon icon="times"/></span>
+        <span class="remove-image" @click="handleDeleteImage" ><Icon icon="times"/></span>
         <img v-if="userEditable.props.picture" :src="userEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       </div>
       <img v-if="!userEditable.props.picture" src="/static/avatar.png" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
-      <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+      <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
       <div class="d-flex align-items-center px-4">
         <dl class="m-0">
         <dd class="m-0"><h4 class="m-0">{{ user.props.displayname }}</h4></dd>
@@ -354,8 +354,8 @@ export default {
   },
 };
 </script>
-<style>
-  .notify-badge{
+<style lang="scss" scoped>
+  .remove-image {
       position: absolute;
       right: 0;
       top: 0;
@@ -372,8 +372,5 @@ export default {
   .avatar {
     width: 60px;
     height: 60px;
-  }
-  input[type="file"] {
-    display: none;
   }
 </style>

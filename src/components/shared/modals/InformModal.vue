@@ -7,7 +7,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
-      data-qa="modalInform"
+    data-qa="modalInform"
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">{{ title }}</h5>
@@ -17,9 +17,7 @@
     </template>
     <template slot="footer">
       <b-button
-        class="float-right"
         variant="primary"
-        size="sm"
         @click="onConfirm"
         data-qa="btnConfirm"
       >

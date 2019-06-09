@@ -27,13 +27,13 @@
       >
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="submit"
             type="submit"
           >
             Save

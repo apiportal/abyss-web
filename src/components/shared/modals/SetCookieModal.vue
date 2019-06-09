@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="set-token"
+    bodyClass="p-0"
     :hideHeader="false"
     :hideFooter="true"
     :noCloseOnBackdrop="true"
@@ -18,7 +18,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <p>Currently, you don't have a valid token.</p>
           <b-form-group
             id="cookieGroup"
@@ -40,7 +40,7 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa ="btnSubmit"
           >
@@ -90,10 +90,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.set-token {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

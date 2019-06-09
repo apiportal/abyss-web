@@ -172,10 +172,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.btn.btn-secondary.btn-selected {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-</style>

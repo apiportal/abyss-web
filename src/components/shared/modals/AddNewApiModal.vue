@@ -172,7 +172,7 @@ export default {
         apistateid: 'dccb1796-9338-4ae8-a0d9-02654d1e2c6d',
         apivisibilityid: '043d4827-cff4-43f9-9d5b-782d1f83b3f0',
         changelog: '',
-        color: '#006699',
+        color: '#6c757d',
         crudsubjectid: this.currentUser.uuid,
         deployed: this.$moment.utc().toISOString(),
         extendeddocument: {},

@@ -7,11 +7,19 @@
         <div class="ml-auto">
           <b-button-group size="md" class="mr-1">
             <b-button
+              @click="validateOnChange = !validateOnChange"
+              :class="`${ validateOnChange ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Validate on change"
+            ><Icon icon="check-double" /></b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
               @click="setView('abyss')"
               :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
               v-b-tooltip.hover
               title="Abyss View"
-            ><Icon icon="magic" /></b-button>
+            ><Icon icon="stream" /></b-button>
             <b-button
               @click="setView('hybrid')"
               :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
@@ -75,22 +83,34 @@
     </div>
     <div class="api-designer-footer">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col">
           <b-alert class="alert-vivid alert-t-l" v-model="showNotValidAlert" variant="danger" dismissible>
             <h4>API is not valid!</h4>
             <div v-for="(error, index) in notValidMessage" v-bind:key="index">{{ error }}</div>
           </b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
-          <b-alert v-model="isVersionChanged" variant="info" dismissible>
+          <b-alert class="api-designer-alert" v-model="isVersionChanged" variant="info" dismissible>
             <strong>VERSION CHANGE DETECTED</strong>
             You have to save as new API if you change the version.
           </b-alert>
+          <b-alert class="api-designer-alert py-2" v-model="showHasChangesAlert" variant="warning" dismissible>
+            <strong>CHANGES DETECTED</strong>
+            Are you sure to cancel your changes?
+            <b-button
+              variant="warning"
+              @click="onClose"
+              size="sm"
+              data-qa="btnCancel"
+            >
+              CANCEL
+            </b-button>
+          </b-alert>
         </div>
-        <div class="col">
+        <div class="col-auto">
           <b-button
             variant="link"
-            @click="onClose"
+            @click="handleClose"
             size="lg"
             data-qa="btnCancel"
             block
@@ -98,7 +118,7 @@
             Close
           </b-button>
         </div>
-        <div class="col">
+        <div class="col-auto">
           <b-button
             variant="primary"
             @click="handleSubmit"
@@ -167,6 +187,8 @@ export default {
       showSavedAlert: false,
       showCreatedAlert: false,
       isVersionChanged: false,
+      showHasChangesAlert: false,
+      validateOnChange: false,
       mode: 'json',
     };
   },
@@ -187,6 +209,10 @@ export default {
     apiVersion() {
       return this.records[this.recordIndex].openapidocument.info.version;
     },
+    hasChanges() {
+      const { records, recordIndex } = this;
+      return recordIndex > 0 && JSON.stringify(records[recordIndex]) !== JSON.stringify(records[0]);
+    },
   },
   mounted() {
     this.getApiLicenses();
@@ -194,12 +220,16 @@ export default {
   watch: {
     apiVersion(newValue) {
       if (newValue) {
-        console.log('newValue: ', newValue); // eslint-disable-line
         if (newValue !== this.apiInitialVersion) {
           this.isVersionChanged = true;
         } else {
           this.isVersionChanged = false;
         }
+      }
+    },
+    hasChanges(newValue) {
+      if (!newValue) {
+        this.showHasChangesAlert = false;
       }
     },
   },
@@ -229,27 +259,38 @@ export default {
     setMode(mode) {
       this.mode = mode;
     },
+    handleClose() {
+      if (this.hasChanges) {
+        this.showHasChangesAlert = true;
+      } else {
+        this.onClose();
+      }
+    },
     handleChange(propAddress, newPropValue, customAction, replaceItem) {
       console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
-      const { records, recordIndex } = this;
-      const { objectDeepUpdate } = Helpers;
+      const { records, recordIndex, validateOnChange } = this;
       let newRecord = JSON.parse(JSON.stringify(records[recordIndex])); // eslint-disable-line
-      objectDeepUpdate(propAddress, newPropValue, newRecord, customAction);
-      if (replaceItem) {
-        objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newRecord);
+      if (propAddress) {
+        const { objectDeepUpdate } = Helpers;
+        objectDeepUpdate(propAddress, newPropValue, newRecord, customAction);
+        if (replaceItem) {
+          objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newRecord);
+        }
       }
       this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
       this.recordIndex += 1;
-      api.validateApi({ spec: records[recordIndex].openapidocument }).then(() => {
-      })
-      .catch((error) => {
-        this.showNotValidAlert = true;
-        this.notValidMessage = JSON.parse(error.data.usermessage);
-      });
+      if (validateOnChange && propAddress) {
+        api.validateApi({ spec: records[recordIndex].openapidocument }).then(() => {
+        })
+        .catch((error) => {
+          this.showNotValidAlert = true;
+          this.notValidMessage = JSON.parse(error.data.usermessage);
+        });
+      }
     },
     handleEditorChange(newValue) {
       try {
-        const { records, recordIndex, mode } = this;
+        const { records, recordIndex, mode, validateOnChange } = this;
         let newRecord = { // eslint-disable-line
           ...records[recordIndex],
           openapidocument: {
@@ -258,12 +299,14 @@ export default {
         };
         this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
         this.recordIndex += 1;
-        api.validateApi({ spec: newRecord.openapidocument }).then(() => {
-        })
-        .catch((error) => {
-          this.showNotValidAlert = true;
-          this.notValidMessage = JSON.parse(error.data.usermessage);
-        });
+        if (validateOnChange) {
+          api.validateApi({ spec: newRecord.openapidocument }).then(() => {
+          })
+          .catch((error) => {
+            this.showNotValidAlert = true;
+            this.notValidMessage = JSON.parse(error.data.usermessage);
+          });
+        }
         return true;
       } catch (e) {
         return false;
@@ -330,6 +373,10 @@ export default {
           // !!!
         }
       });
+    },
+    handleSubmittt() {
+      const currentApi = this.records[this.recordIndex];
+      console.log('currentApi: ', currentApi); // eslint-disable-line
     },
     handleSubmit() {
       const { records, recordIndex, role,
@@ -498,12 +545,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .api-designer-container {
   .api-designer-actions-bar {
     border-bottom: 1px solid #e9ecef;
     padding: 1rem 1rem;
-
     .toolbar-title {
       display: inline-flex;
       vertical-align: middle;
@@ -511,33 +557,29 @@ export default {
       font-weight: 500;
       margin-right: 1rem;
     }
-
-    .btn.btn-secondary.btn-selected {
-      background-color: #5a6268;
-      border-color: #545b62;
-    }
   }
-
   .api-designer-columns-container {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
     height: calc(100vh - 215px);
-
     .api-designer-abyss-container {
       display: flex;
       flex: 1 0 0;
     }
-
     .api-designer-editor-container {
       display: flex;
       flex: 1 0 0;
     }
   }
-
   .api-designer-footer {
     padding: 1rem;
     border-top: 1px solid #dee2e6;
+  }
+  .api-designer-alert {
+    position: absolute;
+    left: 0;
+    right: 0;
   }
 }
 </style>

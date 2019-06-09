@@ -1,39 +1,41 @@
-// Under Construction DO NOT EDIT edit on main.scss
-// varibales:; will be moved to dynamic
-  $default-color: #007BFF;
-  // $brand-color: #177ec1;
-  $brand-color: #0088CC;
-  // $bg-sidebar: #00386C;
-  $bg-sidebar: #003366;
+// mixins
+  @mixin pos($position: p, $top: t, $right: r, $bottom: b, $left: l){
+    @if $position != 'p' {
+      position: $position;
+    }
+    @if $top != 't' {
+      top: $top;
+    }
+    @if $right != 'r' {
+      right: $right;
+    }
+    @if $bottom != 'b' {
+      bottom: $bottom;
+    }
+    @if $left != 'l' {
+      left: $left;
+    }
+  }
+// variables
+  $primary: #0088CC;
+  $primary-light: #00BBFF;
   $bg-sidebar: #004477;
-  // $bg-sidebar: #004477;
-  // $brand-color-light: #28ACE2;
-  $brand-color-light: #00BBFF;
-  // $brand-color-light: #0099EE;
-  $secondary-color: #6c757d;
-  $bg-body: #E9ECEF;
   $bg-body: #EEE;
-  $bg-body-tint: mix($brand-color, $bg-body, 10%);
-  $bg-body-tint: lighten($brand-color, 100%);
-  $border-color: #ced4da;
-  $border-color-light: #dee2e6;
-  $border-color-darker: darken($border-color-light, 10%);
-  $border-selected: #6C757D;
-  $transition-base: all .2s ease-in-out;
-// rebootstrap:; colors will be moved to dynamic
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+// rebootstrap
   .dropdown-menu {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     padding: 0;
-    border-color: $border-color-light;
+    border-color: $border-color;
     border-radius: 0;
-    // border: 0 none;
+    border: 0 none;
     margin: 0;
   }
   .dropdown-item {
     padding: .5rem 1.25rem;
     &:focus, &:hover {
       color: #fff;
-      background-color: $brand-color-light;
+      background-color: $primary-light;
     }
     svg {
       margin-right: .5rem;
@@ -46,7 +48,7 @@
     font-weight: bold;
     color: inherit;
     white-space: nowrap;
-    border-top: 1px solid $border-color-light;
+    border-top: 1px solid $border-color;
   }
   body {
     background-color: $bg-body;
@@ -63,7 +65,7 @@
     min-width: calc(1.5em + .75rem + 2px);
     text-align: center;
     &:hover {
-      background-color: $brand-color-light;
+      background-color: $primary-light;
       color: white;
     }
   }
@@ -122,12 +124,10 @@
     font-size: 12px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
   }
-  // h1, h2, h3, h4, h5, h6 {
-  //   margin-bottom: .5rem;
-  //   font-weight: 300;
-  //   line-height: 1.2;
-  //   color: #007bff;
-  // }
+  .btn.btn-secondary.btn-selected {
+    background-color: $gray-700;
+    border-color: $gray-700;
+  }
 // scrollbar
   ::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -151,7 +151,7 @@
   }
 // app
   .loading-modal-backdrop {
-    color: $brand-color;
+    color: $primary;
   }
   .app-flex {
     position: absolute;
@@ -175,7 +175,7 @@
     flex: 0 0 250px;
     display: flex;
     background-color: $bg-sidebar;
-    background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $brand-color);
+    background-image: linear-gradient(235deg, $bg-sidebar, $bg-sidebar, $primary);
     background-repeat: repeat-x;
     &:hover::-webkit-scrollbar-thumb {
       background-color: rgba(white, 0.35);
@@ -272,13 +272,13 @@
         text-decoration: none;
         border-left: 6px solid transparent;
         &:hover {
-          border-color: $brand-color-light;
-          background-color: rgba($brand-color-light, 0.5);
+          border-color: $primary-light;
+          background-color: rgba($primary-light, 0.5);
           color: white;
         }
         &.selected {
-          border-color: $brand-color;
-          background-color: rgba($brand-color, 0.5);
+          border-color: $primary;
+          background-color: rgba($primary, 0.5);
           color: white;
         }
         .route-icon {
@@ -297,33 +297,32 @@
     flex-direction: column;
   }
   .page-header {
-    // border-top: 1px solid $border-color-light;
-    border-bottom: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
     flex: 50px 0 0;
     padding: 0rem 2rem 1rem 2rem;
-    background-color: $bg-body-tint;
+    background-color: $white;
     z-index: 1;
   }
   .page-navbar {
-      border-top: 1px solid $border-color-light;
+      border-top: 1px solid $border-color;
       box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
       padding: .5rem 2rem .5rem 2rem;
-      background-color: $bg-body-tint;
+      background-color: $white;
       z-index: 1;
     }
   .tabs-container {
     padding: 0rem 2rem 2rem 2rem;
     .nav-tabs {
       box-shadow: 0 1px 10px rgba(0, 0, 0, 0.075);
-      background-color: $bg-body-tint;
+      background-color: $white;
       margin-bottom: 2rem;
     }
   }
   .page-header-nested {
     flex: 50px 0 0;
     padding: 0 2rem 0 2rem;
-    background-color: $bg-body-tint;
+    background-color: $white;
     z-index: 2;
   }
   .page-content {
@@ -336,7 +335,6 @@
     display: flex;
   }
   .page-btn-add {
-    // border-radius: 3rem;
     text-transform: uppercase;
     font-weight: bold;
     width: 140px;
@@ -345,9 +343,6 @@
     justify-content: space-between;
     padding-left: 1rem;
     padding-right: 1rem;
-    // span {
-    //   border-right: 1px solid rgba(white, 0.2);
-    // }
   }
   .page-btn-refresh {
     font-size: 2rem;
@@ -357,19 +352,16 @@
   .page-filter {
     .form-control {
       border-radius: 0 3rem 3rem 0;
-      // border-color: $border-color-darker;
     }
     .input-group-text {
       border-radius: 3rem 0 0 3rem;
-      // background-color: #ccc;
       padding-left: 1rem;
-      // border-color: $border-color-darker;
     }
   }
   .page-tabs ,.nav-tabs {
     margin-bottom: 1rem;
-    border-bottom: 1px solid $border-color-light;
-    border-top: 1px solid $border-color-light;
+    border-bottom: 1px solid $border-color;
+    border-top: 1px solid $border-color;
     margin-left: -2rem;
     margin-right: -2rem;
     padding: 0 2rem;
@@ -383,43 +375,43 @@
       &.active {
         color: inherit;
         background-color: transparent;
-        border-color: $brand-color;
+        border-color: $primary;
       }
       &:hover {
         color: inherit;
         background-color: transparent;
-        border-color: $brand-color-light;
+        border-color: $primary-light;
       }
     }
   }
   .page-footer {
-    border-top: 1px solid $border-color-light;
+    border-top: 1px solid $border-color;
     z-index: 1;
     box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.075);
     flex: 50px 0 0;
     padding: 1rem;
-    background-color: $bg-body-tint;
+    background-color: $white;
     ul {
       margin: 0;
     }
   }
 // data table
   .abyss-table-buttons {
-    border-top: 1px solid $border-color-light;
-    border-bottom: 1px solid $border-color-light;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
     padding: 0 1rem;
     .btn {
       text-decoration: none;
       color: inherit;
       border-bottom: 3px solid transparent;
       &.active {
-        border-bottom: 3px solid $border-selected;
+        border-bottom: 3px solid $gray-600;
       }
       &:hover {
-        border-bottom: 3px solid $brand-color;
+        border-bottom: 3px solid $primary;
       }
       svg {
-        color: $brand-color;
+        color: $primary;
       }
     }
   }
@@ -439,8 +431,7 @@
         }
         dl {
           margin: 0;
-          border-right: 1px solid $border-color-light;
-          // border-top: 1px solid $border-color-light;
+          border-right: 1px solid $border-color;
           padding-top: 1rem;
           padding-bottom: .5rem;
           &:last-child {
@@ -458,16 +449,16 @@
         > tr {
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           background-color: #fff;
-          border-left: 1px solid $border-color-light;
-          border-top: 1px solid $border-color-light;
-          border-right: 1px solid $border-color-light;
-          border-bottom: 1px solid $border-color-light;
+          border-left: 1px solid $border-color;
+          border-top: 1px solid $border-color;
+          border-right: 1px solid $border-color;
+          border-bottom: 1px solid $border-color;
           transition: $transition-base;
           &:first-child {
             cursor: pointer;
             &:hover {
-                background: $brand-color;
-                border-color: $brand-color;
+                background: $primary;
+                border-color: $primary;
                 color: white !important;
                 
                 .btn-link {
@@ -521,7 +512,7 @@
         font-size: 0.85rem;
         // font-weight: 500;
         // text-transform: uppercase;
-        color: $secondary-color;
+        color: $gray-600;
         line-height: 1;
         position: relative;
         a {
@@ -535,11 +526,11 @@
             margin-left: 0.5rem;
             color: silver;
             &.active {
-              color: $brand-color;
+              color: $primary;
             }
           }
           &:hover {
-            color: $brand-color-light;
+            color: $primary-light;
           }
         }
       }
@@ -611,7 +602,7 @@
       }
       code {
         font-size: .65rem;
-        color: $brand-color;
+        color: $primary;
       }
       .tbody-collapsible {
         .collapsible-content {
@@ -627,10 +618,10 @@
         &.tbody-collapsed {
           & > tr:first-child {
             & > td:first-child {
-              border-left: 8px solid $brand-color;
+              border-left: 8px solid $primary;
             }
-            background-color: $brand-color;
-            border-color: $brand-color;
+            background-color: $primary;
+            border-color: $primary;
             color: white;
             .btn-link {
               color: white !important;
@@ -638,7 +629,7 @@
           }
           & > tr:last-child {
             & > td:first-child {
-              border-left: 8px solid $brand-color;
+              border-left: 8px solid $primary;
               padding: 0;
             }
           }
@@ -752,13 +743,13 @@
   }
   input, textarea {
     &.is-valid:not([required]) {
-      border-color: $border-color;
+      border-color: $input-border-color;
       background: none;
     }
   }
   select {
     &.is-valid:not([required]) {
-      border-color: $border-color;
+      border-color: $input-border-color;
       background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
     }
   }

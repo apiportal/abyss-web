@@ -27,6 +27,12 @@
         >
           Servers &amp; Security
         </b-nav-item>
+        <b-nav-item
+          :active="activeTab === 'status'"
+          @click="() => setActiveTab('status')"
+        >
+          Portal Specific
+        </b-nav-item>
       </b-nav>
     </div>
     <div class="abyss-tool-content-container">
@@ -58,6 +64,11 @@
         :openapidocument="api.openapidocument"
         :onChange="onChange"
       />
+      <Status
+        v-if="activeTab === 'status'"
+        :api="api"
+        :onChange="onChange"
+      />
     </div>
   </div>
 </template>
@@ -67,6 +78,7 @@ import Paths from '@/components/shared/apiDesigner/abyssTool/paths/Paths';
 import ComponentsTags from '@/components/shared/apiDesigner/abyssTool/ComponentsTags';
 import Information from '@/components/shared/apiDesigner/abyssTool/Information';
 import Servers from '@/components/shared/apiDesigner/abyssTool/Servers';
+import Status from '@/components/shared/apiDesigner/abyssTool/Status';
 
 export default {
   props: {
@@ -85,6 +97,7 @@ export default {
     ComponentsTags,
     Information,
     Servers,
+    Status,
   },
   computed: {
     refs() {

@@ -114,8 +114,6 @@
 <script>
 import { mapState } from 'vuex';
 import api from '@/api';
-
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 import TextAreaModal from '@/components/shared/modals/TextAreaModal';
 
@@ -137,7 +135,6 @@ export default {
     },
   },
   components: {
-    TbodyCollapsible,
     Icon,
     TextAreaModal,
     Policies: () => import('@/components/shared/subjects/policies/Policies'),

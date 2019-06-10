@@ -37,24 +37,40 @@
         <dd v-if="group.isdeleted">{{ group.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
+    <div class="row abyss-table-buttons">
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Group Users"
+        @click="listGroupUsers"
+        :class="{'active': isShowGroupUsers}"
+        v-if="group.users.length"
+      >
+        <Icon icon="users" /> Users
+        <b-badge pill>{{ group.users.length }}</b-badge>
+      </b-button>
+    </div>
+    <div v-if="isShowGroupUsers && group.users.length">
+      <Users
+        :rows="group.users"
+        :routePath="routePath"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import SortBy from '@/components/shared/SortBy';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/subjects/users/Users';
 import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Group',
   components: {
     Icon,
-    SortBy,
-    TbodyCollapsible,
-    Users,
     Pictures,
+    Users: () => import('@/components/shared/subjects/users/Users'),
   },
   props: {
     group: {

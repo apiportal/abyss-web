@@ -142,6 +142,7 @@ import Helpers from '@/helpers';
 import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Organizations',
   props: {
     rows: {
       type: Array,

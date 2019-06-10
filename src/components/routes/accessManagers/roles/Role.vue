@@ -95,18 +95,15 @@
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/subjects/users/Users';
-import Permissions from '@/components/shared/subjects/permissions/Permissions';
-import Groups from '@/components/shared/subjects/groups/Groups';
 
 export default {
   components: {
     Icon,
     SortBy,
     TbodyCollapsible,
-    Users,
-    Permissions,
-    Groups,
+    Users: () => import('@/components/shared/subjects/users/Users'),
+    Groups: () => import('@/components/shared/subjects/groups/Groups'),
+    Permissions: () => import('@/components/shared/subjects/permissions/Permissions'),
   },
   props: {
     item: {

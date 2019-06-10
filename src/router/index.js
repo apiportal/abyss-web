@@ -68,6 +68,7 @@ import EditAdministerUserOrganizations from '@/components/routes/administerUsers
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
 import EditAdministerUserRoles from '@/components/routes/administerUsers/EditAdministerUserRoles';
 // Administer Groups Routes Components
+import SubjectGroups from '@/components/routes/administerGroups/subjectGroups/SubjectGroups';
 import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
 import AdministerGroupsLogs from '@/components/routes/administerGroups/AdministerGroupsLogs';
 import AddAdministerGroup from '@/components/routes/administerGroups/AddAdministerGroup';
@@ -441,44 +442,50 @@ export default new Router({
 
         },
         {
-          path: 'administer-groups/:page',
+          path: 'administer-groups',
           component: AdministerGroups,
           children: [
             {
-              path: 'logs/:id/:logType/:logPage',
-              component: AdministerGroupsLogs,
-            },
-            {
-              path: 'add-new',
-              component: AddAdministerGroup,
-            },
-            {
-              path: 'edit/:id',
-              component: EditAdministerGroup,
-            },
-            {
-              path: 'delete/:id',
-              component: DeleteAdministerGroup,
-            },
-            {
-              path: 'edit-user/:id',
-              component: EditAdministerGroupUser,
-            },
-            {
-              path: 'delete-user/:id',
-              component: DeleteAdministerGroupUser,
-            },
-            {
-              path: 'edit-user-groups/:id',
-              component: EditAdministerGroupUserGroups,
-            },
-            {
-              path: 'edit-group-users/:id',
-              component: EditAdministerGroupUsers,
-            },
-            {
-              path: 'edit-user-organizations/:id',
-              component: EditAdministerGroupUserOrganizations,
+              path: 'groups/:page',
+              component: SubjectGroups,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: AdministerGroupsLogs,
+                },
+                {
+                  path: 'add-new',
+                  component: AddAdministerGroup,
+                },
+                {
+                  path: 'edit/:id',
+                  component: EditAdministerGroup,
+                },
+                {
+                  path: 'delete/:id',
+                  component: DeleteAdministerGroup,
+                },
+                {
+                  path: 'edit-user/:id',
+                  component: EditAdministerGroupUser,
+                },
+                {
+                  path: 'delete-user/:id',
+                  component: DeleteAdministerGroupUser,
+                },
+                {
+                  path: 'edit-user-groups/:id',
+                  component: EditAdministerGroupUserGroups,
+                },
+                {
+                  path: 'edit-group-users/:id',
+                  component: EditAdministerGroupUsers,
+                },
+                {
+                  path: 'edit-user-organizations/:id',
+                  component: EditAdministerGroupUserOrganizations,
+                },
+              ],
             },
           ],
         },

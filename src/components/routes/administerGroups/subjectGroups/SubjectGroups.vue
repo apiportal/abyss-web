@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container page-users">
+  <div class="page-container page-groups">
     <div class="page-header">
       <div class="row">
         <div class="col">
@@ -25,10 +25,10 @@
         </div>
         <div class="col-auto">
           <b-button
-            :to="`/app/administer-users/users/${page}/add-new`"
+            :to="`/app/administer-groups/groups/${page}/add-new`"
             variant="primary"
             v-b-tooltip.hover
-            title="Add New User"
+            title="Add New Group"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -40,9 +40,9 @@
       </div>
     </div>
     <div class="page-content">
-      <Users
+      <Groups
         :rows="tableRows"
-        :routePath="`/app/administer-users/users/${page}`"
+        :routePath="`/app/administer-groups/groups/${page}`"
         :itemsPerPage="itemsPerPage"
         :page="page"
       />
@@ -65,56 +65,80 @@
 
 <script>
 import { mapState } from 'vuex';
-import Users from '@/components/shared/subjects/users/Users';
+import Groups from '@/components/shared/subjects/groups/Groups';
 import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import Helpers from '@/helpers';
 
 export default {
   components: {
-    Users,
+    Groups,
     InputWithIcon,
     Icon,
   },
   computed: {
     ...mapState({
-      isLoading: state => state.traffic.isLoading,
-      subjectDirectories: state => state.subjectDirectories.items,
-      organizations: state => state.organizations.items,
-      users: state => state.users.items,
+      currentUser: state => state.user,
       groups: state => state.groups.items,
+      users: state => state.users.items,
+      memberships: state => state.subjectMemberships.items,
+      userGroupMemberships: state => state.subjectMemberships.userGroup,
     }),
     tableRows() {
-      const { users } = this;
+      const { groups, users } = this;
+      const getUsers = (groupId) => {
+        const members = this.memberships.filter(item =>
+          !item.isdeleted &&
+          item.subjectgroupid === groupId);
+        const groupUsers = users.filter(el =>
+          members.some(f =>
+            f.subjectid === el.uuid,
+          ),
+        );
+        return groupUsers;
+      };
+      const getUserFromGroups = (groupId) => {
+        const group = this.userGroupMemberships.find(item => item.subjectgroupid === groupId) || {};
+        return group.subjectid || groupId;
+      };
       const { sortByKey, sortByKeyType, sortDirection } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
-        array: users.map(item => ({
+        array: groups.map(item => ({
           ...item,
+          users: getUsers(item.uuid),
+          userscount: getUsers(item.uuid).length,
+          currentuser: getUserFromGroups(item.uuid),
         })).filter((item) => {
-          const { filterKey } = this;
-          if (filterKey === '') {
-            return true;
+          if (
+            item.currentuser === this.currentUser.props.uuid
+            || item.users.find(i => i.uuid === this.currentUser.props.uuid)
+          ) {
+            const { filterKey } = this;
+            if (filterKey === '') {
+              return true;
+            }
+            const filterKeyLowerCase = filterKey.toLowerCase();
+            return (
+              (
+                item.firstname &&
+                item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.lastname &&
+                item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.displayname &&
+                item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              ) ||
+              (
+                item.email &&
+                item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
+              )
+            );
           }
-          const filterKeyLowerCase = filterKey.toLowerCase();
-          return (
-            (
-              item.firstname &&
-              item.firstname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.lastname &&
-              item.lastname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.displayname &&
-              item.displayname.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            ) ||
-            (
-              item.email &&
-              item.email.toLowerCase().indexOf(filterKeyLowerCase) > -1
-            )
-          );
+          return false;
         }),
         sortByKey,
         sortByKeyType,
@@ -123,8 +147,8 @@ export default {
     },
   },
   created() {
-    this.$store.commit('currentPage/setFirstChildPath', 'users');
-    this.$store.commit('currentPage/setRootPath', 'administer-users');
+    this.$store.commit('currentPage/setFirstChildPath', 'groups');
+    this.$store.commit('currentPage/setRootPath', 'administer-groups');
   },
   data() {
     return {
@@ -142,10 +166,10 @@ export default {
       this.filterKey = value;
     },
     handlePageChange(page) {
-      this.$router.push(`/app/administer-users/users/${page}`);
+      this.$router.push(`/app/administer-groups/groups/${page}`);
     },
     refreshData() {
-      this.$store.dispatch('users/getUsers', {
+      this.$store.dispatch('groups/getGroups', {
         refresh: true,
       });
     },

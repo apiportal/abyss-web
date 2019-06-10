@@ -82,8 +82,6 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
-import AccessTokens from '@/components/shared/subjects/subscriptions/AccessTokens';
-import Licenses from '@/components/shared/subjects/licenses/Licenses';
 
 export default {
   props: {
@@ -104,8 +102,8 @@ export default {
   },
   components: {
     Icon,
-    AccessTokens,
-    Licenses,
+    AccessTokens: () => import('@/components/shared/subjects/subscriptions/AccessTokens'),
+    Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {

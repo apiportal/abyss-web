@@ -129,6 +129,7 @@ import Helpers from '@/helpers';
 import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Users',
   props: {
     rows: {
       type: Array,
@@ -155,10 +156,7 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
-      users: state => state.users.items,
-      groups: state => state.groups.items,
       itemsLastUpdatedAt: state => state.users.lastUpdatedAt,
     }),
     tableRows() {
@@ -197,11 +195,8 @@ export default {
   },
   created() {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
     this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('groups/getGroups', {});
   },
   components: {
     User,

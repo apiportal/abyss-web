@@ -90,7 +90,6 @@
 import { mapState } from 'vuex';
 // import api from '@/api';
 import Icon from '@/components/shared/Icon';
-import Users from '@/components/shared/subjects/users/Users';
 import Pictures from '@/components/shared/Pictures';
 
 export default {
@@ -118,9 +117,9 @@ export default {
   },
   components: {
     Icon,
-    Users,
     Pictures,
     Organizations: () => import('@/components/shared/subjects/organizations/Organizations'),
+    Users: () => import('@/components/shared/subjects/users/Users'),
   },
   computed: {
     ...mapState({

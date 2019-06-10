@@ -161,6 +161,7 @@ import Role from '@/components/shared/subjects/roles/Role';
 import Helpers from '@/helpers';
 
 export default {
+  name: 'Roles',
   components: {
     InputWithIcon,
     Icon,

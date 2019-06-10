@@ -110,12 +110,10 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
-import Groups from '@/components/shared/subjects/groups/Groups';
 import Pictures from '@/components/shared/Pictures';
-import Organizations from '@/components/shared/subjects/organizations/Organizations';
-import Roles from '@/components/shared/subjects/roles/Roles';
 
 export default {
+  name: 'User',
   props: {
     user: {
       type: Object,
@@ -129,10 +127,10 @@ export default {
   },
   components: {
     Icon,
-    Groups,
     Pictures,
-    Organizations,
-    Roles,
+    Organization: () => import('@/components/shared/subjects/organizations/Organization'),
+    Groups: () => import('@/components/shared/subjects/groups/Groups'),
+    Roles: () => import('@/components/shared/subjects/roles/Roles'),
   },
   computed: {
     ...mapState({

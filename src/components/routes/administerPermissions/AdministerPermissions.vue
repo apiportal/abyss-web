@@ -145,7 +145,8 @@ export default {
         return resourceType.type || resourceTypeId;
       };
       const { sortByKey, sortByKeyType, sortDirection } = this;
-      return Helpers.sortArrayOfObjects({
+      const { sortArrayOfObjects } = Helpers;
+      return sortArrayOfObjects({
         array: permissions.map(item => ({
           ...item,
           resourceactionname: getResourceActions(item.resourceactionid),
@@ -153,8 +154,7 @@ export default {
           resourcename: getResourceName(item.resourceid),
           accessmanagername: getAccessManagerName(item.accessmanagerid),
           resourcetypename: getResourceTypeName(item.resourceid),
-        }))
-        .filter((item) => {
+        })).filter((item) => {
           const { filterKey } = this;
           if (filterKey === '') {
             return true;

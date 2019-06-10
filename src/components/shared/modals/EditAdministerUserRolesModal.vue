@@ -135,7 +135,7 @@ export default {
     const { roles, memberships } = this;
     return {
       rolesEditable: [...JSON.parse(JSON.stringify(roles))].map((role) => {
-        const membership = memberships.find(m => m.subjectroleid === role.uuid);
+        const membership = memberships.find(m => m.subjectgroupid === role.uuid);
         const isAttached = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
@@ -154,7 +154,8 @@ export default {
   methods: {
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
-      const { rolesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
+      const { rolesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate,
+      currentUser, user } = this;
       evt.preventDefault();
       this.rolesToDelete = rolesEditable
       .filter(role => role.membership && !role.isAttached)
@@ -162,12 +163,14 @@ export default {
       this.rolesToAdd = rolesEditable
       .filter(role => !role.membership && role.isAttached)
       .map(role => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: role.organizationid,
-        crudsubjectid: this.currentUser.props.uuid,
-        subjectid: this.user.uuid,
-        subjectroleid: role.uuid,
+        crudsubjectid: currentUser.props.uuid,
+        subjectid: user.uuid,
+        subjectgroupid: role.uuid,
+        subjecttypeid: user.subjecttypeid,
+        subjectgrouptypeid: role.subjecttypeid,
         subjectdirectoryid: role.subjectdirectoryid,
+        isactive: true,
       }));
       if (this.rolesToDelete.length) {
         for (let i = 0; i < this.rolesToDelete.length; i += 1) {

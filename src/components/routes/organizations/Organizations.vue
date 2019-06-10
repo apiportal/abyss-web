@@ -9,7 +9,7 @@
         <b-nav-item :active="false" to="/app/administer-users/users/1">
           <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item :active="false" to="/app/administer-groups/1">
+        <b-nav-item :active="false" to="/app/administer-groups/groups/1">
           <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ computedGroups.length }}</b-badge>
         </b-nav-item>
       </b-nav>

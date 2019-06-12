@@ -171,6 +171,10 @@ Vue.filter('booleanToText', (value) => {
   }
   return 'No';
 });
+router.beforeEach(async (to, from, next) => {
+  store.dispatch('traffic/getNavigation', { from, to });
+  next();
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

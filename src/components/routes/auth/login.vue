@@ -119,6 +119,7 @@ export default {
     ...mapState({
       users: state => state.users.items,
       isLoading: state => state.traffic.isLoading,
+      navigationFrom: state => state.traffic.navigationFrom,
     }),
     userNameState() {
       const { username } = this.formLogin;
@@ -140,7 +141,8 @@ export default {
         .then((response) => {
           const { principalid, sessionid, organizationid, organizationname } = response.data;
           this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname });
-          this.$router.push('/app/explore/');
+          // this.$router.push('/app/explore/');
+          this.$router.push(this.navigationFrom);
         })
         .catch((error) => {
           this.isAlertVisible = true;

@@ -94,6 +94,9 @@
                 <b-dropdown-item data-qa="btnLogsAll"  :to="`${routePath}/logs/${item.uuid}/subject/1`">All</b-dropdown-item>
 
                 <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
+                <b-dropdown-header><code>{{ routePath }}</code></b-dropdown-header>
+                <b-dropdown-header><code>{{ navigationTo }}</code></b-dropdown-header>
+                <b-dropdown-header><code>{{ navigationFrom }}</code></b-dropdown-header>
 
               </b-dropdown>
             </td>
@@ -115,11 +118,11 @@
 
 <script>
 import { mapState } from 'vuex';
+import Group from '@/components/routes/groups/shared/Group';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
-import Group from '@/components/shared/subjects/groups/Group';
 import Helpers from '@/helpers';
 import Pictures from '@/components/shared/Pictures';
 
@@ -158,6 +161,8 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      navigationFrom: state => state.traffic.navigationFrom,
+      navigationTo: state => state.traffic.navigationTo,
       subjectDirectories: state => state.subjectDirectories.items,
       organizations: state => state.organizations.items,
       users: state => state.users.items,

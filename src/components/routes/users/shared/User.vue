@@ -88,19 +88,19 @@
     <div v-if="isShowUserOrganizations">
       <Organizations
         :rows="computedUserOrganizations"
-        :routePath="`/app/administer-users/users/${page}`"
+        :routePath="`/app/users/users/${page}`"
       ></Organizations>
     </div>
     <div v-if="isShowUserGroups">
       <Groups
         :rows="userGroups"
-        :routePath="`/app/administer-users/users/${page}`"
+        :routePath="`/app/users/users/${page}`"
       ></Groups>
     </div>
     <div v-if="isShowUserRoles">
       <Roles
         :rows="userRoles"
-        :routePath="`/app/administer-users/users/${page}`"
+        :routePath="`/app/users/users/${page}`"
       ></Roles>
     </div>
   </div>

@@ -1,12 +1,11 @@
 <template>
   <Modal
-    dialogClass="modal-xl"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
     :noCloseOnEsc="noCloseOnEsc"
     :hideHeaderClose="hideHeaderClose"
-    :size="size"
+    size="xl"
     :onClose="onClose"
   >
     <template slot="header">

@@ -148,7 +148,7 @@ import Explore from '@/components/routes/explore/Explore';
 import ExploreModal from '@/components/routes/explore/ExploreApis';
 // Organizations Routes Components
 import Organizations from '@/components/routes/organizations/Organizations';
-import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
+// import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
 import AddOrganization from '@/components/routes/organizations/AddOrganization';
 import EditOrganization from '@/components/routes/organizations/EditOrganization';
 import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
@@ -805,7 +805,7 @@ export default new Router({
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
-              component: OrganizationsLogs,
+              component: FeatureLogs,
             },
             {
               path: 'add-new',

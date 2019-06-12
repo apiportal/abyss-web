@@ -43,8 +43,8 @@ const actions = {
 
 const mutations = {
   setNavigation: (state, navigation) => {
-    console.log('from: ', navigation.from);
-    console.log('to: ', navigation.to);
+    // console.log('from: ', navigation.from);
+    // console.log('to: ', navigation.to);
     window.localStorage.setItem('abyssNavigationTo', navigation.to.path);
     state.navigationTo = navigation.to.path;
     if (navigation.from.path === '/' && !window.localStorage.getItem('abyssNavigationFrom')) {

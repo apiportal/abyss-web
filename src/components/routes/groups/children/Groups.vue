@@ -148,7 +148,6 @@ export default {
   },
   created() {
     this.$store.commit('currentPage/setFirstChildPath', 'groups');
-    console.log('this.$route.matched: ', this.$route.matched); // eslint-disable-line
   },
   data() {
     return {

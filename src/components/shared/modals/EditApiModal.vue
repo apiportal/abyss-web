@@ -1,13 +1,12 @@
 <template>
   <Modal
-    dialogClass="modal-xxl"
     bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
     :noCloseOnEsc="noCloseOnEsc"
     :hideHeaderClose="hideHeaderClose"
-    :size="size"
+    size="xxl"
     :onClose="onClose"
     data-qa="modalEditApiModal"
   >

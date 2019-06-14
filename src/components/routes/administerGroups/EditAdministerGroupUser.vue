@@ -1,7 +1,7 @@
 <template>
   <div>
     <EditUser
-      :routePath="`/app/administer-groups/${page}`"
+      :routePath="`/app/administer-groups/groups/${page}`"
     />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-organization"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,10 +19,10 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-row align-v="center">
-            <b-col md=9>
-              <b-form-group 
+            <b-col>
+              <b-form-group
                 id="organizationNameGroup"
               >
                 <label>
@@ -39,7 +39,7 @@
                 >
                 </b-form-input>
               </b-form-group>
-              <b-form-group 
+              <b-form-group
                 id="organizationDescriptionGroup"
               >
                 <label>
@@ -57,34 +57,30 @@
                 </b-form-textarea>
               </b-form-group>
             </b-col>
-            <b-col md=3>
-              <div class="d-flex">
-                <div class="item p-0"> 
-                  <img
-                    v-if="organizationEditable.picture"
-                    :src="organizationEditable.picture" 
-                    :alt="organizationEditable.name" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  >
-                  <img 
-                    v-if="!organizationEditable.picture" 
-                    src="@/assets/avatar.jpg" 
-                    :alt="organizationEditable.name" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()" />
-                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
-                </div>
+            <b-col cols="auto">
+              <div class="thumb-picture square bg-secondary" style="width: 200px;">
+                <img
+                  v-if="organizationEditable.picture"
+                  :src="organizationEditable.picture"
+                  :alt="organizationEditable.name"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                >
+                <img
+                  v-if="!organizationEditable.picture"
+                  src="/static/avatar.png"
+                  :alt="organizationEditable.name"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()" />
+                <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
               </div>
             </b-col>
           </b-row>
-          <b-form-group 
+          <b-form-group
             id="organizationOrganizationIdGroup"
           >
             <label>
@@ -93,7 +89,7 @@
             </label>
             <b-form-select
               id="organizationOrganizationIdInput"
-              v-model="organizationEditable.organizationid" 
+              v-model="organizationEditable.organizationid"
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -116,7 +112,7 @@
                 Is Active?
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="organizationUrlGroup"
           >
             <label>
@@ -133,14 +129,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -373,35 +369,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-organization {
-    padding: 0;
-  }
-}
-
-.configure-organization {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
-input[type="file"] {
-    display: none;
-}
+<style lang="scss" scoped>
 </style>

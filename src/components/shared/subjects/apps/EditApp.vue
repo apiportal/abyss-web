@@ -5,8 +5,7 @@
         app &&
         isAppsLoaded &&
         isOrganizationsLoaded &&
-        isSubjectDirectoriesLoaded &&
-        isSubjectDirectoryTypesLoaded
+        isSubjectDirectoriesLoaded
       "
       role="edit"
       :onClose="handleModalClose"
@@ -36,11 +35,9 @@ export default {
       userApps: state => state.userApps.items,
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       isAppsLoaded: state => (state.userApps.lastUpdatedAt > 0),
       isOrganizationsLoaded: state => (state.organizations.lastUpdatedAt > 0),
       isSubjectDirectoriesLoaded: state => (state.subjectDirectories.lastUpdatedAt > 0),
-      isSubjectDirectoryTypesLoaded: state => (state.subjectDirectoryTypes.lastUpdatedAt > 0),
     }),
   },
   data() {

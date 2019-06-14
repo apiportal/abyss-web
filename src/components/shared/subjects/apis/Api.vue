@@ -1,22 +1,30 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt style="width: 260px;" class="pb-2">
-          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+      <dl class="col-auto pb-3">
+        <dt style="width: 260px;">
+          <Images :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
         </dt>
       </dl>
       <dl class="col">
         <dt>Business Api Name:</dt>
         <dd>{{ item.openapidocument.info.title }}</dd>
-      </dl>
-      <dl class="col">
         <dt>Version:</dt>
         <dd>{{ item.openapidocument.info.version }}</dd>
+        <dt>State:</dt>
+        <dd>{{ item.apistatename }}</dd>
       </dl>
       <dl class="col">
         <dt>Description:</dt>
         <dd>{{ item.openapidocument.info.description }}</dd>
+      </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Updated:</dt>
+        <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="item.isdeleted">Deleted:</dt>
+        <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
     <div class="row abyss-table-buttons" v-if="routePath === `/app/my-apis/businesses/${page}`">
@@ -67,24 +75,11 @@ export default {
     ...mapState({
       currentPage: state => state.currentPage,
       proxies: state => state.proxies.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      organizations: state => state.organizations.items,
+      itemsLastUpdatedAt: state => state.apis.lastUpdatedAt,
     }),
     apiProxies() {
-      const { proxies, organizations } = this;
-      const getOrganizationName = (organizationid) => {
-        const organization = organizations.find(item => item.uuid === organizationid);
-        return organization ? organization.name : organizationid;
-      };
-      return proxies
-      .filter(proxy => proxy.businessapiid === this.item.uuid)
-      .map(item => ({
-        ...item,
-        organizationame: getOrganizationName(item.organizationid),
-        subscriptions: this.subscriptions[item.uuid] || [],
-        subscriptionsUpdated: this.subscriptions.lastUpdated,
-      }));
+      const { proxies } = this;
+      return proxies.filter(proxy => proxy.businessapiid === this.item.uuid);
     },
   },
   data() {
@@ -101,7 +96,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

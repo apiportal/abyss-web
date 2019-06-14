@@ -39,7 +39,8 @@ import AddMyApis from '@/components/routes/myApis/AddMyApis';
 import CreateProxy from '@/components/routes/myApis/CreateProxy';
 import EditMyApisLicense from '@/components/routes/myApis/EditMyApisLicense';
 import EditMyApiLicenses from '@/components/routes/myApis/EditMyApiLicenses';
-import EditMyApisLifeCycle from '@/components/routes/myApis/EditMyApisLifeCycle';
+import EditMyProxyApisLifeCycle from '@/components/routes/myApis/EditMyProxyApisLifeCycle';
+import EditMyBusinessApisLifeCycle from '@/components/routes/myApis/EditMyBusinessApisLifeCycle';
 // Dashboard Routes Components
 import Dashboard from '@/components/routes/dashboard/Dashboard';
 // Home Routes Components
@@ -67,6 +68,7 @@ import EditAdministerUserOrganizations from '@/components/routes/administerUsers
 import DeleteAdministerUser from '@/components/routes/administerUsers/DeleteAdministerUser';
 import EditAdministerUserRoles from '@/components/routes/administerUsers/EditAdministerUserRoles';
 // Administer Groups Routes Components
+import SubjectGroups from '@/components/routes/administerGroups/subjectGroups/SubjectGroups';
 import AdministerGroups from '@/components/routes/administerGroups/AdministerGroups';
 import AdministerGroupsLogs from '@/components/routes/administerGroups/AdministerGroupsLogs';
 import AddAdministerGroup from '@/components/routes/administerGroups/AddAdministerGroup';
@@ -136,13 +138,17 @@ import MyPoliciesLogs from '@/components/routes/myPolicies/MyPoliciesLogs';
 import EditMyPolicy from '@/components/routes/myPolicies/EditMyPolicy';
 import AddMyPolicy from '@/components/routes/myPolicies/AddMyPolicy';
 import DeleteMyPolicy from '@/components/routes/myPolicies/DeleteMyPolicy';
-
+// My Contracts
+import MyContracts from '@/components/routes/myContracts/MyContracts';
+import SubjectContracts from '@/components/routes/myContracts/subjectContracts/SubjectContracts';
+import MyApiContracts from '@/components/routes/myContracts/subjectContracts/SubjectApiContracts';
+import MyAppContracts from '@/components/routes/myContracts/subjectContracts/SubjectAppContracts';
 // Explore
 import Explore from '@/components/routes/explore/Explore';
 import ExploreModal from '@/components/routes/explore/ExploreApis';
 // Organizations Routes Components
 import Organizations from '@/components/routes/organizations/Organizations';
-import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
+// import OrganizationsLogs from '@/components/routes/organizations/OrganizationsLogs';
 import AddOrganization from '@/components/routes/organizations/AddOrganization';
 import EditOrganization from '@/components/routes/organizations/EditOrganization';
 import DeleteOrganization from '@/components/routes/organizations/DeleteOrganization';
@@ -151,6 +157,25 @@ import EditOrganizationUser from '@/components/routes/organizations/EditOrganiza
 import EditOrganizationUserGroups from '@/components/routes/organizations/EditOrganizationUserGroups';
 import EditOrganizationUserOrganizations from '@/components/routes/organizations/EditOrganizationUserOrganizations';
 import EditOrganizationUsers from '@/components/routes/organizations/EditOrganizationUsers';
+// Shared Logs
+import FeatureLogs from '@/components/shared/FeatureLogs';
+// Groups Routes Components
+import Groups from '@/components/routes/groups/children/Groups';
+import GroupsMain from '@/components/routes/groups/GroupsMain';
+import AddGroup from '@/components/routes/groups/AddGroup';
+import EditGroup from '@/components/routes/groups/EditGroup';
+import DeleteGroup from '@/components/routes/groups/DeleteGroup';
+import EditGroupUsers from '@/components/routes/groups/EditGroupUsers';
+// Users Routes Components
+import Users from '@/components/routes/users/children/Users';
+import UsersMain from '@/components/routes/users/UsersMain';
+import AddUser from '@/components/routes/users/AddUser';
+import EditUser from '@/components/routes/users/EditUser';
+import DeleteUser from '@/components/routes/users/DeleteUser';
+import EditUserGroups from '@/components/routes/users/EditUserGroups';
+import EditUserOrganizations from '@/components/routes/users/EditUserOrganizations';
+import EditUserRoles from '@/components/routes/users/EditUserRoles';
+// import xxx from '@/components/routes/myApis/api/Api';
 
 Vue.use(Router);
 
@@ -159,6 +184,15 @@ export default new Router({
     {
       path: '/',
       component: Home,
+      redirect: '/app/explore',
+    },
+    {
+      path: '/test/:apiId',
+      component: EditMyApis,
+    },
+    {
+      path: '/xxx',
+      component: AddMyApis,
     },
     {
       path: '/auth',
@@ -189,18 +223,22 @@ export default new Router({
         {
           path: 'my-profile',
           component: MyProfile,
+          meta: { title: 'My Profile', menu: 'my-profile' },
         },
         {
           path: 'my-settings',
           component: MySettings,
+          meta: { title: 'My Settings', menu: 'my-settings' },
         },
         {
           path: 'dashboard',
           component: Dashboard,
+          meta: { title: 'Dashboard', menu: 'explore' },
         },
         {
           path: 'explore',
           component: Explore,
+          meta: { title: 'Explore', menu: 'dashboard' },
           children: [
             {
               path: 'apis/:apiId',
@@ -211,6 +249,7 @@ export default new Router({
         {
           path: 'my-apis',
           component: MyApis,
+          meta: { title: 'My Apis', menu: 'my-apis' },
           children: [
             {
               path: 'businesses/:page',
@@ -235,6 +274,10 @@ export default new Router({
                 {
                   path: 'create-proxy/:apiId',
                   component: CreateProxy,
+                },
+                {
+                  path: 'edit-api-lifecycle/:apiId',
+                  component: EditMyBusinessApisLifeCycle,
                 },
               ],
             },
@@ -308,7 +351,7 @@ export default new Router({
                 },
                 {
                   path: 'edit-api-lifecycle/:apiId',
-                  component: EditMyApisLifeCycle,
+                  component: EditMyProxyApisLifeCycle,
                 },
               ],
             },
@@ -339,6 +382,7 @@ export default new Router({
         {
           path: 'identity-managers/:page',
           component: IdentityManagers,
+          meta: { title: 'Identity Managers', menu: 'identity-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -361,6 +405,7 @@ export default new Router({
         {
           path: 'identity-manager-types/:page',
           component: IdentityManagerTypes,
+          meta: { title: 'Identity Manager Types', menu: 'identity-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -383,6 +428,7 @@ export default new Router({
         {
           path: 'administer-users',
           component: AdministerUsers,
+          meta: { title: 'Users', menu: 'organizations' },
           children: [
             {
               path: 'users/:page',
@@ -416,56 +462,75 @@ export default new Router({
                   path: 'edit-user-roles/:id',
                   component: EditAdministerUserRoles,
                 },
+                {
+                  path: 'edit-group/:id',
+                  component: EditAdministerGroup,
+                },
+                {
+                  path: 'delete-group/:id',
+                  component: DeleteAdministerGroup,
+                },
+                {
+                  path: 'edit-group-users/:id',
+                  component: EditAdministerGroupUsers,
+                },
               ],
             },
           ],
-
         },
         {
-          path: 'administer-groups/:page',
+          path: 'administer-groups',
           component: AdministerGroups,
+          meta: { title: 'Groups', menu: 'organizations' },
           children: [
             {
-              path: 'logs/:id/:logType/:logPage',
-              component: AdministerGroupsLogs,
-            },
-            {
-              path: 'add-new',
-              component: AddAdministerGroup,
-            },
-            {
-              path: 'edit/:id',
-              component: EditAdministerGroup,
-            },
-            {
-              path: 'delete/:id',
-              component: DeleteAdministerGroup,
-            },
-            {
-              path: 'edit-user/:id',
-              component: EditAdministerGroupUser,
-            },
-            {
-              path: 'delete-user/:id',
-              component: DeleteAdministerGroupUser,
-            },
-            {
-              path: 'edit-user-groups/:id',
-              component: EditAdministerGroupUserGroups,
-            },
-            {
-              path: 'edit-group-users/:id',
-              component: EditAdministerGroupUsers,
-            },
-            {
-              path: 'edit-user-organizations/:id',
-              component: EditAdministerGroupUserOrganizations,
+              path: 'groups/:page',
+              component: SubjectGroups,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: AdministerGroupsLogs,
+                },
+                {
+                  path: 'add-new',
+                  component: AddAdministerGroup,
+                },
+                {
+                  path: 'edit-group/:id',
+                  component: EditAdministerGroup,
+                },
+                {
+                  path: 'delete-group/:id',
+                  component: DeleteAdministerGroup,
+                },
+                {
+                  path: 'edit-group-users/:id',
+                  component: EditAdministerGroupUsers,
+                },
+                {
+                  path: 'edit-user/:id',
+                  component: EditAdministerGroupUser,
+                },
+                {
+                  path: 'delete-user/:id',
+                  component: DeleteAdministerGroupUser,
+                },
+                {
+                  path: 'edit-user-groups/:id',
+                  component: EditAdministerGroupUserGroups,
+                },
+                {
+                  path: 'edit-user-organizations/:id',
+                  component: EditAdministerGroupUserOrganizations,
+                },
+              ],
             },
           ],
         },
         {
           path: 'access-managers/:page',
           component: AccessManagers,
+          meta: { title: 'Access Managers', menu: 'access-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -488,6 +553,7 @@ export default new Router({
         {
           path: 'roles/:page',
           component: Roles,
+          meta: { title: 'Roles', menu: 'access-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -522,6 +588,7 @@ export default new Router({
         {
           path: 'access-manager-types/:page',
           component: AccessManagerTypes,
+          meta: { title: 'Access Manager Types', menu: 'access-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -544,6 +611,7 @@ export default new Router({
         {
           path: 'policy-types/:page',
           component: PolicyTypes,
+          meta: { title: 'Policy Types', menu: 'my-policies' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -566,6 +634,7 @@ export default new Router({
         {
           path: 'administer-permissions/:page',
           component: AdministerPermissions,
+          meta: { title: 'Permissions', menu: 'access-managers' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
@@ -588,6 +657,7 @@ export default new Router({
         {
           path: 'my-apps',
           component: MyApps,
+          meta: { title: 'My Apps', menu: 'my-apps' },
           children: [
             {
               path: 'my-apps/:page',
@@ -616,6 +686,7 @@ export default new Router({
         {
           path: 'my-licenses',
           component: MyLicenses,
+          meta: { title: 'My Licenses', menu: 'my-licenses' },
           children: [
             {
               path: 'my-licenses/:page',
@@ -664,6 +735,7 @@ export default new Router({
         {
           path: 'my-policies',
           component: MyPolicies,
+          meta: { title: 'My Policies', menu: 'my-policies' },
           children: [
             {
               path: 'my-policies/:page',
@@ -690,12 +762,50 @@ export default new Router({
           ],
         },
         {
+          path: 'my-contracts',
+          component: MyContracts,
+          meta: { title: 'My Contracts', menu: 'my-contracts' },
+          children: [
+            {
+              path: 'my-contracts/:page',
+              component: SubjectContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
+            },
+            {
+              path: 'api-contracts/:page',
+              component: MyApiContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
+            },
+            {
+              path: 'app-contracts/:page',
+              component: MyAppContracts,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: MyApisLogs,
+                },
+              ],
+            },
+          ],
+        },
+        {
           path: 'organizations/:page',
           component: Organizations,
+          meta: { title: 'Organizations', menu: 'organizations' },
           children: [
             {
               path: 'logs/:id/:logType/:logPage',
-              component: OrganizationsLogs,
+              component: FeatureLogs,
             },
             {
               path: 'add-new',
@@ -728,6 +838,112 @@ export default new Router({
             {
               path: 'edit-organization-users/:id',
               component: EditOrganizationUsers,
+            },
+          ],
+        },
+        {
+          path: 'users',
+          component: UsersMain,
+          meta: { title: 'Users', menu: 'organizations' },
+          children: [
+            {
+              path: 'users/:page',
+              component: Users,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: FeatureLogs,
+                },
+                {
+                  path: 'add-new',
+                  component: AddUser,
+                },
+                {
+                  path: 'edit-user/:id',
+                  component: EditUser,
+                },
+                {
+                  path: 'delete-user/:id',
+                  component: DeleteUser,
+                },
+                {
+                  path: 'edit-user-groups/:id',
+                  component: EditUserGroups,
+                },
+                {
+                  path: 'edit-user-organizations/:id',
+                  component: EditUserOrganizations,
+                },
+                {
+                  path: 'edit-user-roles/:id',
+                  component: EditUserRoles,
+                },
+                {
+                  path: 'edit-group/:id',
+                  component: EditGroup,
+                },
+                {
+                  path: 'delete-group/:id',
+                  component: DeleteGroup,
+                },
+                {
+                  path: 'edit-group-users/:id',
+                  component: EditGroupUsers,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          path: 'groups',
+          component: GroupsMain,
+          meta: { title: 'Groups', menu: 'organizations' },
+          children: [
+            {
+              path: 'groups/:page',
+              component: Groups,
+              children: [
+                {
+                  path: 'logs/:id/:logType/:logPage',
+                  component: FeatureLogs,
+                },
+                {
+                  path: 'add-new',
+                  component: AddGroup,
+                },
+                {
+                  path: 'edit-group/:id',
+                  component: EditGroup,
+                },
+                {
+                  path: 'delete-group/:id',
+                  component: DeleteGroup,
+                },
+                {
+                  path: 'edit-group-users/:id',
+                  component: EditGroupUsers,
+                },
+                {
+                  path: 'edit-user/:id',
+                  component: EditUser,
+                },
+                {
+                  path: 'delete-user/:id',
+                  component: DeleteUser,
+                },
+                {
+                  path: 'edit-user-groups/:id',
+                  component: EditUserGroups,
+                },
+                {
+                  path: 'edit-user-organizations/:id',
+                  component: EditUserOrganizations,
+                },
+                {
+                  path: 'edit-user-roles/:id',
+                  component: EditUserRoles,
+                },
+              ],
             },
           ],
         },

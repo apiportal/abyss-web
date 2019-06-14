@@ -7,7 +7,7 @@
       <span v-if="required" class="text-danger">*</span>
     </label>
     <b-form-select
-      v-model="inputValue" 
+      v-model="inputValue"
       :options="options"
       :state="state"
       :required="required"
@@ -42,6 +42,11 @@ export default {
       required: false,
       default() { return false; },
     },
+    replace: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
     propAddress: {
       type: Array,
       required: false,
@@ -61,13 +66,19 @@ export default {
     },
   },
   computed: {
+    inputValue: {
+      get() {
+        return this.value || this.example;
+      },
+      set(newVal) {
+        return newVal;
+      },
+    },
     state() {
       const { inputValue, required } = this;
-
       if (required) {
         return Boolean(inputValue);
       }
-
       return true;
     },
   },
@@ -78,17 +89,17 @@ export default {
       }
     },
   },
-  data() {
-    const { example, value } = this;
-
-    return {
-      inputValue: value || example,
-    };
-  },
+  // data() {
+  //   const { example, value } = this;
+  //   return {
+  //     inputValue: value || example,
+  //   };
+  // },
   methods: {
     handleChange(val) {
-      const { propAddress, onChange } = this;
-      onChange(propAddress, val);
+      const { propAddress, onChange, replace, description } = this;
+      const replaceItem = replace ? description : null;
+      onChange(propAddress, val, null, replaceItem);
     },
   },
 };

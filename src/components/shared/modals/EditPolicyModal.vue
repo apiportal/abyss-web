@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-policy"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-      <div style="padding: 1rem;">
+      <div class="p-3">
         <b-form-group
           id="policyNameGroup"
           label="Policy Name*:"
@@ -63,48 +63,41 @@
               Is Active?
           </b-form-checkbox>
         </b-form-group>
-        <div class="row">
-          <div class="col-12">
-            <label for="directoryTypeInput">Policy Type: <span class="text-danger">*</span></label>
-          </div>
-          <div class="col-10">
-            <b-form-group 
-              id="policyTypeGroup"
-            >
-              <b-form-select
-                id="policyTypeInput"
-                v-model="policyEditable.typeid" 
-                :state="policyTypeState"
-                :options="[
-                  { value: null, text: 'Please Select'},
-                  ...policyTypes.map(policyType => ({
-                    value: policyType.uuid,
-                    text: policyType.name,
-                  }))
-                ]"
-                @change="(val) => handlePolicyTypeChange(val)"
-                required
-              />
-            </b-form-group>
-          </div>
-          <div class="col-2">
-            <b-button
-              variant="primary"
-              block
-              v-b-tooltip.hover
-              title="Configure Policy"
-              @click="toggleConfigurePolicy"
-              :disabled="!policyEditable.typeid"
-            >
-              <Icon icon="cog" />
-            </b-button>
-          </div>
-        </div>
+        <b-form-group id="policyTypeGroup">
+          <label for="directoryTypeInput">Policy Type: <span class="text-danger">*</span></label>
+          <b-input-group>
+            <b-input-group-prepend>
+              <b-button
+                :variant="`${isConfigurePolicyVisible ? 'primary' : 'secondary'}`"
+                v-b-tooltip.hover
+                title="Configure Policy"
+                @click="toggleConfigurePolicy"
+                :disabled="!policyEditable.typeid"
+              >
+                <Icon icon="cog" />
+              </b-button>
+            </b-input-group-prepend>
+            <b-form-select
+              id="policyTypeInput"
+              v-model="policyEditable.typeid"
+              :state="policyTypeState"
+              :options="[
+                { value: null, text: 'Please Select'},
+                ...policyTypes.map(policyType => ({
+                  value: policyType.uuid,
+                  text: policyType.name,
+                }))
+              ]"
+              @change="(val) => handlePolicyTypeChange(val)"
+              required
+            />
+          </b-input-group>
+        </b-form-group>
         <div
           v-if="policyEditable.typeid"
-          :class="`configure-directory ${isConfigurePolicyVisible ? 'd-block' : 'd-none'}`"
+          :class="`${isConfigurePolicyVisible ? 'd-block' : 'd-none'}`"
         >
-          <h5 class="mb-3">Configure Policy</h5>
+          <h6 class="text-primary font-weight-bold mb-3">Configure Policy</h6>
           <DynamicForm
             :formTemplate="policyConfigurationTemplate"
             :formData="{ configuration: policyEditable.policyinstance }"
@@ -114,13 +107,13 @@
       </div>
       <footer class="modal-footer">
         <b-button
-          variant="secondary"
+          variant="link"
           @click="onClose"
           data-qa="btnCancel"
         >
           Cancel
         </b-button>
-        <b-button 
+        <b-button
           variant="primary"
           @click="handleSubmit"
           data-qa="btnSave"
@@ -212,12 +205,12 @@ export default {
       return '';
     },
     policyDescriptionState() {
-      const { name } = this.policyEditable;
-      return name.length > 0;
+      const { description } = this.policyEditable;
+      return description.length > 0;
     },
     policyDescriptionInvalidFeedback() {
-      const { name } = this.policyEditable;
-      if (name.length === 0) {
+      const { description } = this.policyEditable;
+      if (description.length === 0) {
         return 'Please enter something';
       }
       return '';
@@ -235,10 +228,11 @@ export default {
       policyEditable: JSON.parse(JSON.stringify(this.policy)),
       isConfigurePolicyVisible: false,
       policyConfigurationTemplate: {},
+      policyInfo: {},
     };
   },
   methods: {
-    ...mapActions('policies', ['putPolicies', 'postPolicies']),
+    ...mapActions('subjectPolicies', ['putPolicies', 'postPolicies']),
     handleSubmit(evt) {
       evt.preventDefault();
       const { policyEditable, putPolicies, postPolicies, onUpdate, role } = this;
@@ -282,6 +276,10 @@ export default {
         ...policyEditable,
         policyinstance: {
           ...newTypeConfiguration.configuration,
+          info: {
+            type: this.policyInfo['x-type'],
+            subType: this.policyInfo['x-subType'],
+          },
         },
       };
     },
@@ -295,6 +293,11 @@ export default {
           .template
           .components
           .schemas;
+        this.policyInfo =
+          policyTypes
+          .find(item => item.uuid === typeid)
+          .template
+          .info;
       }
     },
   },
@@ -305,32 +308,5 @@ export default {
 
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-policy {
-    padding: 0;
-  }
-}
-
-.configure-directory {
-  // border: 1px solid #e9ecef;
-  // border-radius: .3rem;
-  // padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
+<style lang="scss" scoped>
 </style>

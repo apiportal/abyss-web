@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + group.picture + ')' }"></dt>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="group.uuid" :altText="group.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>Group Name:</dt>
@@ -15,20 +15,20 @@
         <dd>{{ group.organizationname }}</dd>
       </dl>
       <dl class="col">
-        <dt>Active:</dt>
-        <dd>{{ group.isactivated | booleanToText }}</dd>
         <dt>Directory:</dt>
         <dd>{{ group.directoryname }}</dd>
         <dt>url:</dt>
         <dd>{{ group.url }}</dd>
+        <dt>Active:</dt>
+        <dd>{{ group.isactivated | booleanToText }}</dd>
         <dt>Locked:</dt>
         <dd>{{ group.islocked | booleanToText }}</dd>
       </dl>
       <dl class="col">
-        <dt>Effective End Date:</dt>
-        <dd>{{ group.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Effective Start Date:</dt>
         <dd>{{ group.effectivestartdate | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Effective End Date:</dt>
+        <dd>{{ group.effectiveenddate | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt>Created:</dt>
         <dd>{{ group.created | moment("DD.MM.YYYY HH:mm") }}</dd>
         <dt v-if="!group.isdeleted">Updated:</dt>
@@ -42,7 +42,7 @@
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Users"
+        title="Group Users"
         @click="listGroupUsers"
         :class="{'active': isShowGroupUsers}"
         v-if="group.users.length"
@@ -51,27 +51,26 @@
         <b-badge pill>{{ group.users.length }}</b-badge>
       </b-button>
     </div>
-    <div class="abyss-table-content" v-if="isShowGroupUsers && group.users.length">
+    <div v-if="isShowGroupUsers && group.users.length">
       <Users
         :rows="group.users"
-        :routePath="`/app/administer-groups/${page}`"
+        :routePath="routePath"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import SortBy from '@/components/shared/SortBy';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/subjects/users/Users';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Group',
   components: {
     Icon,
-    SortBy,
-    TbodyCollapsible,
-    Users,
+    Pictures,
+    Users: () => import('@/components/routes/users/shared/Users'),
   },
   props: {
     group: {
@@ -79,23 +78,19 @@ export default {
       required: false,
       default() { return {}; },
     },
-    page: {
-      Type: Number,
+    routePath: {
+      type: String,
       required: false,
-      default() { return 1; },
-    },
-    users: {
-      Type: Array,
-      required: false,
-      default() { return []; },
-    },
-    memberships: {
-      Type: Array,
-      required: false,
-      default() { return []; },
+      default() { return ''; },
     },
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      navigationFrom: state => state.traffic.navigationFrom,
+      navigationTo: state => state.traffic.navigationTo,
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
+    }),
+  },
   data() {
     return {
       isShowGroupUsers: false,

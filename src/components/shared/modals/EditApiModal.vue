@@ -1,13 +1,12 @@
 <template>
   <Modal
-    dialogClass="modal-xxl"
-    bodyClass="edit-my-api"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
     :noCloseOnEsc="noCloseOnEsc"
     :hideHeaderClose="hideHeaderClose"
-    :size="size"
+    size="xxl"
     :onClose="onClose"
     data-qa="modalEditApiModal"
   >
@@ -19,7 +18,6 @@
     <template>
       <ApiDesigner
         :api="api"
-        :height="700"
         :title="api.openapidocument.info.title"
         :onClose="onClose"
         :role="role"
@@ -93,10 +91,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-my-api {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

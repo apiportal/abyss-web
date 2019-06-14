@@ -35,6 +35,8 @@
         @click="listRolePermissions"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Permissions"
         :class="{'active': isShowRolePermissions}"
         data-qa="btnRolePermissions"
       >
@@ -46,6 +48,8 @@
         @click="listRoleUsers"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Users"
         :class="{'active': isShowRoleUsers}"
         data-qa="btnRoleUsers"
       >
@@ -57,6 +61,8 @@
         @click="listRoleGroups"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Role Groups"
         :class="{'active': isShowRoleGroups}"
         data-qa="btnRoleGroups"
       >
@@ -89,18 +95,15 @@
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/subjects/users/Users';
-import Permissions from '@/components/shared/subjects/permissions/Permissions';
-import Groups from '@/components/shared/subjects/groups/Groups';
 
 export default {
   components: {
     Icon,
     SortBy,
     TbodyCollapsible,
-    Users,
-    Permissions,
-    Groups,
+    Users: () => import('@/components/shared/subjects/users/Users'),
+    Groups: () => import('@/components/shared/subjects/groups/Groups'),
+    Permissions: () => import('@/components/shared/subjects/permissions/Permissions'),
   },
   props: {
     item: {

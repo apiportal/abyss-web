@@ -1,49 +1,73 @@
 <template>
   <div>
-    <div style="text-align: center;">
-      <b-button-group size="sm" style="width: 100%;">
-        <b-button
-          :class="`${ groupBy === 'paths' ? 'btn-selected' : '' }`"
-          @click="handleGroupBy('paths')"
-        >
-          Group by Paths
-        </b-button>
-        <b-button
-          :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
-          @click="handleGroupBy('tags')"
-        >
-          Group by Tags
-        </b-button>
-      </b-button-group>
+    <b-button-group size="sm" class="w-100" v-if="showGroupButtons">
+      <b-button
+        :class="`${ groupBy === 'paths' ? 'btn-selected' : '' }`"
+        @click="handleGroupBy('paths')"
+      >
+        Group by Paths
+      </b-button>
+      <b-button
+        :class="`${ groupBy === 'tags' ? 'btn-selected' : '' }`"
+        @click="handleGroupBy('tags')"
+      >
+        Group by Tags
+      </b-button>
+    </b-button-group>
+
+    <div class="text-center">
+      <b-button
+        v-if="Object.keys(paths).length === 0"
+        variant="primary"
+        @click="addPath"
+        size="lg"
+        class="mt-3 mx-auto"
+        data-qa="btnAddPath"
+      >
+        Add Path
+      </b-button>
     </div>
-    <div style="margin-top: 1rem;">
-      <div v-if="groupBy === 'tags'">
-        <div
-          v-for="(tag, index) in tags"
-          v-bind:key="index"
-        >
-          <Tag
-            :tag="tag"
-            :operations="operations.filter(item => item.tags.indexOf(tag) > -1)"
-            :onChange="onChange"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+
+    <div v-if="groupBy === 'tags'" class="mt-3">
+      <div v-if="computedDefaultTags.length">
+        <Tag
+          :tag="'default'"
+          :operations="computedDefaultTags"
+          :onChange="onChange"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+          :tags="tags"
+        />
       </div>
-      <div v-else-if="groupBy === 'paths'">
-        <div
-          v-for="(path, index) in Object.keys(paths)"
-          v-bind:key="index"
-        >
-          <PathItem
-            :path="path"
-            :operations="operations.filter(item => item.parentProps.path === path)"
-            :onChange="onChange"
-            :refs="refs"
-            :securitySchemes="securitySchemes"
-          />
-        </div>
+      <div
+        v-for="(tag, index) in operationTags"
+        v-bind:key="index"
+      >
+        <Tag
+          :tag="tag"
+          :operations="operations.filter(item => item.tags && item.tags.length && item.tags.indexOf(tag) > -1)"
+          :onChange="onChange"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+          :tags="tags"
+        />
+      </div>
+    </div>
+    <div v-else-if="groupBy === 'paths'" class="mt-3">
+      <div
+        v-for="(path, index) in Object.keys(paths)"
+        v-bind:key="index"
+      >
+        <PathItem
+          :path="path"
+          :pathObject="paths[path]"
+          :pathArray="[...pathArray, path]"
+          :operations="operations.filter(item => item.parentProps.path === path)"
+          :onChange="onChange"
+          :refs="refs"
+          :securitySchemes="securitySchemes"
+          :tags="tags"
+        />
       </div>
     </div>
   </div>
@@ -60,6 +84,10 @@ export default {
       required: false,
       default() { return {}; },
     },
+    pathArray: {
+      type: Array,
+      required: true,
+    },
     refs: {
       type: Array,
       required: false,
@@ -70,9 +98,19 @@ export default {
       required: false,
       default() { return {}; },
     },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
     onChange: {
       type: Function,
       required: true,
+    },
+    showGroupButtons: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
     },
   },
   components: {
@@ -89,6 +127,8 @@ export default {
         const pathOperations = operationKeys
         .filter(item => (
           item !== 'description' &&
+          item !== 'servers' &&
+          item !== 'parameters' &&
           item !== 'summary'
         ))
         .reduce((operationAccumulator, operationValue) => (
@@ -97,19 +137,23 @@ export default {
             parentProps: {
               operationType: operationValue,
               path: pathValue,
+              tags: pathoperationsObject[operationValue].tags || ['default'],
             },
           }]
         ), []);
         return [...pathAccumulator, ...pathOperations];
       }, []);
     },
-    tags() {
+    operationTags() {
       const { operations } = this;
       return operations.reduce((operationAccumulator, operationValue) => {
-        const { tags } = operationValue;
+        const tags = operationValue.tags || [];
         const newTags = tags.filter(tag => (operationAccumulator.indexOf(tag) === -1));
         return [...operationAccumulator, ...newTags];
       }, []);
+    },
+    computedDefaultTags() {
+      return this.operations.filter(item => !item.tags || !item.tags.length);
     },
   },
   data() {
@@ -121,13 +165,10 @@ export default {
     handleGroupBy(groupBy) {
       this.groupBy = groupBy;
     },
+    addPath() {
+      const { pathArray } = this;
+      this.onChange([...pathArray, '/newPath'], {}, 'addItem');
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.btn.btn-secondary.btn-selected {
-  background-color: #5a6268;
-  border-color: #545b62;
-}
-</style>

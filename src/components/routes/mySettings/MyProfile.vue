@@ -2,12 +2,12 @@
 <div>
   <nav class="navbar page-navbar d-flex justify-content-between">
     <div class="d-flex">
-      <div v-if="pictureEditable.props.picture" class="position-relative">
-        <span class="notify-badge" @click="handleDeleteImage" ><Icon icon="times"/></span>
-        <img :src="pictureEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <div v-if="userEditable.props.picture" class="position-relative">
+        <span class="remove-image" @click="handleDeleteImage" ><Icon icon="times"/></span>
+        <img v-if="userEditable.props.picture" :src="userEditable.props.picture" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
       </div>
-      <img  v-if="!pictureEditable.props.picture" src="@/assets/avatar.jpg" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
-      <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
+      <img v-if="!userEditable.props.picture" src="/static/avatar.png" class="bg-cover bg-secondary rounded-circle avatar" @click="$refs.fileInput.click()" />
+      <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
       <div class="d-flex align-items-center px-4">
         <dl class="m-0">
         <dd class="m-0"><h4 class="m-0">{{ user.props.displayname }}</h4></dd>
@@ -147,7 +147,7 @@
                   <b-form-input v-model="form.oldpassword" type="password" placeholder="********" required
                     class="form-control"></b-form-input>
                 </b-form-group>
-                
+
                 <b-form-group>
                   <label class="form-label">
                     <span class="d-flex justify-content-between align-items-center">
@@ -157,7 +157,7 @@
                   <b-form-input v-model="form.newpassword" type="password" placeholder="********" required
                     class="form-control"></b-form-input>
                 </b-form-group>
-                
+
                 <b-form-group>
                   <label class="form-label">
                     <span class="d-flex justify-content-between align-items-center">
@@ -189,19 +189,19 @@
               <div class="py-3">
                 <b-form-group id="referralEmailAddress">
                   <label for="referralEmailAddressInput">Referral Email Address <code>*</code></label>
-                  <b-form-input 
-                    id="referralEmailAddressInput" 
+                  <b-form-input
+                    id="referralEmailAddressInput"
                     type="email"
                     v-model="referral.email"
-                    placeholder="Referral Email Address" 
+                    placeholder="Referral Email Address"
                     required
                   >
                   </b-form-input>
                 </b-form-group>
 
                 <b-form-group id="invitationGroup" label="Invitation Text" label-for="invitationTextarea">
-                  <b-form-textarea 
-                    id="invitationTextarea" 
+                  <b-form-textarea
+                    id="invitationTextarea"
                     v-model="referral.message"
                     placeholder="Invitation text" :rows="4" :cols="100"
                   >
@@ -220,8 +220,8 @@
                 </b-form-group>
               </div>
               <footer class="text-center">
-                <b-button size="lg" 
-                  variant="primary" 
+                <b-button size="lg"
+                  variant="primary"
                   type="submit"
                   id="IdSendReferral"
                   >Send</b-button>
@@ -249,7 +249,6 @@ export default {
     Icon,
   },
   data() {
-    // const { user } = this;
     return {
       referral: {
         email: '',
@@ -268,19 +267,16 @@ export default {
         newpassword: '',
         confirmpassword: '',
       },
-      // userEditable: JSON.parse(JSON.stringify(user)),
+      userEditable: JSON.parse(JSON.stringify(this.$store.state.user)),
     };
   },
   computed: {
     ...mapState({
       user: state => state.user,
     }),
-    userEditable() {
-      return JSON.parse(JSON.stringify(this.user));
-    },
-    pictureEditable() {
-      return JSON.parse(JSON.stringify(this.user));
-    },
+    // userEditable() {
+    //   return JSON.parse(JSON.stringify(this.user));
+    // },
   },
   methods: {
     ...mapActions('users', ['putUsers']),
@@ -313,83 +309,22 @@ export default {
           this.$store.commit('user/setUserProps', response.data[0]);
         }
       })
-        .catch((err) => {
-          console.error('Error Message >>> ', err); // eslint-disable-line no-console
-        });
+      .catch((err) => {
+        console.error('Error Message >>> ', err); // eslint-disable-line no-console
+      });
     },
     onFileSelected(event) {
-      // console.log(event.target.files[0]); // eslint-disable-line no-console
+      event.preventDefault();
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.pictureEditable.props.picture = reader.result;
-        console.log(this.pictureEditable.props.picture); // eslint-disable-line no-console
-        const {
-        description, url, effectiveenddate, secondaryemail, email,
-        picture,
-        distinguishedname, uniqueid, phonebusiness, phoneextension,
-        phonehome, phonemobile, jobtitle, department, company,
-        } = this.pictureEditable.props;
-        api.putUsers({
-          ...this.pictureEditable.props,
-          description: (description === null ? '' : description),
-          url: (url === null ? '' : url),
-          picture: (picture === null ? '' : picture),
-          distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-          uniqueid: (uniqueid === null ? '' : uniqueid),
-          phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-          phoneextension: (phoneextension === null ? '' : phoneextension),
-          phonehome: (phonehome === null ? '' : phonehome),
-          phonemobile: (phonemobile === null ? '' : phonemobile),
-          jobtitle: (jobtitle === null ? '' : jobtitle),
-          department: (department === null ? '' : department),
-          company: (company === null ? '' : company),
-          effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-          secondaryemail: (secondaryemail === null ? email : email),
-        }).then((response) => {
-          if (response && response.data) {
-            this.$store.commit('user/setUserProps', response.data[0]);
-          }
-        })
-          .catch((err) => {
-            console.error('Error Message >>> ', err); // eslint-disable-line no-console
-          });
+        this.userEditable.props.picture = reader.result;
       };
       reader.readAsDataURL(file);
     },
     handleDeleteImage() {
-      // this.pictureEditable.props.picture = '';
-      // console.log('e');
-      const {
-        description, url, effectiveenddate, secondaryemail, email,
-        // picture,
-        distinguishedname, uniqueid, phonebusiness, phoneextension,
-        phonehome, phonemobile, jobtitle, department, company,
-        } = this.pictureEditable.props;
-      api.putUsers({
-        ...this.pictureEditable.props,
-        description: (description === null ? '' : description),
-        url: (url === null ? '' : url),
-        picture: (''),
-        distinguishedname: (distinguishedname === null ? '' : distinguishedname),
-        uniqueid: (uniqueid === null ? '' : uniqueid),
-        phonebusiness: (phonebusiness === null ? '' : phonebusiness),
-        phoneextension: (phoneextension === null ? '' : phoneextension),
-        phonehome: (phonehome === null ? '' : phonehome),
-        phonemobile: (phonemobile === null ? '' : phonemobile),
-        jobtitle: (jobtitle === null ? '' : jobtitle),
-        department: (department === null ? '' : department),
-        company: (company === null ? '' : company),
-        effectiveenddate: (effectiveenddate === null ? '' : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : email),
-      }).then((response) => {
-        if (response && response.data) {
-          this.$store.commit('user/setUserProps', response.data[0]);
-        }
-      })
-        .catch((err) => {
-          console.error('Error Message >>> ', err); // eslint-disable-line no-console
-        });
+      this.userEditable.props.picture = '';
+      this.$refs.fileInput.value = null;
     },
     sendReferral(e) {
       e.preventDefault();
@@ -419,8 +354,8 @@ export default {
   },
 };
 </script>
-<style>
-  .notify-badge{
+<style lang="scss" scoped>
+  .remove-image {
       position: absolute;
       right: 0;
       top: 0;
@@ -437,8 +372,5 @@ export default {
   .avatar {
     width: 60px;
     height: 60px;
-  }
-  input[type="file"] {
-    display: none;
   }
 </style>

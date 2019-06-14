@@ -49,17 +49,19 @@
     </div>
     <div class="row abyss-table-buttons">
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleLicensesTable"
         size="md"
         variant="link"
         v-b-tooltip.hover
-        title="Used by Licenses"
+        title="Policy Attached Licenses"
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
         <b-badge pill>{{ licensesOfPolicy ? licensesOfPolicy.length : 0 }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
@@ -71,6 +73,7 @@
         <b-badge pill>{{ contractsOfPolicy ? contractsOfPolicy.length : 0 }}</b-badge>
       </b-button>
       <b-button
+        v-if="routePath !== '/app/explore/' && item.subjectid === currentUser.uuid"
         @click="handleToggleApisTable"
         size="md"
         variant="link"
@@ -90,8 +93,9 @@
     </div>
     <div v-if="isContractsTableVisible && contractsOfPolicy.length">
       <Contracts
-        :rows="computedContractsOfPolicy"
+        :rows="contractsOfPolicy"
         :routePath="routePath"
+        :onNeedsRefreshData="getContractsOfPolicy"
       ></Contracts>
     </div>
     <div v-if="isApisTableVisible && apisOfPolicy.length">
@@ -175,20 +179,8 @@ export default {
   },
   computed: {
     ...mapState({
-      contractStates: state => state.contractStates.items,
+      currentUser: state => state.user,
     }),
-    computedContractsOfPolicy() {
-      const { contractStates, contractsOfPolicy } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId) || {};
-        return contractState.name || contractStateId;
-      };
-      return contractsOfPolicy.map(item => ({
-        ...item,
-        contractstatename: getContractStateName(item.contractstateid),
-      }));
-    },
   },
   data() {
     return {
@@ -205,10 +197,6 @@ export default {
     this.getLicensesOfPolicy();
     this.getContractsOfPolicy();
     this.getApisOfPolicy();
-    this.$store.dispatch('apiStates/getApiStates', {});
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
-    this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('users/getUsers', {});
   },
 };
 </script>

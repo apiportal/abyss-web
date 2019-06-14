@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -27,6 +27,8 @@
           <b-button
             :to="`/app/administer-users/users/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New User"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -47,10 +49,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -78,7 +80,6 @@ export default {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
       subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
       users: state => state.users.items,
       groups: state => state.groups.items,
@@ -124,11 +125,6 @@ export default {
   created() {
     this.$store.commit('currentPage/setFirstChildPath', 'users');
     this.$store.commit('currentPage/setRootPath', 'administer-users');
-    // this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
-    // this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
-    // this.$store.dispatch('organizations/getOrganizations', {});
-    // this.$store.dispatch('users/getUsers', {});
-    // this.$store.dispatch('groups/getGroups', {});
   },
   data() {
     return {

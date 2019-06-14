@@ -6,6 +6,8 @@
         <div class="row">
           <b-form-select
             :value="currentUser.organizationid"
+            v-b-tooltip.hover
+            title="Change Organization"
             :options="organizationOptions"
             @change="handleOrganizationChange"
             data-qa="sideMenuSwitchOrganization"
@@ -15,69 +17,71 @@
       </b-form>
       <ul class="sidenav-links">
         <li>
-          <!-- <b-link to="/app/dashboard" :class="`${currentPage.rootPath === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome" disabled>
+          <!-- <b-link to="/app/dashboard" :class="`${menuGroup === 'dashboard' ? 'selected' : ''}`" data-qa="sideMenuHome" disabled>
             <span><span class="route-icon"><Icon icon="home" /></span> Home<span class="soon"> - Soon</span></span>
           </b-link> -->
 
-          <b-link to="/app/explore" :class="`${currentPage.rootPath === 'explore' ? 'selected' : ''}`" data-qa="sideMenuMarketplace">
+          <b-link to="/app/explore" :class="`${menuGroup === 'explore' ? 'selected' : ''}`" data-qa="sideMenuMarketplace">
             <span class="route-icon"><Icon icon="globe" /></span> Marketplace
           </b-link>
 
-          <!-- <b-link to="/app/analytics" :class="`${currentPage.rootPath === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics" disabled> 
+          <!-- <b-link to="/app/analytics" :class="`${menuGroup === 'analytics' ? 'selected' : ''}`" data-qa="sideMenuAnalytics" disabled>
             <span class="route-icon"><Icon icon="chart-bar" /></span> Analytics<span class="soon"> - Soon</span>
           </b-link> -->
 
           <p>MANAGE</p>
 
-          <b-link to="/app/my-apis/my-proxy-apis/1" :class="`${currentPage.rootPath === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
+          <b-link to="/app/my-apis/my-proxy-apis/1" :class="`${menuGroup === 'my-apis' ? 'selected' : ''}`" data-qa="sideMenuMyApis">
             <span class="route-icon"><Icon icon="cube" /></span>  My APIs
           </b-link>
 
-          <b-link to="/app/my-apps/my-apps/1" :class="`${currentPage.rootPath === 'my-apps' ? 'selected' : ''}`" data-qa="sideMenuMyApps">
+          <b-link to="/app/my-apps/my-apps/1" :class="`${menuGroup === 'my-apps' ? 'selected' : ''}`" data-qa="sideMenuMyApps">
             <span class="route-icon"><Icon icon="cubes" /></span> My Apps
           </b-link>
 
           <b-link
+            to="/app/my-contracts/my-contracts/1"
+            :class="`${menuGroup === 'my-contracts' ? 'selected' : ''}`" data-qa="sideMenuMyContracts">
+            <span class="route-icon"><Icon icon="file-signature" /></span> My Contracts
+          </b-link>
+
+          <b-link
             to="/app/my-licenses/my-licenses/1"
-            :class="`${currentPage.rootPath === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
+            :class="`${menuGroup === 'my-licenses' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="certificate" /></span> My Licenses
-          </b-link> 
-          
+          </b-link>
+
           <b-link
             to="/app/my-policies/my-policies/1"
-            :class="`${currentPage.rootPath === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
+            :class="`${menuGroup === 'my-policies' ? 'selected' : ''}`" data-qa="sideMenuMyLicenses">
             <span class="route-icon"><Icon icon="atlas" /></span> My Policies
-          </b-link> 
-
+          </b-link>
 
           <p>ADMIN</p>
-          
+
           <b-link
             to="/app/organizations/1"
-            :class="`${(currentPage.rootPath === 'organizations' || currentPage.rootPath === 'administer-users'|| currentPage.rootPath === 'administer-groups') ? 'selected' : ''}`"
+            :class="`${menuGroup === 'organizations' ? 'selected' : ''}`"
             data-qa="sideMenuOrganizations"
           >
             <span class="route-icon"><Icon icon="sitemap" /></span> Organizations
           </b-link>
-          <b-link to="/app/administer-permissions/1" :class="`${currentPage.rootPath === 'administer-permissions' ? 'selected' : ''}`" data-qa="sideMenuPermissions">
-            <span class="route-icon"><Icon icon="user-cog" /></span> Permissions
-          </b-link> 
 
           <b-link
             to="/app/identity-managers/1"
-            :class="`${(currentPage.rootPath === 'identity-managers' || currentPage.rootPath === 'identity-manager-types') ? 'selected' : ''}`"
+            :class="`${menuGroup === 'identity-managers' ? 'selected' : ''}`"
             data-qa="sideMenuIdentityManagers"
           >
             <span class="route-icon"><Icon icon="users" /></span> Identity Management
-          </b-link> 
+          </b-link>
 
           <b-link
             to="/app/access-managers/1"
-            :class="`${(currentPage.rootPath === 'access-managers' || currentPage.rootPath === 'access-manager-types' || currentPage.rootPath === 'roles') ? 'selected' : ''}`"
+            :class="`${menuGroup === 'access-managers' ? 'selected' : ''}`"
             data-qa="sideMenuAccessManagers"
           >
             <span class="route-icon"><Icon icon="user-tie" /></span> Access Management
-          </b-link> 
+          </b-link>
 
         </li>
       </ul>
@@ -97,6 +101,7 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      menuGroup: state => state.traffic.menuGroup,
       currentPage: state => state.currentPage,
       organizations: state => state.organizations.items,
     }),
@@ -138,7 +143,6 @@ export default {
         organizationname: name,
       }).then((response) => {
         if (response && response.data) {
-          // this.$store.dispatch('user/resetUser');
           const { principalid, sessionid, organizationid, organizationname } = response.data;
           this.$store.dispatch('user/getUser', { principalid, sessionid, organizationid, organizationname, refresh: true });
         }

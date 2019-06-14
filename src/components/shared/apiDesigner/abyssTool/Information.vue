@@ -1,15 +1,23 @@
 <template>
   <div>
-    <div>
-      <OpenApiObject
-        item="info"
-        type="Info Object"
-        :formData="openapidocument.info"
-        :pathArray="['openapidocument', 'info']"
-        :onChange="onChange"
-        :isCollapsedInitial="true"
-      />
-    </div>
+    <OpenApiObject
+      item="info"
+      type="Info Object"
+      :formData="openapidocument.info"
+      :pathArray="['openapidocument', 'info']"
+      :onChange="onChange"
+      :isCollapsedInitial="true"
+      :isMenu="false"
+    />
+    <OpenApiObject
+      item="externalDocs"
+      type="External Documentation Object"
+      :formData="openapidocument.externalDocs"
+      :pathArray="['openapidocument', 'externalDocs']"
+      :onChange="onChange"
+      :isCollapsedInitial="true"
+      :isMenu="false"
+    />
   </div>
 </template>
 

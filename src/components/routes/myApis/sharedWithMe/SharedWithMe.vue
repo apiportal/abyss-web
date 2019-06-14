@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -26,8 +26,8 @@
         <div class="col-auto">
           <b-button
             :to="`/app/my-apis/shared-with-me/${page}/add-new-api`"
-            v-b-tooltip.hover 
-            title="Add"
+            v-b-tooltip.hover
+            title="Add New Business API"
             variant="primary"
             class="page-btn-add"
             block
@@ -49,10 +49,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -79,9 +79,6 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      proxies: state => state.proxies.items,
       apisSharedWithUser: state => state.apisSharedWithUser.items,
     }),
     tableRows() {
@@ -100,10 +97,8 @@ export default {
             }
             const filterKeyLowerCase = filterKey.toLowerCase();
             return (
-              (
-                item.openapidocument.info.title &&
-                item.openapidocument.info.title.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              )
+              item.openapidocument.info.title &&
+              item.openapidocument.info.title.toLowerCase().indexOf(filterKeyLowerCase) > -1
             );
           }),
         sortByKey,

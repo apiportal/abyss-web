@@ -1,6 +1,7 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user-roles"
+    bodyClass="p-0"
+    :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,13 +20,14 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <div>
             <Chips
               :chips="computedMemberships"
               :autocompleteOptions="rolesEditable"
               :onDeleteChip="handleDeleteMembership"
               :onAddChip="handleAddMembership"
+              :showAddChip="false"
               label="User Roles"
             />
           </div>
@@ -33,14 +35,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -133,7 +135,7 @@ export default {
     const { roles, memberships } = this;
     return {
       rolesEditable: [...JSON.parse(JSON.stringify(roles))].map((role) => {
-        const membership = memberships.find(m => m.subjectroleid === role.uuid);
+        const membership = memberships.find(m => m.subjectgroupid === role.uuid);
         const isAttached = Boolean(membership);
         const sortTime = (new Date()).getTime();
         return {
@@ -152,7 +154,8 @@ export default {
   methods: {
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'postSubjectMemberships']),
     handleSubmit(evt) {
-      const { rolesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate } = this;
+      const { rolesEditable, postSubjectMemberships, deleteSubjectMemberships, onUpdate,
+      currentUser, user } = this;
       evt.preventDefault();
       this.rolesToDelete = rolesEditable
       .filter(role => role.membership && !role.isAttached)
@@ -160,15 +163,16 @@ export default {
       this.rolesToAdd = rolesEditable
       .filter(role => !role.membership && role.isAttached)
       .map(role => ({
-        // organizationid: this.currentUser.props.organizationid,
         organizationid: role.organizationid,
-        crudsubjectid: this.currentUser.props.uuid,
-        subjectid: this.user.uuid,
-        subjectroleid: role.uuid,
+        crudsubjectid: currentUser.props.uuid,
+        subjectid: user.uuid,
+        subjectgroupid: role.uuid,
+        subjecttypeid: user.subjecttypeid,
+        subjectgrouptypeid: role.subjecttypeid,
         subjectdirectoryid: role.subjectdirectoryid,
+        isactive: true,
       }));
       if (this.rolesToDelete.length) {
-        // console.log('rolesToDelete', this.rolesToDelete);
         for (let i = 0; i < this.rolesToDelete.length; i += 1) {
           deleteSubjectMemberships(this.rolesToDelete[i]).then((response) => {
             if (response && response.data) {
@@ -178,7 +182,6 @@ export default {
         }
       }
       if (this.rolesToAdd.length) {
-        // console.log('rolesToAdd', this.rolesToAdd);
         for (let i = 0; i < this.rolesToAdd.length; i += 1) {
           postSubjectMemberships([this.rolesToAdd[i]]).then((response) => {
             if (response && response.data) {
@@ -214,10 +217,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-administer-user-roles {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

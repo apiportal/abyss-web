@@ -7,7 +7,7 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
-      data-qa="modalInform"
+    data-qa="modalInform"
   >
     <template slot="header">
       <h5 class="modal-title" data-qa="modalTitle">{{ title }}</h5>
@@ -16,10 +16,8 @@
       <p v-html="withBrTags" style="text-align: justify"></p>
     </template>
     <template slot="footer">
-      <b-button 
-        class="float-right" 
-        variant="primary" 
-        size="sm" 
+      <b-button
+        variant="primary"
         @click="onConfirm"
         data-qa="btnConfirm"
       >

@@ -37,7 +37,7 @@
     <div class="page-content-nested">
       <router-view></router-view>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -49,11 +49,10 @@ export default {
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
       businessApis: state => state.businessApis.items,
-      apiSubscriptions: state => state.apiSubscriptions.items,
       apisSharedWithUser: state => state.apisSharedWithUser.items,
       apisSharedByUser: state => state.apisSharedByUser.items,
       proxies: state => state.proxies.items,
-      contracts: state => state.userContracts.items,
+      contracts: state => state.userContracts.userApiContracts,
       users: state => state.users.items,
     }),
     myContractedApis() {
@@ -69,18 +68,10 @@ export default {
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-apis');
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('apiSubscriptions/getApiSubscriptions', { uuid: this.currentUser.uuid });
     this.$store.dispatch('apisSharedWithUser/getApisSharedWithUser', { uuid: this.currentUser.uuid });
     this.$store.dispatch('apisSharedByUser/getApisSharedByUser', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('apiStates/getApiStates', {});
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('policyTypes/getPolicyTypes', {});
-    this.$store.dispatch('resourceActions/getResourceActions', {});
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('userContracts/getUserApiContracts', { uuid: this.currentUser.uuid });
   },
 };
 </script>

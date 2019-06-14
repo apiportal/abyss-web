@@ -1,48 +1,60 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt style="width: 260px;" class="pb-2">
-          <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle"></Images>
+      <dl class="col-auto pb-3">
+        <dt style="width: 260px;">
+          <Images :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
         </dt>
       </dl>
       <dl class="col">
         <dt>Proxy Api Name:</dt>
-        <dd>{{ item.openapidocument.info.title }}</dd>
+        <dd>{{ item.apititle }}</dd>
         <dt>Version:</dt>
-        <dd>{{ item.openapidocument.info.version }}</dd>
-        <dt>Organization:</dt>
-        <dd>{{ item.organizationame }}</dd>
-      </dl>
-      <dl class="col col-md-2">
+        <dd>{{ item.version }}</dd>
         <dt>State:</dt>
         <dd>{{ item.apistatename }}</dd>
+      </dl>
+      <dl class="col col-md-2">
         <dt>Visibility:</dt>
         <dd>{{ item.apivisibilityname }}</dd>
         <dt>Environment:</dt>
-        <dd>{{ environment(item) }}</dd>
+        <dd>{{ item.environment }}</dd>
+        <dt>Organization:</dt>
+        <dd>{{ getOrganizationName(item.organizationid) }}</dd>
       </dl>
       <dl class="col">
         <dt>Business API:</dt>
         <dd>{{ computedBusinessApiName }}</dd>
         <dt>Description:</dt>
-        <dd>{{ item.openapidocument.info.description }}</dd>
+        <dd>{{ item.apidescription }}</dd>
       </dl>
+      <dl class="col">
+        <dt>Created:</dt>
+        <dd>{{ item.created | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt>Updated:</dt>
+        <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
+        <dt v-if="item.isdeleted">Deleted:</dt>
+        <dd v-if="item.isdeleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
+      </dl>
+
     </div>
     <div class="row abyss-table-buttons">
       <b-button
         @click="handleToggleBusinessTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Business API of Proxy API"
         :class="{'active': isBusinessTableVisible}"
       >
         <span>Business API</span>
-        <b-badge pill>{{ computedBusinessApi.length }}</b-badge>
       </b-button>
       <b-button
         @click="handleToggleLicensesTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Attached Licenses"
         :class="{'active': isLicensesTableVisible}"
       >
         <span>Licenses</span>
@@ -52,6 +64,8 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Proxy API Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
@@ -68,11 +82,13 @@
       <Contracts
         :rows="item.contracts"
         :routePath="routePath"
+        :isMineApi="isMineApi"
+        :onNeedsRefreshData="refreshData"
       ></Contracts>
     </div>
-    <div v-if="isBusinessTableVisible && computedBusinessApi.length">
+    <div v-if="isBusinessTableVisible && businessApi.length">
       <Apis
-        :rows="computedBusinessApi"
+        :rows="businessApi"
         :routePath="routePath"
       ></Apis>
     </div>
@@ -81,6 +97,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import api from '@/api';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 import Images from '@/components/shared/Images';
@@ -88,17 +105,23 @@ import Images from '@/components/shared/Images';
 export default {
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       businessApis: state => state.businessApis.items,
+      organizations: state => state.organizations.items,
+      itemsLastUpdatedAt: state => state.proxies.lastUpdatedAt,
     }),
-    computedBusinessApi() {
-      return this.businessApis.filter(item =>
-        item.uuid === this.item.businessapiid);
-    },
+    // computedBusinessApi() {
+    //   return this.businessApis.filter(item =>
+    //     item.uuid === this.item.businessapiid);
+    // },
     computedBusinessApiName() {
-      if (this.computedBusinessApi.length) {
-        return this.computedBusinessApi[0].openapidocument.info.title;
+      if (this.businessApi.length) {
+        return this.businessApi[0].openapidocument.info.title;
       }
       return '';
+    },
+    isMineApi() {
+      return this.currentUser.uuid === this.item.subjectid;
     },
   },
   components: {
@@ -132,11 +155,24 @@ export default {
       isContractsTableVisible: false,
       isTokensTableVisible: false,
       isBusinessTableVisible: false,
+      businessApi: [],
     };
   },
   methods: {
-    environment(item) {
-      return item.islive ? 'Live' : 'Sandbox';
+    getBusinessApi() {
+      api.getApi(this.item.businessapiid).then((response) => {
+        this.businessApi = response.data;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.businessApi = [];
+        }
+      });
+    },
+    getOrganizationName(organizationId) {
+      const { organizations } = this;
+      const organization = organizations.find(i => i.uuid === organizationId) || {};
+      return organization.name || organizationId;
     },
     handleToggleContractsTable() {
       this.isContractsTableVisible = !this.isContractsTableVisible;
@@ -165,12 +201,20 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+    refreshData() {
+      this.$store.dispatch('userContracts/getUserApiContracts', {
+        uuid: this.currentUser.uuid,
+        refresh: true,
+      });
+    },
+  },
+  created() {
+    this.getBusinessApi();
   },
 };
 </script>

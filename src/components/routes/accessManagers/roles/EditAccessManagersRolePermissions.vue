@@ -7,16 +7,16 @@
 </template>
 
 <script>
-  import EditRolePermissions from '@/components/shared/subjects/roles/EditRolePermissions';
+import EditRolePermissions from '@/components/shared/subjects/roles/EditRolePermissions';
 
-  export default {
-    components: {
-      EditRolePermissions,
-    },
-    data() {
-      return {
-        page: this.$route.params.page,
-      };
-    },
-  };
+export default {
+  components: {
+    EditRolePermissions,
+  },
+  data() {
+    return {
+      page: this.$route.params.page,
+    };
+  },
+};
 </script>

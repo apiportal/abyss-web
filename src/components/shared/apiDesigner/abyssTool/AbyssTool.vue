@@ -25,7 +25,13 @@
           :active="activeTab === 'servers'"
           @click="() => setActiveTab('servers')"
         >
-          Servers
+          Servers &amp; Security
+        </b-nav-item>
+        <b-nav-item
+          :active="activeTab === 'status'"
+          @click="() => setActiveTab('status')"
+        >
+          Portal Specific
         </b-nav-item>
       </b-nav>
     </div>
@@ -33,14 +39,20 @@
       <Paths
         v-if="activeTab === 'paths'"
         :paths="api.openapidocument.paths"
+        :pathArray="['openapidocument', 'paths']"
         :onChange="onChange"
         :refs="refs"
-        :securitySchemes="api.openapidocument.components.securitySchemes"
+        :securitySchemes="securitySchemes"
+        :tags="api.openapidocument.tags"
+        :showGroupButtons="true"
       />
       <ComponentsTags
         v-if="activeTab === 'componentsTags'"
         :openapidocument="api.openapidocument"
         :onChange="onChange"
+        :refs="refs"
+        :securitySchemes="securitySchemes"
+        :tags="api.openapidocument.tags"
       />
       <Information
         v-if="activeTab === 'information'"
@@ -52,6 +64,11 @@
         :openapidocument="api.openapidocument"
         :onChange="onChange"
       />
+      <Status
+        v-if="activeTab === 'status'"
+        :api="api"
+        :onChange="onChange"
+      />
     </div>
   </div>
 </template>
@@ -61,6 +78,7 @@ import Paths from '@/components/shared/apiDesigner/abyssTool/paths/Paths';
 import ComponentsTags from '@/components/shared/apiDesigner/abyssTool/ComponentsTags';
 import Information from '@/components/shared/apiDesigner/abyssTool/Information';
 import Servers from '@/components/shared/apiDesigner/abyssTool/Servers';
+import Status from '@/components/shared/apiDesigner/abyssTool/Status';
 
 export default {
   props: {
@@ -79,20 +97,30 @@ export default {
     ComponentsTags,
     Information,
     Servers,
+    Status,
   },
   computed: {
     refs() {
       const { components } = this.api.openapidocument;
-      const optionGroups = Object.keys(components);
-      return optionGroups.map((optionGroup) => {
-        const optionGroupProps = Object.keys(components[optionGroup]);
-        const optionGroupOptions = optionGroupProps
-        .map(optionGroupProp => `#/components/${optionGroup}/${optionGroupProp}`);
-        return {
-          name: optionGroup,
-          options: optionGroupOptions,
-        };
-      });
+      if (components) {
+        const optionGroups = Object.keys(components);
+        return optionGroups.map((optionGroup) => {
+          const optionGroupProps = Object.keys(components[optionGroup]);
+          const optionGroupOptions = optionGroupProps
+          .map(optionGroupProp => `#/components/${optionGroup}/${optionGroupProp}`);
+          return {
+            name: optionGroup,
+            options: optionGroupOptions,
+          };
+        });
+      }
+      return [];
+    },
+    securitySchemes() {
+      if (this.api.openapidocument.components) {
+        return this.api.openapidocument.components.securitySchemes;
+      }
+      return {};
     },
   },
   data() {
@@ -117,7 +145,6 @@ export default {
 
   .abyss-tool-header-container {
     flex: 40px 0 0;
-    background: #f8f8f8;
 
     .nav-tabs {
       margin-top: .5rem;
@@ -130,6 +157,7 @@ export default {
   }
 
    .abyss-tool-content-container {
+    background: #f8f8f8;
     flex: 1 0 0;
     overflow-y: scroll;
     padding: 1rem;

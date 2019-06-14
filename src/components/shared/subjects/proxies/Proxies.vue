@@ -1,15 +1,16 @@
 <template>
   <div class="abyss-table-content">
-    <table class="table abyss-table abyss-table-cards">
+    <table class="table abyss-table abyss-table-cards" v-if="isUsersLoaded">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
               :selectedSortDirection="sortDirection"
               :onClick="handleSortByClick"
               text="Proxy Api Name"
-              sortByKey="openapidocument.info.title"
+              sortByKey="apititle"
               sortByKeyType="string"
             />
           </th>
@@ -63,6 +64,19 @@
               sortByKeyType="number"
             />
           </th>
+          <th v-if="currentPage.firstChildPath === 'shared-with-me' ||
+            currentPage.firstChildPath === 'shared-by-me' ||
+            currentPage.rootPath === 'my-contracts' ||
+            currentPage.rootPath === 'my-apps'">
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Owner"
+              sortByKey="owner.name"
+              sortByKeyType="string"
+            />
+          </th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -70,16 +84,6 @@
               :onClick="handleSortByClick"
               text="Updated"
               sortByKey="updated"
-              sortByKeyType="string"
-            />
-          </th>
-          <th v-if="currentPage.firstChildPath === 'shared-with-me'">
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Owner"
-              sortByKey="owner.name"
               sortByKeyType="string"
             />
           </th>
@@ -91,63 +95,73 @@
         :cols="10"
       />
       <TbodyCollapsible
-        v-for="(proxyItem, proxyIndex) in paginatedRows" v-bind:key="proxyIndex"
-        :isCollapsed="collapsedRows.indexOf(proxyItem.uuid) > -1"
+        v-for="(item, index) in paginatedRows" v-bind:key="index"
+        :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
         :level="1"
       >
-        <tr slot="main" :class="`${proxyIndex % 2 === 0 ? 'odd' : 'even'} ${proxyItem.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${proxyIndex}`">
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" :data-qa="`tableRowName-${proxyIndex}`">
-            <Images :uuid="proxyItem.uuid" :itext="proxyItem.openapidocument.info.title" :color="proxyItem.color" type="apis" shape="rectangle" class="favimage"></Images>
-            {{ proxyItem.openapidocument.info.title }}
+        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
+          <td class="picture">
+            <Images :uuid="item.uuid" :altText="item.apititle" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.version }}
+          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+            {{ item.apititle }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apistatename }} - {{ environment(proxyItem) }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.apivisibilityname }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            <Icon icon="circle" :class="`state${item.apistatename}`"/>
+            {{ item.apistatename }} - {{ item.environment }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
-            {{ proxyItem.contractscount }}
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.apivisibilityname }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" class="number">
-            {{ proxyItem.licensescount }}
+          <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
+            {{ item.contractscount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
-            {{ proxyItem.updated | moment("DD.MM.YYYY HH:mm") }}
+          <td @click="() => handleCollapseTableRows(item.uuid)" class="number">
+            {{ item.licensescount }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me'">
-            {{ proxyItem.owner.name }}
+          <td @click="() => handleCollapseTableRows(item.uuid)" v-if="currentPage.firstChildPath === 'shared-with-me' ||
+            currentPage.firstChildPath === 'shared-by-me' ||
+            currentPage.rootPath === 'my-contracts' ||
+            currentPage.rootPath === 'my-apps'">
+            {{ item.apiowner }}
+          </td>
+          <td @click="() => handleCollapseTableRows(item.uuid)">
+            {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions" v-if="routePath !== '/app/explore/'">
-            <b-dropdown variant="link" size="lg" no-caret right v-if="!proxyItem.isdeleted" data-qa="dropDownActions">
+            <b-dropdown variant="link" size="lg" no-caret right v-if="!item.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
-              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${proxyItem.uuid}`"><Icon icon="edit" /> Edit Proxy API</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Proxy API</b-dropdown-item>
 
-              <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${proxyItem.uuid}`"><Icon icon="certificate" /> Add/Edit API Licenses</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditApiLicenses" :to="`${routePath}/edit-api-licenses/${item.uuid}`">
+                <Icon icon="certificate" /> Add/Edit API Licenses
+              </b-dropdown-item>
 
-              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${proxyItem.uuid}`"><Icon icon="bezier-curve" /> Edit API Life Cycle</b-dropdown-item>
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${item.uuid}`">
+                <Icon icon="bezier-curve" />Change API Lifecycle
+              </b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
-              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${proxyItem.uuid}/api/1`">All</b-dropdown-item>
+              <b-dropdown-item data-qa="btnLogsAll" :to="`${routePath}/logs/${item.uuid}/api/1`">All</b-dropdown-item>
 
-              <b-dropdown-header><code>{{ proxyItem.uuid }}</code></b-dropdown-header>
+              <b-dropdown-header><code>{{ item.uuid }}</code></b-dropdown-header>
 
             </b-dropdown>
           </td>
           <td class="actions" v-else></td>
         </tr>
-        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(proxyItem.uuid) > -1">
+        <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
           <td colspan="10">
             <div class="collapsible-content">
               <Proxy
-                :item="proxyItem"
+                :item="item"
                 :routePath="routePath"
                 childComponent="Licenses"
               ></Proxy>
@@ -201,8 +215,10 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       licenses: state => state.subjectLicenses.items,
-      contracts: state => state.userContracts.items,
+      contracts: state => state.userContracts.userApiContracts,
       apiLicenses: state => state.apiLicenses.items,
+      isUsersLoaded: state => state.users.lastUpdatedAt,
+      itemsLastUpdatedAt: state => state.proxies.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows, users,
@@ -210,11 +226,7 @@ export default {
       const { sortArrayOfObjects } = Helpers;
       const getApiOwner = (apiItem) => {
         const apiOwner = users.find(item => item.uuid === apiItem.subjectid);
-        // return apiOwner || {};
-        return {
-          name: apiOwner.displayname,
-          uuid: apiOwner.uuid,
-        };
+        return apiOwner.displayname;
       };
       const getApiStateName = (apistateid) => {
         const apiState = apiStates.find(item => item.uuid === apistateid);
@@ -226,7 +238,7 @@ export default {
       };
       const getApiLicenses = (id) => {
         const apiLicensesApis = this.apiLicenses
-        .filter(item => item.apiid === id && !item.isdeleted);
+        .filter(item => item.apiid === id);
         const apiLicenses = this.licenses.filter(el =>
           apiLicensesApis.some(f =>
             f.licenseid === el.uuid,
@@ -236,7 +248,7 @@ export default {
       };
       const getProxyContracts = (id) => {
         const proxyContracts = this.contracts
-        .filter(item => item.apiid === id && !item.isdeleted);
+        .filter(item => item.apiid === id);
         return proxyContracts;
       };
       return sortArrayOfObjects({
@@ -245,11 +257,16 @@ export default {
             ...item,
             apistatename: getApiStateName(item.apistateid),
             apivisibilityname: getApiVisibilityName(item.apivisibilityid),
-            owner: getApiOwner(item),
             licenses: getApiLicenses(item.uuid),
             licensescount: getApiLicenses(item.uuid).length,
             contracts: getProxyContracts(item.uuid),
             contractscount: getProxyContracts(item.uuid).length,
+            apiowner: item.apiowner ? item.apiowner : getApiOwner(item),
+            apititle: item.apititle ? item.apititle : item.openapidocument.info.title,
+            apiversion: item.apiversion ? item.apiversion : item.openapidocument.info.version,
+            apidescription: item.apidescription ? item.apidescription :
+              item.openapidocument.info.description,
+            environment: item.islive ? 'Live' : 'Sandbox',
           })),
         sortByKey,
         sortByKeyType,
@@ -277,22 +294,12 @@ export default {
   data() {
     return {
       collapsedRows: [],
-      proxyRows: [],
       sortByKey: 'updated',
       sortByKeyType: 'string',
       sortDirection: 'asc',
     };
   },
-  mounted() {
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('userContracts/getUserContracts', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('apiLicenses/getApiLicensesRefs', {});
-  },
   methods: {
-    environment(item) {
-      return item.islive ? 'Live' : 'Sandbox';
-    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -301,12 +308,20 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
       }
     },
+  },
+  mounted() {
+    this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
+    this.$store.dispatch('users/getUsers', {});
+    // this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('userContracts/getUserApiContracts', { uuid: this.currentUser.uuid });
+    this.$store.dispatch('apiLicenses/getApiLicensesRefs', {});
   },
 };
 </script>
@@ -316,5 +331,35 @@ export default {
   max-width: 35px;
   height: auto;
   margin: -7px 10px;
+}
+.stateInitial{
+  color:#8b8e91
+}
+.stateDraft{
+  color:#161c9a
+}
+.stateStaged{
+  color:#6f42c1
+}
+.statePublished{
+  color:#eeee00
+}
+.statePromoted{
+  color:#4cac00
+}
+.stateDemoted{
+  color:#db408d
+}
+.stateDeprecated{
+  color:#ecb100
+}
+.stateRetired{
+  color:#00bbbb
+}
+.stateArchived{
+  color:#177ec1
+}
+.stateRemoved{
+  color:#212121
 }
 </style>

@@ -14,7 +14,7 @@
           <dt>Status:</dt>
           <dd>{{ item.status }}</dd>
           <dt>State:</dt>
-          <dd>{{ state }}</dd>
+          <dd>{{ item.contractstatename }}</dd>
         </dl>
         <dl class="col">
           <dt>Created:</dt>
@@ -23,8 +23,6 @@
           <dd>{{ item.updated | moment("DD.MM.YYYY HH:mm") }}</dd>
           <dt v-if="item.deleted">Deleted:</dt>
           <dd v-if="item.deleted">{{ item.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
-          <dt>subjectpermissionid:</dt>
-          <dd>{{ item.subjectpermissionid }}</dd>
         </dl>
       </div>
 
@@ -66,13 +64,13 @@
       </div>
       <div v-if="isApisTableVisible">
         <Proxies
-          :rows="contractApis"
+          :rows="contractApi"
           :routePath="routePath"
         ></Proxies>
       </div>
       <div v-if="isLicensesTableVisible">
         <Licenses
-          :rows="computedContractLicenses"
+          :rows="contractLicense"
           :routePath="routePath"
         ></Licenses>
       </div>
@@ -84,8 +82,6 @@
 import { mapState } from 'vuex';
 import api from '@/api';
 import Icon from '@/components/shared/Icon';
-import AccessTokens from '@/components/shared/subjects/subscriptions/AccessTokens';
-import Licenses from '@/components/shared/subjects/licenses/Licenses';
 
 export default {
   props: {
@@ -106,29 +102,18 @@ export default {
   },
   components: {
     Icon,
-    AccessTokens,
-    Licenses,
+    AccessTokens: () => import('@/components/shared/subjects/subscriptions/AccessTokens'),
+    Licenses: () => import('@/components/shared/subjects/licenses/Licenses'),
     Proxies: () => import('@/components/shared/subjects/proxies/Proxies'),
   },
   computed: {
     ...mapState({
       currentUser: state => state.user,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
-      // licenses: state => state.subjectLicenses.items,
-      licenses: state => state.licenses.items,
-      proxies: state => state.proxies.items,
+      currentPage: state => state.currentPage,
     }),
-    computedContractApis() {
-      const { proxies, item } = this;
-      return proxies.filter(el => el.uuid === item.apiid);
-    },
     computedExpiredTokens() {
       const hasNoActiveToken = this.accessTokens.find(item => !item.isexpired);
       return Boolean(!hasNoActiveToken);
-    },
-    computedContractLicenses() {
-      return this.licenses.filter(license => license.uuid === this.item.licenseid);
     },
   },
   data() {
@@ -138,7 +123,8 @@ export default {
       isTokensTableVisible: false,
       isLicensesTableVisible: false,
       accessTokens: [],
-      contractApis: [],
+      contractApi: [],
+      contractLicense: [],
     };
   },
   methods: {
@@ -178,23 +164,38 @@ export default {
     },
     getContractApi() {
       api.getApi(this.item.apiid).then((response) => {
-        this.contractApis = response.data;
+        this.contractApi = response.data;
       })
       .catch((error) => {
         if (error.status === 404) {
-          this.contractApis = [];
+          this.contractApi = [];
+        }
+      });
+    },
+    getContractLicense() {
+      api.getLicense(this.item.licenseid).then((response) => {
+        this.contractLicense = response.data;
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          this.contractLicense = [];
         }
       });
     },
   },
   created() {
-    // this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('licenses/getLicenses', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('proxies/getProxies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    this.getAccessTokens();
-    this.getContractApi();
+    if (this.currentPage.rootPath === 'my-apps') {
+      this.contractLicense = this.item.licenses;
+      this.contractApi = this.item.apis;
+      this.accessTokens = this.item.tokens.map(token => ({
+        ...token,
+        isexpired: this.$moment(token.expiredate).isBefore(this.$moment.utc()),
+      }));
+    } else {
+      this.getContractLicense();
+      this.getAccessTokens();
+      this.getContractApi();
+    }
   },
 };
 </script>

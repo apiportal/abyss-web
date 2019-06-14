@@ -24,7 +24,6 @@ const state = {
   organizationname: null,
   signedIn: false,
   lastUpdatedAt: 0,
-  gatewayUrl: 'https://dev2.apiportal.com/abyss-gw/',
   props: {},
 };
 

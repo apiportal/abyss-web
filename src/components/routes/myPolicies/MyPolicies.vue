@@ -16,7 +16,7 @@
     <div class="page-content-nested">
       <router-view></router-view>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -34,7 +34,6 @@ export default {
   mounted() {
     this.$store.commit('currentPage/setRootPath', 'my-policies');
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('policies/getPolicies', {});
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('organizations/getOrganizations', {});

@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-role-permissions"
+    bodyClass="p-0"
     :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
@@ -20,7 +20,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <div class="form-group">
             <Chips
               :chips="computedRolePermissions"
@@ -34,13 +34,13 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import moment from 'moment-timezone';
 import { mapActions, mapState } from 'vuex';
 import Modal from '@/components/shared/modals/Modal';
 import Icon from '@/components/shared/Icon';
@@ -103,18 +102,14 @@ export default {
       type: Function,
       required: true,
     },
-    user: {
-      type: Object,
-      required: false,
-    },
-    selectedRole: {
-      type: Object,
-      required: false,
-    },
     permissions: {
       type: Array,
       required: false,
       default() { return []; },
+    },
+    selectedRole: {
+      type: Object,
+      required: false,
     },
     rolePermissions: {
       type: Array,
@@ -129,22 +124,24 @@ export default {
     computedRolePermissions() {
       const { permissionsEditable } = this;
       return permissionsEditable
-        .filter(permission => permission.isAttached)
-        .sort((a, b) => b.sortTime - a.sortTime);
+      .filter(permission => permission.isAttached)
+      .sort((a, b) => b.sortTime - a.sortTime);
     },
   },
   data() {
-    const { permissions, rolePermissions } = this;
+    const { permissions, rolePermissions, selectedRole } = this;
     return {
-      permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission) => {
-        const rolepermission = rolePermissions
-          .find(o => o.permissionrefid === this.selectedRole.uuid);
+      permissionsEditable: [...JSON.parse(JSON.stringify(permissions))].map((permission, index) => {
+        const rolepermission = rolePermissions.find(m =>
+          m.subjectid === permission.subjectid &&
+          m.subjectid === selectedRole.uuid,
+        );
         const isAttached = Boolean(rolepermission);
         const sortTime = (new Date()).getTime();
         return {
           ...permission,
-          text: permission.permission,
           value: permission.uuid,
+          text: `${permission.permission} - ${index}`,
           isAttached,
           rolepermission,
           sortTime,
@@ -158,30 +155,26 @@ export default {
     ...mapActions('permissions', ['deletePermissions', 'postPermissions']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const now = new Date();
-      const endDate = new Date(now);
-      endDate.setFullYear(now.getFullYear() + 1);
       const { permissionsEditable, selectedRole, currentUser,
         postPermissions, deletePermissions, onUpdate } = this;
       this.permissionsToDelete = permissionsEditable
          .filter(permission => permission.rolepermission && !permission.isAttached)
         .map(permission => (permission.rolepermission));
-      this.permissionsToAdd = permissionsEditable
+      this.permissionsToAdd = [permissionsEditable
         .filter(permission => !permission.rolepermission && permission.isAttached)
         .map(permission => ({
           organizationid: permission.organizationid,
           crudsubjectid: currentUser.props.uuid,
           permission: permission.permission,
           description: permission.description,
-          effectivestartdate: moment(now),
-          effectiveenddate: moment(endDate),
+          effectivestartdate: this.$moment.utc().toISOString(),
+          effectiveenddate: this.$moment.utc().add(1, 'years').toISOString(),
           subjectid: selectedRole.uuid,
           resourceid: permission.resourceid,
           resourceactionid: permission.resourceactionid,
           accessmanagerid: permission.accessmanagerid,
           isactive: true,
-          // permissionrefid: permission.uuid,
-        }));
+        }))];
       if (this.permissionsToDelete.length) {
         for (let i = 0; i < this.permissionsToDelete.length; i += 1) {
           deletePermissions(this.permissionsToDelete[i]).then((response) => {
@@ -197,17 +190,14 @@ export default {
             if (response && response.data) {
               onUpdate();
             }
+          })
+          .catch((error) => {
+            if (error && i === this.permissionsToAdd.length - 1) {
+              onUpdate();
+            }
           });
         }
       }
-      // let rolePermissionsObj = {}; // eslint-disable-line
-      // for (let i = 0; i < rolePermissions.length; i += 1) {
-      //   const { uuid, ...rest } = rolePermissions[i];
-      //   rolePermissionsObj[uuid] = rest;
-      // }
-      // postPermissions(rolePermissionsObj).then(() => {
-      //   onUpdate();
-      // });
     },
     handleDeleteRolePermissions(index, chip) {
       const { permissionsEditable } = this;
@@ -235,10 +225,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-  .modal-body {
-    &.edit-role-permissions {
-      padding: 0;
-    }
-  }
+<style lang="scss" scoped>
 </style>

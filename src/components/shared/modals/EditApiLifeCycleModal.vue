@@ -9,15 +9,16 @@
     :hideHeaderClose="hideHeaderClose"
     :size="size"
     :onClose="onClose"
-    data-qa="modalEditApiLifeCycle"
+    data-qa="modalEditProxyApiLifeCycle"
   >
     <template slot="header">
       <h5 class="modal-title">
-        Edit API Lifecycle
+        Change API Lifecycle
       </h5>
     </template>
     <template>
       <LifeCycle
+        role="proxyApi"
         :currentApiState="computedApiState"
         @clicked="onClickLifeCycle"
       />
@@ -26,13 +27,13 @@
       >
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import api from '@/api';
 import Modal from '@/components/shared/modals/Modal';
 import LifeCycle from '@/components/shared/LifeCycle';
 import { mapState, mapActions } from 'vuex';
@@ -110,19 +112,18 @@ export default {
   data() {
     return {
       readNewState: '',
-      proxyEditable: JSON.parse(JSON.stringify(this.proxy)),
     };
   },
   methods: {
-    ...mapActions('proxies', ['putProxies']),
+    ...mapActions('lifecycle', ['putLifecycle']),
     handleSubmit(evt) {
       evt.preventDefault();
-      const { proxyEditable, onUpdate, putProxies, apiNextState } = this;
-      const proxyToUpdate = {
-        ...proxyEditable,
-        apistateid: apiNextState,
+      const { proxy, onUpdate, apiNextState } = this;
+      const lifecycleToUpdate = {
+        currentstateid: proxy.apistateid,
+        nextstateid: apiNextState,
       };
-      putProxies(proxyToUpdate).then((response) => {
+      api.putLifecycle(proxy.uuid, lifecycleToUpdate).then((response) => {
         if (response && response.data) {
           onUpdate();
         }

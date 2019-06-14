@@ -42,11 +42,17 @@
         v-if="isLoading && rows.length === 0"
         :cols="5"
       />
+      <b-alert class="alert-vivid alert-t-r" v-model="showCopiedAlert" variant="success" dismissible>Access Token copied to clipboard.</b-alert>
       <TbodyCollapsible
         v-for="(item, index) in tableRows" v-bind:key="index"
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
-        <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''} ${item.isexpired ? 'is-expired' : ''}`" class="opaque" :data-qa="`tableRow-${index}`">
+        <tr
+          slot="main"
+          :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''} ${item.isexpired ? 'is-expired' : ''}`"
+          class="opaque"
+          :data-qa="`tableRow-${index}`"
+        >
           <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
             <Icon
               :icon="item.isactive ? 'check-circle' : 'times-circle'"
@@ -61,7 +67,7 @@
           <!--  -->
           <td class="actions">
             <b-button
-              v-b-tooltip.hover 
+              v-b-tooltip.hover
               title="Regenerate"
               variant="link"
               size="lg"
@@ -76,7 +82,7 @@
           </td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(item.uuid) > -1">
-          <td colspan="5">           
+          <td colspan="5">
             <div class="collapsible-content token-area">
               <b-input-group>
                 <b-input-group-prepend>
@@ -84,27 +90,28 @@
                     v-b-tooltip.hover.left
                     title="Show/Hide"
                     variant="light"
-                    @click="isVisible = !isVisible"
+                    @click="isAccessTokenVisible = !isAccessTokenVisible"
                     data-qa="btnToggleTokenText"
                   >
-                    <Icon icon="eye" />
+                    <Icon :icon="`${isAccessTokenVisible ? 'eye-slash' : 'eye'}`" />
                   </b-button>
                   <b-button
                     v-b-tooltip.hover.left
                     title="Copy Token"
                     variant="light"
-                    :disabled="!isVisible"
+                    :disabled="!isAccessTokenVisible"
                     @click="copyTokenText()"
                     data-qa="btnCopyTokenText"
+                    style="font-size:14px"
                   >
-                    <Icon icon="copy" />
+                    COPY
                   </b-button>
                 </b-input-group-prepend>
                 <b-form-input
                   id="textarea1"
                   class="token-area-show"
                   v-model="item.token"
-                  v-if="isVisible"
+                  v-if="isAccessTokenVisible"
                   rows="4"
                   max-rows="6"
                   readonly="readonly"
@@ -113,7 +120,7 @@
                 <b-form-input
                   id="textarea2"
                   class="token-area-hide"
-                  v-if="!isVisible"
+                  v-if="!isAccessTokenVisible"
                   placeholder="••••••••••••••••••••••••••••••••••••••••••••••••••"
                   rows="4"
                   max-rows="6"
@@ -188,14 +195,14 @@ export default {
       sortByKey: 'created',
       sortByKeyType: 'string',
       sortDirection: 'desc',
-      isVisible: false,
+      isAccessTokenVisible: false,
+      showCopiedAlert: false,
     };
   },
   methods: {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
@@ -208,16 +215,12 @@ export default {
     },
     regenerateAppsAccessToken(accessToken) {
       const accessTokenToAdd = JSON.parse(JSON.stringify(accessToken));
-      // console.log('tokenToAdd: ', accessTokenToAdd); // eslint-disable-line
       const { uuid, created, updated, deleted, isdeleted,
         expiredate, isexpired, token, ...rest } = accessTokenToAdd;
-      // console.log('rest: ', rest); // eslint-disable-line
       api.deleteAccessTokens(accessToken.uuid).then((res) => {
-        // console.log('res: ', res); // eslint-disable-line
         if (res) {
           api.postAccessTokens([{ ...rest }]).then((response) => {
             if (response && response.data) {
-              // console.log('response: ', response); // eslint-disable-line
               this.onUpdate();
             }
           });
@@ -228,6 +231,10 @@ export default {
       const tokenText = document.getElementById('textarea1');
       tokenText.select();
       document.execCommand('copy');
+      this.showCopiedAlert = true;
+      setTimeout(() => {
+        this.showCopiedAlert = false;
+      }, 3000);
     },
   },
 };

@@ -22,7 +22,7 @@ export default {
     ...mapActions('groups', ['deleteGroups']),
     ...mapActions('subjectMemberships', ['deleteSubjectMemberships', 'deleteUserGroupMembership']),
     handleModalClose() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/administer-groups/groups/${this.page}`);
     },
     handleModalConfirm() {
       const { deleteGroups, deleteSubjectMemberships, userGroupMembership,
@@ -30,7 +30,7 @@ export default {
       deleteGroups({ ...group }).then(() => {
         deleteSubjectMemberships({ ...membership }).then(() => {
           deleteUserGroupMembership({ ...userGroupMembership }).then(() => {
-            this.$router.push(`/app/administer-groups/${this.page}`);
+            this.$router.push(`/app/administer-groups/groups/${this.page}`);
           });
         });
       });

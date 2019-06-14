@@ -29,7 +29,7 @@
         <dt>Link:</dt>
         <dd><b-link :href="item.licensedocument.legal.link" target="_blank">{{ item.licensedocument.legal.link }}</b-link></dd>
         <b-link
-          @click="toggleInformModal"  
+          @click="toggleInformModal"
         >
           Show Legal Agreement
         </b-link>
@@ -44,7 +44,7 @@
       </dl>
     </div>
     <TextAreaModal
-      v-if="isInformModalVisible"  
+      v-if="isInformModalVisible"
       size="lg"
       :item="item"
       :onClose="toggleInformModal"
@@ -56,6 +56,9 @@
         @click="handleTogglePoliciesTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Policies attached to License"
+
         :class="{'active': isPoliciesTableVisible}"
       >
         <span>Policies</span>
@@ -66,9 +69,11 @@
         @click="handleToggleApisTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Proxy APIs using this License"
         :class="{'active': isApisTableVisible}"
       >
-        <span>Proxy APIs with this License</span>
+        <span>Proxy APIs</span>
         <b-badge pill>{{ licenseApis.length }}</b-badge>
       </b-button>
       <b-button
@@ -76,9 +81,11 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="Contracts with this License"
         :class="{'active': isContractsTableVisible}"
       >
-        <span>Contracts with this License</span>
+        <span>Contracts</span>
         <b-badge pill>{{ computedLicenseContracts.length }}</b-badge>
       </b-button>
     </div>
@@ -98,6 +105,7 @@
       <Contracts
         :rows="computedLicenseContracts"
         :routePath="routePath"
+        :onNeedsRefreshData="getLicenseContracts"
       ></Contracts>
     </div>
   </div>
@@ -106,8 +114,6 @@
 <script>
 import { mapState } from 'vuex';
 import api from '@/api';
-
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import Icon from '@/components/shared/Icon';
 import TextAreaModal from '@/components/shared/modals/TextAreaModal';
 
@@ -129,7 +135,6 @@ export default {
     },
   },
   components: {
-    TbodyCollapsible,
     Icon,
     TextAreaModal,
     Policies: () => import('@/components/shared/subjects/policies/Policies'),
@@ -141,15 +146,17 @@ export default {
     ...mapState({
       currentUser: state => state.user,
       currentPage: state => state.currentPage,
-      policies: state => state.subjectPolicies.items,
       policyTypes: state => state.policyTypes.items,
       organizations: state => state.organizations.items,
       apis: state => state.exploreApis.items,
-      apiStates: state => state.apiStates.items,
-      apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
-      contractStates: state => state.contractStates.items,
     }),
+    policies() {
+      if (this.item.subjectid !== this.currentUser.uuid) {
+        return this.$store.state.policies.items;
+      }
+      return this.$store.state.subjectPolicies.items;
+    },
     tableRows() {
       const { item, policies, policyTypes } = this;
       const licensePolicyIds = item.licensedocument.termsOfService.policyKey;
@@ -171,13 +178,8 @@ export default {
       }));
     },
     computedLicenseContracts() {
-      const { licenseContracts, contractStates, apis } = this;
+      const { licenseContracts, apis } = this;
       const { currentUser, routePath } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
       const getUserFromApi = (apiId) => {
         const theApi = apis.find(item => item.uuid === apiId) || {};
         return theApi.subjectid || apiId;
@@ -185,7 +187,6 @@ export default {
       return licenseContracts
         .map(licenseContractItem => ({
           ...licenseContractItem,
-          contractstatename: getContractStateName(licenseContractItem.contractstateid),
           userid: getUserFromApi(licenseContractItem.apiid),
         }))
         .filter((item) => {
@@ -219,7 +220,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);
@@ -272,14 +272,14 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('users/getUsers', {});
     this.$store.dispatch('businessApis/getBusinessApis', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
-    // if (this.childComponent === 'contracts') {
+    if (this.item.subjectid !== this.currentUser.uuid) {
+      this.$store.dispatch('policies/getPolicies', { uuid: this.currentUser.uuid });
+    } else {
+      this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
+    }
     this.getLicenseContracts();
-    // } else if (this.childComponent === 'proxies') {
     this.getLicenseApis();
-    // }
   },
 };
 </script>

@@ -25,7 +25,7 @@ const state = {
 const getters = {};
 
 const actions = {
-  getApps: ({ commit }, { uuid, refresh = false  }) => {
+  getApps: ({ commit }, { uuid, refresh = false }) => {
     const { lastUpdatedAt } = state;
     if (lastUpdatedAt > 0 && !refresh ) {
       return false;

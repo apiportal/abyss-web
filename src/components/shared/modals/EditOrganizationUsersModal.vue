@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user"
+    bodyClass="p-0"
     :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
@@ -19,8 +19,8 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
-          <b-form-group 
+        <div class="p-3">
+          <b-form-group
             id="organizationOwnerGroup"
           >
             <label>
@@ -29,7 +29,7 @@
             </label>
             <b-form-select
               id="organizationOwnerInput"
-              v-model="computedOrganizationOwner" 
+              v-model="computedOrganizationOwner"
               :options="[
                 { value: null, text: 'Please Select'},
                 ...computedOrganizationUsers.map(user => ({
@@ -54,13 +54,13 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -175,7 +175,6 @@ export default {
         const ownerToAdd = computedOrganizationUsers.find(
           user => user.crudsubjectid === user.subjectid);
         if (owner) {
-          // console.log(owner);
           return owner;
         } else if (ownerToAdd) {
           return ownerToAdd;
@@ -189,7 +188,6 @@ export default {
         if (user) {
           user.isowner = true;
         }
-        // console.log(newval, ownerNew);
         return ownerNew;
       },
     },
@@ -311,10 +309,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-administer-user {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

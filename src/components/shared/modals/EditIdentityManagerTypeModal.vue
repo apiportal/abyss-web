@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-identity-manager-type"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,8 +19,8 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
-          <b-form-group 
+        <div class="p-3">
+          <b-form-group
             id="directoryTypeNameGroup"
           >
             <label>
@@ -37,7 +37,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeDescriptionGroup"
           >
             <label>
@@ -54,7 +54,7 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeOrganizationIdGroup"
           >
             <label>
@@ -63,7 +63,7 @@
             </label>
             <b-form-select
               id="directoryTypeOrganizationIdInput"
-              v-model="subjectDirectoryTypeEditable.organizationid" 
+              v-model="subjectDirectoryTypeEditable.organizationid"
               :state="organizationIdState"
               :options="[
                 { value: null, text: 'Please Select'},
@@ -86,7 +86,7 @@
               Enabled
             </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="directoryTypeTemplateGroup"
           >
             <label>
@@ -106,14 +106,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -279,32 +279,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-identity-manager-type {
-    padding: 0;
-  }
-}
-
-.configure-directory-type {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
+<style lang="scss" scoped>
 </style>

@@ -62,9 +62,6 @@
 </template>
 
 <script>
-// import api from '@/api';
-// import { mapState } from 'vuex';
-
 export default {
   data() {
     return {
@@ -102,7 +99,7 @@ export default {
   .mb-0,
   .my-0 {
     margin-bottom: 0 !important
-  } 
+  }
   .mb-5,
   .my-5 {
     margin-bottom: 3rem !important

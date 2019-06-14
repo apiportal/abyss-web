@@ -107,16 +107,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-xl {
-  @media (min-width: 992px) {
-    max-width: 1200px;
-  }
-}
-
-.modal-xxl {
-  @media (min-width: 992px) {
-    max-width: 1800px;
-  }
-}
+<style lang="scss" scoped>
 </style>

@@ -93,15 +93,16 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.user,
+      gatewayUrl: state => state.traffic.gatewayUrl,
       businessApis: state => state.businessApis.items,
       isBusinessApisLoaded: state => state.businessApis.lastUpdatedAt,
     }),
     api() {
-      const { apiId, businessApis, currentUser } = this;
+      const { apiId, businessApis, currentUser, gatewayUrl } = this;
       const api = businessApis.find(item => item.uuid === apiId);
       const newExtendedDocument = () => {
         const extendeddocument = JSON.parse(JSON.stringify(api.openapidocument));
-        extendeddocument.security = [];
+        extendeddocument.security = [{ abyssApiKeyAuth: [] }];
         extendeddocument.components.securitySchemes = {
           abyssApiKeyAuth: {
             in: 'header',
@@ -120,7 +121,7 @@ export default {
         const servers = extendeddocument.servers;
         for (let i = 0; i < servers.length; i += 1) {
           servers[i]['x-abyss-url'] = servers[i].url;
-          servers[i].url = `${currentUser.gatewayUrl}${api.uuid}`;
+          servers[i].url = `${gatewayUrl}/${api.uuid}`;
         }
         return extendeddocument;
       };

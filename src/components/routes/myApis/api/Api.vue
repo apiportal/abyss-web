@@ -35,6 +35,7 @@
     <div style="display: flex; flex: 1 0 0;">
       <Editor
         :value="apiData"
+        :onChange="handleEditorChange"
       />
     </div>
   </div>
@@ -182,6 +183,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex: 1 0 0;
+  height: 100vh;
 }
 
 .editor-container {

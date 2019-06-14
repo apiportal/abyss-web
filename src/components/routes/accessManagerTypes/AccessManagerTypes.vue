@@ -1,6 +1,6 @@
 <template>
   <div class="page-container page-access-manager-types">
-    
+
     <div class="page-header">
       <b-nav class="page-tabs" tabs>
         <b-nav-item
@@ -18,6 +18,12 @@
         >
           <span class="link-text" data-qa="linkRoles">Roles</span> <b-badge pill>{{ roles.length }}</b-badge>
         </b-nav-item>
+        <b-nav-item
+          :active="false"
+          to="/app/administer-permissions/1"
+        >
+          <span class="link-text" data-qa="linkPermissions">Permissions</span> <b-badge pill>{{ permissions.length }}</b-badge>
+        </b-nav-item>
       </b-nav>
       <div class="row">
         <div class="col">
@@ -30,7 +36,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -45,6 +51,8 @@
           <b-button
             :to="`/app/access-manager-types/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New Access Manager Type"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -115,8 +123,8 @@
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
-              <Icon 
-                :icon="item.isactive ? 'check-circle' : 'times-circle'" 
+              <Icon
+                :icon="item.isactive ? 'check-circle' : 'times-circle'"
                 :class="item.isactive ? 'text-success' : 'text-danger'"
               />
             </td>
@@ -135,8 +143,10 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-manager-types/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/access-manager-types/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Access Manager Type</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/access-manager-types/${page}/delete/${item.uuid}`">
+                  <Icon icon="trash-alt" /> Delete Access Manager Type
+                </b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -178,10 +188,10 @@
       </table>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -216,6 +226,7 @@ export default {
       accessManagers: state => state.accessManagers.items,
       organizations: state => state.organizations.items,
       roles: state => state.roles.items,
+      permissions: state => state.permissions.items,
     }),
     tableRows() {
       const { accessManagerTypes, organizations } = this;
@@ -265,6 +276,7 @@ export default {
     this.$store.dispatch('accessManagerTypes/getAccessManagerTypes', {});
     this.$store.dispatch('accessManagers/getAccessManagers', {});
     this.$store.dispatch('organizations/getOrganizations', {});
+    this.$store.dispatch('permissions/getPermissions', {});
   },
   data() {
     return {
@@ -292,7 +304,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

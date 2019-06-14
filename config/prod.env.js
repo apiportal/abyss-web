@@ -15,5 +15,6 @@
  */
 
 module.exports = {
-  NODE_ENV: '"production"'
+  NODE_ENV: '"production"',
+  GLOBAL_PATH: '"/"'
 }

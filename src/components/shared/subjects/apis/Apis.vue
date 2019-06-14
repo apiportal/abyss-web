@@ -3,6 +3,7 @@
     <table class="table abyss-table abyss-table-cards">
       <thead>
         <tr>
+          <th></th>
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -12,16 +13,6 @@
               sortByKey="openapidocument.info.title"
               sortByKeyType="string"
               data-qa="tableHeadName"
-            />
-          </th>
-          <th>
-            <SortBy
-              :selectedSortByKey="sortByKey"
-              :selectedSortDirection="sortDirection"
-              :onClick="handleSortByClick"
-              text="Environment"
-              sortByKey="islive"
-              sortByKeyType="boolean"
             />
           </th>
           <th>
@@ -86,18 +77,18 @@
         :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
       >
         <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`" :data-qa="`tableRow-${index}`">
-          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
-            <Images :uuid="item.uuid" :itext="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" class="favimage"></Images>
-            {{ item.openapidocument.info.title }}
+          <td class="picture">
+            <Images :uuid="item.uuid" :altText="item.openapidocument.info.title" :color="item.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
           </td>
-          <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ environment(item) }}
+          <td @click="() => handleCollapseTableRows(item.uuid)" :data-qa="`tableRowName-${index}`">
+            {{ item.openapidocument.info.title }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.version }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
-            {{ item.apistatename }}
+            <Icon icon="circle" :class="`state${item.apistatename}`"/>
+            {{ item.apistatename }} - {{ item.environment }}
           </td>
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.apivisibilityname }}
@@ -105,7 +96,7 @@
           <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.numberofproxies }}
           </td>
-          <td @click="() => handleCollapseTableRows(proxyItem.uuid)">
+          <td @click="() => handleCollapseTableRows(item.uuid)">
             {{ item.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
           <td class="actions">
@@ -117,6 +108,8 @@
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-api/${item.uuid}`"><Icon icon="edit" /> Edit Business API</b-dropdown-item>
 
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/create-proxy/${item.uuid}`"><Icon icon="file-powerpoint" /> Create Proxy API</b-dropdown-item>
+
+              <b-dropdown-item data-qa="btnEditLifeCycle" :to="`${routePath}/edit-api-lifecycle/${item.uuid}`"><Icon icon="bezier-curve" /> Change API Lifecycle</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -182,6 +175,7 @@ export default {
       apiStates: state => state.apiStates.items,
       apiVisibilityTypes: state => state.apiVisibilityTypes.items,
       proxies: state => state.proxies.items,
+      itemsLastUpdatedAt: state => state.apis.lastUpdatedAt,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows,
@@ -205,6 +199,7 @@ export default {
             apistatename: getApiStateName(item.apistateid),
             apivisibilityname: getApiVisibilityName(item.apivisibilityid),
             numberofproxies: getNumberOfProxies(item.uuid),
+            environment: item.islive ? 'Live' : 'Sandbox',
           })),
         sortByKey,
         sortByKeyType,
@@ -238,9 +233,6 @@ export default {
     };
   },
   methods: {
-    environment(item) {
-      return item.islive ? 'Live' : 'Sandbox';
-    },
     handleSortByClick({ sortByKey, sortByKeyType, sortDirection }) {
       this.sortByKey = sortByKey;
       this.sortByKeyType = sortByKeyType;
@@ -255,6 +247,10 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$store.dispatch('apiStates/getApiStates', {});
+    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
+  },
 };
 </script>
 
@@ -263,5 +259,35 @@ export default {
   max-width: 35px;
   height: auto;
   margin: -7px 10px;
+}
+.stateInitial{
+  color:#8b8e91
+}
+.stateDraft{
+  color:#161c9a
+}
+.stateStaged{
+  color:#6f42c1
+}
+.statePublished{
+  color:#eeee00
+}
+.statePromoted{
+  color:#4cac00
+}
+.stateDemoted{
+  color:#db408d
+}
+.stateDeprecated{
+  color:#ecb100
+}
+.stateRetired{
+  color:#00bbbb
+}
+.stateArchived{
+  color:#177ec1
+}
+.stateRemoved{
+  color:#212121
 }
 </style>

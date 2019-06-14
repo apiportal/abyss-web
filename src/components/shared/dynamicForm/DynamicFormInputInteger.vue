@@ -1,5 +1,5 @@
 <template>
-  <b-form-group 
+  <b-form-group
     :description="label"
   >
     <label v-if="description">
@@ -8,12 +8,13 @@
     </label>
     <b-form-input
       type="number"
-      v-model="inputValue"
+      v-model.number="inputValue"
       :state="state"
       :placeholder="example.toString()"
       :required="required"
       :disabled="readonly"
       @keyup.native="handleKeyup"
+      @change.native="handleKeyup"
     >
     </b-form-input>
   </b-form-group>
@@ -61,11 +62,12 @@ export default {
   computed: {
     state() {
       const { inputValue, required } = this;
-
       if (required) {
-        return inputValue.length > 0;
+        if (inputValue && inputValue.toString().length > 0) {
+          return true;
+        }
+        return false;
       }
-
       return true;
     },
   },

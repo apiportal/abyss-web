@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-user"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,10 +19,10 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-row align-v="center">
-            <b-col md=9>
-              <b-form-group 
+            <b-col>
+              <b-form-group
                 id="firstNameGroup"
                 label="First Name*:"
                 label-for="firstNameInput"
@@ -39,7 +39,7 @@
                 >
                 </b-form-input>
               </b-form-group>
-              <b-form-group 
+              <b-form-group
                 id="lastNameGroup"
                 label="Last Name*:"
                 label-for="lastNameInput"
@@ -57,35 +57,31 @@
                 </b-form-input>
               </b-form-group>
             </b-col>
-            <b-col md=3>
-              <div class="d-flex">
-                <div class="p-0">
-                  <img
-                    v-if="userEditable.picture"
-                    :src="userEditable.picture"
-                    :alt="userEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 175px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  />
-                  <img
-                    v-if="!userEditable.picture"
-                    src="@/assets/avatar.jpg"
-                    :alt="userEditable.displayname"
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail"
-                    style="width: 175px;"
-                    v-b-tooltip.hover
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  />
-                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*" />
-                </div>
+            <b-col cols="auto">
+              <div class="thumb-picture square bg-secondary" style="width: 200px;">
+                <img
+                  v-if="userEditable.picture"
+                  :src="userEditable.picture"
+                  :alt="userEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                />
+                <img
+                  v-if="!userEditable.picture"
+                  src="/static/avatar.png"
+                  :alt="userEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                />
+                <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*" />
               </div>
             </b-col>
           </b-row>
-          <b-form-group 
+          <b-form-group
             id="displayNameGroup"
             label="Display Name*:"
             label-for="displayNameInput"
@@ -102,7 +98,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userNameGroup"
             label="User Name*:"
             label-for="userNameInput"
@@ -157,7 +153,7 @@
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="emailGroup"
             label="Email*:"
             label-for="emailInput"
@@ -174,7 +170,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="secondaryEmailGroup"
             label="Secondary Email:"
             label-for="secondaryEmailInput"
@@ -187,7 +183,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="urlGroup"
             label="URL:"
             label-for="urlInput"
@@ -203,7 +199,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userOrganizationIdGroup"
             label="Organization*:"
             label-for="userOrganizationIdInput"
@@ -212,7 +208,7 @@
           >
             <b-form-select
               id="userOrganizationIdInput"
-              v-model="userEditable.organizationid" 
+              v-model="userEditable.organizationid"
               :options="[
                 {
                   value: null,
@@ -227,7 +223,7 @@
               :state="organizationIdState"
             />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userDirectoryIdGroup"
             label="Directory*:"
             label-for="userDirectoryIdInput"
@@ -236,7 +232,7 @@
           >
             <b-form-select
               id="userDirectoryIdInput"
-              v-model="userEditable.subjectdirectoryid" 
+              v-model="userEditable.subjectdirectoryid"
               :options="[
                 {
                   value: null,
@@ -251,7 +247,7 @@
               :state="subjectDirectoryIdState"
             />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="userDescriptionGroup"
             label="Description:"
             label-for="userDescriptionTextarea"
@@ -267,14 +263,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -557,13 +553,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-administer-user {
-    padding: 0;
-  }
-}
-input[type="file"] {
-  display: none;
-}
+<style lang="scss" scoped>
 </style>

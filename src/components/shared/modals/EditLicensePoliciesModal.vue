@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-license-policies"
+    bodyClass="p-0"
     :scrollable="false"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
@@ -19,7 +19,7 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <div>
             <Chips
               :chips="computedLicensePolicies"
@@ -34,13 +34,13 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
           >
             Save
@@ -211,10 +211,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-license-policies {
-    padding: 0;
-  }
-}
+<style lang="scss" scoped>
 </style>

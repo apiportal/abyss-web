@@ -3,6 +3,7 @@
       <table class="table abyss-table abyss-table-cards">
         <thead>
           <tr>
+            <th></th>
             <th class="status">
               <SortBy
                 :selectedSortByKey="sortByKey"
@@ -49,14 +50,17 @@
         </thead>
         <TBodyLoading
           v-if="isLoading && rows.length === 0"
-          :cols="5"
+          :cols="6"
         />
         <TbodyCollapsible
-          v-for="(item, index) in tableRows" v-bind:key="index"
+          v-for="(item, index) in paginatedRows" v-bind:key="index"
           :isCollapsed="collapsedRows.indexOf(item.uuid) > -1"
           :data-qa="`tableRow-${index}`"
         >
           <tr slot="main" :class="`${index % 2 === 0 ? 'odd' : 'even'} ${item.isdeleted ? 'is-deleted' : ''}`">
+            <td class="picture">
+              <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="circle" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
+            </td>
             <td class="status" @click="() => handleCollapseTableRows(item.uuid)">
               <Icon
                 :icon="item.isactivated ? 'check-circle' : 'times-circle'"
@@ -78,8 +82,8 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete"  :to="`${routePath}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-group/${item.uuid}`"><Icon icon="edit" /> Edit Group</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete"  :to="`${routePath}/delete-group/${item.uuid}`"><Icon icon="trash-alt" /> Delete Group</b-dropdown-item>
 
                 <b-dropdown-header class="p-0"></b-dropdown-header>
 
@@ -95,7 +99,7 @@
             </td>
           </tr>
           <tr slot="footer" class="footer" data-qa="tableFooter">
-            <td colspan="5">
+            <td colspan="6">
               <div class="collapsible-content">
                 <Group
                   :group="item"
@@ -111,22 +115,23 @@
 
 <script>
 import { mapState } from 'vuex';
-import InputWithIcon from '@/components/shared/InputWithIcon';
 import Icon from '@/components/shared/Icon';
 import SortBy from '@/components/shared/SortBy';
 import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
 import TBodyLoading from '@/components/shared/TBodyLoading';
 import Group from '@/components/shared/subjects/groups/Group';
 import Helpers from '@/helpers';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Groups',
   components: {
-    InputWithIcon,
     Icon,
     SortBy,
     TbodyCollapsible,
     TBodyLoading,
     Group,
+    Pictures,
   },
   props: {
     rows: {
@@ -139,19 +144,26 @@ export default {
       required: false,
       default() { return ''; },
     },
+    page: {
+      Type: Number,
+      required: false,
+      default() { return 1; },
+    },
+    itemsPerPage: {
+      Type: Number,
+      required: false,
+      default() { return 2000; },
+    },
   },
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
-      currentUser: state => state.user,
       subjectDirectories: state => state.subjectDirectories.items,
-      subjectDirectoryTypes: state => state.subjectDirectoryTypes.items,
       organizations: state => state.organizations.items,
-      subjectOrganizations: state => state.subjectOrganizations.items,
-      groups: state => state.groups.items,
       users: state => state.users.items,
       memberships: state => state.subjectMemberships.items,
       userGroupMemberships: state => state.subjectMemberships.userGroup,
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
     }),
     tableRows() {
       const { subjectDirectories, organizations, rows, users } = this;
@@ -194,14 +206,20 @@ export default {
         sortDirection,
       });
     },
+    paginatedRows() {
+      const { tableRows, itemsPerPage, page } = this;
+      const { paginateArray } = Helpers;
+      return paginateArray({
+        array: tableRows,
+        itemsPerPage,
+        page,
+      });
+    },
   },
   created() {
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
     this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('subjectOrganizations/getSubjectOrganizations', {});
     this.$store.dispatch('users/getUsers', {});
-    this.$store.dispatch('groups/getGroups', {});
     this.$store.dispatch('subjectMemberships/getAllSubjectMemberships', {});
     this.$store.dispatch('subjectMemberships/getUserGroupMemberships', {});
   },

@@ -16,18 +16,24 @@
 
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://dev2.apiportal.com';
-// axios.defaults.headers.common.Accept = 'application/json';
-// axios.defaults.headers.common['Content-Type'] = 'application/json';
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8080';
-axios.defaults.withCredentials = true;
-// axios.defaults.timeout = 10000;
-// axios.defaults.responseType = 'json';
-
 export default {
+  swaggerToOas(schema) {
+    return axios.post('/abyss/oapi/convert-swagger-to-oas', schema);
+  },
+  getExternalData(url) {
+    return axios({
+      method: 'get',
+      url,
+      baseURL: '',
+      withCredentials: false,
+    });
+  },
   // auth
   getUser(uuid) {
     return axios.get(`/abyss/oapi/subjects/${uuid}`);
+  },
+  getUserWithOrganizations() {
+    return axios.get('/abyss/oapi/subjects/users/current-user');
   },
   postLogin(user) {
     return axios.post('/abyss/login-auth', user);
@@ -418,8 +424,8 @@ export default {
   getApiVisibilityTypes() {
     return axios.get('/abyss/oapi/api-visibility-types');
   },
-  getApiLicenses(uuid) {
-    return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
+  putLifecycle(uuid, params) {
+    return axios.put(`/abyss/oapi/lifecycle/${uuid}`, params);
   },
   // policies
   getSubjectPolicies(uuid) {
@@ -467,20 +473,17 @@ export default {
   postSubjectLicensesCascaded(uuid, license) {
     return axios.post(`/abyss/oapi/licenses/subject/${uuid}/cascaded`, license);
   },
-  getSubjectLicenses(uuid) {
+  getLicensesOfSubject(uuid) {
     return axios.get(`/abyss/oapi/licenses/subject/${uuid}`);
   },
-  getApiLicensesRefs() {
-    return axios.get('/abyss/oapi/api-licenses/');
-  },
-  postApiLicensesRefs(license) {
-    return axios.post('/abyss/oapi/api-licenses/', license);
-  },
-  deleteApiLicensesRefs(uuid) {
-    return axios.delete(`/abyss/oapi/api-licenses/${uuid}`);
+  getLicensesOfApi(uuid) {
+    return axios.get(`/abyss/oapi/licenses/api/${uuid}`);
   },
   getLicenses() {
     return axios.get('/abyss/oapi/licenses/');
+  },
+  getLicense(uuid) {
+    return axios.get(`/abyss/oapi/licenses/${uuid}`);
   },
   putLicenses(license) {
     const { uuid, created, updated, deleted, isdeleted, openApiLicense, ...rest } = license;
@@ -491,6 +494,22 @@ export default {
   },
   postLicenses(license) {
     return axios.post('/abyss/oapi/licenses/', license);
+  },
+  // api-licenses
+  getApiLicensesRefsApi(uuid) {
+    return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
+  },
+  getApiLicensesRefsUser(uuid) {
+    return axios.get(`/abyss/oapi/api-licenses/user/${uuid}`);
+  },
+  getApiLicensesRefs() {
+    return axios.get('/abyss/oapi/api-licenses/');
+  },
+  postApiLicensesRefs(license) {
+    return axios.post('/abyss/oapi/api-licenses/', license);
+  },
+  deleteApiLicensesRefs(uuid) {
+    return axios.delete(`/abyss/oapi/api-licenses/${uuid}`);
   },
   getContractStates() {
     return axios.get('/abyss/oapi/contract-states');
@@ -513,6 +532,12 @@ export default {
   },
   getApiContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/api/${uuid}`);
+  },
+  getUserApiContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/api/user/${uuid}`);
+  },
+  getUserAppContracts(uuid) {
+    return axios.get(`/abyss/oapi/contracts/app/user/${uuid}`);
   },
   getLicenseContracts(uuid) {
     return axios.get(`/abyss/oapi/contracts/license/${uuid}`);
@@ -547,12 +572,8 @@ export default {
   postInviteUser(referral) {
     return axios.post('/abyss/oapi/invite-user/', referral);
   },
-  // api-licenses
   getExploreApis() {
     return axios.get('/abyss/oapi/apis/proxies/explore');
-  },
-  getExploreApiLicenses(uuid) {
-    return axios.get(`/abyss/oapi/api-licenses/api/${uuid}`);
   },
   postContracts(contracts) {
     return axios.post('/abyss/oapi/contracts', contracts);
@@ -565,6 +586,12 @@ export default {
   },
   validateApi(api) {
     return axios.post('/abyss/oapi/validate-oas', api);
+  },
+  subscribeToApi(contract) {
+    return axios.post('/abyss/oapi/contracts/subscribe/', contract);
+  },
+  unsubscribeFromApi(uuid) {
+    return axios.delete(`/abyss/oapi/contracts/${uuid}/unsubscribe`);
   },
   getGroupsOfRole(uuid) {
     return axios.get(`/abyss/oapi/subject-memberships/group/${uuid}`);

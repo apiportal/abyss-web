@@ -9,7 +9,7 @@
         <b-nav-item :active="false" to="/app/administer-users/users/1">
           <span class="link-text" data-qa="linkUsers">Users</span> <b-badge pill>{{ users.length }}</b-badge>
         </b-nav-item>
-        <b-nav-item :active="false" to="/app/administer-groups/1">
+        <b-nav-item :active="false" to="/app/administer-groups/groups/1">
           <span class="link-text" data-qa="linkGroups">Groups</span> <b-badge pill>{{ computedGroups.length }}</b-badge>
         </b-nav-item>
       </b-nav>
@@ -24,7 +24,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/organizations/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New Organization"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -60,10 +62,10 @@
       />
     </div>
     <div class="page-footer" v-if="tableRows.length > itemsPerPage">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"

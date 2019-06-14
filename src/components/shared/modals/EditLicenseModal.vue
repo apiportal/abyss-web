@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-my-license"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,7 +19,8 @@
       <b-form
         @submit="handleSubmit"
       >
-      <div style="padding: 1rem;">
+      <div class="p-3">
+        <h5 class="text-primary font-weight-medium mb-3">License Info</h5>
         <b-form-group
           id="licenseNameGroup"
           label="License Name*:"
@@ -85,19 +86,36 @@
         >
         </b-form-textarea>
         </b-form-group>
-        <b-form-group id="licenseEnabledGroup">
-          <b-form-checkbox
-              id="licenseEnabledChecks"
-              v-model="licenseEditable.isactive"
-              :value="true"
-              :unchecked-value="false"
-          >
-              Is Active?
-          </b-form-checkbox>
+        <b-form-group
+          id="policyGroup"
+          label="Policy*:"
+          label-for="policyInput"
+          :invalid-feedback="policyInvalidFeedback"
+          :state="policyState"
+        >
+        <b-form-select
+          id="policyInput"
+          v-model="licenseEditable.licensedocument.termsOfService.policyKey[0]"
+          :state="policyState"
+          :options="[
+            {
+              value: null,
+              text: 'Please select',
+            },
+            ...policies.filter(policy => currentUser.uuid === policy.subjectid)
+            .map(policy => ({
+              value: policy.uuid,
+              text: policy.name,
+            })),
+          ]"
+          required
+        >
+        </b-form-select>
+
         </b-form-group>
         <b-form-group
         id="licenseVisibilityGroup"
-        label="Visibility*"
+        label="Visibility*:"
         label-for="licenseVisibilityInput"
         :invalid-feedback="visibilityInvalidFeedback"
         :state="visibilityState"
@@ -118,6 +136,18 @@
           ]"
         />
         </b-form-group>
+        <b-form-group id="licenseEnabledGroup">
+          <b-form-checkbox
+            id="licenseEnabledChecks"
+            v-model="licenseEditable.isactive"
+            :value="true"
+            :unchecked-value="false"
+          >
+            Is Active?
+          </b-form-checkbox>
+        </b-form-group>
+        <br>
+        <h5 class="text-primary font-weight-medium mb-3">SLA Info</h5>
         <b-form-group
           id="slaTierNameGroup"
           label="SLA Tier Name*:"
@@ -220,6 +250,8 @@
         >
         </b-form-input>
         </b-form-group>
+        <br>
+        <h5 class="text-primary font-weight-medium mb-3">Legal Info</h5>
         <b-form-group
           id="legalAgreementNameGroup"
           label="Legal Agreement Name*:"
@@ -256,7 +288,7 @@
         </b-form-group>
         <b-form-group
         id="agreementTypeGroup"
-        label="Agreement Type*"
+        label="Agreement Type*:"
         label-for="agreementTypeInput"
         :invalid-feedback="legalAgreementTypeInvalidFeedback"
         :state="legalAgreementTypeState"
@@ -282,7 +314,7 @@
         </b-form-group>
         <b-form-group
         id="documentStateGroup"
-        label="Document State*"
+        label="Document State*:"
         label-for="documentStateInput"
         :invalid-feedback="documentStateInvalidFeedback"
         :state="documentStateState"
@@ -348,14 +380,14 @@
       </div>
       <footer class="modal-footer">
         <b-button
-          variant="secondary"
+          variant="link"
           @click="onClose"
           data-qa="btnCancel"
         >
           Cancel
         </b-button>
         <b-button
-          variant="success"
+          variant="primary"
           type="submit"
           data-qa="btnSave"
         >
@@ -426,10 +458,14 @@ export default {
       default() { return 'edit'; },
     },
   },
+  created() {
+    this.$store.dispatch('policies/getPolicies', {});
+  },
   computed: {
     ...mapState({
       currentUser: state => state.user,
       visibilityTypes: state => state.apiVisibilityTypes.items,
+      policies: state => state.policies.items,
     }),
     licenseVersionInvalidFeedback() {
       const { version } = this.licenseEditable;
@@ -474,6 +510,17 @@ export default {
     licenseDescriptionState() {
       const { description } = this.licenseEditable.licensedocument.info;
       return description.length > 0;
+    },
+    policyInvalidFeedback() {
+      const { policyKey } = this.licenseEditable.licensedocument.termsOfService;
+      if (policyKey.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
+    policyState() {
+      const { policyKey } = this.licenseEditable.licensedocument.termsOfService;
+      return policyKey.length > 0;
     },
     visibilityInvalidFeedback() {
       const { visibility } = this.licenseEditable.licensedocument.info;
@@ -654,32 +701,6 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.modal-body {
-  &.edit-my-license {
-    padding: 0;
-  }
-}
 
-.configure-my-license {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
+<style lang="scss" scoped>
 </style>

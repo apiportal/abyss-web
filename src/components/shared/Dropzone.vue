@@ -2,7 +2,7 @@
   <vue-dropzone
     ref="myVueDropzone"
     id="dropzone"
-    :options="options"></vue-dropzone>  
+    :options="options"></vue-dropzone>
 </template>
 
 <script>

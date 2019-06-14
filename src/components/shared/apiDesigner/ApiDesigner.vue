@@ -3,62 +3,70 @@
 
     <div class="api-designer-actions-bar">
       <b-button-toolbar>
-        <span v-if="title" class="toolbar-title">{{ title }}</span>
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setView('abyss')" 
-            :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Abyss View"
-          ><Icon icon="magic" /></b-button>
-          <b-button
-            @click="setView('hybrid')"
-            :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Hybrid View"
-          ><Icon icon="columns" /></b-button>
-          <b-button
-            @click="setView('editor')"
-            :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
-            v-b-tooltip.hover
-            title="Editor View"
-          ><Icon icon="code" /></b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="setMode('json')" 
-            :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
-          >JSON</b-button>
-          <b-button
-            @click="setMode('yaml')" 
-            :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
-          >YAML</b-button>
-        </b-button-group>
-
-        <b-button-group size="sm" class="mr-1">
-          <b-button
-            @click="handleUndo"
-            :disabled="apiStateIndex === 0"
-          >
-            <Icon icon="undo" />
-          </b-button>
-          <b-button
-            @click="handleRedo"
-            :disabled="apiStateIndex === (apiStates.length - 1)"
-          >
-            <Icon icon="redo" />
-          </b-button>
-        </b-button-group>
+        <span class="toolbar-title">{{ records[this.recordIndex].openapidocument.info.title }}</span>
+        <div class="ml-auto">
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="validateOnChange = !validateOnChange"
+              :class="`${ validateOnChange ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Validate on change"
+            ><Icon icon="check-double" /></b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setView('abyss')"
+              :class="`${ view === 'abyss' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Abyss View"
+            ><Icon icon="stream" /></b-button>
+            <b-button
+              @click="setView('hybrid')"
+              :class="`${ view === 'hybrid' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Hybrid View"
+            ><Icon icon="columns" /></b-button>
+            <b-button
+              @click="setView('editor')"
+              :class="`${ view === 'editor' ? 'btn-selected' : '' }`"
+              v-b-tooltip.hover
+              title="Editor View"
+            ><Icon icon="code" /></b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="setMode('json')"
+              :class="`${ mode === 'json' ? 'btn-selected' : '' }`"
+            >JSON</b-button>
+            <b-button
+              @click="setMode('yaml')"
+              :class="`${ mode === 'yaml' ? 'btn-selected' : '' }`"
+            >YAML</b-button>
+          </b-button-group>
+          <b-button-group size="md" class="mr-1">
+            <b-button
+              @click="handleUndo"
+              :disabled="recordIndex === 0"
+            >
+              <Icon icon="undo" />
+            </b-button>
+            <b-button
+              @click="handleRedo"
+              :disabled="recordIndex === (records.length - 1)"
+            >
+              <Icon icon="redo" />
+            </b-button>
+          </b-button-group>
+        </div>
       </b-button-toolbar>
     </div>
 
-    <div class="api-designer-columns-container" :style="`height: ${height}px`">
-      <div 
+    <div class="api-designer-columns-container">
+      <div
         :class="`api-designer-abyss-container ${ (view === 'abyss' || view === 'hybrid') ? '' : 'd-none'}`"
       >
         <AbyssTool
-          :api="apiStates[apiStateIndex]"
+          :api="records[recordIndex]"
           :onChange="handleChange"
         />
       </div>
@@ -75,19 +83,34 @@
     </div>
     <div class="api-designer-footer">
       <div class="row">
-        <div class="col-md-8">
-          <b-alert class="alert-vivid alert-t-r" v-model="showNotValidAlert" variant="danger" dismissible>API is not valid!</b-alert>
+        <div class="col">
+          <b-alert class="alert-vivid alert-t-l" v-model="showNotValidAlert" variant="danger" dismissible>
+            <h4>API is not valid!</h4>
+            <div v-for="(error, index) in notValidMessage" v-bind:key="index">{{ error }}</div>
+          </b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showSavedAlert" variant="success" dismissible>API saved successfully!</b-alert>
           <b-alert class="alert-vivid alert-t-r" v-model="showCreatedAlert" variant="info" dismissible>New version is created successfully!</b-alert>
-          <b-alert v-model="isVersionChanged" variant="info" dismissible>
+          <b-alert class="api-designer-alert" v-model="isVersionChanged" variant="info" dismissible>
             <strong>VERSION CHANGE DETECTED</strong>
             You have to save as new API if you change the version.
           </b-alert>
+          <b-alert class="api-designer-alert py-2" v-model="showHasChangesAlert" variant="warning" dismissible>
+            <strong>CHANGES DETECTED</strong>
+            Are you sure to cancel your changes?
+            <b-button
+              variant="warning"
+              @click="onClose"
+              size="sm"
+              data-qa="btnCancel"
+            >
+              CANCEL
+            </b-button>
+          </b-alert>
         </div>
-        <div class="col">
+        <div class="col-auto">
           <b-button
             variant="link"
-            @click="onClose"
+            @click="handleClose"
             size="lg"
             data-qa="btnCancel"
             block
@@ -95,7 +118,7 @@
             Close
           </b-button>
         </div>
-        <div class="col">
+        <div class="col-auto">
           <b-button
             variant="primary"
             @click="handleSubmit"
@@ -104,6 +127,7 @@
             block
           >
             <span v-if='isVersionChanged'><Icon icon="plus" /> Create New Version</span>
+            <span v-else-if="role === 'add'"><Icon icon="plus" /> Create</span>
             <span v-else><Icon icon="save" /> Save</span>
           </b-button>
         </div>
@@ -133,11 +157,6 @@ export default {
       required: false,
       default() { return {}; },
     },
-    height: {
-      type: Number,
-      required: false,
-      default() { return 500; },
-    },
     title: {
       type: String,
       required: false,
@@ -159,14 +178,17 @@ export default {
   data() {
     return {
       view: this.initialView,
-      apiStates: [(JSON.parse(JSON.stringify(this.api)))],
-      apiVersion: this.api.openapidocument.info.version,
-      apiStateIndex: 0,
+      records: [(JSON.parse(JSON.stringify(this.api)))],
+      apiInitialVersion: this.api.openapidocument.info.version,
+      recordIndex: 0,
       licensesToClone: [],
       showNotValidAlert: false,
+      notValidMessage: [],
       showSavedAlert: false,
       showCreatedAlert: false,
       isVersionChanged: false,
+      showHasChangesAlert: false,
+      validateOnChange: false,
       mode: 'json',
     };
   },
@@ -175,8 +197,8 @@ export default {
       currentUser: state => state.user,
     }),
     editorValue() {
-      const { apiStates, apiStateIndex, mode } = this;
-      const { openapidocument } = apiStates[apiStateIndex];
+      const { records, recordIndex, mode } = this;
+      const { openapidocument } = records[recordIndex];
       if (mode === 'json') {
         return JSON.stringify(openapidocument, null, '\t');
       } else if (mode === 'yaml') {
@@ -184,9 +206,32 @@ export default {
       }
       return openapidocument;
     },
+    apiVersion() {
+      return this.records[this.recordIndex].openapidocument.info.version;
+    },
+    hasChanges() {
+      const { records, recordIndex } = this;
+      return recordIndex > 0 && JSON.stringify(records[recordIndex]) !== JSON.stringify(records[0]);
+    },
   },
   mounted() {
     this.getApiLicenses();
+  },
+  watch: {
+    apiVersion(newValue) {
+      if (newValue) {
+        if (newValue !== this.apiInitialVersion) {
+          this.isVersionChanged = true;
+        } else {
+          this.isVersionChanged = false;
+        }
+      }
+    },
+    hasChanges(newValue) {
+      if (!newValue) {
+        this.showHasChangesAlert = false;
+      }
+    },
   },
   methods: {
     ...mapActions('businessApis', ['putBusinessApis', 'postBusinessApis']),
@@ -196,7 +241,7 @@ export default {
     ...mapActions('permissions', ['postPermissions']),
     getApiLicenses() {
       if (this.api.isproxyapi) {
-        api.getExploreApiLicenses(this.api.uuid).then((response) => {
+        api.getApiLicensesRefsApi(this.api.uuid).then((response) => {
           if (response && response.data) {
             this.licensesToClone = response.data.filter(item => !item.isdeleted);
           }
@@ -214,59 +259,135 @@ export default {
     setMode(mode) {
       this.mode = mode;
     },
-    handleChange(propAddress, newPropValue, customAction) {
-      const { apiStates, apiStateIndex } = this;
-      const { objectDeepUpdate } = Helpers;
-      let newApiState = JSON.parse(JSON.stringify(apiStates[apiStateIndex])); // eslint-disable-line
-      const versionKey = propAddress.join('.');
-      if (versionKey === 'openapidocument.info.version') {
-        if (this.apiVersion !== newPropValue) {
-          this.isVersionChanged = true;
-        } else {
-          this.isVersionChanged = false;
+    handleClose() {
+      if (this.hasChanges) {
+        this.showHasChangesAlert = true;
+      } else {
+        this.onClose();
+      }
+    },
+    handleChange(propAddress, newPropValue, customAction, replaceItem) {
+      console.log('pa, npv, ca: ', propAddress, newPropValue, customAction); // eslint-disable-line
+      const { records, recordIndex, validateOnChange } = this;
+      let newRecord = JSON.parse(JSON.stringify(records[recordIndex])); // eslint-disable-line
+      if (propAddress) {
+        const { objectDeepUpdate } = Helpers;
+        objectDeepUpdate(propAddress, newPropValue, newRecord, customAction);
+        if (replaceItem) {
+          objectDeepUpdate(propAddress.slice(0, -1), { [replaceItem]: newPropValue }, newRecord);
         }
       }
-      objectDeepUpdate(propAddress, newPropValue, newApiState, customAction);
-      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
-      this.apiStateIndex += 1;
+      this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
+      this.recordIndex += 1;
+      if (validateOnChange && propAddress) {
+        api.validateApi({ spec: records[recordIndex].openapidocument }).then(() => {
+        })
+        .catch((error) => {
+          this.showNotValidAlert = true;
+          this.notValidMessage = JSON.parse(error.data.usermessage);
+        });
+      }
     },
     handleEditorChange(newValue) {
-      const { apiStates, apiStateIndex, mode } = this;
-      const newApiState = {
-        ...apiStates[apiStateIndex],
-        openapidocument: {
-          ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
-        },
-      };
-      const newVersion = newApiState.openapidocument.info.version;
-      if (this.apiVersion !== newVersion) {
-        this.isVersionChanged = true;
-      } else {
-        this.isVersionChanged = false;
+      try {
+        const { records, recordIndex, mode, validateOnChange } = this;
+        let newRecord = { // eslint-disable-line
+          ...records[recordIndex],
+          openapidocument: {
+            ...(mode === 'json' ? JSON.parse(newValue) : yaml.load(newValue)),
+          },
+        };
+        this.records = [...this.records.slice(0, (recordIndex + 1)), newRecord];
+        this.recordIndex += 1;
+        if (validateOnChange) {
+          api.validateApi({ spec: newRecord.openapidocument }).then(() => {
+          })
+          .catch((error) => {
+            this.showNotValidAlert = true;
+            this.notValidMessage = JSON.parse(error.data.usermessage);
+          });
+        }
+        return true;
+      } catch (e) {
+        return false;
       }
-      this.apiStates = [...this.apiStates.slice(0, (apiStateIndex + 1)), newApiState];
-      this.apiStateIndex += 1;
     },
     handleUndo() {
-      if (this.apiStateIndex > 0) {
-        this.apiStateIndex -= 1;
+      if (this.recordIndex > 0) {
+        this.recordIndex -= 1;
       }
     },
     handleRedo() {
-      if (this.apiStateIndex < (this.apiStates.length - 1)) {
-        this.apiStateIndex += 1;
+      if (this.recordIndex < (this.records.length - 1)) {
+        this.recordIndex += 1;
       }
     },
+    addBusinessApi(item) {
+      const { postBusinessApis, currentUser, postResources, postPermissions } = this;
+      postBusinessApis(item).then((response) => {
+        if (response && response.data) {
+          const createdApi = response.data[0].response;
+          /* // !!! replace after cascade
+          this.showCreatedAlert = true;
+          setTimeout(() => {
+            this.showCreatedAlert = false;
+            this.onClose();
+          }, 3000);
+          // !!! */
+          const resourceApiToAdd = [{
+            organizationid: createdApi.organizationid,
+            crudsubjectid: createdApi.crudsubjectid,
+            resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
+            resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API ${createdApi.uuid}`,
+            description: createdApi.openapidocument.info.description,
+            resourcerefid: createdApi.uuid,
+            isactive: true,
+          }];
+          postResources(resourceApiToAdd).then((responseResource) => {
+            if (responseResource && responseResource.data) {
+              const createdResource = responseResource.data[0].response;
+              const permissionToAdd = [{
+                organizationid: createdApi.organizationid,
+                crudsubjectid: createdApi.crudsubjectid,
+                permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
+                effectivestartdate: this.$moment.utc().toISOString(),
+                effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
+                subjectid: createdApi.subjectid,
+                resourceid: createdResource.uuid,
+                resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
+                accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
+                isactive: true,
+              }];
+              postPermissions(permissionToAdd).then((responsePermission) => {
+                if (responsePermission && responsePermission.data) {
+                  this.showCreatedAlert = true;
+                  setTimeout(() => {
+                    this.showCreatedAlert = false;
+                    this.onClose();
+                  }, 3000);
+                }
+              });
+            }
+          });
+          // !!!
+        }
+      });
+    },
+    handleSubmittt() {
+      const currentApi = this.records[this.recordIndex];
+      console.log('currentApi: ', currentApi); // eslint-disable-line
+    },
     handleSubmit() {
-      const { apiStates, apiStateIndex,
-        putBusinessApis, putProxies, postProxies, postBusinessApis,
+      const { records, recordIndex, role,
+        putBusinessApis, putProxies, postProxies,
         postApiLicensesRefs, currentUser, postResources, postPermissions } = this;
-      const currentApi = apiStates[apiStateIndex];
+      const currentApi = records[recordIndex];
       const { openapidocument, businessapiid } = currentApi;
       // VALIDATE API
       api.validateApi({ spec: openapidocument }).then(() => {
-        if (this.isVersionChanged) { // CREATE API
-          const apiToCreate = {
+        if (this.isVersionChanged) { // VERSION CREATE
+          const apiToVersion = {
             ...currentApi,
             version: currentApi.openapidocument.info.version,
             // apioriginid: currentApi.apioriginid,
@@ -274,10 +395,10 @@ export default {
             apiparentid: currentApi.uuid,
             businessapiid: businessapiid !== null ? businessapiid : currentApi.uuid,
           };
-          const { uuid, created, updated, deleted, isdeleted, ...rest } = apiToCreate;
+          const { uuid, created, updated, deleted, isdeleted, ...restVersion } = apiToVersion;
           if (currentApi.isproxyapi) {
-            postProxies([{
-              ...rest,
+            postProxies([{ // PROXY VERSION CREATE
+              ...restVersion,
             }]).then((response) => {
               if (response && response.data) {
                 const createdProxy = response.data[0].response;
@@ -368,63 +489,15 @@ export default {
                     });
                   }
                 });
-                // !!!
+                // !!
               }
             });
-          } else {
-            postBusinessApis([{
-              ...rest,
-            }]).then((response) => {
-              if (response && response.data) {
-                const createdApi = response.data[0].response;
-                /* // !!! replace after cascade
-                this.showCreatedAlert = true;
-                setTimeout(() => {
-                  this.showCreatedAlert = false;
-                  this.onClose();
-                }, 3000);
-                // !!! */
-                const resourceApiToAdd = [{
-                  organizationid: createdApi.organizationid,
-                  crudsubjectid: createdApi.crudsubjectid,
-                  resourcetypeid: 'e2c446ad-f947-4a56-aed4-397534376aeb',
-                  resourcename: `${createdApi.openapidocument.info.title} ${createdApi.openapidocument.info.version} BUSINESS API`,
-                  description: createdApi.openapidocument.info.description,
-                  resourcerefid: createdApi.uuid,
-                  isactive: true,
-                }];
-                postResources(resourceApiToAdd).then((responseResource) => {
-                  if (responseResource && responseResource.data) {
-                    const createdResource = responseResource.data[0].response;
-                    const permissionToAdd = [{
-                      organizationid: createdApi.organizationid,
-                      crudsubjectid: createdApi.crudsubjectid,
-                      permission: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
-                      description: `Ownership of ${createdApi.openapidocument.info.title} BUSINESS API by ${currentUser.props.displayname}`,
-                      effectivestartdate: this.$moment.utc().toISOString(),
-                      effectiveenddate: this.$moment.utc().add(50, 'years').toISOString(),
-                      subjectid: createdApi.subjectid,
-                      resourceid: createdResource.uuid,
-                      resourceactionid: 'be55e687-8495-481f-a953-b450bb185f17', // ALL_BUSINESS_API_ACTION
-                      accessmanagerid: '6223ebbe-b30f-4976-bcf9-364003142379', // Abyss Access Manager
-                      isactive: true,
-                    }];
-                    postPermissions(permissionToAdd).then((responsePermission) => {
-                      if (responsePermission && responsePermission.data) {
-                        this.showCreatedAlert = true;
-                        setTimeout(() => {
-                          this.showCreatedAlert = false;
-                          this.onClose();
-                        }, 3000);
-                      }
-                    });
-                  }
-                });
-                // !!!
-              }
-            });
+          } else { // BUSINESS VERSION CREATE
+            this.addBusinessApi([{
+              ...restVersion,
+            }]);
           }
-        } else { // SAVE API
+        } else if (role === 'edit') { // UPDATE API
           const apiToUpdate = {
             ...currentApi,
             version: currentApi.openapidocument.info.version,
@@ -453,59 +526,60 @@ export default {
               }, 3000);
             });
           }
+        } else if (role === 'add') { // CREATE API
+          this.addBusinessApi([{
+            ...currentApi,
+          }]);
         }
       })
       .catch((error) => {
         console.log('error: ', error); // eslint-disable-line
         this.showNotValidAlert = true;
-        setTimeout(() => {
-          this.showNotValidAlert = false;
-        }, 3000);
+        this.notValidMessage = JSON.parse(error.data.usermessage);
+        // setTimeout(() => {
+        //   this.showNotValidAlert = false;
+        // }, 3000);
       });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .api-designer-container {
   .api-designer-actions-bar {
-    border-bottom: 1px solid #e9ecef; 
-    padding: 1rem;
-
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 1rem;
     .toolbar-title {
       display: inline-flex;
       vertical-align: middle;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 500;
       margin-right: 1rem;
     }
-
-    .btn.btn-secondary.btn-selected {
-      background-color: #5a6268;
-      border-color: #545b62;
-    }
   }
-
   .api-designer-columns-container {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
-
+    height: calc(100vh - 215px);
     .api-designer-abyss-container {
       display: flex;
       flex: 1 0 0;
     }
-
     .api-designer-editor-container {
       display: flex;
       flex: 1 0 0;
     }
   }
-
   .api-designer-footer {
     padding: 1rem;
     border-top: 1px solid #dee2e6;
+  }
+  .api-designer-alert {
+    position: absolute;
+    left: 0;
+    right: 0;
   }
 }
 </style>

@@ -26,12 +26,7 @@ export default {
   created() {
     this.$store.commit('currentPage/setRootPath', 'my-apps');
     this.$store.dispatch('userApps/getApps', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('apiStates/getApiStates', {});
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('subjectDirectories/getSubjectDirectories', {});
-    this.$store.dispatch('subjectDirectoryTypes/getSubjectDirectoryTypes', {});
   },
   data() {
     return {

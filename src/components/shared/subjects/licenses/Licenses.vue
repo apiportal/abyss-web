@@ -24,6 +24,36 @@
               data-qa="tableHeadName"
             />
           </th>
+          <!-- <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Policies"
+              sortByKey="policies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Proxies"
+              sortByKey="proxies"
+              sortByKeyType="number"
+            />
+          </th>
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Contracts"
+              sortByKey="contracts"
+              sortByKeyType="number"
+            />
+          </th> -->
           <th>
             <SortBy
               :selectedSortByKey="sortByKey"
@@ -31,6 +61,15 @@
               :onClick="handleSortByClick"
               text="Version"
               sortByKey="version"
+              sortByKeyType="string"
+            />
+          <th>
+            <SortBy
+              :selectedSortByKey="sortByKey"
+              :selectedSortDirection="sortDirection"
+              :onClick="handleSortByClick"
+              text="Policies"
+              sortByKey="Policies"
               sortByKeyType="string"
             />
           </th>
@@ -49,7 +88,7 @@
       </thead>
       <TBodyLoading
         v-if="isLoading && rows.length === 0"
-        :cols="5"
+        :cols="6"
       />
       <TbodyCollapsible
         v-for="(licenseItem, licenseIndex) in paginatedRows" v-bind:key="licenseIndex"
@@ -68,27 +107,29 @@
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
             {{ licenseItem.version }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
-            {{ licenseItem.updated | moment("DD.MM.YYYY HH:mm") }}
           </td>
-          <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'policies'">
             {{ licenseItem.licensedocument.termsOfService.policyKey.length }}
           </td>
-          <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'proxies'">
+          <td @click="() => handleCollapseTableRows(licenseItem.uuid)">
+            {{ licenseItem.updated | moment("DD.MM.YYYY HH:mm") }}
+          <!-- <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'proxies'">
             {{ licenseApis.length }}
           </td>
           <td @click="() => handleCollapseTableRows(licenseItem.uuid)" v-if="childComponent === 'contracts'">
             {{ licenseContracts.length }}
           </td> -->
-          <td class="actions" v-if="routePath !== '/app/explore/'">
+          <td class="actions" v-if="routePath !== '/app/explore/' && licenseItem.subjectid === currentUser.uuid">
             <b-dropdown variant="link" size="lg" no-caret right v-if="!licenseItem.isdeleted" data-qa="dropDownActions">
               <template slot="button-content">
                 <Icon icon="ellipsis-h" />
               </template>
 
               <b-dropdown-item data-qa="btnEdit" :to="`${routePath}/edit-license/${licenseItem.uuid}`"><Icon icon="edit" /> Edit License</b-dropdown-item>
-              <b-dropdown-item data-qa="btnEditPolicy" :to="`${routePath}/edit-license-policies/${licenseItem.uuid}`"><Icon icon="edit" /> Add/Edit Policies</b-dropdown-item>
               <b-dropdown-item data-qa="btnDelete" :to="`${routePath}/delete-license/${licenseItem.uuid}`"><Icon icon="trash-alt" /> Delete License</b-dropdown-item>
+
+              <b-dropdown-header class="p-0"></b-dropdown-header>
+              <b-dropdown-item data-qa="btnEditPolicy" :to="`${routePath}/edit-license-policies/${licenseItem.uuid}`"><Icon icon="edit" /> Add/Edit Policies</b-dropdown-item>
 
               <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -98,7 +139,7 @@
 
             </b-dropdown>
           </td>
-          <td class="actions" v-else style="vertical-align: middle !important">
+          <td class="actions" v-else-if="showSelectLicense" style="vertical-align: middle !important">
             <b-form-radio
             v-model="licenseId"
             :value="licenseItem.uuid"
@@ -109,9 +150,10 @@
             >
             </b-form-radio>
           </td>
+          <td class="actions" v-else></td>
         </tr>
         <tr slot="footer" class="footer" v-if="collapsedRows.indexOf(licenseItem.uuid) > -1" data-qa="tableFooter">
-          <td colspan="5">
+          <td colspan="6">
             <div class="collapsible-content">
               <License
                 :item="licenseItem"
@@ -153,6 +195,11 @@ export default {
       required: false,
       default() { return 'policies'; },
     },
+    showSelectLicense: {
+      type: Boolean,
+      required: false,
+      default() { return false; },
+    },
     licenseIdFromStore: {
       type: String,
       required: false,
@@ -171,6 +218,7 @@ export default {
   computed: {
     ...mapState({
       isLoading: state => state.traffic.isLoading,
+      currentUser: state => state.user,
     }),
     tableRows() {
       const { sortByKey, sortByKeyType, sortDirection, rows } = this;

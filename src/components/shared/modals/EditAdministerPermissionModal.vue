@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-administer-permission"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -16,10 +16,10 @@
       </h5>
     </template>
     <template>
-      <b-form 
+      <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-form-group
             id="permissionNameGroup"
             label="Permission Name*:"
@@ -36,7 +36,7 @@
           >
           </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="permissionDescriptionGroup"
           label="Description*:"
           label-for="permissionDescriptionTextarea"
@@ -53,7 +53,7 @@
             >
             </b-form-textarea>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="permissionOrganizationIdGroup"
           label="Organization*:"
           label-for="permissionOrganizationIdInput"
@@ -77,7 +77,7 @@
               :state="organizationIdState"
           />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="permissionAccessManagerIdGroup"
           label="Access Manager*:"
           label-for="permissionAccessManagerIdInput"
@@ -101,7 +101,7 @@
               :state="accessManagerIdState"
           />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="resourceTypeGroup"
           label="Resource Type*:"
           label-for="resourceTypeInput"
@@ -124,7 +124,7 @@
               :state="resourceTypeIdState"
           />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="resourceGroup"
           label="Resource:"
           label-for="resourceInput"
@@ -147,7 +147,7 @@
               ]"
           />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="resourceActionGroup"
           label="Resource Action:"
           label-for="resourceActionInput"
@@ -169,12 +169,12 @@
               ]"
           />
           </b-form-group>
-          <b-form-group 
+          <b-form-group
           id="subjectGroup"
           label="Subject:"
           label-for="subjectInput"
           >
-          <b-form-select 
+          <b-form-select
             id="subjectInput"
             v-model="permissionEditable.subjectid"
           >
@@ -227,7 +227,7 @@
               Enabled
           </b-form-checkbox>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="effectiveStartDateGroup"
             label="Effective Start Date:"
             label-for="effectiveStartDateInput"
@@ -244,7 +244,7 @@
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group 
+          <b-form-group
             id="effectiveEndDateGroup"
             label="Effective End Date:"
             label-for="effectiveEndDateInput"
@@ -264,14 +264,14 @@
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -422,77 +422,77 @@ export default {
       const { effectivestartdate } = this.permissionEditable;
       return effectivestartdate.length > 0;
     },
-    // effectiveStartDateInvalidFeedback() {
-    //   const { effectivestartdate } = this.permissionEditable;
-    //   if (effectivestartdate.length === 0) {
-    //     return 'Please enter something';
-    //   }
-    //   return '';
-    // },
+    effectiveStartDateInvalidFeedback() {
+      const { effectivestartdate } = this.permissionEditable;
+      if (effectivestartdate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
     effectiveEndDateState() {
       const { effectiveenddate } = this.permissionEditable;
       return effectiveenddate.length > 0;
     },
-    // effectiveEndDateInvalidFeedback() {
-    //   const { effectiveenddate } = this.permissionEditable;
-    //   if (effectiveenddate.length === 0) {
-    //     return 'Please enter something';
-    //   }
-    //   return '';
-    // },
+    effectiveEndDateInvalidFeedback() {
+      const { effectiveenddate } = this.permissionEditable;
+      if (effectiveenddate.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
     permissionNameState() {
       const { permission } = this.permissionEditable;
       return permission.length > 0;
     },
-    // permissionNameInvalidFeedback() {
-    //   const { permission } = this.permissionEditable;
-    //   if (permission.length === 0) {
-    //     return 'Please enter something';
-    //   }
-    //   return '';
-    // },
+    permissionNameInvalidFeedback() {
+      const { permission } = this.permissionEditable;
+      if (permission.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
     descriptionState() {
       const { description } = this.permissionEditable;
       return description.length > 0;
     },
-    // descriptionInvalidFeedback() {
-    //   const { description } = this.permissionEditable;
-    //   if (description.length === 0) {
-    //     return 'Please enter something';
-    //   }
-    //   return '';
-    // },
+    descriptionInvalidFeedback() {
+      const { description } = this.permissionEditable;
+      if (description.length === 0) {
+        return 'Please enter something';
+      }
+      return '';
+    },
     organizationIdState() {
       const { organizationid } = this.permissionEditable;
       return organizationid !== null;
     },
-    // organizationIdInvalidFeedback() {
-    //   const { organizationid } = this.permissionEditable;
-    //   if (organizationid === null) {
-    //     return 'Please select organization';
-    //   }
-    //   return '';
-    // },
+    organizationIdInvalidFeedback() {
+      const { organizationid } = this.permissionEditable;
+      if (organizationid === null) {
+        return 'Please select organization';
+      }
+      return '';
+    },
     accessManagerIdState() {
       const { accessmanagerid } = this.permissionEditable;
       return accessmanagerid !== null;
     },
-    // accessManagerIdInvalidFeedback() {
-    //   const { accessmanagerid } = this.permissionEditable;
-    //   if (accessmanagerid === null) {
-    //     return 'Please select Access Manager';
-    //   }
-    //   return '';
-    // },
+    accessManagerIdInvalidFeedback() {
+      const { accessmanagerid } = this.permissionEditable;
+      if (accessmanagerid === null) {
+        return 'Please select Access Manager';
+      }
+      return '';
+    },
     resourceTypeIdState() {
       return this.resourceTypeIdEditable !== null;
     },
-    // resourceTypeIdInvalidFeedback() {
-    //   if (this.resourceTypeIdEditable === null) {
-    //     return 'Please select Resource Type';
-    //   }
-    //   return '';
-    // },
+    resourceTypeIdInvalidFeedback() {
+      if (this.resourceTypeIdEditable === null) {
+        return 'Please select Resource Type';
+      }
+      return '';
+    },
   },
   data() {
     const { permission } = this;
@@ -541,32 +541,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-administer-permission {
-    padding: 0;
-  }
-}
-
-.configure-administer-permission {
-  border: 1px solid #e9ecef;
-  border-radius: .3rem;
-  padding: 1rem;
-  position: relative;
-
-  &:before {
-    bottom: 100%;
-    left: 50%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border-color: rgba(233, 236, 239, 0);
-    border-bottom-color: #e9ecef;
-    border-width: 11px;
-    margin-left: -11px;
-  }
-}
+<style lang="scss" scoped>
 </style>

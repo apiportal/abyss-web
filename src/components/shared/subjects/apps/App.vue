@@ -1,12 +1,12 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" style="width: 200px;" :style="{ 'background-image': 'url(' + item.picture + ')' }"></dt>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="item.uuid" :altText="item.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>App Name:</dt>
-        <dd>{{ item.subjectname }}</dd>
+        <dd>{{ item.displayname }}</dd>
         <dt>Description:</dt>
         <dd>{{ item.description }}</dd>
         <dt>Organization:</dt>
@@ -38,6 +38,8 @@
         @click="handleToggleContractsTable"
         size="md"
         variant="link"
+        v-b-tooltip.hover
+        title="APP Contracts"
         :class="{'active': isContractsTableVisible}"
       >
         <span>Contracts</span>
@@ -46,8 +48,10 @@
     </div>
     <div v-if="isContractsTableVisible && item.contracts.length">
       <Contracts
-        :rows="appContracts"
+        :rows="item.contracts"
         :routePath="routePath"
+        :isMineApi="false"
+        :onNeedsRefreshData="refreshData"
       ></Contracts>
     </div>
   </div>
@@ -56,6 +60,8 @@
 <script>
 import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
+import Images from '@/components/shared/Images';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
   props: {
@@ -76,26 +82,18 @@ export default {
   },
   components: {
     Icon,
+    Images,
+    Pictures,
     Contracts: () => import('@/components/shared/subjects/contracts/Contracts'),
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       contractStates: state => state.contractStates.items,
       organizations: state => state.organizations.items,
       subjectDirectories: state => state.subjectDirectories.items,
+      itemsLastUpdatedAt: state => state.userApps.lastUpdatedAt,
     }),
-    appContracts() {
-      const { item, contractStates } = this;
-      const getContractStateName = (contractStateId) => {
-        const contractState = contractStates
-          .find(contractStateItem => contractStateItem.uuid === contractStateId);
-        return contractState ? contractState.name : contractStateId;
-      };
-      return item.contracts.map(contract => ({
-        ...contract,
-        contractstatename: getContractStateName(contract.contractstateid),
-      }));
-    },
   },
   data() {
     return {
@@ -116,6 +114,12 @@ export default {
       const { subjectDirectories } = this;
       const directory = subjectDirectories.find(item => item.uuid === subjectDirectoryId) || {};
       return directory.directoryname || subjectDirectoryId;
+    },
+    refreshData() {
+      this.$store.dispatch('userApps/getApps', {
+        uuid: this.currentUser.uuid,
+        refresh: true,
+      });
     },
   },
 };

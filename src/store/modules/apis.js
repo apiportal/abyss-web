@@ -19,6 +19,7 @@ import api from '@/api';
 
 const state = {
   items: [],
+  temporaryApi: null,
   lastUpdatedAt: 0,
 };
 
@@ -75,6 +76,9 @@ const mutations = {
       ...state.items,
       ...apis,
     ];
+  },
+  setTemporaryApi: (state, api) => {
+    state.temporaryApi = api;
   },
 };
 

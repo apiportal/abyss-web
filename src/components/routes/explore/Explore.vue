@@ -7,11 +7,9 @@
           v-for="(cardItem, index) in cardItems"
           v-bind:key="index"
         >
-          <b-card
-            @click="handleModalOpen(cardItem.uuid)"
-          >
+          <b-card @click="handleModalOpen(cardItem.uuid)">
             <div slot="header" class="mb-0">
-              <Images :uuid="cardItem.uuid" :itext="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle"></Images>
+              <Images :uuid="cardItem.uuid" :altText="cardItem.apititle" :color="cardItem.color" type="apis" shape="rectangle" :lastUpdatedAt="itemsLastUpdatedAt"></Images>
             </div>
             <div class="clearfixx">
               <div class="float-right">
@@ -23,6 +21,7 @@
                 <div>
                   <small>{{ cardItem.apiversion }}</small>
                 </div>
+                <!-- <div>{{ cardItem.resources.length }}</div> -->
                 <div class="mt-2">{{ cardItem.apiowner }}</div>
                 <div class="card-description">{{ subStr(cardItem.apidescription) }}</div>
               </b-card-text>
@@ -53,7 +52,7 @@ export default {
       currentUser: state => state.user,
       apis: state => state.exploreApis.items,
       apiStates: state => state.apiStates.items,
-      // users: state => state.users.items,
+      itemsLastUpdatedAt: state => state.exploreApis.lastUpdatedAt,
     }),
     cardItems() {
       const { apis, apiStates } = this;
@@ -72,11 +71,6 @@ export default {
     this.$store.dispatch('apiStates/getApiStates', {});
     this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
     this.$store.dispatch('userApps/getApps', { uuid: this.currentUser.uuid });
-    this.$store.dispatch('contractStates/getContractStates', {});
-    this.$store.dispatch('resourceTypes/getResourceTypes', {});
-    this.$store.dispatch('resourceActions/getResourceActions', {});
-    this.$store.dispatch('subjectMemberships/getUserAppMemberships', {});
-    this.$store.dispatch('resources/getResources', {});
   },
   methods: {
     subStr(i) {
@@ -129,12 +123,6 @@ export default {
     line-height: 1.2;
     margin-top: .5rem;
   }
-  // .card-text {
-    // width: 100%;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
-    // white-space: nowrap;
-  // }
 }
 .stateInitial{
   color:#8b8e91
@@ -146,10 +134,10 @@ export default {
   color:#6f42c1
 }
 .statePublished{
-  color:#4cac00
+  color:#db408d
 }
 .statePromoted{
-  color:#db408d
+  color:#4cac00
 }
 .stateDemoted{
   color:#ec7700

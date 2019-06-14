@@ -65,7 +65,7 @@
               <legend></legend>
               <b-form-group>
                 <b-form-checkbox-group>
-                  <b-form-checkbox 
+                  <b-form-checkbox
                     :value="true"
                     :unchecked-value="false"
                   >

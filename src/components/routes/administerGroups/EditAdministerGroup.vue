@@ -43,10 +43,10 @@ export default {
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/administer-groups/groups/${this.page}`);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/administer-groups/groups/${this.page}`);
     },
   },
   data() {

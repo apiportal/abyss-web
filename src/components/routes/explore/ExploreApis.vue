@@ -3,7 +3,7 @@
     <ExploreModal
       v-if="isApisLoaded"
       :onClose="handleModalClose"
-      :hideHeader="true"
+      :hideFooter="true"
       :api="getCardItem(apiId)"
       size="lg"
     />
@@ -20,6 +20,7 @@ export default {
   },
   computed: {
     ...mapState({
+      currentUser: state => state.user,
       apis: state => state.exploreApis.items,
       isApisLoaded: state => state.exploreApis.lastUpdatedAt > 0,
     }),

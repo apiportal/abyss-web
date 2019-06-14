@@ -12,7 +12,7 @@
         </div>
         <div class="col-auto">
           <b-button
-            v-b-tooltip.hover 
+            v-b-tooltip.hover
             title="Refresh"
             variant="link"
             class="page-btn-refresh"
@@ -27,6 +27,8 @@
           <b-button
             :to="`/app/my-licenses/my-licenses/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New License"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -47,10 +49,10 @@
       <router-view></router-view>
     </div>
     <div class="page-footer">
-      <b-pagination 
+      <b-pagination
         size="md"
         :total-rows="tableRows.length"
-        v-model="page" 
+        v-model="page"
         :per-page="itemsPerPage"
         align="center"
         @change="handlePageChange"
@@ -83,42 +85,39 @@ export default {
       const { sortByKey, sortByKeyType, sortDirection, subjectLicenses } = this;
       const { sortArrayOfObjects } = Helpers;
       return sortArrayOfObjects({
-        array: subjectLicenses
-          .filter((item) => {
-            const { filterKey } = this;
-            if (filterKey === '') {
-              return true;
-            }
-            const filterKeyLowerCase = filterKey.toLowerCase();
-            return (
-              (
-                item.name &&
-                item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.version &&
-                item.version.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.licensedocument.info.visibility &&
-                item.licensedocument.info.visibility
-                .toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.licensedocument.legal.documentState &&
-                item.licensedocument.legal.documentState
-                .toLowerCase().indexOf(filterKeyLowerCase) > -1
-              ) ||
-              (
-                item.created &&
-                item.created.toLowerCase().indexOf(filterKeyLowerCase) > -1
-              )
-            );
-          },
+        array: subjectLicenses.map(item => ({
+          ...item,
+        })).filter((item) => {
+          const { filterKey } = this;
+          if (filterKey === '') {
+            return true;
+          }
+          const filterKeyLowerCase = filterKey.toLowerCase();
+          return (
+            (
+              item.name &&
+              item.name.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.version &&
+              item.version.toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.licensedocument.info.visibility &&
+              item.licensedocument.info.visibility
+              .toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.licensedocument.legal.documentState &&
+              item.licensedocument.legal.documentState
+              .toLowerCase().indexOf(filterKeyLowerCase) > -1
+            ) ||
+            (
+              item.created &&
+              item.created.toLowerCase().indexOf(filterKeyLowerCase) > -1
             )
-          .map(item => ({
-            ...item,
-          })),
+          );
+        }),
         sortByKey,
         sortByKeyType,
         sortDirection,

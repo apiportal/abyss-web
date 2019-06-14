@@ -1,31 +1,31 @@
 {
-  "Tag Object": {
-    "name": {
-      "type": "string",
-      "Required": true
+  "Object Item": {
+    "type": "Object Item",
+    "regex": "(.*?)"
+  },
+  "Discriminator Object": {
+    "propertyName": {
+      "type": "String"
     },
-    "description": {
-      "type": "string",
-      "Markdown": true
-    },
-    "externalDocs": {
-      "type": "External Documentation Object"
+    "mapping": {
+      "type": "Object Item",
+      "Map": true
     }
   },
   "OAuth Flow Object": {
     "authorizationUrl": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "tokenUrl": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "refreshUrl": {
-      "type": "string"
+      "type": "String"
     },
     "scopes": {
-      "type": "string",
+      "type": "Object Item",
       "Required": true,
       "Map": true
     }
@@ -44,123 +44,131 @@
       "type": "OAuth Flow Object"
     }
   },
-  "Security Scheme Object": {
-    "type": {
-      "type": "string",
-      "Required": true,
-      "ValidValues": ["apiKey", "http", "oauth2", "openIdConnect"]
+  "Security Schemes Predefined": {
+    "basicAuth": {
+      "type": "http",
+      "scheme": "Basic"
     },
-    "description": {
-      "type": "string"
+    "bearer": {
+      "type": "http",
+      "scheme": "Bearer"
     },
-    "name": {
-      "type": "string",
-      "Required": true
+    "apiKey": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "query"
     },
-    "in": {
-      "type": "string",
-      "Required": true,
-      "ValidValues": ["query", "header", "cookie"]
+    "abyssCookieAuth": {
+      "type": "apiKey",
+      "name": "abyss.session",
+      "in": "cookie"
     },
-    "scheme": {
-      "type": "string",
-      "Required": true
+    "abyssHttpBasicAuth": {
+      "type": "http",
+      "description": "Authorization method for extra security of sensitive methods",
+      "scheme": "Basic",
+      "x-abyss-username": "",
+      "x-abyss-password": ""
     },
-    "bearerFormat": {
-      "type": "string"
+    "abyssApiKeyAuth": {
+      "type": "apiKey",
+      "name": "abyss.api.key",
+      "in": "header",
+      "x-abyss-apikey": ""
     },
-    "flows": {
-      "type": "OAuth Flows Object"
+    "abyssAppKeyAuth": {
+      "type": "apiKey",
+      "name": "abyss.app.access.token",
+      "in": "header",
+      "x-abyss-apikey": ""
     },
-    "openIdConnectUrl": {
-      "type": "string",
-      "Required": true
+    "abyssAppKeyCookieAuth": {
+      "type": "apiKey",
+      "name": "abyss.app.access.token",
+      "in": "cookie",
+      "x-abyss-apikey": ""
+    },
+    "abyssJWTBearerAuth": {
+      "type": "http",
+      "scheme": "Bearer",
+      "bearerFormat": "JWT"
     }
   },
-  "Components Object": {
-    "schemas": {
-      "type": "Schema Object",
-      "Map": true
+  "Security Scheme Object": {
+    "type": {
+      "type": "String",
+      "Required": true,
+      "Replace": true,
+      "Select": ["apiKey", "http", "oauth2", "openIdConnect"],
+      "Options": {
+        "apiKey": {
+          "name": {
+            "type": "String",
+            "Required": true
+          },
+          "in": {
+            "type": "String",
+            "Required": true,
+            "Select": ["query", "header", "cookie"]
+          },
+          "x-abyss-apikey": {
+            "type": "String"
+          }
+        },
+        "http": {
+          "scheme": {
+            "type": "String",
+            "Required": true,
+            "Select": ["Basic", "Bearer", "Digest", "HOBA", "Mutual", "Negotiate", "OAuth", "vapid", "SCRAM-SHA-1", "SCRAM-SHA-256"]
+          },
+          "bearerFormat": {
+            "type": "String"
+          },
+          "x-abyss-username": {
+            "type": "String"
+          },
+          "x-abyss-password": {
+            "type": "String"
+          }
+        },
+        "oauth2": {
+          "flows": {
+            "type": "OAuth Flows Object"
+          }
+        },
+        "openIdConnect": {
+          "openIdConnectUrl": {
+            "type": "String",
+            "Required": true
+          }
+        }
+      }
     },
-    "responses": {
-      "type": "Response Object",
-      "Map": true
-    },
-    "parameters": {
-      "type": "Parameter Object",
-      "Map": true
-    },
-    "examples": {
-      "type": "Example Object",
-      "Map": true
-    },
-    "requestBodies": {
-      "type": "Request Body Object",
-      "Map": true
-    },
-    "headers": {
-      "type": "Header Object",
-      "Map": true
-    },
-    "securitySchemes": {
-      "type": "Security Scheme Object",
-      "Map": true
-    },
-    "links": {
-      "type": "Link Object",
-      "Map": true
-    },
-    "callbacks": {
-      "type": "Callback Object",
-      "Map": true
+    "description": {
+      "type": "String",
+      "Markdown": true
     }
   },
   "Security Requirement Object": {
     "{template}": {
-      "type": "string",
-      "Array": true
+      "type": "String",
+      "Array": true,
+      "Menu": false
+    }
+  },
+  "Callbacks Object": {
+    "{template}": {
+      "type": "Callback Object",
+      "regex": "(.*?)",
+      "MapWithRegex": true,
+      "Menu": true
     }
   },
   "Callback Object": {
-    "{expression}": {
-      "type": "Path Item Object"
-    }
-  },
-  "Link Parameters Object": {
-    "notDefinedYet": true
-  },
-  "Link Object": {
-    "href": {
-      "type": "string"
-    },
-    "operationId": {
-      "type": "string"
-    },
-    "parameters": {
-      "type": "Link Parameters Object"
-    },
-    "headers": {
-      "type": "Header Object"
-    },
-    "description": {
-      "type": "string",
-      "Markdown": true
-    }
-  },
-  "Response Object": {
-    "description": {
-      "type": "string",
-      "Markdown": true
-    },
-    "headers": {
-      "type": "Header Object"
-    },
-    "content": {
-      "type": "Media Type Object"
-    },
-    "links": {
-      "type": "Link Object",
-      "Map": true
+    "{template}": {
+      "type": "Path Item Object Operations",
+      "MapWithRegex": true,
+      "regex": "(.*?)"
     }
   },
   "Responses Object": {
@@ -172,98 +180,505 @@
       "regex": "(.*?)"
     }
   },
-  "Header Object":  {
-    "description": {
-      "type": "string",
-      "Markdown": true
+  "Schemas Object": {
+    "{template}": {
+      "type": "Schema Object",
+      "regex": "(.*?)"
+    }
+  },
+  "Paths Object": {
+    "{template}": {
+      "type": "Path Item Object Operations",
+      "MapWithRegex": true,
+      "regex": "(.*?)"
+    }
+  },
+  "Anonymization": {
+    "attributeClass": {
+      "type": "String",
+      "Select": [
+        { "value": "auxiliary", "text": "Auxiliary" },
+        { "value": "id", "text": "Identifier" },
+        { "value": "sensitive", "text": "Sensitive" },
+        { "value": "qid", "text": "QuasiIdentifier" }
+      ],
+      "Required": true,
+      "Replace": true,
+      "Options": {
+        "auxiliary": {
+          "action": {
+            "type": "String",
+            "Select": [null, "passThrough"],
+            "Required": true,
+            "Replace": false
+          }
+        },
+        "qid": {
+          "action": {
+            "type": "String",
+            "Select": [null, "generalize"],
+            "Required": true,
+            "Replace": false
+          },
+          "matchPattern": {
+            "type": "String"
+          },
+          "maskPattern": {
+            "type": "String"
+          },
+          "generalizationLevel": {
+            "type": "String"
+          }
+        },
+        "sensitive": {
+          "action": {
+            "type": "String",
+            "Select": [null, "remove", "mask", "generalize"],
+            "Required": true,
+            "Replace": false,
+            "Options": {
+              "remove": {
+                "matchPattern": {
+                  "type": "String"
+                }
+              },
+              "mask": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                }
+              },
+              "generalize": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                },
+                "generalizationLevel": {
+                  "type": "String"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "action": {
+            "type": "String",
+            "Select": [null, "remove", "mask", "generalize"],
+            "Required": true,
+            "Replace": false,
+            "Options": {
+              "remove": {
+                "matchPattern": {
+                  "type": "String"
+                }
+              },
+              "mask": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                }
+              },
+              "generalize": {
+                "matchPattern": {
+                  "type": "String"
+                },
+                "maskPattern": {
+                  "type": "String"
+                },
+                "generalizationLevel": {
+                  "type": "String"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "Schema Object":  {
+    "type": {
+      "type": "String",
+      "Replace": true,
+      "Select": ["string", "integer", "number", "boolean", "array", "object"],
+      "Options": {
+        "integer": {
+          "x-abyss-privacy": {
+            "type": "Anonymization"
+          },
+          "default": {
+            "type": "Integer",
+            "info": "semi-supported"
+          },
+          "minimum": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "maximum": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "multipleOf": {
+            "type": "Integer",
+            "info": "supported"
+          },
+          "exclusiveMinimum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "exclusiveMaximum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "Integer",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["int32", "int64"],
+            "info": "semi-supported"
+          }
+        },
+        "number": {
+          "x-abyss-privacy": {
+            "type": "Anonymization",
+            "info": "semi-supported"
+          },
+          "default": {
+            "type": "Number",
+            "info": "semi-supported"
+          },
+          "minimum": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maximum": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "multipleOf": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "exclusiveMinimum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "exclusiveMaximum": {
+            "type": "Boolean",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "Number",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["float", "double"],
+            "info": "semi-supported"
+          }
+        },
+        "string": {
+          "x-abyss-privacy": {
+            "type": "Anonymization",
+            "info": "semi-supported"
+          },
+          "default": {
+            "type": "Number",
+            "info": "semi-supported"
+          },
+          "minLength": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxLength": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "pattern": {
+            "type": "String",
+            "info": "supported"
+          },
+          "enum": {
+            "type": "String",
+            "Array": true,
+            "info": "supported"
+          },
+          "format": {
+            "type": "String",
+            "Select": ["date", "date-time", "byte", "binary", "password", "uri", "uuid", "email", "hostname", "ipv4", "ipv6", "pattern"],
+            "info": "semi-supported"
+          }
+        },
+        "array": {
+          "items": {
+            "type": "Schema Object",
+            "Map": false,
+            "Menu": false,
+            "info": "semi-supported"
+          },
+          "minItems": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxItems": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "uniqueItems": {
+            "type": "Boolean",
+            "info": "supported"
+          }
+        },
+        "object": {
+          "properties": {
+            "type": "Schema Object",
+            "Map": true,
+            "info": "semi-supported"
+          },
+          "additionalProperties ": {
+            "type": "Schema Object",
+            "Map": true,
+            "info": "semi-supported"
+          },
+          "minProperties": {
+            "type": "Number",
+            "info": "supported"
+          },
+          "maxProperties": {
+            "type": "Number",
+            "info": "supported"
+          }
+        },
+        "boolean": {}
+      },
+      "info": "semi-supported"
     },
     "required": {
-      "type": "boolean"
+      "type": "String",
+      "Array": true,
+      "info": "supported"
+    },
+    "title": {
+      "type": "String",
+      "info": "supported"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true,
+      "info": "semi-supported"
+    },
+    "example": {
+      "type": "String",
+      "info": "additional"
+    },
+    "not": {
+      "type": "String",
+      "Select": ["", "string", "integer", "number", "boolean", "array", "object"],
+      "info": "semi-supported"
+    },
+    "nullable": {
+      "type": "Boolean",
+      "info": "additional"
+    },
+    "readOnly": {
+      "type": "Boolean",
+      "info": "additional"
+    },
+    "writeOnly": {
+      "type": "Boolean",
+      "info": "additional"
     },
     "deprecated": {
-      "type": "boolean"
+      "type": "Boolean",
+      "info": "additional"
+    },
+    "xml": {
+      "type": "XML Object",
+      "info": "additional",
+      "Menu": false
+    },
+    "discriminator": {
+      "type": "Discriminator Object",
+      "info": "additional",
+      "Menu": false
+    },
+    "allOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "oneOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "anyOf": {
+      "type": "Schema Object",
+      "Array": true,
+      "info": "semi-supported"
+    },
+    "externalDocs": {
+      "type": "External Documentation Object",
+      "info": "additional",
+      "Menu": false
+    }
+  },
+  "Link Object": {
+    "operationRef": {
+      "type": "String"
+    },
+    "operationId": {
+      "type": "String"
+    },
+    "parameters": {
+      "type": "String"
+    },
+    "requestBody": {
+      "type": "String"
+    },
+    "server": {
+      "type": "Server Object",
+      "Menu": false
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    }
+  },
+  "Response Object": {
+    "description": {
+      "type": "String",
+      "Required": true,
+      "Markdown": true
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "headers": {
+      "type": "Header Object",
+      "Menu": false
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    }
+  },
+  "Parameter Object": {
+    "name": {
+      "type": "String",
+      "Required": true
+    },
+    "in": {
+      "type": "String",
+      "Required": true,
+      "Select": ["path", "query", "header", "cookie"]
+    },
+    "required": {
+      "type": "Boolean"
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
+    "allowEmptyValue": {
+      "type": "Boolean"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+
+    "style": {
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
+    },
+    "explode": {
+      "type": "Boolean"
+    },
+    "allowReserved": {
+      "type": "Boolean"
+    },
+    "schema": {
+      "type": "Schema Object"
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "example": {
+      "type": "Example Object"
+    }
+  },
+  "Header Object":  {
+    "required": {
+      "type": "Boolean"
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
+    "allowEmptyValue": {
+      "type": "Boolean"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+
+    "style": {
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
+    },
+    "explode": {
+      "type": "Boolean"
+    },
+    "allowReserved": {
+      "type": "Boolean"
+    },
+    "schema": {
+      "type": "Schema Object"
+    },
+    "content": {
+      "type": "Media Type Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "example": {
+      "type": "Example Object"
     }
   },
   "Encoding Object": {
     "contentType": {
-      "type": "string"
+      "type": "String"
     },
     "headers": {
-      "type": "Header Object"
+      "type": "Header Object",
+      "Menu": false
     },
     "style": {
-      "type": "string"
+      "type": "String",
+      "Select": ["simple", "label", "matrix", "form", "spaceDelimited", "pipeDelimited", "deepObject"]
     },
     "explode": {
-      "type": "boolean"
+      "type": "Boolean"
     },
     "allowReserved": {
-      "type": "boolean"
-    }
-  },
-  "Example Object": {
-    "summary": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string",
-      "Markdown": true
-    },
-    "Value": {
-      "type": "Any",
-      "Markdown": true
-    }
-  },
-  "Discriminator Object": {
-    "propertyName": {
-      "type": "string"
-    },
-    "mapping": {
-      "type": "string",
-      "Map": true
-    }
-  },
-  "XML Object": {
-    "name": {
-      "type": "string"
-    },
-    "namespace": {
-      "type": "string"
-    },
-    "prefix": {
-      "type": "string"
-    },
-    "attribute": {
-      "type": "boolean"
-    },
-    "wrapped": {
-      "type": "boolean"
-    }
-  },
-  "Schema Object":  {
-    "nullable": {
-      "type": "boolean"
-    },
-    "discriminator": {
-      "type": "Discriminator Object"
-    },
-    "readOnly": {
-      "type": "boolean"
-    },
-    "writeOnly": {
-      "type": "boolean"
-    },
-    "xml": {
-      "type": "XML Object"
-    },
-    "externalDocs": {
-      "type": "External Documentation Object"
-    },
-    "example": {
-      "type": "Any"
-    },
-    "deprecated": {
-      "type": "boolean"
+      "type": "Boolean"
     }
   },
   "Media Type Object": {
@@ -284,65 +699,40 @@
   },
   "Request Body Object": {
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
+    },
+    "required": {
+      "type": "Boolean"
     },
     "content": {
       "type": "Media Type Object",
       "Required": true,
       "Map": true
-    },
-    "required": {
-      "type": "boolean"
-    }
-  },
-  "Parameter Object": {
-    "name": {
-      "type": "string",
-      "Required": true
-    },
-    "in": {
-      "type": "string",
-      "Required": true
-    },
-    "description": {
-      "type": "string",
-      "Markdown": true
-    },
-    "required": {
-      "type": "boolean"
-    },
-    "deprecated": {
-      "type": "boolean"
-    }
-  },
-  "External Documentation Object": {
-    "description": {
-      "type": "string",
-      "Markdown": true
-    },
-    "url": {
-      "type": "string",
-      "Required": true
     }
   },
   "Operation Object": {
+    "operationId": {
+      "type": "String"
+    },
+    "deprecated": {
+      "type": "Boolean"
+    },
     "tags": {
-      "type": "string",
+      "type": "String",
       "Array": true
     },
     "summary": {
-      "type": "string"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
-    "externalDocs": {
-      "type": "External Documentation Object"
-    },
-    "operationId": {
-      "type": "string"
+    "security": {
+      "type": "Security Requirement Object",
+      "Array": true,
+      "Menu": false
     },
     "parameters": {
       "type": "Parameter Object",
@@ -350,43 +740,44 @@
     },
     "requestBody": {
       "type": "Request Body Object",
-      "Required": true
+      "Required": true,
+      "Menu": false
     },
     "responses": {
       "type": "Responses Object",
       "Required": true,
       "MapWithRegex": true
     },
-    "callbacks": {
-      "type": "Callback Object",
-      "Map": true
-    },
-    "deprecated": {
-      "type": "boolean"
-    },
-    "security": {
-      "type": "Security Requirement Object",
-      "Array": true
-    },
     "servers": {
       "type": "Server Object",
       "Array": true
-    }
-  },
-  "Paths Object": {
-    "{path}": {
-      "type": "Path Item Object",
-      "regex": "(.*?)"
+    },
+    "callbacks": {
+      "type": "Callbacks Object",
+      "MapWithRegex": true
+    },
+    "externalDocs": {
+      "type": "External Documentation Object",
+      "Menu": false
     }
   },
   "Path Item Object": {
     "summary": {
-      "type": "string"
+      "type": "String"
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
+    "servers": {
+      "type": "Server Object"
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Array": true
+    }
+  },
+  "Path Item Object Operations": {
     "get": {
       "type": "Operation Object"
     },
@@ -411,6 +802,13 @@
     "trace": {
       "type": "Operation Object"
     },
+    "summary": {
+      "type": "String"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
     "servers": {
       "type": "Server Object"
     },
@@ -419,26 +817,65 @@
       "Array": true
     }
   },
+  "Components Object": {
+    "schemas": {
+      "type": "Schema Object",
+      "Map": true
+    },
+    "responses": {
+      "type": "Responses Object",
+      "MapWithRegex": true
+    },
+    "securitySchemes": {
+      "type": "Security Scheme Object",
+      "Map": true
+    },
+    "parameters": {
+      "type": "Parameter Object",
+      "Map": true
+    },
+    "requestBodies": {
+      "type": "Request Body Object",
+      "Map": true
+    },
+    "headers": {
+      "type": "Header Object",
+      "Map": true
+    },
+    "examples": {
+      "type": "Example Object",
+      "Map": true
+    },
+    "links": {
+      "type": "Link Object",
+      "Map": true
+    },
+    "callbacks": {
+      "type": "Callbacks Object",
+      "MapWithRegex": true
+    }
+  },
   "Server Variable Object": {
     "enum": {
-      "type": "primitive",
+      "type": "String",
       "Array": true
     },
     "default": {
-      "type": "primitive"
+      "type": "String",
+      "Required": true
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     }
   },
   "Server Object": {
     "url": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "description": {
-      "type": "string",
+      "type": "String",
       "Markdown": true
     },
     "variables": {
@@ -446,52 +883,112 @@
       "Map": true
     }
   },
+  "XML Object": {
+    "name": {
+      "type": "String"
+    },
+    "namespace": {
+      "type": "String"
+    },
+    "prefix": {
+      "type": "String"
+    },
+    "attribute": {
+      "type": "Boolean"
+    },
+    "wrapped": {
+      "type": "Boolean"
+    }
+  },
+  "Tag Object": {
+    "name": {
+      "type": "String",
+      "Required": true
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "externalDocs": {
+      "type": "External Documentation Object",
+      "Menu": false
+    }
+  },
+  "Example Object": {
+    "summary": {
+      "type": "String"
+    },
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "Value": {
+      "type": "String",
+      "Markdown": true
+    },
+    "externalValue": {
+      "type": "String",
+      "Markdown": true
+    }
+  },
   "License Object": {
     "name": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "url": {
-      "type": "string"
+      "type": "String"
     }
   },
   "Contact Object": {
     "name": {
-      "type": "string"
+      "type": "String"
     },
     "url": {
-      "type": "string"
+      "type": "String"
     },
     "email": {
-      "type": "string"
+      "type": "String"
     }
   },
   "Info Object": {
     "title": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
-    "description": {
-      "type": "string",
-      "Markdown": true
+    "version": {
+      "type": "String",
+      "Required": true
     },
     "termsOfService": {
-      "type": "string"
+      "type": "String"
     },
-    "contact": {
-      "type": "Contact Object"
+    "description": {
+      "type": "String",
+      "Markdown": true
     },
     "license": {
-      "type": "License Object"
+      "type": "License Object",
+      "Menu": false
     },
-    "version": {
-      "type": "string",
+    "contact": {
+      "type": "Contact Object",
+      "Menu": false
+    }
+  },
+  "External Documentation Object": {
+    "description": {
+      "type": "String",
+      "Markdown": true
+    },
+    "url": {
+      "type": "String",
       "Required": true
     }
   },
   "Root Object": {
     "openapi": {
-      "type": "string",
+      "type": "String",
       "Required": true
     },
     "info": {
@@ -512,14 +1009,16 @@
     },
     "security": {
       "type": "Security Requirement Object",
-      "Array": true
+      "Array": true,
+      "Menu": false
     },
     "tags": {
       "type": "Tag Object",
       "Array": true
     },
     "externalDocs": {
-      "type": "External Documentation Object"
+      "type": "External Documentation Object",
+      "Menu": false
     }
   }
 }

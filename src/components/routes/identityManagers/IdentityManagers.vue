@@ -39,6 +39,8 @@
           <b-button
             :to="`/app/identity-managers/${page}/add-new`"
             variant="primary"
+            v-b-tooltip.hover
+            title="Add New Identity Manager"
             class="page-btn-add"
             block
             data-qa="btnAddNew"
@@ -142,8 +144,8 @@
                   <Icon icon="ellipsis-h" />
                 </template>
 
-                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit</b-dropdown-item>
-                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete</b-dropdown-item>
+                <b-dropdown-item data-qa="btnEdit" :to="`/app/identity-managers/${page}/edit/${item.uuid}`"><Icon icon="edit" /> Edit Identity Manager</b-dropdown-item>
+                <b-dropdown-item data-qa="btnDelete" :to="`/app/identity-managers/${page}/delete/${item.uuid}`"><Icon icon="trash-alt" /> Delete Identity Manager</b-dropdown-item>
 
                 <b-dropdown-header>LOGS</b-dropdown-header>
 
@@ -315,7 +317,6 @@ export default {
     handleCollapseTableRows(itemId) {
       const rowIndex = this.collapsedRows.indexOf(itemId);
       if (rowIndex === -1) {
-        // this.collapsedRows.push(itemId);
         this.collapsedRows = [itemId];
       } else {
         this.collapsedRows.splice(rowIndex, 1);

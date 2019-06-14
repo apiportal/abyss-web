@@ -1,16 +1,25 @@
 <template>
   <div>
-    <div>
-      <OpenApiObject
-        item="servers"
-        type="Server Object"
-        :formData="openapidocument.servers"
-        :pathArray="['openapidocument', 'servers']"
-        :onChange="onChange"
-        :isArray="true"
-        :isCollapsedInitial="true"
-      />
-    </div>
+    <OpenApiObject
+      item="servers"
+      type="Server Object"
+      :formData="openapidocument.servers"
+      :pathArray="['openapidocument', 'servers']"
+      :onChange="onChange"
+      :isArray="true"
+      :isCollapsedInitial="true"
+    />
+    <OpenApiObject
+      item="security"
+      type="Security Requirement Object"
+      :formData="openapidocument.security"
+      :pathArray="['openapidocument', 'security']"
+      :securitySchemes="openapidocument.components.securitySchemes"
+      :onChange="onChange"
+      :isArray="true"
+      :isCollapsedInitial="true"
+      :isMenu="false"
+    />
   </div>
 </template>
 

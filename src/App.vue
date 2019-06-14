@@ -8,6 +8,16 @@ import { mapState } from 'vuex';
 
 export default {
   created() {
+    this.$store.commit('traffic/setGlobalConfig');
+    axios.defaults.baseURL = this.baseUrl;
+    axios.defaults.withCredentials = true;
+    // axios.defaults.baseURL = 'https://dev2.apiportal.com';
+    // axios.defaults.headers.common.Accept = 'application/json';
+    // axios.defaults.headers.common['Content-Type'] = 'application/json';
+    // axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8080';
+    // axios.defaults.timeout = 10000;
+    // axios.defaults.responseType = 'json';
+
     // axios global listeners
     axios.interceptors.request.use((config) => {
       this.$store.commit('traffic/increaseRequests');
@@ -57,6 +67,7 @@ export default {
   },
   computed: {
     ...mapState({
+      baseUrl: state => state.traffic.baseUrl,
       user: state => state.user,
     }),
   },

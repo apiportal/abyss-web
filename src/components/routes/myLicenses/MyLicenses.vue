@@ -25,7 +25,7 @@
     <div class="page-content-nested">
       <router-view></router-view>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -46,10 +46,6 @@ export default {
     this.$store.dispatch('subjectLicenses/getSubjectLicenses', { uuid: this.currentUser.uuid });
     this.$store.dispatch('subjectPolicies/getSubjectPolicies', { uuid: this.currentUser.uuid });
     this.$store.dispatch('policyTypes/getPolicyTypes', {});
-    this.$store.dispatch('apiVisibilityTypes/getApiVisibilityTypes', {});
-    this.$store.dispatch('organizations/getOrganizations', {});
-    this.$store.dispatch('apiStates/getApiStates', {});
-    this.$store.dispatch('contractStates/getContractStates', {});
   },
 };
 </script>

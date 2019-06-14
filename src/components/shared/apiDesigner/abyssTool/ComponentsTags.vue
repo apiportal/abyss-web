@@ -1,26 +1,24 @@
 <template>
   <div>
-    <div>
-      <OpenApiObject
-        item="tags"
-        type="Tag Object"
-        :formData="openapidocument.tags"
-        :pathArray="['openapidocument', 'tags']"
-        :onChange="onChange"
-        :isArray="true"
-        :isCollapsedInitial="true"
-      />
-    </div>
-    <div style="margin-top: 1rem;">
-      <OpenApiObject
-        item="components"
-        type="Components Object"
-        :formData="openapidocument.components"
-        :pathArray="['openapidocument', 'components']"
-        :onChange="onChange"
-        :isCollapsedInitial="true"
-      />
-    </div>
+    <OpenApiObject
+      item="tags"
+      type="Tag Object"
+      :formData="openapidocument.tags"
+      :pathArray="['openapidocument', 'tags']"
+      :onChange="onChange"
+      :isArray="true"
+      :isCollapsedInitial="true"
+    />
+    <OpenApiObject
+      item="components"
+      type="Components Object"
+      :formData="openapidocument.components"
+      :pathArray="['openapidocument', 'components']"
+      :onChange="onChange"
+      :isCollapsedInitial="true"
+      :refs="refs"
+      :isMenu="false"
+    />
   </div>
 </template>
 
@@ -33,6 +31,21 @@ export default {
       type: Object,
       required: false,
       default() { return {}; },
+    },
+    refs: {
+      type: Array,
+      required: false,
+      default() { return []; },
+    },
+    securitySchemes: {
+      type: Object,
+      required: false,
+      default() { return {}; },
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default() { return []; },
     },
     onChange: {
       type: Function,

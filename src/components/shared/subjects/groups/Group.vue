@@ -1,8 +1,8 @@
 <template>
   <div class="abyss-table-content">
     <div class="row">
-      <dl class="col-auto">
-        <dt class="bg-cover mb-2 bg-secondary rounded-circle embed-responsive embed-responsive-1by1" style="width: 150px;" :style="{ 'background-image': 'url(' + group.picture + ')' }"></dt>
+      <dl class="col-auto pb-3">
+        <Pictures :uuid="group.uuid" :altText="group.displayname" type="subjects" shape="square" width="200px" :lastUpdatedAt="itemsLastUpdatedAt"></Pictures>
       </dl>
       <dl class="col">
         <dt>Group Name:</dt>
@@ -37,21 +37,40 @@
         <dd v-if="group.isdeleted">{{ group.deleted | moment("DD.MM.YYYY HH:mm") }}</dd>
       </dl>
     </div>
+    <div class="row abyss-table-buttons">
+      <b-button
+        size="md"
+        variant="link"
+        v-b-tooltip.hover
+        title="Group Users"
+        @click="listGroupUsers"
+        :class="{'active': isShowGroupUsers}"
+        v-if="group.users.length"
+      >
+        <Icon icon="users" /> Users
+        <b-badge pill>{{ group.users.length }}</b-badge>
+      </b-button>
+    </div>
+    <div v-if="isShowGroupUsers && group.users.length">
+      <Users
+        :rows="group.users"
+        :routePath="routePath"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Icon from '@/components/shared/Icon';
-import SortBy from '@/components/shared/SortBy';
-import TbodyCollapsible from '@/components/shared/TbodyCollapsible';
-import Users from '@/components/shared/subjects/users/Users';
+import Pictures from '@/components/shared/Pictures';
 
 export default {
+  name: 'Group',
   components: {
     Icon,
-    SortBy,
-    TbodyCollapsible,
-    Users,
+    Pictures,
+    Users: () => import('@/components/shared/subjects/users/Users'),
   },
   props: {
     group: {
@@ -65,7 +84,11 @@ export default {
       default() { return ''; },
     },
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      itemsLastUpdatedAt: state => state.groups.lastUpdatedAt,
+    }),
+  },
   data() {
     return {
       isShowGroupUsers: false,

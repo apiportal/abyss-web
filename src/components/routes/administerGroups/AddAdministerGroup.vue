@@ -33,23 +33,19 @@ export default {
   },
   methods: {
     handleModalClose() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/administer-groups/groups/${this.page}`);
     },
     handleModalUpdate() {
-      this.$router.push(`/app/administer-groups/${this.page}`);
+      this.$router.push(`/app/administer-groups/groups/${this.page}`);
     },
   },
   data() {
-    const now = new Date();
-    const end = new Date();
-    // 50 years * 365.25 = 18262.5
-    // const endDate = new Date(now.getTime() + (24 * 60 * 60 * 1000 * 18262.5));
-    const endDate = new Date(end.setFullYear(end.getFullYear() + 50));
     return {
       newGroup: {
         firstname: '',
         lastname: '',
         displayname: '',
+        isactivated: true,
         subjectname: '',
         password: '',
         email: '',
@@ -61,8 +57,8 @@ export default {
         isrestrictedtoprocessing: false,
         issandbox: false,
         picture: '',
-        effectiveenddate: endDate.toISOString(),
-        effectivestartdate: now.toISOString(),
+        effectiveenddate: this.$moment.utc().add(1, 'years').toISOString(),
+        effectivestartdate: this.$moment.utc().toISOString(),
         subjecttypeid: 'c5ef2da7-b55e-4dec-8be3-96bf30255781',
       },
       page: this.$route.params.page,

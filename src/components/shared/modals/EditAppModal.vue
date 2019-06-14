@@ -1,6 +1,6 @@
 <template>
   <Modal
-    bodyClass="edit-my-app"
+    bodyClass="p-0"
     :hideHeader="hideHeader"
     :hideFooter="hideFooter"
     :noCloseOnBackdrop="noCloseOnBackdrop"
@@ -19,9 +19,9 @@
       <b-form
         @submit="handleSubmit"
       >
-        <div style="padding: 1rem;">
+        <div class="p-3">
           <b-row align-v="center">
-            <b-col md="8">
+            <b-col>
               <b-form-group
                 id="appNameGroup"
                 label="App Name*:"
@@ -56,30 +56,26 @@
                 </b-form-textarea>
               </b-form-group>
             </b-col>
-            <b-col md="4">
-              <div class="d-flex justify-content-center">
-                <div class="item p-0"> 
-                  <img
-                    v-if="appEditable.picture"
-                    :src="appEditable.picture" 
-                    :alt="appEditable.displayname" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()"
-                  >
-                  <img 
-                    v-if="!appEditable.picture" 
-                    src="@/assets/avatar.jpg" 
-                    :alt="appEditable.displayname" 
-                    class="bg-cover mb-2 bg-secondary embed-responsive embed-responsive-1by1 img-thumbnail" 
-                    style="width: 200px;" 
-                    v-b-tooltip.hover 
-                    title="Click to change picture"
-                    @click="$refs.fileInput.click()" />
-                  <input type="file" id="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
-                </div>
+            <b-col cols="auto">
+              <div class="thumb-picture square bg-secondary" style="width: 200px;">
+                <img
+                  v-if="appEditable.picture"
+                  :src="appEditable.picture"
+                  :alt="appEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()"
+                >
+                <img
+                  v-if="!appEditable.picture"
+                  src="/static/avatar.png"
+                  :alt="appEditable.displayname"
+                  style="width: 200px;"
+                  v-b-tooltip.hover
+                  title="Click to change picture"
+                  @click="$refs.fileInput.click()" />
+                <input type="file" class="image-upload" ref="fileInput" @change="onFileSelected" accept="image/*"/>
               </div>
             </b-col>
           </b-row>
@@ -148,7 +144,6 @@
             <b-form-select
               id="directoryInput"
               v-model="appEditable.subjectdirectoryid"
-              :state="directoryState"
               :options="[
                 {
                   value: null,
@@ -159,19 +154,21 @@
                   text: item.directoryname,
                 })),
               ]"
+              :state="directoryState"
+              required
             />
           </b-form-group>
         </div>
         <footer class="modal-footer">
           <b-button
-            variant="secondary"
+            variant="link"
             @click="onClose"
             data-qa="btnCancel"
           >
             Cancel
           </b-button>
           <b-button
-            variant="success"
+            variant="primary"
             type="submit"
             data-qa="btnSave"
           >
@@ -303,7 +300,7 @@ export default {
     handleSubmit(evt) {
       evt.preventDefault();
       const { appEditable, putApps, postApps, onUpdate, role } = this;
-      const { description, url, secondaryemail,
+      const { description, url,
         effectivestartdate, effectiveenddate,
         email, picture, distinguishedname, uniqueid,
         phonebusiness, phoneextension, phonehome, phonemobile,
@@ -325,7 +322,7 @@ export default {
         effectivestartdate: (effectivestartdate === null ?
           this.$moment.utc().toISOString() : effectivestartdate),
         effectiveenddate: (effectiveenddate === null ? this.$moment.utc().add(50, 'years').toISOString() : effectiveenddate),
-        secondaryemail: (secondaryemail === null ? email : secondaryemail),
+        secondaryemail: email,
       };
       if (role === 'edit') {
         putApps(appToUpdate).then(() => {
@@ -356,13 +353,5 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.modal-body {
-  &.edit-my-app {
-    padding: 0;
-  }
-}
-input[type="file"] {
-    display: none;
-}
+<style lang="scss" scoped>
 </style>
